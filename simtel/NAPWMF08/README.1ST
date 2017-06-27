@@ -1,0 +1,124 @@
+
+NAPWMF version 0.8
+-------------------------------------
+Copyright 1993 by Memra Software Inc.
+All Rights Reserved
+
+
+This program is a shareware copy for evaluation only.
+To register this program, send $20 to Memra Software Inc.
+                                      C-4 Powerhouse, RR #2
+                                      Armstrong, BC, V0E 1B0
+                                      CANADA
+Registration will give you the legal right to use this version and all 
+future versions of NAPWMF. Unregistered users may try the program for up 
+to 30 days to determine whether or not it is suitable for their needs. 
+Anyone may freely distribute copies of this program by any means for the 
+purpose of allowing others to evaluate the program. Any such copies must 
+be either the original .ZIP archive file or another archive format 
+containing all the original files contained in the original .ZIP. The
+only exception is that BBSes and CD-ROMs which include this program in
+a collection of Visual Basic software and make the VBRUN100.DLL file
+accessible separately, may leave the VBRUN100.DLL file out of the .ZIP 
+or other archive.
+
+
+
+This program converts Windows Metafiles (.WMF) into NAPLPS format. It 
+currently works only with .WMF files created by CorelDraw's File-Export 
+function. It is intended to be used to convert clip art and TrueType 
+fonts into NAPLPS format so that they can be incorporated into a NAPLPS 
+image using MGE or another NAPLPS drawing program. NAPWMF is not 
+intended to be a replacement for a NAPLPS drawing program although it is 
+possible in some circumstances. Since CorelDraw does not support blinks 
+(palette animation), timed pauses, screen clears, macros and other 
+NAPLPS features, I highly recommend using a NAPLPS specific drawing 
+program in conjunction with NAPWMF. However, I have included a sample 
+.CDR, .WMF and .NAP called AMERWEST that was drawn in CorelDraw to be 
+directly converted to NAPLPS.
+
+INSTALLATION
+The files may be unzipped in any directory, but if you do not have
+a copy of VBRUN100.DLL in your Windows directory, or in a directory
+listed in your PATH statement, you should copy VBRUN100.DLL to your
+Windows directory.
+
+COLOR PALETTE
+NAPWMF currently creates 16-color images only. Future versions will 
+allow creation of images in either monochrome or using a palette of up 
+to 256 colors. Of course, you can incorporate images from NAPWMF into a 
+256 color NAPLPS image by simply redefining the colors after importing 
+(adding) it in MGE. The palette options are ignored in version 0.8.
+
+POLY POLYGONS
+This option is ignored in version 0.8. It will allow a choice in how to 
+handle "combined" curves such as in text.
+
+SCALABILITY
+The NAPLPS images created by NAPWMF are always scaled to the full screen 
+size. This is because programs like MGE produce good results when 
+scaling down an object, but tend to loose resolution if an object is 
+scaled up. If you want to create a complete NAPLPS image using CorelDraw 
+and NAPWMF, then you will need to make sure that the drawing extends 
+either the full width or the full height of the screen. In any case, you 
+should preview the drawing with a program like PP3 running in another 
+window. See AMERWEST.CDR for an example.
+
+MERGING LINES
+CorelDraw creates metafiles in which curves are approximated by many 
+very short lines so that the images will print properly on high 
+resolution printers. NAPWMF offers 2 techniques to simplify images (and 
+reduce the file size) by merging these lines. These options work well on 
+some drawings but on others the occasional right angle or sharp corner 
+gets cut off. Sometimes this can create useful artistic effects so it is 
+worth experimenting with a large minimum length and/or large minimum 
+angle.
+Version 0.8 will merge line segments which are shorter than the minimum 
+length and at an angle less than the minimum when compared with the 
+neighbouring segments. The units used are 1/2048 of the screen width. 
+This means that when you specify 15 units as the minimum line length, 
+you are consolidating any lines shorter than 15/2048 of the screen 
+width. If you want to try merging by angles only, set the minimum length 
+to 0, if you want length only, set the minimum angle to 0. This can 
+produce some interesting jagged effects if the other parameter is also 
+set high.
+
+HOW TO USE
+First, export the CorelDraw image to .WMF format using CorelDraw's File 
+Export menu selection. Do not include a placeable header in the 
+metafile.
+Second, enter the .WMF file name (including subdirectories) into NAPWMF's
+dialog box, select the "Merge Lines" option if desired and adjust the 
+minimum length and angle.
+Now, press the Convert button or the ENTER key. NAPWMF will display the 
+word "Converting..." and the object number being converted. When the 
+conversion is finished, it will change that to "Completed".
+Now, use PP3, MGE, Turshow or Teledraw to preview the image. 
+
+TEXT
+Text converts best if it is converted to curves and broken apart using 
+the two choices in the Arrange menu. When you do this, you will have to 
+select all the cutouts (letter O, lowercase e, lowercase a, etc...) and 
+change their color to the background color. This is easier to do in 
+CorelDraw than in MGE. You may find it useful to convert text separately 
+from drawings since the optimum settings for merging lines will be 
+different for text and for drawings.
+
+BLENDS
+If you are using a 16 color palette, you have 14 colors to use in a 
+blend since white and black cannot be redefined. When entering the 
+number of steps in CorelDraw's Blend roll-up, use 12 since CorelDraw 
+doesn't count the two objects being blended. See AMERWEST.CDR for an 
+example.
+
+SCREEN BACKGROUND
+Set the CorelDraw paper color (File, Page Setup) to the same color as 
+you will be using for the screen color. This makes it easier to judge 
+colors as you draw. If it is not black, then add the screen background 
+in MGE as follows:
+    1. Select the color to use in the Paint menu
+    2. Select Screen in the Xpert menu (the screen will seem to clear)
+    3. Select Back in the Edit menu
+    4. Type Alt-I to call up the index
+    5. Use the scrollbars to go to the top of the list
+    6. Click object # 1, MGE will place the screen behind it.

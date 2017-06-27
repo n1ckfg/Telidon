@@ -1,0 +1,279 @@
+Message file for Personality+III (Shareware Version)
+Copyright (C) 1991 Microstar Software Ltd.
+
+
+English version - __MPSE2C
+
+Each line begins with a number with is the maximum length the line can be,
+except where the number is prefixed by ~ to indicate average parameter length.
+Each string is enclosed in double quotes.  Each character is in single quotes.
+All information not in quotes are commentary and are not used by the program
+
+******************************************************************************
+
+ 79 "Invalid service."
+ 79 "Invalid option."
+ 79 "Default message file is missing."
+ 79 "The MVDI(tm) interface is not present."
+ 79 "Insufficent memory."
+
+Title page - program name at top of screen
+           - non-graphical title page lines
+           - bars, date and time
+
+ 79 " Personality+III (S)"
+ 74 " "
+ 74 " "
+ 74 " "
+ 74 " "
+ 35 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ ** "บ "
+ ** " บ"
+ ** "อออออออออออออออออออออออออออออออออออออออป"
+ ** "อออออออออออออออออออออออออออออออออออออออผ"
+ ** "ษออออออออออออออออออออออออออออออออออออออห"
+ ** "บ                                      บ"
+ ** "                                       บ"
+ ** "ศออออออออออออออออออออออออออออออออออออออส"
+ ** "ษอออออออออออออออออออออออออออออออออออออออ"
+ ** "ศอออออออออออออออออออออออออออออออออออออออ"
+  8 "Date: "
+  8 "Time: "
+
+Service directory - waiting for service prompt and 4 lines help
+                  - got a service prompt and 4 lines help
+                  - profile prompts
+                  - profile problem messages
+                  - program exit prompt
+
+ 35 "SERVICE DIRECTORY"
+ 30 "Select a Service: "
+ 74 "                                                          "
+ 74 "Press - 1 through 0 - to create or select a service       "
+ 74 "      - EXIT (F9)   - to exit Personality+III       "
+ 74 "                                                          "
+ 35 "Service Selected: "
+ 74 "Press - NEXT (F7)          - to modify the service profile"
+ 74 "      - SEND (F8) or Enter - to connect to the service    "
+ 74 "      - EXIT (F9)          - to exit Personality+III"
+ 74 "      - 1 through 0        - to create or select a service"
+  3 "1 -"
+  3 "2 -"
+  3 "3 -"
+  3 "4 -"
+  3 "5 -"
+  3 "6 -"
+  3 "7 -"
+  3 "8 -"
+  3 "9 -"
+  3 "0 -"
+ 35 "Service file problem"
+ 35 "Service file not found"
+ 35 "Confirm Exit to DOS [Y/N]? "
+ ** 'Y'            - request to exit to DOS (upper case)
+ ** 'y'            - request to exit to DOS (lower case)
+ ** 'N'            - request to stay in program (upper case)
+ ** 'n'            - request to stay in program (lower case)
+
+Entry names and default modem sequences
+
+<=40 "ATDT                                  ^M"    Normal Dial
+
+Service profile - 4 lines help
+
+ 35 "SERVICE PROFILE"
+ 74 "Press - MENU   (F6) - to return to the Service Directory"
+ 74 "      - CANCEL (F3) - to return to Directory without saving changes"
+ 74 "      - NEXT   (F7) - to modify the Service User Keys"
+ 74 "      - keypad arrows,Ins,Del,Backspace,Esc - to modify parameter values"
+
+Service profile parameters - 4 basic profile element prompts
+                           - options for 4 basic prompts
+
+ 22 "         Service Name:"
+ 22 "     Connect Sequence:"
+ 22 "                 Port:"
+ 22 "       Baud/Speed/bps:"
+ ~8 "Local"
+ ~8 "COM1"
+ ~8 "COM2"
+ ~8 "COM3"
+ ~8 "COM4"
+    "     "
+ ~8 "300"
+ ~8 "1200"
+ ~8 "2400"
+ ~8 "4800"
+ ~8 "9600"
+ ~8 "19200"
+    "     "
+
+Service profile framing
+
+ 22 "     Parity/Data/Stop:"
+ ~9 "None/8/1"                 - no parity, 8 data bits, 1 stop bit
+ ~9 "Even/7/1"                 - even parity, 7 data bits, 1 stop bit
+ ~9 "Odd/7/1"                  - odd parity, 7 data bits, 1 stop bit
+ ~9 "Ignore/7/1"               - ignore parity, 7 data bits, 1 stop bit
+
+Service profile parameters - 6 other profile element prompts
+                           - options for 6 other prompts
+
+ 22 "       Handshake Type:"
+ 22 "     Terminal Message:"
+ 22 "Character Echo/Duplex:"
+ 22 "   ASCII Command Type:"
+ 22 "             Linefeed:"
+ 22 "Videotex Command Type:"
+ ~9 "None"                     - no handshake
+ ~9 "Minimal"                  - minimal handshake
+ ~9 "Full"                     - full handshake
+ ~9 "Subset"                   - subset handshake
+ 26 "Yes/Half"                 - echo characters entered
+ 26 "No/Full"                  - do not echo characters entered
+ 26 "Line"                     - ASCII - line oriented input
+ 26 "Character"                - ASCII - character oriented input
+ 26 "Normal"                   - ASCII - no automatic linefeed after CR
+ 26 "Automatic"                - ASCII - automatic linefeed after CR
+ 26 "Line"                     - NAPLPS Command Line - line oriented input
+ 26 "Character"                - NAPLPS Command Line - character oriented input
+
+Service user keys - 3 lines help
+                  - user key prompts
+
+ 35 "SERVICE USER KEYS"
+ 74 "Press - MENU   (F6) - to return to the Service Directory"
+ 74 "      - CANCEL (F3) - to return to Directory without saving changes"
+ 74 "      - BACK   (F5) - to return to the Service Profile"
+ 74 "      - keypad arrows,Ins,Del,Backspace,Esc - to modify parameter values"
+  7 "* S+F1 "
+  7 "* S+F2 "
+  7 "* S+F3 "
+  7 "* S+F4 "
+  7 "* S+F5 "
+  7 "* S+F6 "
+  7 "* S+F7 "
+  7 "* S+F8 "
+  7 "  S+F9 "
+  7 "  S+F10"
+ 79 "* Not available if handshake type is Subset"
+
+File errors
+     -----------------------------------
+ 35 "Retry/Create/Abort[R/C/A]? "          - for service directory
+ 35 "Open Error"
+ 35 "Retry/Abort[R/A]? "
+ 35 "Exist Error"
+ 35 "Replace/Abort[R/A]? "
+ 35 "Read Error"
+ 35 "Retry/Abort[R/A]? "
+ 35 "Write Error"
+ 35 "Retry/Abort[R/A]? "
+ 35 "Close Error"
+ 35 "Retry/Abort[R/A]? "
+ ** 'A'                              - abort (upper case)
+ ** 'a'                              - abort (lower case)
+ ** 'C'                              - create (upper case)
+ ** 'c'                              - create (lower case)
+ ** 'R'                              - replace (upper case)
+ ** 'r'                              - replace (lower case)
+ ** 'R'                              - retry (upper case)
+ ** 'r'                              - retry (lower case)
+
+File Miscellaneous
+
+ ** ">"                              - delimeter character before user input
+ ** '>'                              - delimeter character before user input
+ ** "<"                              - delimeter character after user input
+ ** '<'                              - delimeter character after user input
+ 21 "File: "          - general purpose prefix
+
+File Capture and Display information
+
+ 50 "Save Captured or Incoming data [C/I]?><"
+ ** 'I'                              - future download (upper case)
+ ** 'i'                              - future download (lower case)
+ ** 'C'                              - past download (upper case)
+ ** 'c'                              - past download (lower case)
+
+ 51 "Captured data overflow; saving incoming-"
+ 51 "No captured data; saving incoming-"
+ 51 "Type name of file to be saved:"
+ 21 "Capture     >"   - file prompt (requesting) for past download
+ 21 "Incoming    >"   - file prompt (requesting) for future download
+ 21 "Capture     >"   - file prefix (reporting) for past download
+ 21 "Incoming    >"   - file prefix (reporting) for future download
+ 51 "No file save activity."
+
+Printer
+
+ 51 "Printer"         - used in place of file prefix and file name in error
+ 51 "Printer: out of paper"         - used as above for no paper
+
+Display
+
+ 51 "Type filename to display"
+ 21 "Display     >"   - file prompt (requesting) for display
+ 51 "Type number of last file in billboard:"
+ -- "            "    - ***** this must be 1 less than length of file prompts *****
+ 46 "Type time in seconds between files "
+ 21 "Display     >"   - file prefix (reporting) for display
+ 51 "No file display/send activity."
+ 51 "Press any key to continue."
+
+File Send and Send/Display
+
+ 51 "Type method and filename to send"
+ 21 "Send        >"   - file prompt (requesting) for send
+ 21 "Send        >"   - file prefix (reporting) for send
+
+ 51 "Type method and filename to send/display"
+ 21 "Send/Display>"   - file prompt (requesting) for send/display
+ 21 "Send/Display>"   - file prefix (reporting) for send/display
+
+ 49 "Convert and pause the ends of lines [Y/N]?>"  - request for text/binary
+ ** 'N'                                    - response for binary (upper case)
+ ** 'n'                                    - response for binary (lower case)
+ ** 'Y'                                    - response for text (upper case)
+ ** 'y'                                    - response for text (lower case)
+
+Encryption
+
+ 51 "Press again to initiate secure session:"
+ 38 "Type Peer PIN then Enter: "
+ 51 "PIN transmitted; awaiting response..."
+ 38 "Type PIN then Enter: "
+ 51 "!! Session Now Secure !!"
+ 51 "Cancel transmitted; awaiting response..."
+ 51 "!! Session No Longer Secure !!"
+
+Comm errors
+
+     "<!q> "          Overflow Queue
+     "<!c> "          Overrun Chip
+     "<!f> "          Framing
+     "<!p> "          Parity
+     "<!>  "          Unknown
+     "<PRN>"          Printer
+     "     "          Erase
+
+Validation
+
+ ** "Microstar"                - verification string - must not be changed
+
+End of file
+

@@ -1,0 +1,12 @@
+Directory MSDOS/NAPLPS/
+ Filename   Type Length   Date   Description
+==============================================
+MGE201A.ZIP   B  292974  930408  NAPLPS drawing program with many video drivers
+NALPANML.ZIP  B   36777  930408  Sample NAPLPS drawings of animals
+NAPFNTA.ZIP   B   41475  930612  Several typefaces as NAPLPS clipart
+NAPICO11.ZIP  B   37748  930415  Convert Windows 3 icons to NAPLPS bitmaps
+NAPLPS.ZIP    B   50718  930412  Complete technical specs for NAPLPS protocol
+NAPWMF08.ZIP  B  217669  930612  Convert CorelDraw clipart and fonts to NAPLPS
+PP3217A.ZIP   B  244372  930408  Terminal program to call NAPLPS BBSes
+SHOWPLP.ZIP   B   19530  930505  Add NAPLPS support to any BBS program
+TURSHOW6.ZIP  B   75503  930415  File viewer for NAPLPS images (EGA/VGA)

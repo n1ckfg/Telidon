@@ -1,0 +1,147 @@
+SHOWPLP Program (Version 2.05)
+Copyright (C) 1991 Microstar Software Ltd.
+ 
+This software works with a BBS FOSSIL to show Presentation Layer Protocol
+(PLP) frames on a caller's terminal.  This includes built-in support for
+ISO registered standard sequences for switching the terminal between the
+graphical NAPLPS syntax and a textual ASCII syntax.  To run this program
+the SYSOP composes on the command line a script of commands to control a
+standard reception terminal display mode, to display a file, to wait for
+user keystrokes, etc.  The default mode of operation of the program is to
+output and input data to and from a pre-loaded FOSSIL driver.
+ 
+The syntax for the command line is as follows:
+ 
+      SHOWPLP  { /option { /option ... } }  command  { command ... }
+ 
+The following options are available:
+ 
+ /B{ios}         - ignore fossil driver return codes; use BIOS INT 14H
+ /D{ebug}        - debug; all output to screen and input from the
+                   keyboard (default is all output and input to
+                   and from BBS fossil driver)
+ /H{elp}         - display this information on local console
+ /P#             - port number # for fossil driver (default 1)
+ /ST             - suppress titles in browse function
+ 
+The syntax for the command arguments is as follows:
+ 
+ @<filespec>     - execute single lines from automatic response file (ARF)
+                 - see the discussion below regarding ARF files
+ B<dirspec>      - browse a directory of files interactively
+ C<comment>      - command is a comment (no action)
+ F<filespec>     - send the given file
+ Hxxyyzzaabb...  - send hexadecimal sequence out (nibble pairs)
+ I               - interrupt file send on any character (default)
+ Ixx             - interrupt file send on hexadecimal character
+ IN              - no interrupt of file display
+ K               - wait for any key
+ Kxx             - wait only for hexadecimal key
+ PA              - send sequence to flush sender's and receiver's
+                   buffers and switch display to ASCII presentation
+ PN              - send sequence to flush sender's and receiver's
+                   buffers and switch display to NAPLPS presentation
+ Tnnn            - set timeout in seconds (default = 300 (5 minutes),
+                   maximum = 3600 (one hour)) for user inactivity (actual
+                   timeout approximate due to fossil timeout restrictions)
+                 - a timeout value of 0 indicates inhibit timeout
+                 - at timeout, display switched to ASCII and program exits
+                 - see the discussion below regarding timeout
+ 
+Automatic response files are ASCII edited text files containing any number
+of lines, processed in order as if they were arguments on the command
+line.  ARF files are handy when the script of commands is longer than the
+available space for a command string.  The ARF file is limited to having
+one command argument per line.  Following the command, an optional comment
+can follow a semi-colon ';' character for documentation purposes.  An ARF
+file may have any valid DOS name.
+ 
+Errors processing a command are displayed through stdmsg to the BBS
+screen without any error message displayed to the remote caller.  The
+DOS Exit Codes are: 0 == normal, 1 == help, 2 == bad fossil init
+                    3 == lost DCD, 4 == inactivity timeout
+ 
+Examples:
+ 
+  SHOWPLP Pn Ffile K Pa         - show NAPLPS file; break on any key
+  SHOWPLP Pn I0d Ffile K0d Pa   - show file; break on CR only
+  SHOWPLP Pn In Ffile K0d Pa    - show file; no break; continue with CR
+  SHOWPLP T0 Pn In Ffile1 Ffile2 Ffile3 K Pa - show many files (no timeout)
+  SHOWPLP /P2 @\files\script    - follow a set of commands in an ARF file
+  SHOWPLP Pn Bdirfiles Pa       - browse a directory of NAPLPS files and
+                                  change to ASCII when completed
+  SHOWPLP /P*P Pn Ftitle K Bdirbrw Pa - set port to *P argument, change
+                                        to NAPLPS, show title page, wait
+                                        for any key, browse directory,
+                                        change to ASCII
+  SHOWPLP "C*F *L" Pn Ffile K Pa - display comment before displaying file
+ 
+  Note that some bulletin board doorways require explicit path and extension
+  to be specified for the executing program, for example:
+ 
+    c:\ra\showplp.exe /P*P Pn Fd:\file\gallery\picture K Pa
+ 
+  The Microstar technical support bulletin board at (613)727-5272 contains
+  a number of NAPLPS Galleries that use this program through a doorway.
+ 
+Browse Directory Function:
+ 
+ When browsing a directory of files, SHOWPLP will order files in the order
+ they appear in an unsorted directory list.  After a file is displayed or
+ interrupted, the name of the file and it's sequence number is shown for
+ the user's reference.  To browse the next file in the directory, press
+ space, carriage return, 'N' for next or 'F' for forward.  To browse the
+ previous file in the directory, press 'P' for previous or 'B' for back.
+ To repeat the file currently being displayed, press 'R' for redisplay.
+ When finished browsing press 'Q' for quit or the 'Esc' key.  Digits
+ followed by a return will jump to the sequence number.  Digits followed
+ by next file or previous file commands will jump forward or back by the
+ number of frames.  Clear sequences are sent before frames if the
+ presentation is NAPLPS.
+ 
+Timeout Feature and NAPLPS Files with WAIT Constructs:
+ 
+ There is a 300 second (5 minute) default timeout specification if no
+ 'T' argument is on the command line.  The timeout restarts whenever the
+ program receives a character from the remote system or transmits a
+ character to the remote system.  For those NAPLPS files with multiple
+ WAIT constructs, it is possible for SHOWPLP to finish sending the file
+ long before the reception software finishes displaying the complete image.
+ In some cases, the timeout may trigger before the display is completed,
+ requiring the specification of a longer timeout period.
+ 
+An Important Technical Note regarding FOSSIL Flow Control:
+ 
+ There are FOSSILs that do not handle XOFF/XON handshaking correctly.
+ This can be tested by the SYSOP while connected remotely by repeatedly
+ pressing CTRL-S and CTRL-Q during a menu or other long text display.  The
+ CTRL-S will halt the display and the CTRL-Q will resume the display.  If
+ characters are lost, then the FOSSIL driver may have difficulty sending
+ long NAPLPS files to terminals that handshake frequently.  A single byte
+ lost in a NAPLPS syntax stream can destroy the visual effect of an image.
+ 
+An Important Technical Note regarding Modem Flow Control:
+ 
+ Some modems default to operate with XON/XOFF control between the two
+ modems.  If this is engaged, this will interfere with the receiver
+ software signalling the BBS software to halt transmission during, for
+ example, a long NAPLPS file.  The end result of this interference will
+ be lost data and corrupted NAPLPS images or long text files.  It is
+ imperative that the modems allow the flow control to pass between the
+ two pieces of software without interference.  Note also that the control
+ character DC4 (0x14) is a signal to some communication packages to flush
+ their input buffers.
+ 
+*********  This software is distributed as Shareware  *************
+(C) 1991 Microstar Software Ltd.  Microstar disclaims all warranties
+as to this software, whether express or implied, including without
+limitation any implied warranties of merchantability or fitness for a
+particular purpose.  A registration fee of $15. or more would be
+appreciated.  Please submit to Microstar Software Ltd., 100-34 Colonnade
+Rd. North, Nepean, Ontario, CANADA K2E-7J6 noting that it is for the
+SHOWPLP Program.  Thank you for supporting the Shareware concept.
+ 
+To page this information, execute the DOS command:      SHOWPLP | MORE
+To print this information, execute the DOS command:     SHOWPLP  >PRN
+ 
+(Remember to note this is version '2.05' that is executing)

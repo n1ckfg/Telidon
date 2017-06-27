@@ -1,0 +1,15 @@
+"F…@@ ÿÏ¡ÍÀÀÀä¾ÀÀ¼ÀÀÀÀ¾Äà¼ĞÀÀÀ¾ÉÀ¼àÀÀÀ¾Íà¼ğÀÀÀ¾ÒĞ¼ÈÀÀÀ¾Öğ¼ØÀÀÀ¾ÛĞ¼èÀÀÀ¾Üà¼ÿÿÿÿ¾àÀ¼øÿÿÿ¾äÀ¼ÒÒÒÒ¾èÀ¼ääää¾ìÀ¼öööö¾ğÀ¼ÉÉÉÉ¾ôÀ¼ÛÛÛÛ¾øÀ¼íííí¾üÀ¼øÀÀÀ¾àÀ ĞÀ£ÀÀÒÀÀ¾äÀ¢ÀÀÀÕÆí¤ÂÉìğIcons Galore!¡ÍÀÀÉÒ¤ÂÒÉè©ØÈØà¡ÍÀÀÀä¾ÉÀ¢ÀÀÀÁòÀ¤ÁîçÅMessages¤ÁëæÇFiles¤ÁèæÁGames¤ÀíåÃChat¾ÀÀ¢ÀÀÀÀåÀ¸ĞÎâÄÉØÆÈ
+This is a sample
+drawing to show how
+Windows 3.1 icons
+can be integrated
+into a NAPLPS drawing.
+The white rectangles
+are place markers
+for Windows icons
+which will be added
+later by NAPICO v 1.1
+This is a workaround
+because MGE does not
+support NAPLPS
+incremental bitmaps.¾ìÀ²ÒÀäÀÎäáÂ¾Üà³ÁÖåØÀÒÁÁ³ÁÓÚòÀÒÁÁ³ÁĞÙôÀÒÁÁ³ÀÕØöÀÒÁÁ

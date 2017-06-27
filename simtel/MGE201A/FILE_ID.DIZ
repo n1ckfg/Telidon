@@ -1,0 +1,5 @@
+The Microstar Graphics editor is a drawing program similar
+to CorelDraw that uses the standard NAPLPS format for it's
+saved drawings. NAPLPS is a compact format that is VERY
+efficient to transmit via modem and decode on the fly with
+appropriate terminal software like PP3, CTLINK, Teledraw.

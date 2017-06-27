@@ -1,0 +1,87 @@
+NAPICO version 1.1 is Copyright 1993 by Memra Software Inc.
+                      All Rights Reserved
+
+You may use this program for your own personal use and enjoyment
+with no obligation. Corporate users must make an appropriate 
+donation as outlined below.
+-----------------------------------------------------------------
+
+This is a program that will take a specially prepared NAPLPS drawing 
+and insert Windows 3 icons into it as NAPLPS incremental bitmaps. 
+The drawing has to be specially prepared in two ways. 
+
+1. It has to have the same 16-color palette that Windows
+   uses for it's icons. This means you have a limited choice
+   of colors in the drawing. You can still customise any colors
+   in the palette that are not used in your icons. In fact, you
+   can even change the colors used in the icons but then they
+   change color as well. By judicious editing of the palette, you
+   could create icon effects that are not possible in Windows, such 
+   as fountain fills (blends).
+
+2. It has to have special filled rectangles as placeholders
+   for the icons because MGE cannot deal with NAPLPS
+   incremental bitmaps. 
+
+To make this easier, I have included a file called ICOBASE.ORG
+that you can use to start a drawing. It contains the correct
+palette and it has 1 correctly sized rectangle that you can copy
+and place wherever you want an icon. If you add icons to an existing
+drawing, you must use ADD in the STORE menu of MGE to add ICOBASE.ORG
+to your drawing. The colours will all change and you will probably 
+have to EDIT them TO some new selections from the standard
+Windows palette.
+
+Once you have your drawing saved, you must run NAPICO to create
+another copy with the icons in it. Don't delete the original!
+For instance, if your original is called ICOSAMP.ORG you can
+generate a copy called ICOSAMP.NAP with icons in it by the following
+command line:
+
+   napico icosamp.org icosamp.nap mail files tap3 chat
+
+Note that the .ICO files do not have the .ICO specified on the command
+line. There is a limit of 9 icons per drawing unless you double up the
+names on the command line. Type NAPICO with no arguments to see an 
+example.
+
+Now that you have added the icons to your drawing, please remember to
+preview it with PP3 before using it just to be sure it looks OK. PP3 is
+the only terminal program I know of that supports incremental bitmaps.
+
+If you like this program I would appreciate a donation of $10 or whatever
+you feel the program is worth to you and your organisation. The money
+goes toward producing more NAPLPS oriented shareware.
+My name and address:  Michael Dillon
+                      Memra Software Inc.
+                      C-4 Powerhouse, RR #2
+                      Armstrong, BC  V0E 1B0
+                      CANADA
+
+ I can be phoned voice at (604) 546-8022
+          I have a BBS at (604) 546-2705  Nice NAPLPS Art samples here
+     My BBS is in Fidonet 1:353/350
+I am also on the Internet mpdillon@halcyon.halcyon.com
+  Internet via Compuserve >INTERNET:mpdillon@halcyon.halcyon.com
+
+If you can't afford to pay anything and you are an artist, you might 
+consider encoding some of your original NAPLPS artwork with the
+DBGSCR program enclosed and netmailing it to me on Fidonet via
+one of your local BBS'es. Ask your local sysop for help with netmail.
+
+You type DBGSCR IMAGE.NAP IMAGE.SCR
+to create a debug script called IMAGE.SCR. This file can be included
+in e-mail/netmail messages. At the receiving end type
+DEBUG <IMAGE.SCR to reconstitute the original file IMAGE.NAP.
+
+PS. If you are interested in the technical specs for NAPLPS, then 
+    FREQ NAPLPS.ZIP from 1:353/350 or dial 1-604-546-2705 and
+    download NAPLPS.ZIP from the DOS.BBS file area. First time
+    callers may download. The file is approx. 50k bytes.
+
+    Another conversion program will be released at the beginning of
+    May 1993. NAPWMF will convert Windows metafiles created by CorelDraw
+    into NAPLPS. The logo in MEMRA2.NAP was created using an early
+    beta version of this program. The 1.0 version will create smaller
+    files and future programs will convert .WMF files created by
+    other drawing programs as well.

@@ -1,0 +1,171 @@
+
+README.MGE  August 13, 1991 (1600)
+MGE(R) (Shareware) Version DM2.01a
+
+This is the *SHAREWARE* version of MGE.
+
+         (C) 1991 Microstar Software Ltd.  Microstar disclaims all
+         warranties as to this software, whether express or implied,
+         including without limitation any implied warranties of
+         merchantability or fitness for a particular purpose.  See
+         the end of this file for further disclaimers.
+
+You are welcome to copy and distribute these files for non-commercial use
+provided all of the files are included and none are modified in any way.  If
+you find this program useful, a registration fee of $50 per copy would be
+appreciated.  If you send $75 or more, you will receive a printed manual and
+information on our other NAPLPS based products and services.  With your
+cheque, VISA (number and expiry date), or money order, please include your
+name, address, phone number, software version, and where you obtained this
+software.  To help us meet your future needs, you may wish to briefly
+describe how and where you use this software.  Please send your registration
+to 100-34 Colonnade Road North, Nepean, Ontario CANADA K2E-7J6.
+
+
+                             Table of Contents
+
+         1.0  Use of the Program
+         2.0  Program Setup and Screen Drivers
+         3.0  Starting MGE
+         4.0  Hot Keys
+         5.0  Limited Warranty
+
+1.0  Use of the Program
+
+MGE is the Microstar Graphics Editor, a graphics creation package that lets
+you create vivid, high resolution, full color drawings using standard PC
+hardware.  The drawings conform to the NAPLPS standard and can be transmitted
+and received using Microstar's communication product, Personality+III(R).
+
+
+2.0  Program Setup and Screen Drivers
+
+You must prepare MGE to run on your hardware.  Use the setup program, MGESET,
+to choose a driver for the graphics card in your computer.  Type MGESET,
+followed by the driver name. This may be followed by an argument.
+
+         examples:       MGESET VGA640
+                         MGESET HER720 +AB000
+
+The following screen drivers are included with MGE:
+(Note that various trademarks and copyrights for the graphics boards are
+owned by their respective manufacturers.)
+
+CGA640.SCR     640x200 B&W (colours mimicked with dither patterns)
+               CGA Mode 06 graphics mode.
+EGA640.SCR     640x350 16 out of 64 colours with blink
+               EGA Mode 10 graphics mode; 256K video memory required
+HER720.SCR     720x348 B&W (colours mimicked with dither patterns)
+               Hercules graphics mode
+               Default arguments:       +AB000    (or +AB800)
+TARGA16.SCR    512x400 256 out of 32,768 colours without blink
+               Truevision Targa 16 graphics mode
+               Default arguments:       +AA000    (or +Aaddress)
+                                        +P220     (or +Pport)
+VGA640.SCR     640x480 16 out of 262,144 colours with blink
+               VGA Mode 12 graphics mode
+
+
+3.0  Starting MGE
+
+To start MGE, make sure you have connected a mouse to your computer and that
+you have run the mouse driver software.  At the DOS prompt, type MGE and
+press <Enter>. MGE displays some startup messages, clears the screen and
+displays the MAIN menu.
+
+If the MAIN menu does not appear when you start MGE, it is likely that you
+selected the wrong driver when you ran MGESET.  Run MGESET again and select
+a different driver.
+
+Use the mouse to select menu items, draw objects and to pick and manipulate
+objects. On a three button mouse the left button is <Start>, the middle
+button is <Undo> and the right button is <End> or <Pick>.  On a two button
+mouse the left button is <Start>, the right button is <End> or <Pick>, and
+the two buttons pressed together are <Undo>.
+
+4.0  Hot Key
+
+Many of the menu items in MGE have "hot key" equivalents.  The MAIN menu hot
+keys are shown on the menu. The other hot keys are listed below.
+
+General:
+Esc      MAIN menu
+F2       Undo
+F3       Start
+F4       End or Pick
+F9       Check Box (accept)
+F10      Cross Box (reject)
+PgUp     Mouse Faster
+PgUp     Mouse Slower
+Arrows   Move Cursor
+Alt+Z    Pick All
+Alt+U    Unpick All
+Alt+F    Fast Move On/Off
+
+DRAW Menu:
+Alt+A    Surround
+Alt+B    Be
+Alt+F1   Point
+Alt+F2   Line
+Alt+F3   Unfilled Arc
+Alt+F4   Filled Arc
+Alt+F5   Unfilled Rectangle
+Alt+F6   Filled Rectangle
+Alt+F7   Unfilled Polygon
+Alt+F8   Filled Polygon
+Alt+F9   Unfilled Circle
+Alt+F10  Filled Circle
+Alt+T    Type
+Alt+L    Cursor Coordinates On/Off
+Alt+V    Cursor Coordinates Pixels/Domain
+
+EDIT menu:
+Alt+C    Copy
+Alt+D    Delete
+Alt+N    Change
+Alt+E    Modify
+
+XPERT menu:
+Alt+G    GRID menu
+Alt+S    Snap On/Off
+Alt+K    Confine On/Off
+Alt+P    Pan On/ Off
+Alt+I    Index
+F5       Grow
+F6       Replay
+F7       Shrink
+F8       Grid
+
+Text Editing:
+Alt+1    Accute Accent
+Alt+2    Umlaut
+Alt+3    Grave Accent
+Alt+4    Cedilla
+Alt+5    Tilde
+Alt+6    Circumflex
+Ins      Insert/Overwrite
+Del      Delete Current Character
+Bcksp    Delete Previous Character
+Ctrl+X   Delete Line
+Enter    Insert Line/Move to Next Line
+
+Vertex Editing:
+Ins      Insert New Vertices
+Del      Delete Vertex
+
+
+5.0  Limited Warranty
+
+The programs are provided "AS IS" without any warranty or condition, express
+or implied, including but not limited to the implied warranties or conditions
+of merchantable quality and fitness for a particular purpose and those
+arising by statute or otherwise in law or from a course or dealing or usage
+of trade.  The entire risk as to the quality and performance of the program
+is with you.  Should the program prove defective, you (and not Microstar or
+an authorized Microstar dealer) assume the entire cost of all necessary
+servicing, repair or correction.  Without limiting the foregoing, Microstar
+does not warrant that the functions contained in the program(s) will meet
+your requirements or that the operation of the program(s) will be
+uninterrupted or error free.
+
+
