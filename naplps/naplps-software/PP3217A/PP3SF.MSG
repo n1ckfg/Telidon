@@ -1,0 +1,279 @@
+Message file for Personality+III (Shareware Version)
+Copyright (C) 1991 Microstar Software Ltd.
+
+
+French version - __MPSF2C
+
+Each line begins with a number with is the maximum length the line can be,
+except where the number is prefixed by ~ to indicate average parameter length.
+Each string is enclosed in double quotes.  Each character is in single quotes.
+All information not in quotes are commentary and are not used by the program
+
+******************************************************************************
+
+ 79 "Service invalide."
+ 79 "Option invalide."
+ 79 "Fichier de message implicite manque."
+ 79 "L'interface MVDI(mc) n'est pas install‚e."
+ 79 "M‚moire insuffisante."
+
+Title page - program name at top of screen
+           - non-graphical title page lines
+           - bars, date and time
+
+ 79 " Personnalit‚+III (S) "
+ 74 " "
+ 74 " "
+ 74 " "
+ 74 " "
+ 35 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ 80 " "
+ ** "º "
+ ** " º"
+ ** "ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»"
+ ** "ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼"
+ ** "ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍË"
+ ** "º                                      º"
+ ** "                                       º"
+ ** "ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊ"
+ ** "ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ"
+ ** "ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ"
+  8 "Date: "
+  8 "Heure: "
+
+Service directory - waiting for service prompt and 4 lines help
+                  - got a service prompt and 4 lines help
+                  - profile prompts
+                  - profile problem messages
+                  - program exit prompt
+
+ 35 "RPERTOIRE DE SERVICE"
+ 30 "Choisir un service:   "
+ 74 "                                                                       "
+ 74 "Appuyez sur - 1 … 0 - pour cr‚er ou choisir un service             "
+ 74 "            - SORTI (F9) - pour sortir de Personnalit‚+III          "
+ 74 "                                                                     "
+ 35 "S‚lection de service: "
+ 74 "Appuyez sur - SUITE (F7)           - pour modifier le profil de service"
+ 74 "            - ENVOI (F8) ou Entrer - pour le branchement au service"
+ 74 "            - SORTI (F9)           - pour sortir de Personnalit‚+III"
+ 74 "            - 1 … 0                - pour cr‚er ou choisir un service"
+  3 "1 -"
+  3 "2 -"
+  3 "3 -"
+  3 "4 -"
+  3 "5 -"
+  3 "6 -"
+  3 "7 -"
+  3 "8 -"
+  3 "9 -"
+  3 "0 -"
+ 35 "ProblŠme avec le fichier de service"
+ 35 "Fichier de service introuvable"
+ 35 "Confirmer retour … DOS [O/N]? "
+ ** 'O'            - request to exit to DOS (upper case)
+ ** 'o'            - request to exit to DOS (lower case)
+ ** 'N'            - request to stay in program (upper case)
+ ** 'n'            - request to stay in program (lower case)
+
+Entry names and default modem sequences
+
+<=40 "ATDT                                  ^M"    Normal Dial
+
+Service profile - 4 lines help
+
+ 35 "PROFIL DE SERVICE"
+ 74 "Appuyez sur - MENU  (F6) - pour retourner au r‚pertoire de service"
+ 74 "            - ANNUL (F3) - pour retourner sans sauvegarder"
+ 74 "            - SUITE (F7) - pour modifier les touches d'utilisateur"
+ 74 "            - flŠches,Ins,Del,Backspace,Esc - pour modifier les paramŠtres"
+
+Service profile parameters - 4 basic profile element prompts
+                           - options for 4 basic prompts
+
+ 22 "       Nom de service:"
+ 22 "S‚quence de connexion:"
+ 22 "        Point d'accŠs:"
+ 22 "     Baud/vitesse/bps:"
+ ~8 "Local"
+ ~8 "COM1"
+ ~8 "COM2"
+ ~8 "COM3"
+ ~8 "COM4"
+    "     "
+ ~8 "300"
+ ~8 "1200"
+ ~8 "2400"
+ ~8 "4800"
+ ~8 "9600"
+ ~8 "19200"
+    "     "
+
+Service profile framing
+
+ 22 "  Parit‚/Donn‚e/Arrˆt:"
+ ~9 "Aucun/8/1"                - no parity, 8 data bits, 1 stop bit
+ ~9 "Pair/7/1"                 - even parity, 7 data bits, 1 stop bit
+ ~9 "Impair/7/1"               - odd parity, 7 data bits, 1 stop bit
+ ~9 "Sauter/7/1"               - ignore parity, 7 data bits, 1 stop bit
+
+Service profile parameters - 6 other profile element prompts
+                           - options for 6 other prompts
+
+ 22 "     Mode de dialogue:"
+ 22 "  Message du terminal:"
+ 22 "   cho de caractŠres:"
+ 22 " Type de commande ASC:"
+ 22 "  Changement de ligne:"
+ 22 " Type de commande VTX:"
+ ~9 "Aucun"                    - no handshake
+ ~9 "Minimum"                  - minimal handshake
+ ~9 "Int‚gral"                 - full handshake
+ ~9 "Partiel"                  - subset handshake
+ 26 "Oui(Duplex Semi)"         - echo characters entered
+ 26 "Non(Duplex Int‚gral)"     - do not echo characters entered
+ 26 "Ligne"                    - ASCII - line oriented input
+ 26 "CaractŠre"                - ASCII - character oriented input
+ 26 "Normal"                   - ASCII - no automatic linefeed after CR
+ 26 "Automatique"              - ASCII - automatic linefeed after CR
+ 26 "Ligne"                    - NAPLPS Command Line - line oriented input
+ 26 "CaractŠre"                - NAPLPS Command Line - character oriented input
+
+Service user keys - 3 lines help
+                  - user key prompts
+
+ 35 "TOUCHE D'UTILISATEUR DU SERVICE"
+ 74 "Appuyez sur - MENU   (F6) - pour retourner au r‚pertoire de service"
+ 74 "            - ANNUL  (F3) - pour retourner sans sauvegarder"
+ 74 "            - RETOUR (F5) - pour retourner au profil de service"
+ 74 "            - flŠches,Ins,Del,Backspace,Esc - pour modifier les paramŠtres"
+  7 "* S+F1 "
+  7 "* S+F2 "
+  7 "* S+F3 "
+  7 "* S+F4 "
+  7 "* S+F5 "
+  7 "* S+F6 "
+  7 "* S+F7 "
+  7 "* S+F8 "
+  7 "  S+F9 "
+  7 "  S+F10"
+ 79 "* Non disponible si le mode de dialogue est Partiel"
+
+File errors
+     -----------------------------------
+ 35 "R‚essayer/Cr‚er/Abandonner[R/C/A]? "          - for service directory
+ 35 "Erreur d'ouverture"
+ 35 "R‚essayer/Abandonner[R/A]? "
+ 35 "Fichier existe"
+ 35 "R‚essayer/Abandonner[R/A]? "
+ 35 "Erreur de lecture"
+ 35 "R‚essayer/Abandonner[R/A]? "
+ 35 "Erreur d'‚criture"
+ 35 "R‚essayer/Abandonner[R/A]? "
+ 35 "Erreur de fermeture"
+ 35 "R‚essayer/Abandonner[R/A]? "
+ ** 'A'                              - abort (upper case)
+ ** 'a'                              - abort (lower case)
+ ** 'C'                              - create (upper case)
+ ** 'c'                              - create (lower case)
+ ** 'R'                              - replace (upper case)
+ ** 'r'                              - replace (lower case)
+ ** 'R'                              - retry (upper case)
+ ** 'r'                              - retry (lower case)
+
+File Miscellaneous
+
+ ** ">"                              - delimeter character before user input
+ ** '>'                              - delimeter character before user input
+ ** "<"                              - delimeter character after user input
+ ** '<'                              - delimeter character after user input
+ 21 "Fichier: "   - general purpose prefix
+
+File Capture and Display information
+
+ 50 "Sauvegarder donn‚es saisies ou ®en entr‚e¯ [S/E]><"
+ ** 'E'                              - future download (upper case)
+ ** 'e'                              - future download (lower case)
+ ** 'S'                              - past download (upper case)
+ ** 's'                              - past download (lower case)
+
+ 51 "®En entr‚e¯; saisie de donn‚es en surcharge"
+ 51 "®En entr‚e¯; aucune donn‚e saisie"
+ 51 "Tapez le nom du fichier … sauvegarder:"
+ 21 "Saisie     >"   - file prompt (requesting) for past download
+ 21 "D'entr‚e   >"   - file prompt (requesting) for future download
+ 21 "Saisie     >"   - file prefix (reporting) for past download
+ 21 "D'entr‚e   >"   - file prefix (reporting) for future download
+ 51 "Aucun sauvegarde de fichier en cours."
+
+Printer
+
+ 51 "L'imprimante"   - used in place of file prefix and file name in error
+ 51 "L'imprimante: pas de papier"   - used as above for no paper
+
+Display
+
+ 51 "Tapez le nom du fichier … afficher:"
+ 21 "Affichage  >"   - file prompt (requesting) for display
+ 51 "Tapez le num‚ro du dernier fichier dans le tableau"
+ -- "           "   - ***** this must be 1 less than length of file prompts *****
+ 46 "Tapez le temps en secondes entre les fichiers "
+ 21 "Affichage  >"   - file prefix (reporting) for display
+ 51 "Aucun affichage/de transmission en cours"
+ 51 "Appuyez sur n'importe quelle touche pour continuer"
+
+File Send and Send/Display
+
+ 51 "Tapez m‚thode et nom … transmettre"
+ 21 "Transmettre>"   - file prompt (requesting) for send
+ 21 "Transmettre>"   - file prefix (reporting) for send
+
+ 51 "Tapez m‚thode et nom … transmettre / … afficher"
+ 21 "Transm/Affi>"   - file prompt (requesting) for send/display
+ 21 "Transm/Affi>"   - file prefix (reporting) for send/display
+
+ 49 "Convertir et marquer la fin des lignes [O/N]?>"  - request for text/binary
+ ** 'N'                                    - response for binary (upper case)
+ ** 'n'                                    - response for binary (lower case)
+ ** 'O'                                    - response for text (upper case)
+ ** 'o'                                    - response for text (lower case)
+
+Encryption
+
+ 51 "Encore une fois pour … ‚tablir la s‚ance"
+ 38 "Tapez le NIP du pair puis Retour: "
+ 51 "Le NIP transmis, attendant r‚ponse..."
+ 38 "Tapez le NIP puis Retour: "
+ 51 "!! la s‚ance ‚tablie !!"
+ 51 "Le annulation transmise, attendant r‚ponse..."
+ 51 "!! la s‚ance n'est plus en cours !!"
+
+Comm errors
+
+     "<!q> "          Overflow Queue
+     "<!c> "          Overrun Chip
+     "<!f> "          Framing
+     "<!p> "          Parity
+     "<!>  "          Unknown
+     "<PRN>"          Printer
+     "     "          Erase
+
+Validation
+
+ ** "Microstar"                - verification string - must not be changed
+
+End of file
+
