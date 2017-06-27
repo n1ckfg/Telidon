@@ -4,6 +4,7 @@ https://www.leadtools.com/help/leadtools/v19/main/api/napfmt.html
 http://fileformats.archiveteam.org/wiki/NAPLPS
 http://www.martinreddy.net/gfx/2d/NAP.txt
 http://ascii.cl/control-characters.htm
+https://stackoverflow.com/questions/36519977/how-to-convert-string-into-a-7-bit-binary
 
 "NAPLPS defines line, box, circle, arc, polyline, polygon, spline, bitmaps, and fonts, both in 
 palette and 24-bit color...as a stream of 7-bit or 8-bit ASCII characters. The coordinate model 
@@ -13,15 +14,13 @@ sequence ESC 25 40 [27 25 40]. NAPLPS code sequences are designed with an eye to
 terminal escape sequences such as those provided by VT100 and ANSI. NAPLPS files are basically 
 segments of the NAPLPS data stream redirected to a file. Properly formatted, NAPLPS data files 
 are not unlike uuencoded binary files."
-
-NOTES
-
 */
 
-byte b[];
 String[] lines;
+int[] ints;
 
 PImage img;
+int byteSize = 7;
 int imgWidth = 28;
 int imgHeight = 16;
 int imgScale = 20;
@@ -31,17 +30,18 @@ String text = "";
 void setup() {
   size(50, 50);
   surface.setSize(imgWidth * imgScale, imgHeight * imgScale);
-  b = loadBytes("boom.nap");
-  println("bytes: " + b.length);
+  lines = loadStrings("image.001");
+  ints = decoder(encodeToNBits(lines[0], byteSize), byteSize);
+  println("bytes: " + ints.length);
   img = createImage(imgWidth*100, imgHeight, RGB);
   img.loadPixels();
   
-  for (int i=0; i<b.length; i++) {
-    img.pixels[i] = b[i];
+  for (int i=0; i<ints.length; i++) {
+    img.pixels[i] = color(ints[i] * 255);
     if (i==0) {
-      text += b[i];
+      text += ints[i];
     } else {
-      text += " " + b[i];
+      text += " " + ints[i];
     }
   }
   
@@ -50,5 +50,33 @@ void setup() {
 }
 
 void draw() {
+  background(0);
   image(img, 0, 0, width, height);
+}
+
+byte[] encodeToNBits(String str, int n) {
+    byte[] bytes = new byte[str.length() * n];
+    for (int i = 0; i < str.length(); i++) {
+        char ch = str.charAt(i);
+        assert ch < int(pow(2,n));
+        for (int j = 0; j < n; j++) 
+            bytes[i * n + j] = (byte) ((ch >> (n - j)) & 1);
+    }
+    return bytes;
+}
+
+int[] decoder(byte[] b, int n) {
+  ArrayList intsL= new ArrayList();
+  for (int i=0; i<b.length; i+=n) {
+    String s = "";
+    for (int j=0; j<byteSize; j++) {
+      s += b[i+j];
+    }
+    intsL.add(unbinary(s));
+  }
+  int[] ints = new int[intsL.size()];
+  for (int i=0; i<ints.length; i++) {
+    ints[i] = (int) intsL.get(i);
+  }
+  return ints;
 }
