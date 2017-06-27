@@ -15,19 +15,19 @@ segments of the NAPLPS data stream redirected to a file. Properly formatted, NAP
 are not unlike uuencoded binary files."
 */
 
-String filePath = "nap/image.001.nap";
+String filePath = "nap/image.003.nap";
 byte bytes[];
-String[] strings;
-int byteSize = 7;
-String debugText = "";
+String[] stringsNumeric;
+String[] stringsAscii;
+int byteSize = 8;
 
 void setup() {
   size(640, 480);
   bytes = loadBytes(filePath);
-  //strings = decodeNBits(readNBits(new String(bytes), byteSize), byteSize);
-  strings = splitByNumber(new String(bytes), byteSize);
-  println("bytes: " + strings.length);
-  println(strings);
+  stringsNumeric = splitByChar(decodeNBits(readNBits(new String(bytes), byteSize), byteSize), "?!#");
+  stringsAscii = splitByNum(new String(bytes), byteSize);
+  println(stringsNumeric);
+  println(stringsAscii);
 }
 
 void draw() {

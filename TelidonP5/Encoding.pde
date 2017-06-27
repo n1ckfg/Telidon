@@ -42,6 +42,10 @@ String getCharFromInt(String s, int n) {
   return returns;
 }
 
-String[] splitByNumber(String s, int n) {
+String[] splitByNum(String s, int n) {
     return s.split("(?<=\\G.{" + n + "})");
+}
+
+String[] splitByChar(String[] s, String delim) {
+    return splitTokens(join(s, ""), delim);
 }
