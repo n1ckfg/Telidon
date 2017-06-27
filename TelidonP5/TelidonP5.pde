@@ -17,6 +17,7 @@ are not unlike uuencoded binary files."
 */
 
 String[] lines;
+String[] strings;
 int[] ints;
 
 PImage img;
@@ -30,9 +31,11 @@ String text = "";
 void setup() {
   size(50, 50);
   surface.setSize(imgWidth * imgScale, imgHeight * imgScale);
-  lines = loadStrings("image.001");
-  ints = decoder(encodeToNBits(lines[0], byteSize), byteSize);
+  lines = loadStrings("nap/image.001.nap");
+  ints = decoderInt(encodeToNBits(lines[0], byteSize), byteSize);
+  strings = decoderStr(encodeToNBits(lines[0], byteSize), byteSize);
   println("bytes: " + ints.length);
+  println(strings);
   img = createImage(imgWidth*100, imgHeight, RGB);
   img.loadPixels();
   
@@ -65,18 +68,45 @@ byte[] encodeToNBits(String str, int n) {
     return bytes;
 }
 
-int[] decoder(byte[] b, int n) {
+byte[] encodeTo7Bits(String str) {
+    byte[] bytes = new byte[str.length() * 7];
+    for (int i = 0; i < str.length(); i++) {
+        char ch = str.charAt(i);
+        assert ch < 128;
+        for (int j = 0; j < 7; j++) 
+            bytes[i * 7 + j] = (byte) ((ch >> (7 - j)) & 1);
+    }
+    return bytes;
+}
+
+int[] decoderInt(byte[] b, int n) {
   ArrayList intsL= new ArrayList();
   for (int i=0; i<b.length; i+=n) {
     String s = "";
     for (int j=0; j<byteSize; j++) {
       s += b[i+j];
     }
-    intsL.add(unbinary(s));
+    intsL.add(int(s));
   }
   int[] ints = new int[intsL.size()];
   for (int i=0; i<ints.length; i++) {
     ints[i] = (int) intsL.get(i);
   }
   return ints;
+}
+
+String[] decoderStr(byte[] b, int n) {
+  ArrayList stringsL= new ArrayList();
+  for (int i=0; i<b.length; i+=n) {
+    String s = "";
+    for (int j=0; j<byteSize; j++) {
+      s += b[i+j];
+    }
+    stringsL.add(hex(byte(int(s))));
+  }
+  String[] strings = new String[stringsL.size()];
+  for (int i=0; i<ints.length; i++) {
+    strings[i] = (String) stringsL.get(i);
+  }
+  return strings;
 }
