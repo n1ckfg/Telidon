@@ -1,0 +1,790 @@
+https://groups.google.com/forum/#!topic/alt.bbs/jFgKRCoBedA
+
+I picked this up from the Fido ONLINE_GRAPHICS echo which is available
+from the host at 1:153/951
+----------------------------------------------------------------------
+Following Messages include detailed descriptions of Files Available From
+1:153/951 (604)966-5815 V.32
+
+Freq Limits are set at 100 Files, 2 Hours, 10 Megs Per Session, 23 Hours per
+day.  (In other words, take whatever you want)
+
+For Direct Logons, First Time Downloads are permitted to the Tune of 2 Hours, 6
+Megs Per Session.
+
+If you have related Files that are NOT in these lists, please post a
+description (including FILE SIZE), and node number, freq details, direct logon
+details.
+
+Thanks
+
+
+                                            Richard
+
+ ----------------------------------------------------------------------------
+                                 NAPLPS FILES
+ ----------------------------------------------------------------------------
+BMP2NAP1.ZIP   26678 07-06-93  [0002] Convert BMP files to NAPLPS format for
+                                      instant/interactive/online viewing. 
+                                      Option for number of colours, etc.
+DENAP.ZIP      31624 10-23-90  [0006] Dis-assemble NAPLPS Files
+FONTS.ZIP      23682 03-18-93  [0001] NAPLPS character sets.... not DRCS
+                                      (Dynamically Redefinable Character Sets)
+                                      fonts
+GIF2NAP3.ZIP   80660 08-11-93  [0007] Converts *256* Colour GIFs to NAPLPS
+                                      format for instant, interactive, online
+                                      viewing, integration with text, etc. 
+                                      Perfect for Missing-Child Pics, Online
+                                      Catalogs, Real-Estate, etc.
+J-NAP.ZIP     196121 05-29-89  [0006] Collection of Japanese NAPLPS utilities
+                                      and images.
+JNAPPRG.ZIP   154381 05-19-92  [0000] Japanese NAPLPS drawing and other
+                                      utilities from ASCII-net. These are very
+                                      techie programs, mostly of interest to
+                                      people who want to understand the NAPLPS
+                                      codes, or generate pictures from a
+                                      program.  Seems to be part of J-NAP file.
+MGESHARE.ZIP  284420 08-20-92  [0009] MGE graphics editor for drawing NAPLPS
+                                      format
+MSTAR.ZIP     533082 11-04-92  [0003] Microstar's NAPLPS demo.  Colour JPEG
+                                      Support.  Impressive!
+NAPAPI10.ZIP  339662 07-13-93  [0005] Standalone NAPLPS Demo + Interpreter for
+                                      Turbo Pascal 7.0.  Adds NAPLPS Display
+                                      capabilities to TP7.0 Programs.  Demo
+                                      shows commercial/sales examples,
+                                      animations.  By John M. Beck.  Careful
+                                      with the FileName -  that's I1 (eye/one).
+NAPICO11.ZIP   38218 04-04-93  [0004] NAPICO will convert windows icons to
+                                      NAPLPS
+NAPLPS.ZIP     51189 04-04-93  [0028] Detailed explanation of NAPLPS format.
+                                      By Michael Dillon
+NAPLPSRA.ZIP   20380 03-24-92  [0004] Information on how to implement NAPLPS
+                                      under RA.
+NAPTERM1.ZIP  295509 08-08-92  [0007] NAPS 1.0-TP NAPLPS Compatible Terminal
+                                      Program for TBBS.  By Advanced Systems
+                                      Research, Inc., Reno.
+NAPWMF09.ZIP  219911 08-24-93  [0011] CorelDraw to NAPLPS Converter for
+                                      clipart and fonts.
+P2NV02.ZIP     15830 04-27-93  [0003] PCXtoNAP V0.2  PCX to NAPLPS conversion.
+                                      Will do only 16 Colours, vs 256 for
+                                      V1.0, needs NCV.EXE from J-NAP.ZIP
+                                      archive to work.  Good to have both V0.2
+                                      AND V1.0, as they offer different
+                                      capabilities.
+P2NV1.ZIP      17129 07-05-93  [0005] PCXtoNAP V1.0  PCX to NAPLPS conversion.
+                                      Now more compact output and up to 256
+                                      Colours!  *note P2NV1.ZIP is NEWER, more
+                                      advanced than P2NV02.ZIP  (V1.0 vs V0.2)
+PCP_PP3.DOC     4887 01-22-93  [0003] How to set up the PP3 NAPLPS Terminal as
+                                      an external protocol under ProComm.
+PP3SHARE.ZIP  235985 05-28-92  [0009] MicroStar Personality+III Terminal
+                                      program for use with NAPLPS Graphics.
+SHOWPLP.ZIP    16495 07-03-92  [0008] Use with FOSSIL Driver to show NAPLPS
+                                      Pics.
+TB119.ZIP     366569 05-31-93  [0001] TurBoard NAPLPS/RIP/ANSI/ASCII BBS
+TB120.ZIP     378617 07-02-93  [0005] TurBoard NAPLPS/RIP/ANSI/ASCII BBS
+TM119.ZIP      74811 05-22-93  [0007] TurModem V1.19  NAPLPS/ANSI/ASCII
+                                      Terminal
+TM122.ZIP     147193 09-10-93  [0005] TurModem V1.22  NAPLPS/ANSI/ASCII
+                                      Terminal Download this to view the
+                                      pictures in the NAPLPS art gallery off
+                                      the main menu here.
+TURKIT01.ZIP   56795 04-30-93  [0005] NAPLPS API Toolkit PRE RELEASE version.
+                                      Includes source code to TURSHOW. 
+                                      Toolkit contains TP7 TPU unit to decode
+                                      NAPLPS codes to CGA, EGA, VGA, & most
+                                      SVGA modes including 256 color modes!
+TURSHOW7.ZIP   70459 05-22-93  [0003] TurShow V7.0 DOS Command NAPLPS Viewer
+TURSHOW8.ZIP   70363 07-02-93  [0005] TurShow V8.0 DOS Command NAPLPS Viewer
+ --------------------------------------------------------------------------
+      Above Shareware NAPLPS executable files are for the IBM platform
+           Following are sources for some non-IBM NAPLPS Terminals
+ ----------------------------------------------------------------------------
+ CTLink IBM/Mac ASCII/ANSI/NAPLPS terms   Tam-Tam Mac/Amiga ASCII/ANSI/NAPLPS
+ CTL Communications, Inc                  C.I. Mac Gregor Inc.
+ 611 Broadway, Suite 430                  P.O. Box 125
+ New York, NY 10012                       Station E
+                                          Montreal, Quebec, Canada H2T 3A5
+
+ TGS Telidon Graphics System for Apple II
+ (Vendor unknown)
+
+ ----------------------------------------------------------------------------
+                               NAPLPS PICTURES
+ ----------------------------------------------------------------------------
+APPLS.NAP       2536 03-09-93  [0000] Excellent Quality!  Household
+                                      Appliances.  Amazingly fine detail for
+                                      such a small pic.   A drawing, but
+                                      almost photo-like.  From NAPART1.ZIP
+ART.NAP        16945 06-16-93  [0000] Artist working on a picture.  Created
+                                      with CorelDraw, NAPWMF and MGE.  From
+                                      SAMPBBS.ZIP
+BALLS.NAP        698 03-20-93  [0000] Animated Bouncing Balls.  From
+                                      NAPART1.ZIP
+BEACH.NAP       1620 09-12-92  [0000] Beach Scene - ad for Turboard.  From
+                                      NAPART1.ZIP
+BIKE.NAP        1518 03-09-93  [0000] Light-Blue/Crimson/Purple Bike with
+                                      Animated Spinning Wheels.  From
+                                      NAPART1.ZIP
+BITBUILD.NAP   34316 08-18-92  [0000] Photo-realistic pic of European street
+                                      scene.  Classic building, statue, cars. 
+                                      Good Quality!  From NAPART1.ZIP
+CANADA.NAP       140 03-09-93  [0003] The Canadian flag in NAPLPS format.
+CHARGE.NAP      2367 04-01-87  [0000] Visa, MasterCard, American Express
+                                      Cards.  From NAPART1.ZIP
+EAGLE1.NAP      6818 01-20-93  [0000] Eagle on U.S. Flag.  From NAPART1.ZIP
+EDUC.NAP        7099 06-19-93  [0000] Group of kids in front of Electronic
+                                      "blackboard/screen".  Created with
+                                      CorelDraw, NAPWMF and MGE.  From
+                                      SAMPBBS.ZIP
+EMAIL.NAP       8893 06-13-93  [0000] Satellite Dish.  Created with CorelDraw,
+                                      NAPWMF, and MGE.  From NAPBBS.ZIP
+FISHMENU.NAP    2148 11-23-92  [0000] Turboard Main Menu with colourful fish
+                                      blowing bubbles.  From NAPART1.ZIP
+FLORIST.NAP     1551 09-05-92  [0000] Viewtron Menu for Dolly's Florist - with
+                                      Orchids.  From NAPART1.ZIP
+FLRFRAME.NAP   12873 09-06-92  [0000] Fancy Art Gallery Frame.  Nice.  From
+                                      NAPART1.ZIP
+GIRL.NAP        6470 05-21-92  [0000] Japanimation Cartoon Girl.  From
+                                      NAPART1.ZIP
+GIRL7.NAP       3405 03-07-88  [0000] Japanamation type girl in green.  From J-
+                                      NAP.ZIP
+GLOBE.NAP       1204 05-06-92  [0000] Spinning Blue Globe/Grid with Gold Logo
+                                      Plate.  From NAPART1.ZIP
+HALLEYS.NAP     2347 05-21-92  [0000] Animated Halley's Commet with arrows,
+                                      explanatory labels.  From NAPART1.ZIP
+HALOWCAT.NAP    1644 10-14-92  [0000] Black cat with yellow eyes and bat
+                                      against full yellow moon.  From
+                                      NAPART1.ZIP
+HARRIS.NAP      3697 08-08-92  [0000] Animated graphic/text screen explaining
+                                      NAPLPS.  By Randy Harris.  From
+                                      NAPART1.ZIP
+HAUNT.NAP       2461 06-30-93  [0000] Haunted house... Perfect for Halloween! 
+                                      Created with CorelDraw, NAPWMF, and MGE.
+                                      From MORENAP.ZIP
+HAWK2.NAP       5520 03-15-88  [0000] Hawk on a limb.  This version has a
+                                      beak.  From J-NAP.ZIP
+IBMMENU.NAP      704 08-18-92  [0000] IBM Videotex menu.  Green, orange, blue
+                                      blocks.  From NAPART1.ZIP
+ICOSAMP.NAP     3282 03-18-93  [0000] Sample of sharp/crisp letter/filing-
+                                      cabinet/games icons with explanation. 
+                                      From NAPART1.ZIP
+KAO.NAP         3889 05-21-92  [0000] Woman's face.  By Juan Gotoh.  From
+                                      NAPART1.ZIP
+LADIES.NAP      4784 03-09-93  [0000] 2 women modelling fashions.  Example of
+                                      an "online stores" catalog.  From
+                                      NAPART1.ZIP
+MARI.NAP        5453 11-19-92  [0000] Marilyn Monroe - black and white drawing
+                                      of face.  From NAPART1.ZIP
+MENSWR.NAP      4365 03-09-93  [0000] Menswear fashion pics.  2 shirts, shoe,
+                                      sportsjacket.  Another "online stores"
+                                      example.  From NAPART1.ZIP
+MICK.NAP        4676 12-18-92  [0000] Mick Jagger.  From NAPART1.ZIP
+MONYTOOL.NAP    2127 06-09-93  [0000] Moneybag, Pliers, and Screwdriver. 
+                                      Created with CorelDraw, NAPWMF, and MGE.
+                                      From NAPBBS.ZIP
+REALESTA.NAP    4344 05-14-92  [0000] Viewtron/Century 21 ad screen with
+                                      picture of house.  Demo graphic from
+                                      MicroStar.  From NAPART1.ZIP
+REFRESH.NAP     3736 05-21-92  [0000] Japanimation Girl drinking orange
+                                      refreshment.  From NAPART1.ZIP
+SANTA.NAP       5127 12-17-92  [0000] Santa crawling down a chimney with sack
+                                      of toys.  From NAPART1.ZIP
+SHARON.NAP     16306 12-21-92  [0000] Photorealistic pic of Sharon's face. 
+                                      From NAPART1.ZIP
+SHRHOADS.NAP    1392 07-06-92  [0000] Shawn Rhoads cartoon?  Is this what he
+                                      really looks like?  Hmmmm, for a cartoon
+                                      character, he writes pretty good
+                                      software!  From NAPART1.ZIP
+SKYOFFIC.NAP    1666 09-06-92  [0000] Office overlooking city at night.  From
+                                      NAPART1.ZIP
+SPACE.NAP       8066 05-14-92  [0002] Engineering drawing of the space
+                                      shuttle.  From NAPART1.ZIP
+TECH03C2.NAP     824 03-06-88  [0000] Techie NAPLPS explanation - Pel Size
+                                      codes.  From J-NAP.ZIP
+TECH04.NAP      2464 03-19-88  [0000] Techie explanation/demo  of x,y
+                                      coordinates.  From J-NAP.ZIP
+TIMEFLY.NAP     5365 09-06-92  [0000] IHBC BBS Screen with IBM Logo and pocket
+                                      watch with rotating hand.  From
+                                      NAPART1.ZIP
+TUNNEL.NAP       568 03-20-93  [0000] Animated trip through a rectangular
+                                      tunnel.  From NAPART1.ZIP
+VCR.NAP         1327 03-09-93  [0000] Video deck.  Crisp drawing.  From
+                                      NAPART1.ZIP
+VIDEOGRA.NAP    5388 09-07-92  [0002] Detailed NAPLPS graphic.  Very good. 
+                                      Nice Colours.  From NAPART1.ZIP
+WINTER.NAP      2160 02-21-88  [0000] Japanamation type cartoon girl with      
+                                violet eyes, pinkish sweater.
+                                      From J-NAP.ZIP
+WLIL.NAP        7940 06-20-93  [0000] Water Lilly.  Created with CorelDraw,
+                                      NAPWMF, and MGE.  From SAMPBBS.ZIP.
+YAMAGARA.NAP    3771 02-18-88  [0000] Flashing screens, then bird.  From J-
+                                      NAP.ZIP
+ZOOM5000.NAP    5589 02-20-88  [0000] Japanamation girl on crane.  Three pics,
+                                      each further away.  From J-NAP.ZIP
+
+
+12MENU.NAP      1529 08-18-92  [0000] Multi-Colour Menu Screen with 12
+                                      Choices.  From NAPART1.ZIP
+ASC00.NAP        761 02-23-88  [0000] Green and blue text on red background.
+                                      From J-NAP.ZIP
+AU.NAP           269 07-06-92  [0000] Orange A on Blue U - Logo.  From
+                                      NAPART1.ZIP
+BANKMENU.NAP    1256 11-07-92  [0000] Turboard TimeBank Menu.  From NAPART1.ZIP
+BEATLES.NAP    41992 01-19-93  [0000] John, Paul, George & Ringo.  16 Colour
+                                      Semi Photo-Realistic.  From NAPART1.ZIP
+BED.NAP         2726 03-09-93  [0000] 4-Poster Bed and Night Table.  Blue
+                                      Cover, Red Pillow.  From NAPART1.ZIP
+BEER.NAP        3304 06-29-93  [0000] Glass of Beer.  Created with CorelDraw,
+                                      NAPWMF, and MGE.  From MORENAP.ZIP
+BIGBIRD.NAP     4651 03-09-93  [0000] BigBird and Friends from Sesame St. 
+                                      From NAPART1.ZIP
+BITRIVER.NAP   34315 08-18-92  [0000] Photo-quality pic of Venice Canal scene.
+                                      From NAPART1.ZIP
+BLASTOFF.NAP    4532 07-04-92  [0000] Space Shuttle blasting off.  From
+                                      NAPART1.ZIP
+BRE.NAP         7829 06-17-93  [0000] Barren Realms Elite Scoreboard Screen. 
+                                      Created with CorelDraw, NAPWMF, and MGE.
+                                      From SAMPBBS.ZIP.
+BRICKWAL.NAP    1265 08-06-91  [0000] Red Brick Wall.  From NAPART1.ZIP
+BULL.NAP        1708 06-19-93  [0000] Old Fashioned Radio & Microphone. 
+                                      Created with CorelDraw, NAPWMF, and MGE.
+                                      From SAMPBBS.ZIP.
+BULLN.NAP       1342 07-11-92  [0000] Old Airplane Towing Bulletin Banners. 
+                                      From NAPART1.ZIP
+BUTERFLY.NAP    2309 08-15-91  [0000] Black/Purple/Yellow Butterfly on White
+                                      Paper.  From NAPART1.ZIP
+CALENDAR.NAP     930 09-05-92  [0000] Viewtron Local Events Calendar Menu. 
+                                      From NAPART1.ZIP
+CARFORM.NAP     1275 03-19-86  [0000] Viewtron/Hertz Car Rental Menu.  From
+                                      NAPART1.ZIP
+CASTLE.NAP     25012 08-18-92  [0000] Castle and MicroStar Logo.  From
+                                      NAPART1.ZIP
+CHIEF.NAP      33408 08-08-92  [0000] Monochrome Image of Chief Joseph Nez
+                                      Perce.  Scanned from 1880's by Dave
+                                      Hughes.  From NAPART1.ZIP
+CIRCLES.NAP      426 03-12-93  [0000] Expanding concentric green circles on
+                                      black background.  From NAPART1.ZIP
+COLORS.NAP       969 03-14-93  [0000] 8x15 array of colour gradient squares. 
+                                      From NAPART1.ZIP
+CRAFT.NAP       2921 03-09-93  [0002] Flowers in a vase.  From NAPART1.ZIP
+CRUISE.NAP      1289 09-05-92  [0000] AmEx cruiseline cruiseship menu.  From
+                                      NAPART1.ZIP
+DIRGRACE.NAP    1791 09-20-92  [0000] GraceLand menu.  From NAPART1.ZIP
+DIRIHBC.NAP      594 09-25-92  [0000] Filing cabinet menu.  From NAPART1.ZIP
+DUPL1.NAP       3575 06-09-93  [0000] Coloured LOGO building blocks.  Created
+                                      with CorelDraw, NAPWMF, and MGE.  From
+                                      NAPBBS.ZIP
+EIGHT.NAP       6064 02-08-93  [0001] Eight Ball on a pool table.  Bit map PCX
+                                      converted to NAPLPS by P2NV  (PCXTONAP).
+                                      From NAPART1.ZIP
+ELEPHNTS.NAP   21895 06-19-91  [0000] 3 Elephants in river.  From NAPART1.ZIP
+EMAIL2.NAP      7616 06-19-93  [0000] Pic of Post-Office Mailbox with
+                                      explanation of Email.  Created with
+                                      CorelDraw, NAPWMF, and MGE.  From
+                                      SAMPBBS.ZIP.
+FLORIDA.NAP     1014 09-05-92  [0000] Viewtron Menu with Florida map.  From
+                                      NAPART1.ZIP
+FTBALL.NAP       826 03-20-92  [0000] UA Logo with Football.  From NAPART1.ZIP
+GAJOU.NAP       4384 01-01-88  [0000] Envelope, then dragon and girl.  From J-
+                                      NAP.ZIP
+GARFIELD.NAP   10578 12-18-92  [0000] Garfield the cat and his dinner dish. 
+                                      From NAPART1.ZIP
+GOOSE.NAP       6115 06-18-91  [0000] Goose's Head against Blue Sky, Clouds. 
+                                      From NAPART1.ZIP
+GRAPH.NAP       1324 08-14-91  [0000] Financial Bar Graph Display.  From
+                                      NAPART1.ZIP
+GYMNAST.NAP     1865 03-18-93  [0000] Animated jumping figure doing
+                                      gymnastics.  From NAPART1.ZIP
+HAVEN2.NAP      2022 03-10-93  [0000] Welcome screen for NorthBrook Haven BBS.
+                                      From NAPART1.ZIP
+HOUSE.NAP       4860 08-20-91  [0000] Black trees, brown/yellow house, and
+                                      yellow/white picket fence.  From
+                                      NAPART1.ZIP
+ICONMENU.NAP    3253 12-01-92  [0000] PC Chattanooga main menu with Icons for
+                                      various functions.  From NAPART1.ZIP
+KAO3.NAP        3670 03-30-88  [0000] Woman's Face.  Weird colours.  From J-
+                                      NAP.ZIP
+LAPTOP.NAP      2554 07-04-92  [0000] Laptop computer drawing.  From
+                                      NAPART1.ZIP
+LIBBAN.NAP       222 07-10-92  [0000] 3 Banners against blue sky from
+                                      BULLN.NAP.  From NAPART1.ZIP
+LIBSART.NAP     1817 01-04-80  [0000] Bunch of Colourful scrawls from a 2-year
+                                      old?  Better hide this, or the Canada
+                                      Council will spend a couple of million
+                                      tax $$ for it!  From NAPART1.ZIP
+LION.NAP       11777 06-18-91  [0000] Golden Lion on Black Background.  From
+                                      NAPART1.ZIP
+LOON.NAP       13661 06-16-93  [0000] Bird in water.  Created with CorelDraw,
+                                      NAPWMF, and MGE.  From NAPBBS.ZIP
+MAIL.NAP        4269 06-13-93  [0000] A rural-style mailbox-on-a-post. 
+                                      Created with CorelDraw, NAPWMF, and MGE.
+                                      From NAPBBS.ZIP
+MENU.NAP        5083 06-13-93  [0000] Created with CorelDraw, NAPWMF, and MGE.
+                                      From NAPBBS.ZIP
+MOVIE.NAP       6976 06-19-93  [0000] Movies Menu.  Created with CorelDraw,
+                                      NAPWMF, and MGE.  From SAMPBBS.ZIP.
+NAPEAGLE.NAP    6818 01-20-93  [0000] Eagle on U.S. flag.
+NAPLPS.NAP      6972 06-15-93  [0000] Stylistic Rainbow drawing, NAPLPS promo.
+                                      Created with CorelDraw, NAPWMF, and MGE.
+                                      From NAPBBS.ZIP
+NENGAJO.NAP     3581 01-01-88  [0000] Dragon/swamp-monster creature.  From J-
+                                      NAP.ZIP
+NEWUSERN.NAP     518 05-07-92  [0000] New user rules menu from PC Chattanooga.
+                                      Colour text.  From NAPART1.ZIP
+OLDPHONE.NAP     897 09-05-92  [0000] Ad with drawing for classic 1882
+                                      telephone.  From NAPART1.ZIP
+ORDERFRM.NAP     799 09-05-92  [0000] Fill-in-the-blanks order form.  From
+                                      NAPART1.ZIP
+PCATLWEL.NAP    1133 02-10-93  [0000] PC Atlanta colourful animated welcome
+                                      text.  From NAPART1.ZIP
+PCCAQUAR.NAP    2820 11-23-92  [0000] PC Chattanooga round aquarium menu. 
+                                      From NAPART1.ZIP
+PCCFLORD.NAP    1678 09-10-92  [0000] PC Chattanooga bulletin with pic of
+                                      Florida.  From NAPART1.ZIP
+PCCGLOBE.NAP    1939 05-06-92  [0000] Same as GLOBE.NAP, except Text Added for
+                                      PC Chattanooga.  From NAPART1.ZIP
+PHONE.NAP       1503 09-05-92  [0000] Bell phone guide menu with pic of
+                                      standard handset.  From NAPART1.ZIP
+S@W.NAP          915 03-29-92  [0000] Software @ Work logo, logoff screen. 
+                                      From NAPART1.ZIP
+SHUTTLAD.NAP    1014 09-12-92  [0000] Space Shuttle, NCC-1701, and Globe. 
+                                      From NAPART1.ZIP
+SHUTTLE.NAP     4856 04-03-92  [0000] Space Shuttle blasting off pic - with
+                                      MicroStar Presents.... text.  From
+                                      NAPART1.ZIP
+SOLDIERS.NAP    1163 03-09-93  [0000] 2 toy soldiers.  From NAPART1.ZIP
+SPOCK2.NAP      2560 08-18-92  [0000] Line drawing of Spock.  From NAPART1.ZIP
+ST-PATS.NAP     5783 03-01-93  [0000] St. Patrick sitting on a rock.  From
+                                      NAPART1.ZIP
+STAR.NAP       21639 06-23-93  [0000] Animated Orange/Yellow Star Grows
+                                      inward.  Created with CorelDraw, NAPWMF,
+                                      and MGE.  From SAMPBBS.ZIP.
+SUBWYMAP.NAP    2688 08-08-92  [0000] Subway Map of Boston.  From NAPART1.ZIP
+TB1.NAP        12082 06-16-93  [0000] Turboard Promo with pic of Mouse 
+                                      (Electronic kind).  Created with
+                                      CorelDraw, NAPWMF, and MGE.  From
+                                      SAMPBBS.ZIP.
+TUR40FSH.NAP    2930 05-22-92  [0000] Turboard V0.40 Main menu with bubble-
+                                      blowing fish.  From NAPART1.ZIP
+TUR40MNU.NAP    2404 05-22-92  [0000] Turboard V0.40 Main menu without the
+                                      fish.  From NAPART1.ZIP
+TURMODEM.NAP    3885 09-05-92  [0000] Turmodem opening screen with computer
+                                      and telephone lines.  From NAPART1.ZIP
+TURSHUTT.NAP    3142 04-25-92  [0000] Turboard promo with shuttle blasting
+                                      off.  From NAPART1.ZIP
+WAST.NAP       11215 06-18-93  [0000] Wasteland - with Skull.  Created with
+                                      CorelDraw, NAPWMF, and MGE.  From
+                                      SAMPBBS.ZIP.
+WEATHER.NAP     8972 06-15-93  [0000] Sun, Cloud, and Rain.  From NAPBBS.ZIP
+YDXMAP4.NAP     2895 01-24-88  [0000] Map of geographical area.  From J-NAP.ZIP
+ZEBRAS.NAP     14912 07-17-91  [0000] 2 zebras.  From NAPART1.ZIP
+ZOOM.NAP        5489 05-21-92  [0000] Japanimation type sequence of girl on
+                                      crane over ocean.  From NAPART1.ZIP
+
+ ----------------------------------------------------------------------------
+                                NAPLPS  PICTURE
+                                   COLLECTIONS
+        See individual descriptions in previous messages for more detail
+ ----------------------------------------------------------------------------
+MORENAP.ZIP    13046 08-20-93  [0002] NAPLPS pics created with CorelDraw,
+                                      NAPWMF and MGE.  Contains BEER.NAP,
+                                      FLY.NAP, HAUNT.NAP, SEAPORT.NAP,
+                                      SHARK.NAP, TGC.NAP
+NAPART1.ZIP   278176 03-20-93  [0005] Collection of NAPLPS Art.  Contains
+                                      12MENU.NAP, APPLS.NAP, AU.NAP,
+                                      BALLS.NAP, BANKMENU.NAP, BANKSCRN.NAP,
+                                      BEACH.NAP, BEATLES.NAP, BED.NAP,
+                                      BIGBIRD.NAP, BIKE.NAP, BITBUILD.NAP,
+                                      BITRIVER.NAP, BLASTOFF.NAP,
+                                      BRICKWAL.NAP, BULLN.NAP,
+                                      BUTERFLY.NAP, CALENDAR.NAP, CARFORM.NAP,
+                                      CASTLE.NAP, CHARGE.NAP, CHIEF.NAP,
+                                      CIRCLES.NAP, COLORS.NAP, CRAFT.NAP,
+                                      CRUISE.NAP, DIRGRACE.NAP, DIRIHBC.NAP,
+                                      EAGLE1.NAP, EIGHT.NAP, ELEPHNTS.NAP,
+                                      FISHMENU.NAP, FLORIDA.NAP, FLORIST.NAP,
+                                      FLRFRAME.NAP, FTBALL.NAP, GARFIELD.NAP,
+                                      GIRL.NAP, GLOBE.NAP, GOOSE.NAP,
+                                      GRAPH.NAP, GYMNAST.NAP, HALLEYS.NAP,
+                                      HALOWCAT.NAP, HARRIS.NAP, HAVEN.NAP,
+                                      HAVEN2.NAP, HAWK.NAP, HONGKONG.NAP,
+                                      HOUSE.NAP, IBMMENU.NAP, ICONMENU.NAP,
+                                      ICOSAMP.NAP, KAO.NAP, LADIES.NAP,
+                                      LAPTOP.NAP, LIBBAN.NAP, LIBSART.NAP,
+                                      LION.NAP, MARI.NAP, MENSWR.NAP, MICK.NAP,
+                                      NEWUSERN.NAP, OLDPHONE.NAP, ORDERFRM.NAP,
+                                      PCATLWEL.NAP, PCCAQUAR.NAP, PCCFLORD.NAP,
+                                      PCCGLOBE.NAP, PHONE.NAP, REALESTA.NAP,
+                                      REFRESH.NAP, S@W.NAP, SANTA.NAP,
+                                      SHARON.NAP, SHRHOADS.NAP, SHUTTLAD.NAP,
+                                      SHUTTLE.NAP, SINGER.NAP, SKYOFFIC.NAP,
+                                      SOLDIERS.NAP, SPACE.NAP, SPOCK2.NAP,
+                                      ST-PATS.NAP, SUBWYMAP.NAP, TIMEFLY.NAP,
+                                      TUNNEL.NAP, TUR40FSH.NAP, TUR40MNU.NAP,
+                                      TURMODEM.NAP, TURSHUTT.NAP, VCR.NAP,
+                                      VIDEOGRA.NAP, ZEBRAS.NAP, ZOOM.NAP
+NAPBBS.ZIP     27383 06-16-93  [0002] NAPLPS pics created with CorelDraw,
+                                      NAPWMF and MGE.  Contains DUPL1.NAP,
+                                      EMAIL.NAP, LOON.NAP, MAIL.NAP, MENU.NAP,
+                                      MONYTOOL.NAP, NAPLPS.NAP, WEATHER.NAP
+NAP-PIX.ZIP  offline           [0012] Collection of NAPLPS Pics.   Contains
+                                      BUTERFLY, ELEPHNTS, GOOSE, LION, ZEBRAS.
+                                      Note: *all* of these are in NAPART1.ZIP.
+SAMPBBS.ZIP    49791 06-23-93  [0002] NAPLPS pics created with CorelDraw,
+                                      NAPWMF and MGE.  Contains ART.NAP,
+                                      BRE.NAP, BULL.NAP, EDUC.NAP, EMAIL2.NAP,
+                                      MOVIE.NAP, STAR.NAP, TB1.NAP, WAST.NAP,
+                                      WLIL.NAP
+
+ ----------------------------------------------------------------------------
+                                   RIP FILES
+ ----------------------------------------------------------------------------
+MAXRIP01.TXT   21154 07-05-93  [0004] Instructions and examples of how to use
+                                      RIPscrip graphics under Maximus cbcs.
+RIPMECCA.ZIP   44708 07-11-93  [0003] Sample menus using Rip Graphics & ansi
+                                      for Maximus.  Menu choices use buttons,
+                                      icons for graphics, you can use regular
+                                      windows size icons for choices also. 
+                                      From Joe Lerch.
+ALLICONS.ZIP   72560 06-06-93  [0001] For use with RIPMECCA - all of Joe's
+                                      Maximus/RIP Menus.
+MAX&RIP.ARJ     3403 05-26-93  [0002] Yet another Maximus and RIP graphics -
+                                      How-to file.
+A2R100.ZIP     15486 05-29-93  [0006] Converts ANSI screens to RIP format.
+DBLSOL10.ZIP   94159 06-05-93  [0001] Double Solitaire with RIP Graphics
+CP.ZIP        115125 06-29-93  [0004] CasketPaint v0.00.2 - Shareware RIP
+                                      paint program.  Load, Save, Edit, etc..
+DEMO3.ZIP     451702 05-06-93  [0000] Searchlight BBS v3.0 working demo A 20
+                                      user working demo with all features
+                                      incl. RIP graphics.  The documentation
+                                      for this file is DOCS3.ZIP
+DOCS3.ZIP     197657 05-06-93  [0000] Complete docs for Searchlight BBS v3.0
+DPAIN21.ZIP   176000 08-29-93  [0000] DeadPaint V2.1 RIP paint program. 
+                                      Improved file handling and keyboard
+                                      support.  Additional fonts.  Now  also
+                                      supports buttons, icons, and text
+                                      window.  Converts  Windows .ICO to .ICN,
+                                      etc.
+HEXITRI.ZIP     2820 04-04-93  [0000] Convert regular numbers to hextridecimal
+QMPRO150.EXE offline           [0000] 969986 06-15-93 Huge update patch to
+                                      convert registered version of Qmpro to
+                                      v1.5 with Rip Graphics.  Not available
+                                      from here yet.  Frequable from 1:270/315
+RDMICONS.ZIP   56225 11-20-92  [0000] Icons Only
+RIPACSW.ZIP    62302 08-05-93  [0001] Acey Ducey Door in RIP graphics, only
+                                      works for RIP players.
+RIPCONV.ZIP   131858 06-12-93  [0002] RIPScript Graphical Communications
+                                      Package Convert PCX, TIF, IMG, MAC, to
+                                      RIPScripts .ICN Icon format!
+RIPCSLOT.ZIP   64317 08-05-93  [0001] Crooked Slots Door in RIP, only works
+                                      for RIP users
+RIPDMO15.ZIP  517080 03-30-93  [0002] RIPpaint Demo
+RIPDMP.ZIP     11028 07-11-93  [0000] Convert small (1k) RIP Script files to
+                                      plain english for easy understanding.
+RIPDTC1B.ZIP    7965 08-12-93  [0000] Lets Maximus sysops auto detect RIP
+                                      terminal
+RIPHIRO.ZIP    60575 07-25-93  [0001] Hiro! Door in RIP, only works for RIP
+                                      users.
+RIPHYP.ZIP    361522 03-24-93  [0001] Ripscrip documentation in hypertext
+RIPINFO.ZIP     3393 05-24-93  [0003] Info on RipPaint and RipDraw
+RIPSC154.ZIP   72675 07-19-93  [0001] RIPscrip Graphics Protocol Spec's. 
+                                      Revision 1.54, July 19/93. RIPscrip is a
+                                      text-based script language for
+                                      displaying online graphics.
+RIPSCRIP.DOC  174728 04-22-93  [0001] Detailed explanation of RIP scripts
+RIPSCRIP.ZIP   43228 04-22-93  [0005] Same as above, but Zipped.
+RIPSW100.ZIP   55277 06-30-93  [0000] RIP Sweeper Door, RIP, Ansi, Ascii
+RIPTL01.ZIP    25737 08-07-93  [0000] RIP tools for writing RIP menus. 
+                                      Freeware.
+RIPTM154.ZIP  587240 07-15-93  [0017] RipTerm terminal program - needed by
+                                      callers to RIP-capable BBSs.
+RIPUZ103.ZIP   41589 06-03-93  [0000] Rip Puzzle by Searchlight BBS, 1st Rip
+                                      Graphic on-line game "Free", uses
+                                      pcboard or door.sys
+RIPVR100.ZIP   60510 06-18-93  [0002] Latest Rip Graphics game, simple version
+                                      of "Reversi" kinda like the one in  OS/2
+RPS.ZIP        26092 05-18-93  [0005] Free program with Pascal source that
+                                      converts Rip Graphic commands to "plain
+                                      english" and back again- (not perfect)
+RVIEW153.ZIP   77878 08-23-93  [0000] RIPEview v1.53, a shareware RIP viewer
+SHWRIP12.ZIP   73599 07-30-93  [0002] RIP viewer v1.2, many new features
+TART150.ZIP   182400 08-28-93  [0002] TOMBSTONE ARTIST V1.50, RIP paint
+                                      program.  Creates Rip Script graphics
+                                      for BBS use.  TA now supports Bezier
+                                      Curves, Arcs, Copy and Paste, button an
+                                      mouse regions.  Load and save RIP files,
+                                      undo errors.  Buttons now Fixed!
+TGD200.ZIP    104471 08-02-93  [0000] The Grafitti Door 2.0, now has RIP
+                                      script support
+WRICON.ZIP    145175 06-30-93  [0002] Windows program to convert .Gif to Rip
+                                      .ICN's  Requires VBRUN200.ZIP.  Freeware
+WRIPDM05.ZIP  191963 07-11-93  [0003] RIP painting program.
+
+
+ ----------------------------------------------------------------------------
+                                 RIP PICTURES
+ ----------------------------------------------------------------------------
+BUGS.RIP        3769 07-14-93  [0006] RIP pic: Bugs Bunny
+BUTFLY.RIP      3271 07-06-93  [0009] RIP pic: butterfly
+CITY.RIP        6713 03-29-93  [0006] RIP picture of city harbour scene
+DAFFY.RIP       2525 07-21-93  [0006] RIP pic: Daffy
+FCBBSAD.RIP     3920 07-19-93  [0007] RIP pic: BBS promo
+FIERO.RIP      56576 07-09-93  [0007] RIP picture of Fiero car
+FLIGHT.RIP      2872 07-19-93  [0006] RIP pic: bird in flight
+FRED.RIP        4882 07-10-93  [0007] RIP pic: Fred
+GOBLIN.RIP     12928 09-15-92  [0006] RIP graphics demo - Goblin
+GOO.RIP         5655 07-14-93  [0007] RIP pic: Goofy
+ICONDEMO.RIP     779 09-15-92  [0006] RIP graphics demo - Icons
+ICEONLIN.RIP    3318 09-22-93  [0000] BBS ad for ICE-Online Computer
+                                      Entertainment System.  RPG, Multiline,
+                                      realtime playing.  Up to 36 lines.
+LIGHTHOS.RIP    4541 07-08-93  [0006] RIP pic: Lighthouse
+LIGHTNGT.RIP   18586 07-05-93  [0007] RIP pic: GAMBIT BBS logon screen
+MARTY.RIP       2988 08-09-93  [0006] MARTY.RIP - Wildcat BBS pre-logon screen
+MEOW.RIP        3550 09-15-92  [0006] RIP test
+MOSAIC.RIP      4791 08-14-92  [0006] RIP test
+MOTION.RIP      7107 09-15-92  [0006] RIP test
+NEWMOUNT.RIP    3638 05-15-93  [0007] RIP scene of mountain & home
+OCA_MENU.RIP    1118 04-27-93  [0006] Sample RIP menu screen
+PARADISE.RIP    4969 04-12-93  [0008] RIP graphics screen
+RADIOBAB.RIP    4459 07-14-93  [0007] RIP pic: BBS promo
+SNARK.RIP       4726 09-16-93  [0000] Snark Combat Helicopter taken from Paul
+                                      Preuss's novel "The Medusa Chronicles"
+SOURCE.RIP      4989 09-12-93  [0006] Source BBS Rip drawing. Rip drawing for
+                                      new BBS that will be in operation early
+                                      in 1994.
+SYNCHRO.RIP    31032 05-29-93  [0006] RIP graphic - SynchroNet
+THANKS.RIP      2862 03-24-93  [0008] Nice RIP drawing of a Pepsi can
+THUMPER.RIP     3081 07-21-93  [0006] RIP pic: Thumper
+TIMELAPS.RIP   33674 03-30-93  [0007] Time Lapse by Mark Hayton of TeleGrafix
+WAGGER.RIP      1658 09-15-92  [0006] RIP test
+
+
+*NOTE These are for older (Shareware) versions of ROBO.  The new F/X version is
+commercial, and I do not yet have any Shareware utilities for it.
+ ----------------------------------------------------------------------------
+                                 ROBOBBS FILES
+ ----------------------------------------------------------------------------
+ROBO1_08.ZIP  629742 01-20-93  [0009] RoboBBS V1.08  Fast Hi-Res VGA Online
+                                      Graphical BBS.
+ROBO270.ZIP    89837 08-30-92  [0012] FreeWare Hi-Res Graphics Term for use
+                                      with RoboBBS.
+ROBOICON.ZIP  226580 12-22-92  [0002] ICONS converted from Windows!
+ROBOTECH.DOC   20596 10-26-92  [0005] Technical explanation of how RoboBBS
+                                      works.  By Seth Hamilton.
+ROBOSND.ZIP    23514 10-27-92  [0005] 40 NEW .SND Sound Files for RB.
+BINKROBO.ZIP   20038 10-03-92  [0003] How to set up RoboBoard with Binkley
+ANIMATE.ZIP    13503 01-24-93  [0002] Chris Duke Lectures on ROBO-ANIMATION
+DV_ROBO.DOC     2788 10-30-92  [0003] Robo-Board and DesqView
+ERUE1225.ZIP   47577 12-28-92  [0001] NEW USER editor released January 12th 199
+FXQROBO1.ZIP   24738 01-20-93  [0000] Loads different (random) background
+                                      screens for Robo-Board
+ICO2RBO.ZIP    28485 01-08-93  [0002] Ver 1.0 Windows Icon --> Robo Icon
+                                      Converter
+ICONFONT.ZIP    4386 01-12-93  [0002] Tri-Color Font in ICON form
+PLATES.ZIP      5134 01-17-93  [0001] Help doc on using Robo-Board .PLT plate
+                                      files by Chris Duke
+PLAYROBO.ZIP offline           [0000] Robo-Board utility for playing .SND
+                                      sound files
+RA2R123.EXE    93434 12-01-92  [0003] NEW VERSION * RA ---> ROBO 1.06 converter
+RBJUKBX1.ZIP   15755 12-22-92  [0004] ROBO Juke Box ver. 1.0, Slick utility to
+                                      select Robo .SND files.  Works with
+                                      ROBOSND.ARJ
+RBOMORP4.ZIP  108186 02-08-93  [0004] Robo-Morph Convert GIF files to Robo
+                                      Icons!
+RBOMUSI2.ZIP   58066 12-01-92  [0003] Create/Play Robo-Board .SND Sound files
+RIM300.ZIP    275042 12-03-92  [0002] RIM 3.0 Robo Icon Manager-View/Edit
+RL_099B.ZIP    14988 01-03-93  [0001] Robo Log v0.99 Wide area beta - Robo log
+                                      packer.
+ROBODOOR.ZIP   10374 03-01-93  [0006] Run RoboBoard as a Door off of many
+                                      other BBS packages.
+ROBOICM.ZIP    41045 01-29-93  [0003] Graphical icon mover/converter for
+                                      Windows to Robo icons
+ROBONEWS.ZIP    9138 06-20-93  [0002] Latest info on Robo, some comparisons
+                                      with other protocols.
+ROBOWHAT.ZIP   23480 09-23-92  [0002] Load different BBS Programs (Run Robo
+                                      and SuperBBS)
+RPLAY104.ZIP  157851 11-09-92  [0002] Roboplay 1.04 Play SND from dos
+RSCAN100.ZIP  125664 12-26-92  [0001] GREAT Upload Checker
+SHG-UPD.TXT     8427 03-21-93  [0003] Seth Hamilton's State of Robo-Board
+                                      Address (3/21/93)
+WINROBO.ZIP     4744 12-01-92  [0005] How to configure Windows 3.1 to work
+                                      with Robo
+
+
+ ----------------------------------------------------------------------------
+                                  BIG FILES
+ ----------------------------------------------------------------------------
+BIG102.ZIP    153749 02-24-92  [0003] Base comm.program for BIG viewing
+BIGKIT.ZIP     29454 06-15-92  [0005] Sysop kit for BIG files
+BPAINT05.ZIP   99994 06-17-92  [0004] To draw BIG pictures
+
+ ----------------------------------------------------------------------------
+                                DARKSTAR FILES
+ ----------------------------------------------------------------------------
+BSVLIB.ZIP   offline           [0000] How to put .BSV files into a library. 
+                                      *NOT* available for freq yet.  (need
+                                      release permission)
+COMMLINK.ZIP  365646 06-12-93  [0003] Terminal Program for DARKSTAR Hi-Res
+                                      Online Graphics
+DARKKIT.ZIP    20673 10-06-92  [0004] Application to join DARKSTAR support Net
+                                      and/or become Beta test site.
+DARKSTAR.GIF    8851 03-01-93  [0007] Welcome to DARKSTAR
+DS101C01.ZIP  366756 06-12-93  [0001] DarkStar BBS PROGRAM [1/4]
+DS101C02.ZIP  376140 06-12-93  [0001] DarkStar BBS PROGRAM [2/4]
+DS101C03.ZIP  361740 06-12-93  [0001] DarkStar BBS PROGRAM [3/4]
+DS101C04.ZIP  387573 06-12-93  [0001] DarkStar BBS PROGRAM [4/4]
+DSLIST20.ZIP   46246 11-16-92  [0000] Master file list compiler for DARKSTAR
+DSLSCALL.ZIP offline           [0000] Last Caller Screen Generator for
+                                      DARKSTAR.  *NOT* available for freq yet.
+                                      (need public release permission)
+DSMODPLA.ZIP  114929 12-19-92  [0001] Mod Player for DARKSTAR.  Pre-Release
+                                      version. (Dec 19 '92)
+DSTHOTS.ZIP    52512 11-12-92  [0000] Creates "thought for today" panel for
+                                      DARKSTAR
+ICEDITOR.ZIP  111558 10-04-92  [0004] Icon Editor for DARKSTAR Icons.
+INTRWARE.DOC   28301 01-25-93  [0004] Technical explanation of how DARKSTAR
+                                      works
+MAILER.BAT      2480 11-01-92  [0001] Sample Mailer Batch file for Front
+                                      Door/DARKSTAR setup
+PARAICOS.ZIP   57103 05-12-93  [0001] Various sample icons for DarkStar boards
+
+ ----------------------------------------------------------------------------
+                                  ETGC FILES
+ ----------------------------------------------------------------------------
+BUCKSHBR.ETG    1222 11-20-92  [0000] ETCG Picture of Bucksport
+ETGCD10G.ZIP  144335 02-27-92  [0003] ETGC Driver. Use with Doors, to Display
+                                      ETGC Graphics Locally.
+ETGCE10G.ZIP  200618 02-27-92  [0003] ETGC Editor (Drawing/Painting Program)
+                                      Mouse Driven (optional)
+ETGCG11G.ZIP   19763 04-05-92  [0002] ETGC Gallery. Online Door, allows
+                                      callers to View Creations!
+ETGCLICE.ZIP  162386 06-20-92  [0002] ETGC Licensing Information and
+                                      Application. Free, but reqd.
+ETGCUT10.ZIP   66403 12-27-92  [0002] Utility for Beta, shell for Icon
+                                      Conversion.
+ETGCV10G.ZIP  147922 06-20-92  [0002] ETGC Viewer, Allows you to View ETGC
+                                      Pictures from DOS
+FORT2.ETG       1173 11-19-92  [0000] Fort drawn with ETGC
+NDIAL10B.ZIP   12235 09-15-92  [0000] NodeDial, Utility for Use with UltiTerm
+                                      v2.09 Allows Dialing from FidoNet
+                                      Nodelist Directly.
+UTERM209.ZIP  455442 09-13-92  [0001] Ultiterm Hi-Res online Graphics Terminal
+                                      for ETGC format.  Supports High IRQ's.
+
+ ----------------------------------------------------------------------------
+                               EXCALIBUR FILES
+ ----------------------------------------------------------------------------
+EXCALTRM.ZIP  363963 09-08-93  [0018] Excalibur Term for Win 3.1  To install,
+                                      run from Win using File|Run. Features:
+                                      Online Multitasking (ie., Read messages
+                                      WHILE downloading Files); Windowed Chat;
+                                      GIF Thumbnail or Preview Images; View
+                                      GIFs while downloading.
+
+ ----------------------------------------------------------------------------
+                                FRACTERM FILES
+ ----------------------------------------------------------------------------
+FTERM112.ZIP offline           [0000] FRACTERM Hi-Res interactive online
+                                      Graphics/Text Terminal.  Graphics are
+                                      very highly compressed (much more than
+                                      GIFs) Can send, automatically
+                                      decompress, and display 1/4-screen VGA
+                                      image in several seconds.
+
+ ----------------------------------------------------------------------------
+                                  GETS FILES
+ ----------------------------------------------------------------------------
+GETS20.ZIP    503705 07-21-92  [0001] Graphical terminal program with Sound
+                                      board support.
+
+ ----------------------------------------------------------------------------
+                          MIME/USENET/INTERNET FILES
+ ----------------------------------------------------------------------------
+CYBRTERM.TXT   32775 03-02-93  [0003] Explanation of Design for a Virtual
+                                      Reality Terminal.  Written Mid '92. 
+                                      Term Availablity  scheduled for late '92
+MPEGINFO.ZIP   14339 12-27-92  [0004] What is MPEG (Video Compression
+                                      Standard) ? From Internet.
+RFC1341.ZIP    63764 11-17-92  [0002] Detailed description of UseNet MIME
+                                      Online Graphics/Text integration
+                                      standard.
+UUEXE510.ZIP   32284 01-15-92  [0007] Turn binary files into 7-bit ascii and
+                                      vice-versa.  GREAT for imbedding image
+                                      files in echo messages, then recovering
+                                      them.
+
+ ----------------------------------------------------------------------------
+                                 VIRTUAL BBS
+ ----------------------------------------------------------------------------
+ICONEDIT.ZIP   37506 08-10-92  [0000] Icon Editor for VGIX.
+VGIX30A.ZIP    66751 01-29-93  [0002] VGIX V3.0 VBBS Term Program.
+VBBS60-1.ZIP  572253 03-08-93  [0003] Version 6.00 of VBBS, part 1 of 2.
+VBBS60-2.ZIP  526667 03-08-93  [0003] Version 6.00 of VBBS, part 2 of 2.
+VFIDO600.01   125274 05-20-93  [0000] Adds FidoNet capabilities to VBBS.
+VXY200.ZIP     56829 01-29-93  [0000] vbbs protocol driver 2.00
+
+ ----------------------------------------------------------------------------
+                                    VORTEX
+ ----------------------------------------------------------------------------
+VTXGT22.ZIP   124338 11-13-91  [0000] Vortex VGA term program.  Similar to
+                                      NAPLPS/PRODIGY.  Includes detailed
+                                      explanation of Escape codes/commands,
+                                      etc.  By Jason S. Clary.
+
+ ----------------------------------------------------------------------------
+                              ONLINE GIF VIEWERS
+ ----------------------------------------------------------------------------
+SHWGIF52.ZIP   39068 03-30-91  [0001] ShowGIF V5.2 Small TSR allows viewing of
+                                      GIFs while downloading
+SHGIF55F.ZIP  157154 09-27-92  [0004] ShowGIF V5.5F Later/Larger version with
+                                      offline viewer capabilities.
+TM412-1.ZIP   191488 07-20-93  [0007] TELEMATE [1 of 4] Communications Program
+TM412-2.ZIP   199680 07-20-93  [0006] TELEMATE [2 of 4] Lets you do several
+                                      things at once
+TM412-3.ZIP   198656 07-20-93  [0007] TELEMATE [3 of 4] Like download and view
+                                      backscroll buffer
+TM412-4.ZIP   251904 07-20-93  [0007] TELEMATE [4 of 4] Includes GIFLINK -
+                                      which allows viewing of GIFs as they are
+                                      downloaded.  (Similar to ShowGIF).  Now
+                                      supports higher IRQ's! (9-15) - frees-up
+                                      lower IRQs for other purposes.
+
+ ----------------------------------------------------------------------------
+                               GIF PREVIEW DOORS
+ ----------------------------------------------------------------------------
+GIFVIEW1.ZIP   52970 08-28-92  [0002] Online Gif Viewer Door for various BBSs.
+                                      Works with GifTerm (which I Haven't
+                                      found a copy of yet).
+OLV120.ZIP    191745 03-02-92  [0008] Online View V1.20.  BBS Door Creates
+                                      Miniature "Preview GIFs" for Caller to
+                                      View Online Immediately.
+PRVIEW13.ZIP  138683 10-14-92  [0000] Online GIF Preview Door Version 1.3
+VISTA15T.ZIP  111053 04-02-92  [0002] Online Gif viewer Door for pcBOARD
+VPIX19M.ZIP   357828 07-24-92  [0003] Online Gif viewer Door for various BBSs
+
+ ----------------------------------------------------------------------------
+                              MISCELLANEOUS STUFF
+ ----------------------------------------------------------------------------
+CONDOR10.ZIP   30178 04-30-93  [0000] Graphical ANSI.SYS replacement An
+                                      ANSI.SYS type driver that has the
+                                      potential for hi-res BBS graphics.  By
+                                      Larry Mears - Author of BIG.
+CAVE2.R18       3712 02-07-93  [0000] Experimental Condor hi-res graphic
+GIF2ICON.ZIP   11313 07-28-90  [0016] Turns GIFS into Windows ICONS.  Useful
+                                      with some of above files.
+WHITEB10.ZIP   76885 06-29-93  [0000] Whiteboard 1.0 Graphical Communication
+                                      Program.  Kind of a shared over-the-
+                                      modem drawingboard where paricipants can
+                                      both modify/view/erase/save the screen. 
+                                      Good for distance education classes.
+
+--- Maximus 2.01wb
+ * Origin: ONLINE_GRAPHICS echo  604-946-5815 V.32 (1:153/951)
+
+-- 
+Michael Dillon                 Internet: mpdi...@halcyon.halcyon.com
+C-4 Powerhouse                  Fidonet: 1:353/350
+RR #2 Armstrong, BC  V0E 1B0      Voice: +1-604-546-8022
+Canada                              BBS: +1-604-546-2705

@@ -1,0 +1,146 @@
+TurKit NAPLPS API Toolkit  Pre-Release Version v0.10
+(c) 1993 Shawn Rhoads, All Rights Reserved
+(c) 1993 Software @ Work, All Rights Reserved
+
+This is the beta pre-release version of the NAPLPS API Toolkit.  This toolkit
+includes the source code to TurShow, the NAPLPS viewer program that is
+developed by Software @ Work.
+
+Legal Notice
+
+End User License
+
+THIS AGREEMENT IS YOUR PERMANENT RECORD OF THE LICENSE AGREEMENT
+YOU HAVE ACCEPTED BY USING THIS SOFTWARE.  IF YOU DO NOT AGREE
+WITH ALL TERMS AND CONDITIONS, PROMPTLY RETURN THE PACKAGE FOR
+REFUND OF YOUR USER LICENSE FEE.  SOFTWARE @ WORK.
+
+NON-EXCLUSIVE LICENSE
+
+You may use the software and any related documentation an a
+single computer.  You may maintain a single copy for backup
+purposes or operation from a hard disk.  You may not sell, rent
+sublicense, assign or otherwise transfer this software or this
+license.  SOFTWARE @ WORK retains title to and ownership of the
+software and to all constituent parts at all times.  If any part
+of this agreement is held invalid or unenforceable, the other
+parts will remain valid.  You agree that the software(s)
+licensed herein constitute trade secrets of Software @ Work which
+are covered by copyright.
+
+TERM
+
+This license is effective until terminated.  This license will
+terminate if you fail to comply with any term or condition of this
+agreement.  Upon termination, you agree to destroy the software
+together with all copies in any form in your possession.
+
+YOU ACKNOWLEDGE THAT YOU HAVE READ THIS AGREEMENT AND CLEARLY
+UNDERSTAND IT AND AGREE TO BE BOUND BY IT.  YOU AGREE THAT IT IS
+THE COMPLETE AND EXCLUSIVE STATEMENT OF THE AGREEMENT BETWEEN
+YOURSELF AND SOFTWARE @ WORK WHICH SUPERSEDES ANY PRIOR
+REPRESENTATIONS EITHER WRITTEN OR ORAL.
+
+(Software @ Work, P.O. Box 566491, Atlanta, GA 31156 USA)
+
+COPYRIGHT NOTICE
+
+THE SOFTWARE AND DOCUMENTATION IS COPYRIGHT SOFTWARE @ WORK.  ALL
+RIGHTS RESERVED.  REPRODUCTION BY MEANS OF SOFTWARE OR DOCUMENTATION
+IS SPECIFICALLY PROHIBITED EXCEPT AS PROVIDED IN THE LICENSE AGREEMENT.
+
+WARNING
+
+ABUSE OF SOFTWARE @ WORK'S COPYRIGHT OR FAILURE TO COMPLY WITH THE
+TERMS OF LICENSE MAY MAKE YOU LIABLE TO CRIMINAL AND/OR CIVIL PROSECUTION.
+
+Technical Information
+---
+
+This toolkit only contains the NAPLPS decoder in .TPU form.  It does not
+include the NAPLPS tools that will make up the DOOR API.  The only functions
+available in this toolkit are:
+
+AVAILABLE FUNCTIONS AND PROCEDURES
+
+function tenths: longint;
+
+  This function will return the number of deciseconds (1/10 of a second)
+  that have elapsed today since midnight.
+
+procedure drawbegin;
+
+  This procedure will disable the mouse and remove the NAPLPS cursor
+  so that ANSIWRITE can be safely called.
+
+procedure drawend;
+
+  This procedure will enable the mouse.
+
+procedure turnnapon;
+
+  This procedure will turn NAPLPS mode ON (and put your screen in graphics
+  mode.  For information on setting up the screen, see the example program
+  TURSHOW.PAS for the flags that should be set for SVGA, etc.
+
+procedure turnnapoff;
+
+  This procedure will turn NAPLPS mode OFF and restore your text mode.
+
+procedure napcursor;
+
+  This procedure should be called during idle moments, it controls the
+  cursor and the blink functions.
+
+procedure ANSIWRITE(st: string);
+
+  This is the main NAPLPS output function, this function can accept a
+  string of input and it is suggested that you feed it as much information
+  as fast as possible for best results (speed).
+
+  This routines can accept ASCII, ANSI and NAPLPS codes and will
+  automatically turn NAPLPS mode on and off when the NAPLPS control codes
+  have been sent to it.  (ie, you need never use the turnnapon and
+  turnnapoff functions.)
+
+
+Warning:  You use this software at your own risk!  This software is for
+information purposes only, if you wish to advance order the TurAPI toolkit
+when the final product is released you may fill out the following form:
+
+Registration of your TurKit license:
+
+This is a demonstration program.  You are permitted to use this
+program for an evaluation period of 30 days.  If you decide to keep the
+program past the evaulation period, you must register your copy for $100.00.
+This is the introductory price, pricing may change without notice.
+
+To register, contact Software @ Work with the following information:
+
+           Name:  __________________________________________
+
+        Address:  __________________________________________
+
+           City:  ______________ State: ________ Zip: ______
+
+          Phone:  __________________________________________
+
+    Credit Card:  __________________________________________
+
+    Expire Date:  ________________  VISA or MASTERCARD    or
+
+      Signiture:  __________________________________________
+
+Amount enclosed:  __________________________________________
+
+       Comments:  __________________________________________
+
+Mail to:
+
+Software @ Work
+P.O. Box 566491
+Atlanta, GA 31156
+
+This software may not be included with any other package without the
+express written permission of Software @ Work.  For more information about
+packaging this software, contact the above address.
