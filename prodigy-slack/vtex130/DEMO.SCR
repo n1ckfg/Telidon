@@ -1,0 +1,175 @@
+~{~|"" DEMO.SCR: a demonstration script for VIDEOTEX ~}
+~k1~~H~M
+~k2~~I~M
+
+~T
+~M~J~J
+Welcome to VIDEOTEX, a terminal emulator and off-line editor
+ for Viewdata and Teletext systems.
+~w~w~w~w
+~M~J~J~J
+This interactive demonstration sequence illustrates some of the features of
+ VIDEOTEX.  To terminate it at any stage type CTRL/Break
+ (hold down CTRL and press the Break/Pause key).
+~w~w~w~w
+~M~J~J~J
+Press any key to continue...
+~i
+
+~L
+~[G
+The Videotex display standard supports
+~M~J~J
+~[BColoured~[Ftext~[G
+~M~J~J
+~[G
+Contiguous and separated
+~M~J
+~[S
+7+jœ46ijœ4uzjhœ$f3
+ ~[Z
+7+jœ46ijœ4uzjhœ$f3
+~M~J
+~[S
+u{jœ47kjœ 5jj*p$p:
+ ~[Z
+u{jœ47kjœ 5jj*p$p:
+~w~w
+~M~J~J
+~[HFlashing~[Itext
+~w~w
+~M~J~J
+ ~[]~[AColoured ~[]~[Gbackgrounds ~[\
+~w~w
+~M~J~J
+~[MDouble~[Lheight
+~w~w
+~M~J~J~J
+~[G
+Held graphics
+~[W~[^,~[Q~[Q~[R~[R~[S~[S~[T~[T~[U~[U~[V~[V~[W
+~w~w
+~M~J~J
+    ~[^~[Z~[H~[S_p~[U~[U
+~[V~[V~[W~[W~[Q~[Q~[R~[R~[S~[S~[T~[T~[U~[U~[V~[V~[W~[W~[Q~[Q~[R~[R~[S~[S0
+~M~J
+ and~[M~[Z~[H~[Tj~[]~[C~[IEverything~[Ftogether~[^!~[H~[T5~[\
+~M~J~J
+    ~[^~[Z~[H~[S"œ~[U~[U
+~[V~[V~[W~[W~[Q~[Q~[R~[R~[S~[S~[T~[T~[U~[U~[V~[V~[W~[W~[Q~[Q~[R~[R~[S~[S!
+~w~w
+~M~J~J
+~[G
+Press any key to continue...
+~i
+
+~L
+~[B
+The screen consists of 24 rows each of 40 characters.  VIDEOTEX can
+ operate in one of two modes: full-screen and split-screen.
+~w~w~w~w
+~M~J~J
+~[G
+This is full-screen mode.  To select split-screen mode press any key...
+~i
+~m
+~T
+~M~K
+~[y~[y
+~[C
+On entry to split-screen mode the normal Videotex frame is displayed on
+ the left side of the screen and the right side of the screen
+ contains a help page.
+~w~w~w~w
+~M~J~J
+~[F
+Once in split-screen mode, the left side of the screen can be copied
+ into the right side.
+~[G
+ To see this press any key...
+~i
+~m
+~w~w
+~M~J~J
+~[E
+The help page can be put back on the right side if required.
+~[G
+ To see this press any key...
+~i
+~h~m
+~w~w
+~M~J~J
+~[H
+Press any key to continue...
+~i
+
+~c~c
+~L
+~T
+Off-line editing facilities include cursor movement, insertion and
+ deletion of characters or lines, and graphics pixel editing.  A word-wrap
+ feature causes words to be automatically wrapped to the beginning of
+ the next line. 
+~w~w~w
+~M~J~J
+Press any key to see a demonstration of word-wrap...
+~M~J~J
+~i
+Watch out for the last word being ~Qw~wr~wa~wp~wp~we~wd!
+~w~w
+~M~J~J
+There now follows an example of offline editing.
+  Watch the cursor...
+~Q~w~K~w~K~w~K~w~K~w~K~w~K~w~K~w~[b~w~1~w~[B~w~[f~w~[G
+~w~M~w~J~w~J~w~J
+~w~[n~w~[n~w~[n~w~[n
+~w~[y~w~[y~w~[y~w~[y
+~w~[i~w~[i~w~[i~w~[i
+~w~[d~w~[d~w~[d~w~[d
+~w~w~T~J~J~J~J~J~J
+Graphics can be edited pixel by pixel...
+~M~J
+~Q~w~w
+~[R
+~W~w~S~w~D~w~E~w
+~S~w~D~w~2~w~W~w~E~w
+~T
+~M~J~J
+Press any key to continue...
+~i
+
+~L
+~[B
+When online what is typed at the keyboard is sent to the remote host
+ and received characters are displayed or acted upon.
+~M~J~J
+~w~w
+~[G
+In this mode the
+ status line at the bottom of the screen shows the serial port selected
+ and its interrupt number (press any key to continue)...
+~^~K~[H~[C     vvvvvvvvv
+~o~T~i~o~T
+~^~J~J~J~J~J~J~J~J~J~J
+~[C
+...the serial baud rate (press any key to continue)...
+~^~K~[y~[H~[C~I~I~I vvvv
+~o~T~i~o~T
+~^~J~J~J~J~J~J~J~J~J~J~J~J~J
+~[F
+...and a clock indicating the time since the online mode was entered...
+~^~K~[y~[H~[C~I~I~I       vvvvvvvv
+~M~K~K
+~[G
+Press any key to continue...
+~o~T~i~o~T
+
+~L
+~M~J~J
+~[G
+That is the end of the demonstration.  You can exit VIDEOTEX with
+ ALT-Q or review the contents of the carousel with the Home, PgDn
+ and PgUp keys.
+~M~J~J
+~Q
+

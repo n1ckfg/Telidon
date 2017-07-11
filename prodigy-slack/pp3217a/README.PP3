@@ -1,0 +1,684 @@
+
+README.PP3  August 26, 1992 (1850)
+Personality+III(R) (Shareware) Version
+
+                          Microstar Software Ltd.
+                        100-34 Colonnade Rd. North
+                     Nepean, Ontario, CANADA  K2E-7J6
+
+This is the *SHAREWARE* version of Personality+III.
+
+         (C) 1992 Microstar Software Ltd.  Microstar disclaims all
+         warranties as to this software, whether express or implied,
+         including without limitation any implied warranties of
+         merchantability or fitness for a particular purpose.  See
+         the end of this file for further disclaimers.
+
+You are welcome to copy and distribute these files for non-commercial use
+provided all of the files are included and none are modified in any way.  If
+you find this program useful, a registration fee of $25 per copy would be
+appreciated.  If you send $40 or more, you will receive a printed manual and
+information on our other NAPLPS based products and services.  With your
+cheque, VISA (number and expiry date), or money order, please include your
+name, address, phone number, software version, and where you obtained this
+software.  To help us meet your future needs, you may wish to briefly
+describe how and where you use this software.  Please print the registration
+form in the file REGISTER.PP3, fill out and mail to the above address.
+
+
+                             Table of Contents
+
+               1.0   Files in the Complete Delivery
+               2.0   Use of the Program and NAPLPS
+               3.0   Program Setup and Screen Drivers
+               4.0   Viewing the Sample NAPLPS Frames
+               5.0   Program Startup and Service Configuration
+               6.0   Emulation of Industry Videotex Devices
+               7.0   Connecting to a Service and Function Keys
+               8.0   Communication Errors
+               9.0   Adding NAPLPS Support to a Host Service
+               10.0  Latin-1/Accented Character Set Display
+               11.0  Differences in Program Versions
+               12.0  Limited Warranty
+
+
+1.0   Files in the Complete Delivery
+
+The following files constitute a complete delivery of this package:
+
+               PP3      BAT        - program invocation
+               PP3SET   BAT        - program configuration
+               MVDIAPP  COM        - program execution
+               PP3SCOMM EXE
+               PP3S     DAT        - service directory storage
+               PP3SE    MSG        - language files
+               PP3SF    MSG
+               CGA640   SCR        - screen drivers
+               EGA640   SCR
+               EGA640E  SCR
+               EGA640F  SCR
+               HER720   SCR
+               LCD640   SCR
+               MCGA320  SCR
+               T3100    SCR
+               TARGA16  SCR
+               TRS1000  SCR
+               VDA256   SCR
+               VGA320   SCR
+               VGA640   SCR
+               README   PP3        - this file
+               REGISTER PP3        - mail-in registration form
+               NAPLPS   000        - sample NAPLPS frames
+               NAPLPS   001
+               NAPLPS   002
+               NAPLPS   003
+               NAPLPS   004
+               NAPLPS   005
+               NAPLPS   006
+               NAPLPS   007
+               NAPLPS   008
+               NAPLPS   009
+               NAPLPS   010
+               NAPLPS   011
+
+2.0  Use of the Program and NAPLPS
+
+Personality+III(R) is a communication package that interprets either the
+VT100 ((c)DEC) control syntax in a textual display, or the North American
+Presentation Layer Protocol Syntax (NAPLPS) in a graphical display.  For a
+brief demonstration of the power of NAPLPS, refer to the Table of Contents
+for the section with instructions for displaying the sample frames.
+
+NAPLPS is a government standard (ANSI-X3.110-1983/CSA-T500-1983) for the
+encoding of alpha-numeric, alpha-mosaic, alpha-geometric and alpha-
+photographic constructs.  This syntax is based on the international standards
+ISO-2022 and ISO-2375.  NAPLPS is a resolution independent and device
+independent syntax and Personality+III uses the proprietary Microstar Virtual
+Device Interface (MVDI(R)) to display data encoded in this syntax.  MVDI is
+implemented on IBM-PC ((c)IBM) compatible, Macintosh ((c)Apple) and AppleIIGS
+((c)Apple) personal computers, and custom manufacturers' terminals.  For more
+information regarding the programmer's C language toolkit and distribution
+license for MVDI please indicate your needs when you register your copy of
+the software.
+
+The software can be programmed with modem control sequences to dial a service
+and communicate asynchronously.  Many host services are being changed in the
+U.S. and Canada to support switching between a textual presentation and
+graphical presentation and are using NAPLPS as the graphics syntax.
+
+
+3.0  Program Setup and Screen Drivers
+
+A selection of device dependent screen drivers is included with the program. 
+The user must choose the language of the user interface and the screen driver
+that corresponds to the graphics card in the computer.  
+
+The batch file PP3SET.BAT sets up the program for use.  Type PP3SET followed
+by E for English or F for French, followed by the name of the screen driver. 
+Optional arguments can be added for screen driver configuration parameters
+(no parameters are required if the defaults are satisfactory).
+
+         examples:       PP3SET  E  VGA640
+                         PP3SET  F  TARGA16.SCR
+                         PP3SET  E  TARGA16.SCR  +AE000  +P2E8
+
+
+3.1  Language of the User Interface
+
+The languages supplied are English and French, selected respectively by the
+letters E and F, that utilize the message files PP3SE.MSG and PP3SF.MSG. 
+Additional support can be added by the user by creating the file PP3Sx.MSG,
+where 'x' is the letter argument.  Any users creating new language interfaces
+are invited to send their message files to Microstar for inclusion in future
+releases of the product.  Optionally, a new setup batch file, PP3SETx.BAT,
+can also be created to give setup instructions in a different language.
+
+
+3.2  Device Dependent Screen Driver
+
+The following screen drivers are included with the software (a list of many
+more screen drivers is included with the printed documentation).  The title
+page of the program is displayed using the NAPLPS syntax.  If the Microstar
+logo does not appear on the title page, it is likely that the wrong driver
+was selected when you ran PP3SET.  Run PP3SET again and select a different
+driver.
+
+         Note that various trademarks and copyrights for the
+         graphics boards are owned by their respective
+         manufacturers.
+
+CGA640.SCR     640x200 B&W (colours mimicked with dither patterns)
+               CGA Mode 06 graphics mode.
+
+EGA640.SCR     640x350 16 out of 64 colours with blink
+               EGA Mode 10 graphics mode; 256K video memory required
+
+EGA640E.SCR    640x200 16 out of 16 colours with blink
+               EGA Mode 0E graphics mode; 64K video memory required
+
+EGA640F.SCR    640x350 B&W (colours mimicked with dither patterns)
+               EGA Mode 0F monochrome graphics mode
+
+HER720.SCR     720x348 B&W (colours mimicked with dither patterns)
+               Hercules graphics mode
+               Default arguments:       +AB000    (or +AB800)
+
+LCD640.SCR     256x200 B&W (colours mimicked with dither patterns)
+               CGA Mode 06 graphics mode 
+               (reverse video CGA640.SCR with narrow display width)
+
+MCGA320.SCR    320x200 256 out of 262,144 colours with blink
+               MCGA Mode 13 graphics mode
+
+T3100.SCR      640x400 B&W (colours mimicked with dither patterns)
+               Toshiba 3100 and Grid graphics modes
+
+TARGA16.SCR    512x400 256 out of 32,768 colours without blink
+               Truevision Targa 16 graphics mode
+               Default arguments:       +AA000    (or +Aaddress)
+                                        +P220     (or +Pport)
+
+TRS1000.SCR    320x200 16 out of 16 colours with blink
+               Tandy Radio Shack and Pcjr Mode 09 graphics mode
+
+VDA256.SCR     256x200 256 out of 32,768 colours with blink
+               Truevision VDA graphics mode
+               Default arguments:       +AA000    (or +Aaddress)
+                                        +P3E8     (or +Pport)
+
+VGA320.SCR     320x200 256 out of 262,144 colours with blink
+               VGA Mode 13 graphics mode
+
+VGA640.SCR     640x480 16 out of 262,144 colours with blink
+               VGA Mode 12 graphics mode
+
+4.0  Viewing the Sample NAPLPS Frames
+
+4.1  Prepare A Local Display Service Entry
+
+The following instructions will prepare a dummy local service in order to
+decode the sample NAPLPS frames to the display:
+
+    (i) - set up the software with the PP3SET command, if not already
+          configured;
+   (ii) - start up the software with PP3 command; the program displays the
+          Service Directory after the title page;
+  (iii) - create an entry for local display by pressing '0' (if '0' is not
+          already used) then press NEXT (F7) to modify the service profile
+          parameters;  the program displays the Service Profile;
+   (iv) - in the Service Name field, enter 'Local';
+    (v) - with the arrow keys, move down to the Handshake parameter and
+          select 'None';
+   (vi) - with the arrow keys, move down to the Port parameter and select
+          'Local';
+  (vii) - press MENU (F6) to return to the Service Directory (the entry in
+          the directory should now be named 'Local').
+
+
+4.2  View Pages One At A Time
+
+The following instructions will display the sample frames:
+
+    (i) - select 'Local' by pressing it's number and <Enter> to 'connect' to
+          this service profile; the screen becomes entirely blank;
+   (ii) - press Ctrl-F2 to select the file display function;
+  (iii) - enter the name 'naplps.000' for the first file and press <Enter>;
+   (iv) - press <Enter> again, for the "last file in billboard" prompt, and
+          the first demonstration page will display;
+    (v) - press PgUp and Ctrl-PgUp to move forwards and backwards through the
+          set of demonstration pages;
+   (vi) - at the end of the frames, the program displays an "Open Error"
+          message; press 'A' to abort the display function.
+
+
+4.3  View Pages In A Billboard
+
+The following instructions will display the sample frames in a rotating
+billboard fashion:
+
+    (i) - press Ctrl-F2 for the file display function;
+   (ii) - enter 'naplps.000' for the first file and press <Enter>;
+  (iii) - enter '011' for the last number in the billboard sequence and press
+          <Enter>
+   (iv) - enter the amount of timed pause between frames (i.e. 3 seconds),
+          then <Enter>;  the frames will display automatically until Ctrl-F2
+          is pressed to stop.
+
+At any time press Alt-F10 to 'hangup' from this dummy service and return to
+the Service Directory, then press F9 to exit from the program.
+
+5.0  Program Startup and Service Configuration
+
+After the title page, the user is presented with the Service Directory.  Each
+service is numbered, and the Service Name field from each entry is listed. 
+All communicating and file displaying is done from within a service, whose
+parameters are defined by the Service Entry.  
+
+To emulate a particular type of NAPLPS terminal, refer to the Table of
+Contents for the section regarding the emulation of industry videotex devices
+for summaries of the Service Configuration Parameter settings required.
+
+To prepare a Service Entry, select a number from the Service Directory, and
+press NEXT (F7) to change the parameters.
+
+    (i) - the Service Name is the field used in the Service Directory for
+          reference.
+
+   (ii) - the Connect Sequence field is analyzed by the software when the
+          entry is first connected, in order to instruct the modem to dial;
+          The following special characters can be entered in this field to
+          specify control characters and timing pauses:
+
+                         ^^        a single ^ character
+                         ^~        a single ~ character
+                         ^1 to ^9  pause 1 to 9 seconds
+                         ^0        pause 10 seconds
+                         ^@-^Z     equivalent control character
+                         ^`-^z     equivalent control character
+                         ^!        toggle presentation mode
+
+        - the field is initialized with the ATDT dialling sequence, with
+          space for the entry of the phone number, followed by ^M for Ctrl-M,
+          which is the carriage return
+        - all three fields can be used to automate, through timing pauses, a
+          logon procedure (note that trailing blanks in the fields are
+          ignored)
+
+  (iii) - the Handshake type defines the style of emulation
+        - 'None' selects a NAPLPS syntax interpretation without any industry
+          standard switching mechanisms; the only way to switch to ASCII is
+          through the Alt-F9 keyboard sequence or Esc/1 and Esc/2 file
+          display control sequences
+        - 'Minimal' selects a 40-column non-VT100 ASCII emulation with only
+          a minimal set of switching mechanisms, popularized in Canadian
+          videotex databases in the early to mid 1980's
+        - 'Full' selects a full terminal emulation, initialized to ASCII and
+          switchable remotely or locally to NAPLPS with a full set of
+          switching mechanisms, popularized in videotex databases in the
+          United States in the early to mid 1980's
+        - 'Subset' selects a terminal emulation that supports a subset of
+          NAPLPS (with default function key sequences and no unprotected
+          fields), popularized in Canada in the late 1980's; this value
+          automatically sets the other parameters, regardless of how they are
+          selected on the screen, to an Even/7/1 character frame, no
+          character echo, character ASCII command type, normal linefeed and
+          character videotex command type.
+
+   (iv) - the Terminal Message is used by the Full handshake for one of the
+          control sequences;  a service provider will dictate whether this
+          field must be defined by the user
+
+    (v) - the port parameter specifies the asynchronous card to use
+        - the 'Local' setting simulates a live connection, but does not
+          utilize any of the asynchronous cards
+        - the other settings assume the following:
+
+               Port           COM1      COM2      COM3      COM4
+
+               PIC Line       IRQ4      IRQ3      IRQ4      IRQ3
+               Chip Address   03F8      02F8      03E8      02E8
+
+   (vi) - the Baud/Speed/bps parameter specifies the number of bits per
+          second of the asynchronous link
+
+  (vii) - the Parity/Data/Stop parameter specifies the character frame
+        - the Ignore parity setting is used when connecting through 7-bit
+          networks of differing Even/Odd parity settings, when connecting to
+          a 7-bit service
+
+ (viii) - the Character Echo/Duplex parameter tells the software whether to
+          echo characters typed or not in ASCII mode and in NAPLPS non-
+          unprotected field mode
+        - all characters in a NAPLPS unprotected field are echoed using the
+          colour parameters of the field
+
+   (ix) - the ASCII Command Type parameter is used to select whether keys
+          typed are transmitted immediately (Character) or buffered until a
+          carriage return (Line)
+
+    (x) - the Linefeed parameter is used in ASCII mode only and specifies
+          whether a linefeed character is automatically displayed after the
+          display of a carriage return character
+
+   (xi) - the Videotex Command Type parameter is used to define that mode
+          that exists in NAPLPS non-unprotected field mode
+        - this is used to select whether keys typed are transmitted
+          immediately (Character) or buffered until a carriage return (Line)
+
+The NEXT (F7) key is pressed to define custom user keys in the same manner in
+which the connect sequence is defined.  These sequences can be triggered by
+the user at any time during a connection by pressing Shift-F1 through Shift-
+F10.  Values for keys Shift-F1 through Shift-F8 are ignored if the handshake
+type is 'Subset'.
+
+The MENU (F6) key returns the user to the Service Directory with all
+parameter changes saved for the next entry to the software.
+
+6.0  Emulation of Industry Videotex Devices
+
+6.1  AT&T Sceptre Terminal
+
+The following parameter settings will configure a service entry to emulate a
+Sceptre terminal:
+
+         Handshake Type:           Full
+         Terminal Message:         Terminal ID String (optional)
+         Parity/Data/Stop:         None/8/1
+         Character Echo/Duplex:    No/Full
+         ASCII Command Type:       Character
+         Linefeed:                 Normal
+         Videotex Command Type:    Line
+
+
+6.2  Northern Telecom ALEXtel Terminal
+
+The following parameter setting will configure a service entry to emulate an
+ALEXtel terminal (all other parameter settings are assumed):
+
+         Handshake Type:           Subset
+
+This is the only parameter that needs to be set.  This value automatically
+sets the other parameters, regardless of how they are selected on the screen,
+to an Even/7/1 character frame, no character echo, character ASCII command
+type, normal linefeed and character videotex command type.
+
+Note that the key F10-BREAK is the same operation as the phone key on an
+ALEXtel terminal.
+
+7.0  Connecting to a Service and Function Keys
+
+The user can connect to a defined Service Entry from two places:
+
+    (i) - from within the Service Directory by selecting the service entry
+          number and pressing either SEND (F8) or <Enter> or <Return>;
+   (ii) - from DOS by entering the service entry number as the only argument
+          of the command line (during this invocation, the title page is not
+          displayed); see below regarding the command line for more details.
+
+When the connection begins, the Connect Sequence is transmitted as if it were
+being typed by the user.  This sequence can be cancelled by typing any key
+while it is being processed.  During a connection, a user defined key,
+invoked by Shift-F1 through Shift-F10, can also be cancelled by typing any
+key while it is being processed.
+
+
+7.1  Optional Command Line Arguments
+
+If the user enters the argument '/NC' for 'no communication change' before
+the optional service directory entry, then the program will not change the
+communication parameters currently set.  The values of the Baud/Speed/BPS and
+Parity/Data/Stop parameters of the Service Directory are ignored and the
+DTR/RTS hardware lines are not manipulated.  All other settings, including
+the Port, Connect Sequence and other configuration settings are respected.
+
+This allows this program to be used by other third-party communication
+programs as an external download program in the following way:
+
+        - configure a service directory (for this example, entry 1) for no
+          connect sequence, the port required and the emulation style desired
+        - configure the external download program to invoke this program with
+          the command line: 'PP3 /NC 1';
+        - after invoking and using this program, use the Ctrl+Home key
+          combination to return to the third-party communication program
+
+
+7.2  Presentation Specific Function Keys
+
+These are keys are available for use in navigation.  This order follows the
+recommendations of the User Interface Requirements Subcommittee of the
+Videotex Industry Association (VIA) published March 1991.
+
+       Label     ASCII         NAPLPS        NAPLPS
+                 Seq.          non-Subset    Subset
+                               Macro         Macro or Default Seq (*)
+
+   F1: HELP      PF1           2/0           2/3 or ESC 2/3 3/4  CR
+   F2: REDISPLAY PF2           2/1           2/4 or ESC 2/3 3/3  CR
+   F3: CANCEL    PF3           2/2           2/0 or ESC 2/3 3/15 CR
+   F4: TOP       PF4           2/3           2/1 or ESC 2/3 3/6  CR
+   F5: BACK                    2/4           2/2 or ESC 2/3 3/2  CR
+   F6: MENU                    2/5           2/5 or ESC 2/3 3/10 CR
+   F7: NEXT                    2/6           2/6 or ESC 2/3 3/8  CR
+   F8: SEND                    2/7           2/7 or ESC 2/3 3/1  CR
+   F9: EXIT                                         ESC 2/3 3/9  CR
+  F10: BREAK     --------- 250 ms Space (Break/Attention) ---------
+
+                                        (*)  In the subset handshake, if the
+                                             macro is undefined, the default
+                                             sequence is transmitted
+
+7.3  Presentation Specific Editing Keys
+
+These keys are available for use during data editing.
+
+       Label    ASCII         NAPLPS         NAPLPS
+                Seq.          non-Subset     Subset
+                                                         
+ Bksp: BKSP     BS            BKSP           BS
+C+Bsp: DEL      DEL                          DEL
+  Esc: Esc      ESC           CLEAR FIELD    ESC
+  Tab: FIELD->  TAB           FIELD->        TAB
+S+Tab: <-FIELD                <-FIELD     
+  Del:                        DEL CHAR
+  Ins:                        INS 1 CHAR
+ Home:                        HOME CURSOR
+  End:                        NEXT LINE
+Enter:          CR            SEND           CR
+
+
+7.4  Global Function Keys
+
+These keys are available at all times during a connection.
+
+    F10:  BREAK 250ms Space Condition (double BREAK within one second implies
+          HANGUP modem without returning to directory)
+ Alt+F9:  Toggle Presentation Mode between ASCII and NAPLPS
+Alt+F10:  HANGUP (HANGUP modem and return to directory)
+Ctl-Home: EXIT (HANGUP modem and return to operating system)
+Sh+Print: Print Screen (NAPLPS print requires GRAPHICS.COM or equivalent)
+
+Note that in all key combinations above that trigger HANGUP, this act is
+accomplished in the software by dropping the hardware DTR line.
+
+
+7.5  Unprotected Field Input Function Keys
+
+These keys are available during the edit of an unprotected field, in addition
+to those keys listed above for data editing.
+
+         Alt+C: change character colour
+         Alt+B: change background colour
+         Alt+M: enter mosaics characters from keyboard
+         Alt+S: enter supplementary characters from keyboard
+         Alt+D: enter DRCS characters from keyboard
+         Alt+P: enter primary characters from keyboard
+         Alt+U: toggle underscored input
+         Alt+R: remove line (same as delete line Shift+Del)
+         Alt+I: insert line (same as insert line Shift+Ins)
+
+
+7.6  ASCII Mode Function Keys
+
+These keys are available during an ASCII connection to instantly modify
+selected parameters.  These modifications are not maintained in the Service
+Directory.
+
+         Alt+F1: toggle local echo/duplex
+         Alt+F2: toggle character/block entry
+         Alt+F3: toggle automatic line feed
+
+7.7  NAPLPS Mode Function Keys
+
+If a terminal is decoding an infinite macro and does not receive the command
+from the host to cancel the macro and continue to the next byte of host data,
+the user can manually cancel the macro with the Alt-X sequence. 
+
+In the Full Handshake, the AT&T Sceptre Terminal use of the DES Encryption
+Standard can be invoked with the Ctrl-End sequence.
+
+
+7.8  File Manipulation Function Keys
+
+7.8.1  File Capture
+
+The Ctrl-F1 sequence engages data capture to disk based on the responses
+prompted from the user.  
+
+The 'Capture' mode will save all data received since the last time the
+software transmitted any data to the host.  This is a one shot function and
+will not save subsequently received data until another capture or repeat
+request is made.
+
+The 'Incoming' mode will save all data received after the prompts are
+answered until cancelled with Ctrl-F1.
+
+The repeat sequences are Ctrl-PgDn and PgDn.  Ctrl-PgDn will repeat the last
+file capture request without changing the target file name.  PgDn will only
+work if the target file name ends in digits, and will increment the final
+digits numerically by one, then repeat the file capture request.
+
+
+7.8.2  File Display
+
+The Ctrl-F2 sequence engages file display from disk to screen based on the
+responses prompted from the user.
+
+All files that are displayed are examined for a two byte request for change
+in presentation mode sequence.  The sequence ESC '1' (ESC 3/1), when
+detected, will change the presentation mode to NAPLPS if it is ASCII.  The
+sequence ESC '2' (ESC 3/2), when detected, will change the presentation mode
+to ASCII if it is NAPLPS.
+
+The 'Billboard' mode is prompted if the source file name ends in digits.  A
+rotating billboard is a set of numerically sequenced file names.  The
+demonstration NAPLPS frames can make a billboard sequence.  
+
+If the user does not respond to the 'last sequence number in billboard'
+prompt, the software proceeds with the display function for the given file.
+
+If the file does not end in numerics, the repeat sequences is Ctrl-PgUp and 
+will redisplay the file requested.
+
+If the file does end in numerics, the repeat sequences are Ctrl-PgUp and
+PgUp.  Ctrl-PgUp will decrement the file name then repeat the display
+request.  PgUp will increment the file name then repeat the display request.
+
+
+7.8.3  File Transmission
+
+The Ctrl-F3 sequence engages file transmission from disk to the host based on
+the responses prompted from the user.
+
+The user is queried regarding whether to 'convert and pause the ends of
+lines'.  This dictates whether the transmission is for text data and is to
+emulate typing (answer 'Yes') or for binary data and is to be transmitted
+verbatim.
+
+Billboard functions detailed in File Display apply also for File
+Transmission.
+
+
+7.8.4  Binary File Transmission and Display
+
+The Ctrl-F4 sequence engages simultaneous file transmission and display from
+disk to both the display and to the host, and operates in a similar manner to
+only file transmission.
+
+8.0  Communication Errors
+
+Errors detected on the asynchronous line are displayed in the top left corner
+of the screen with a bracketed exclamation mark as follows:
+
+   <!q>   Queue Overflow      host not supporting XON/XOFF requests from
+                              software quickly enough
+   <!f>   Framing Error       wrong character frame defined by the
+                              Parity/Data/Stop parameter
+   <!p>   Parity Error        wrong parity setting defined by the
+                              Parity/Data/Stop parameter
+   <!c>   Chip Overrun        personal computer real time interrupts turned
+                              off for a period longer than a character
+                              frame(*)
+
+         (*) Some clone video cards require a pause after receiving the
+         change in presentation mode control sequence because the video BIOS
+         of these cards suspends real time communication interrupts for a
+         period longer than the asynchronous character frame.  When
+         interrupts are suspended too long and the computer is receiving
+         characters, some characters will be lost and the user will see the
+         chip overrun sequence <!c> in the top left corner of the screen.
+
+
+9.0  Adding NAPLPS Support to a Host Service
+
+The host can control the video display mode by sending one of two particular
+ISO-2375 registered control sequences down the asynchronous communication
+line.  When the software detects the sequences, the mode will change before
+the next datum is parsed.  This allows a service to mix both text pages and
+NAPLPS graphic pages in a single session.
+
+The three byte hexadecimal sequence 0x1b, 0x25, 0x41 (in ASCII: ESC, '%',
+'A') will switch the presentation to the NAPLPS graphics mode.  The three
+byte sequence 0x1b, 0x25, 0x40 (in ASCII: ESC, '%', '@') will switch the 
+presentation to the text mode.
+
+
+10.0  Latin-1/Accented Character Set Display
+
+This program will interpret the ASCII character set 'high-bit' characters
+following the international standard ISO-8859/1, also called Latin-1.  This
+character set is different than the code pages found on standard personal
+computers, and does not include line drawing characters.  Some Bulletin
+Boards expect the use of code pages, hence there may be accented characters
+appearing on the screen when line drawing characters are used.
+
+This program is configured with built-in support of Latin-1 characters on
+screens with either 14-dot high (EGA standard) or 16-dot high (VGA standard)
+characters.  Some laptop and other personal computers do not follow either of
+these standards in their default modes.  Some of these computers do, however,
+provide a hot-key combination on the keyboard that configure their text
+screen to be one of these standards.
+
+When the program detects that the dot height of characters in text mode is
+neither 14 nor 16, it will not use the built-in support, however, it will
+still interpret Latin-1 characters and will assume that the current code page
+loaded in the video character set generator is Code Page 850 (PC Multi-
+lingual Code Page).  Refer to the operation of your personal computer or
+operating system for instructions on configuring the code page of your video
+character set generator to Code Page 850.
+
+11.0  Differences in Program Versions
+
+Version 2.18a  92/08/26
+         Changes in memory management in loader and removed use of INT 64H
+         when only a single driver in use.
+
+Version 2.17a  92/05/28
+         Changes for printing support and non-standard text mode display, the
+         ASCII display of 8-bit data, and the ability to be called as an
+         external download program.
+
+Version 2.16a  91/08/21
+         Fixed reported problems regarding conflicting escape sequences
+         between VT100 and both Full and Subset Handshakes (changed such that
+         each conflicting sequence is only supported if the presentation
+         style is in the correct mode).
+
+Version 2.14a  91/08/16
+         Original Shareware Version
+
+
+12.0  Limited Warranty
+
+The programs are provided "AS IS" without any warranty or condition, express
+or implied, including but not limited to the implied warranties or conditions
+of merchantable quality and fitness for a particular purpose and those
+arising by statute or otherwise in law or from a course or dealing or usage
+of trade.  The entire risk as to the quality and performance of the program
+is with you.  Should the program prove defective, you (and not Microstar or
+an authorized Microstar dealer) assume the entire cost of all necessary
+servicing, repair or correction.  Without limiting the foregoing, Microstar
+does not warrant that the functions contained in the program(s) will meet
+your requirements or that the operation of the program(s) will be
+uninterrupted or error free.
+
+

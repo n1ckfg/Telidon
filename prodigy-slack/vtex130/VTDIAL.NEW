@@ -1,0 +1,29 @@
+The changes in v1.91 of VTDIAL are...
+
+1   The interrupt number for the selected COM port is requested.  If  
+    supplied, it is passed to VIDEOTEX with the /I:irqn switch.
+
+2   The option to choose the HELP screen as the right-hand side of the
+    split-screen display has been removed, as this is now automatic.
+
+Richard Russell (5th January 1997)
+
+
+The changes in v1.9 of VTDIAL are quite small.
+
+1   The prompt line on the bottom of the menu screen is now highlighted in
+    reverse video.
+
+2   If you have an entry with a script set up that downloads a set of frames
+    to a carousel you can now load and view the carousel from VTDIAL by
+    moving the highlight bar on the menu to the service and hitting 'V' (for
+    View carousel).
+
+    This works provided that the carousel has the same name as the script
+    and is in the same directory (the restriction is to save having to
+    extend the dialling directory entry to contain another filename - the
+    script file is used with any extension changed to .CAR)
+
+
+Terry (7th June 1991)
+

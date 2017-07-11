@@ -1,0 +1,71 @@
+VIDEOTEX V1.30
+~~~~~~~~~~~~~~
+The REGISTER program allows you to configure VIDEOTEX for Canon-compatible
+printers, as well as Epson and HP (PCL).
+
+The serial port interrupt number can be selected with the /i:irqn switch.
+
+The ALT-N (hangup) command issues the ATH0 modem command as well as pulsing
+the DTR line.
+
+The ALT-P (print screen) command uses 8 x 12 character cells instead of
+8 x 14, so that graphics 'sixels' are square on the printout.
+
+The 'dump screen as graphics' command (ALT-D) has been added, which
+generates a colour Windows Bitmap (.BMP) file.  The telesoftware download
+command is now ALT-Z.
+
+Compatibility with Windows has been improved, so the program now works
+correctly in a (full screen) DOS box.
+
+An online clock has been incorporated, which displays in the status line
+the time since the online mode was entered,
+
+VIDEOTEX V1.20
+~~~~~~~~~~~~~~
+References to *PC SUPPORT# on Prestel have been removed!
+
+When offline, you can edit (toggle) individual graphics 'pixels' using
+CTRL with the W, E, S, D, X and C keys (imagine they are a 2x3 rectangle).
+
+The REGISTER program allows you to configure VIDEOTEX for an HP Laserjet-
+compatible printer instead of an Epson-compatible printer.
+
+Support for COM3 and COM4 has been added, at their 'standard' addresses
+and interrupt numbers (COM3: 3E8H, IRQ4; COM4: 2E8H, IRQ3).
+
+VIDEOTEX V1.10
+~~~~~~~~~~~~~~
+An 80-column split-screen mode has been introduced, activated with ALT-M.
+In this mode the normal display occupies the left-hand half of the screen
+and may be copied into the right-hand half with another ALT-M.  The help
+page may be copied into the right-hand half by ALT-H ALT-M.  MAKEBAT now
+allows you to select split-screen mode automatically if required.
+The ALT-C (show codes) command may be used to return to full-screen mode.
+
+The error messages 'Break rcvd', 'RX framing' and 'RX parity' have been
+removed.  If the baud rate is incorrect you will now get garbage characters.
+
+When editing offline, the ESC-G code (alpha white) is now wrapped, for
+compatibility with Prestel's online editor.
+
+The 'printer reset' string (ESC @) is no longer sent to the printer, as this
+caused subsequent form-feeds to misbehave on some printers.
+
+The keypad *, + and - keys are now user-definable with the ALT-K command.
+You may also permanently re-define these keys when you REGISTER the program.
+
+The DTR line no longer changes state on exit from Videotex, so that the
+modem will not hangup the telephone line.  Use ALT-N if you need to hangup.
+
+The line editing facilities when responding to a prompt have been improved.
+The Ins, Del, left-cursor and right-cursor keys may now be used for editing.
+
+
+VIDEOTEX V1.00
+~~~~~~~~~~~~~~
+The following feature was added at the last moment and is not mentioned in
+the documentation file:
+
+You can test, in a ~| command, for the presence of a file with #"filename"
+which returns TRUE if the file exists and FALSE otherwise.

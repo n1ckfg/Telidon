@@ -1,0 +1,98 @@
+This set consists of:
+
+1. The shareware version of the Microstar Graphics Editor for
+creating NAPLPS frames. These frames or screens consist of text,
+graphic images, timed pauses and palette animation sequences so
+there is a little bit more to them than just a drawing file.
+A Microsoft-compatible mouse is required to run the program.
+
+2. MSDOS executable versions of Uuencode and Uudecode. QUUNCD.EXE
+and QUUDCD.EXE. These will turn any binary file (such as a naplps
+frame)  into  ascii  form,  which can then  be  loaded  into  any 
+wordproccessor and sent as e-mail.  Any MSDOS, Unix, Mac uudecode 
+will  put  the ascii back to binary form.  The syntax  is  simply 
+'quuncd binfile ascfile'. The binary will expand to approximately 
+150%  its original size.  To decode the command is simply 'quudcd 
+ascfile.' It will create the 'binfile' again and name it.
+
+3.  A Batch  File SHOWNAP.BAT  and three  support  files (NAP.ON,
+NAP.OFF and PAUSE.NAP) written by David Hughes Jr demonstrate how 
+to set up  a menu  driven Naplps  Gallery of  frames on a  Remote
+Access Fido system (the script should work with other Fidos).  It
+allows a  caller with a  Naplps  Terminal  program to  select the
+gallery from a  menu, and display individual dynamic frames, then
+return the  terminal  program to ascii mode.  How to install this
+Naplps display ability is commented inside SHOWNAP.BAT.
+
+(NAP.ON  and NAP.OFF  automatically  toggle any  Naplps  Terminal
+program in and out of  Naplps  mode {They can be manually toggled
+also}.  PAUSE.NAP  places a 10  second  pause at the end of  each
+Naplps frame displayed.
+
+4.  Essay (WHYNAP) on why a Sysop would be interested in offering 
+Naplps frames plus the shareware on his or her system.
+
+5.   A  Word  Dance naplps file "Cursor Cowboy's  Song"  by  Dave 
+Hughes  which  can be used  to  practice  quuncd  and quudcd  and 
+Naplps terminal functions with. 
+
+For more information about these programs or Naplps.
+
+There was a 4 part Series in Byte Magazine Feb to May, 1983 by
+Jim Fleming describing the Naplps Ansi Standard in some technical
+detail.
+
+The  standard is contained in the ANSI X3.110-1983  and  Canadian 
+Standards Association T500-1983's 'Videotex/Teletext Presentation
+Level Protocol Syntax."  With Addendum dated June,  1989.  Can be 
+ordered  from  the American National  Standards  Institute,  1430 
+Broadway, NY, NY , 10018. Approximately $35. Call to get price. 
+
+There is a freely available electronic text describing the NAPLPS
+standard in complete technical detail and in a rather more
+understandable language than the official standard. It is named
+NAPLPS.ZIP or NAPLPS2.ZIP and is available from the SIMTEL20 archive
+on the Internet as well as the Fidonet PDN (Programmers Development 
+Network).
+
+David  Hughes  (Jr) is knowledgable about implementing Naplps  on 
+Fido-type systems
+David Hughes
+6 1/2 N 24th St
+Colorado Springs, CO, 80904
+David Hughes on Fido:  1:128/67
+                uucp:  ..!oldcolo!david
+
+Dave  Hughes (Sr) is knowledgable about implementing the standard 
+on  Unix systems. He is also undertaking a project with Russian
+programmers to create a combination drawing/terminal program
+called Troika/Teledraw. 
+
+Dave Hughes
+Old Colorado City Communications
+2502 W Colorado Ave #203
+Colorado Springs, CO 80904
+719-636-2040 and 719-632-4848 voice
+719-632-2658 9600 baud V32 8N1 modem
+719-632-2657 9600 baud V32 8N1 for Remote Access Fido 1/128/67 
+(this is Ufgated to oldcolo.UUCP system. oldcolo.UUCP polls
+csn.org - Colorado Supernet)
+
+dave@oldcolo.com
+
+You can get NAPLPS samples via ftp oldcolo.com in the /pub/naplps
+directory. If you telnet to oldcolo.com and login as newuser, you
+can see a sample NAPLPS art gallery.
+
+There are also samples available on Russell Country BBS Fido 1/346/7.
+ 
+On Compuserve type GO PARTI and then JOIN NAPLPS to join a NAPLPS
+conference. Mail dave@oldcolo.com to join the Internet NAPLPS mailing
+list or to get a feed of the Fido NAPLPS echo.
+
+A Macintosh Naplps service called 'Le Mussee Standard' drawn
+with forthcoming Mac software is running at 514-987-1297. In
+French.
+ 
+For instructions on how to run MGE, print out the file README.MGE
+and keep it handy as a quick reference.

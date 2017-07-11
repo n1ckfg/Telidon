@@ -1,0 +1,51 @@
+~{~|"" Auto read of Mail and PC Support + PC Base letters RTR 20-Apr-1991 ~}
+~{~|"" Extended to download new NET NEWS stories (again), RTR 06-May-1991 ~}
+~{
+~|!"NEW MESSAGE"
+*DOWNLOAD#3~a
+~gNUL~M~o
+~{~|!#"MAIL.CAR"~gMAIL~M~o~|""~}
+~{
+~|("There are no messages for you"|"Download complete"|"Invalid option")#~a
+~}
+~fMAIL~M
+~s~H~H~H~H~H~H~H~HNEWMAIL.FLG~M
+~}
+*PCSUPPORT#71~a
+~gNUL~M~o
+~{
+~{
+~{
+~|!("# FOR "|"# for "|"# For "|"# MORE")#~a
+~}
+~|!("1 FOR "|"1 for "|"1 For "|"1 MORE"|"next day's Letters")1~a
+~}
+~|("That's all for today"|"WHAT'S NEW"|"Daily Letters")*00~a
+~}
+*PCBASE#71~a
+~{
+~{
+~|!"1>>"1~a
+~}
+~|("For earlier letters"|"WHAT'S NEW"|"Today's Letters")*00~a
+~}
+~k0More...~~H#~M
+*800#2~a
+~{
+~{
+~{
+~|!"~0"#~a
+~}
+~|!"1 Next"1~a
+~}
+~|("*NET NEWS#"|"What's New")*00~a
+~}
+*90##~a
+~fLETTERS~M
+~o~L
+~{~|!#"NEWMAIL.FLG"
+~eNEWMAIL.FLG~M
+~[HMessages have been stored as MAIL.CAR. 
+~|""~}
+PC Support and PC Base letters have been stored as LETTERS.CAR.  
+To read the first press HOME, then PGDN.~M~J~T

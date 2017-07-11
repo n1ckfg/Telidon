@@ -1,0 +1,232 @@
+                                                August 16th, 1991
+
+                           WHY NAPLPS?
+
+      			   Dave Hughes
+		Old Colorado City Communications
+
+     I  might as well ask back  'Why ASCII?' Without which  there 
+would  be no general modem-based  telecommunications.  No  BBS's, 
+computer  conferencing  systems,  Compuserve,  MCI  Mail  or  the 
+ability  of any microcomputer to exchange intelligable text  with 
+any other computer - or printer, or modem, or data base. ASCII is 
+an  ANSI  standard  for  the encoding of  the  English  alphabet, 
+punctuation, and certain computer control codes.
+     NAPLPS  - the North American Presentation Protocol Syntax  - 
+is  a joint ANSI-Canadian Standards Association standard for  the 
+encoding of animated graphics,  symbols as graphics, and text. It 
+was designed especially for telecommunications. For it is:
+     a. Terminal independent - it doesn't matter whether you have 
+an IBM PC with Hercules, CGA, EGA, or VGA,  a black and white Mac 
+Classic or a 256 color Mac LC,  an Amiga,  Atari,  or a high  end 
+graphics  work station.  The standard permits work done on one to 
+be viewed on any of the others.
+     b. It is highly compact. No 200k bitmapped GIF, Group 3 fax, 
+or TIFF files,  compressed or not.  A full page of color graphics 
+and text will range from a few hundred bytes, 5k, to a big Naplps 
+file that may be 20k. 
+     c.  Its more than just static pictures.  It's wait and blink 
+functions  permit continuous animation.  Which supports not  only 
+sequential  series,  but  also interactive action,  and  editable 
+'protected fields.
+     d.  It can be integrated into any ASCII based system (a Fido 
+BBS, Unix network, dial-up commercial service, LAN, network). For 
+it is a superset of ASCII,  and its viewing terminal programs can 
+be  dual  ASCII,  NAPLPS - even Teletel - the mosaic's  basis  of 
+French Minitel.
+     e.  Its DRCS function greatly broadens its ability to handle 
+foreign   languages,   symbol  sets  created  by  the   users   - 
+math, science, games.
+     f.  Its perfectly suited for INTERACTIVE online systems, and 
+interconnected networks,  such as the Internet,  Bitnet,  Usenet, 
+Fidonet,  even  Frednet.  It  is especially suited  to  Fido  BBS 
+networks because Fido moves data in binary form between systems - 
+and  this  can easily move Naplps 7 or 8 bit frames  (and  Naplps 
+supports both) between systems. 
+     Why  haven't  I heard of it?  You have,  but didn't know  it 
+because  up until now it almost excusively has been used  as  the 
+basis  of  one-way graphics services called  Videotext.  Such  as 
+Canada's ALEX service, the NYNEX Gateway service (alas, no longer 
+with us) and Prodigy.  (now I'll duck).  Yes,  the 'lowest common 
+denominator'  graphics frames you see on Prodigy,  deeply  buried 
+inside  that bizzare software terminal program,  linked to  their 
+kludgy central server computers running overdeveloped  functions, 
+is  Naplps.  Why?  Because for all the billions IBM and Sears can 
+spend  programming  and marketting a Videotext  service  for  the 
+masses,  they  selected  Naplps because it was the only  protocol 
+that was (1) made for telecom and (2) could let a PC and MAC  see 
+the same graphics.
+     But  there is another more fundamental point.  Videotext  is 
+little  more  than modem based television.  I say  'little  more' 
+because one *can* send and recieve e-mail.   But not *graphic* e-
+mail.  In  fact that is the issue I have long had with the  whole 
+'Videotext' modem-mindset,  and therefore mis-use of Naplps as  a 
+very  neat  protocol with unrealized potential.  They missed  the 
+point  that every user of a BBS learned by their second log in  - 
+that it is more fun to create and send a message or program, than 
+to just read those put there by others.  Ditto for graphics.  The 
+only  service which was both profitable and creative  on  another 
+failed  Videotext  service  (1986) by AT&T and  Knight-Ridder  in 
+Florida called Viewtron (also Naplps) was that users could summon 
+up  clip-art  by Hallmark,  assemble and send  graphics  greeting 
+cards by e-mail!
+     But  what  has held back the spread of  online  graphics  on 
+truely  two-way  dial up services,  has been either (1)  the  big 
+over-head of bit-mapped graphics inside any storage system, which 
+also  means  the  long download times that just  about  rule  out 
+'real-time'  rather than 'look-at-it-later' time graphics and (2) 
+the  lack  of good low-end free ware or share-ware  Naplps  frame 
+creation software as well as terminal programs.
+     That  situation just changed today.  After my working on the 
+minds  of every Candian Naplps developer for years (all  of  whom 
+have  been  more advanced in Naplps than US programers since  the 
+late  70's and who served only the Videotext market),  and  after 
+experimenting with some quirky Naplps programs on my own Unix and 
+Fido  systems  since 1984,  the leader of the Naplps  industry  - 
+Microstar of Canada, called me up and said I could announce TODAY 
+at  Fidocon-91 that his $1,000 professional MSDOS Frame  Creation 
+program MGE (Micro Graphics Editor), AND his $100 Naplps Terminal 
+Program   (Personality   Plus  III)  could  be   distributed   as 
+Shareware!!!! (with a $50 and $25 registration price).
+     That  makes  available to US  BBS,  and  commercial  service 
+operators,  for the first time, professional quality Naplps frame 
+creation  programs  which can run on any PC with a  mouse  - from 
+floppy  disk  CGA laptops to hard disk VGA 346's.  And users  can 
+download  the dual-ascii smart terminal program as shareware  and 
+view  any Naplps frames on any system,  before getting  into  the 
+game  of  creating their own graphics,  animated  text,  using  a 
+protocol based on an ANSI standard,  upload it to any service, or 
+add such graphics to their own system.
+     Not  only  that,  but  one other Canadian company  which  is 
+expert in Naplps graphics for education,  (such as doing the Thai 
+alphabet  in DRCS tables in Naplps so that Thailand  school  kids 
+can do distance learning by modem with MSDOS machines, and Naplps 
+based  wordprocessing  and telecom),  the  Tayson  company,  just 
+promised  delivery  of a single-monitor  Naplps  drawing  program 
+which  INCLUDES the DRCS table-creation function (which MGE  does 
+not), and their Naplps Terminal program for under $200.  
+     And  finally another company,  Macgregor of Canada,  who has 
+the best MacIntosh monchrome-color Naplps terminal program  - Tam 
+Tam,  and  in  the last stages of a powerful Mac  frame  creation 
+program  which can convert MacDraw and other formats  to  Naplps, 
+dropped the price of its $135 terminal program to $50, will offer 
+their  drawing  program for end-user (rather  than  studio-level) 
+prices.  And  is working with me on an agreement to release their 
+simplist  Mac  naplps  Terminal program as a  form  of  shareware 
+within 60 days!
+     So,  together  with an Amiga terminal program  that  already 
+exists,  still-pricey  but  dropping  (as soon as  the  Microstar 
+Shareware impact sinks in) naplps scanner, Group 3 fax, TIFF, and 
+PCX software, and other tools - online graphics in ways GIF could 
+never do is available, and can be put on every BBS in the world!
+     But there is more. 
+     I have been so encouraged by the final 'waking-up' of Naplps 
+developers  to the much larger market for online graphics in  the 
+dial  up  modem  BBS,  Usenet  Unix,  Bitnet  academic,  Internet 
+international,  I have been busy too,  hacking out an approach to 
+handling naplps on interconnected (netted) systems in better ways 
+than just Xmodeming the files around,  or perpetuating the binary 
+file-transfer  'net-specific'  modes  - Fido's  compression   and 
+transfer  techiques,  the Internet's ftp transfers,  the Unix  to 
+Unix UUCP one-hop copy protocol.
+     There are several aspects to the problem.  First on all each 
+of  these  large  'domains'  Fidonet,   growing  Frednet  (school 
+Apples),  Usenet,  Bitnet,  and Internet there are perfectly good 
+ways  to  transfer binary (naplps) files intact but  only  within 
+each  net.  But just try to send a compiled binary  program  from 
+Fido  to the Internet,  or Bitnet to a Usenet node.  But they all 
+talk ASCII!  And ASCII files can be moved,  as mail,  through all 
+these domains,  tranparently!  But Naplps has to be treated as  a 
+binary file.
+     Uuencode  and  Uudecode  - the  conversion   binary-to-ascii 
+public  protocol/programs which had their birth on Unix system  - 
+to  the  rescue!  Not  only  are there plenty  of  public  domain 
+versions of these programs for MSDOS,  Mac and Apples,  they  are 
+the *only* protocol used on the large networks such as Bitnet and 
+the  Internet  to  move programs between programmers  across  the 
+country.  Even  if they are done so by breaking up huge  files  - 
+like  several MB - into e-mail chunks under 65k per mail message. 
+     But  Naplps files are *never* that large!  You are lucky  to 
+see a 25k naplps file! Dinky by comparison.
+     Nothing new here, right? So whats the big deal if I (1) draw 
+a graphic, or type a mail message in Russian using a Naplps (DRCS 
+table) word processor (2) uuencode it into pure ascii (3) load it 
+into  a service and address it as e-mail (4) the addressee saving 
+it to a file upon receipt (5) running uudecode against it to turn 
+the ascii back to naplps binary and (6) viewing it with a  Naplps 
+terminal program? 
+     Nothing  really  new  or exiting  here.  Just  a  work-a-day 
+convert, send, and convert back task. Taking many steps.
+     But what,  I asked myself - and you are reading here for the 
+first time - if I put the uudecode tiny utility (752 bytes in one 
+version)  as  a TSR in the RAM with the Naplps Terminal  program, 
+then  using a modified fossil driver to detect the unique  string 
+which  marks  the beginning of a uuencoded binary,  redirects  it 
+through the uudecode conversion routine,  then redirects that i/o 
+back to the Terminal program Naplps decoder where it display  the 
+graphic.  Having  been  converted  only in  the  naplps  terminal 
+program machine,  on the fly,  in Ram!  So that (1) the end  user 
+doesn't  have to do anything - download and convert (2) the Sysop 
+of the host machine doesn't have to do anything either!
+     Graphics  by  e-mail! 
+     Ah,  but there is more.  Since all Naplps terminal  programs 
+(remember  they can be toggled into either plain 80 column  ascii 
+mode  or  Naplps  graphics  and  40  column  text  mode)  can  be 
+automatically  'toggled' between modes by two escape chars  Esc-A 
+and Esc-@, then these can be imbedded at the beginning and end of 
+a  naplps frame.  So that when the frame is 'decoded' the escapes 
+will toggle the Terminal program automatic.  See mom,  no  hands! 
+And  THAT  means  that one could COMBINE ascii text  with  naplps 
+graphics  inside  a single piece of e-mail,  or  even  a  special 
+echos  on  Fidos  or  in any  Unix/Bitnet/Internet  Newsgroup  or 
+computer conference.
+     This work is not complete yet (integrating uudecode into the
+terminal program or ram with TSR). Maybe some Fido hackers can do
+it themselves.
+     So  no more need for 'just' static graphics sitting  in  the 
+Files  Directory  for intermittent viewing (all one has to do  to 
+see  a naplps frame set in a files directory is either to  'type' 
+the file as an ascii output, or 'cat' the file in Unix.) Suddenly 
+big and little graphics are part of the message stream - logos at 
+the head of e-mail,  a little cartoon in the middle of a wise-ass 
+crack in a stiff conference,  a fractal displaying along with the 
+mathematic discussion of it,  a chess or other game board popping 
+up  in  e-mail,  some  of my immortal  Word  Dance  visual-speech 
+stories.
+     Or as those Native-Americans on 5 Montana Reservations  that 
+we  showed  how  to do original Indian Art on VGA  PCs  with  MGE 
+drawing programs, uploading by Xmodem to Cynthia Denton's Russell 
+Country  BBS  in Hobson,  MT ( a Remote Access with Doors to  the 
+'gallery' inside,  and the fine art pieces offered as "Share-Art" 
+with the artists receiving checks for their works from those  who 
+'download'  their  work  - not just view it  online)  did,  write 
+'Illustrated Narratives' of ancient Indian battles and rituals  - 
+in animated Naplps for the public.
+     The imagination of what is possible stirs mightily.  Telecom 
+joins  the  video  revolution,  but goes beyond it by  giving  us 
+interactive,  user-created,  text  and graphics,  on any dial  up 
+system,  with a standard and highly efficient graphics  protocol, 
+with everybody participating through Shareware!
+     Why Naplps?
+     Why not?
+
+Dave Hughes
+The Cursor Cowboy
+Old Colorado City Electronic Cottage
+Colorado Springs, Colorado
+719-636-2040 voice
+    632-2657 9600 baud 8N1 modem to the unix system
+    632-2658 2400 baud 8N1 to Fido 1/128/67
+
+dave%oldcolo@csn.org
+
+P.S. The Indian Share Art can be seen on Russell Country BBS,
+Hobson Montana, 406-423-5433  to 9600 baud V32. Remote Access
+(Fido) 1/346/7.  You can download a shareware MSDOS terminal
+program CTlink.exe to call back and view or download the files.
+Please respect their Share Art status - Native Americans who
+live on Montana Reservations with high unemployment created
+these quality naplps pieces of art, and narrative art. You
+can 'view' them online as many times as you wish, but if you
+download them for your use or posting on your system, it is
+ethical to pay something to the artist for your copy. 

@@ -1,0 +1,60 @@
+       VTDIAL.COM - Copyright (c) Terry Love & PowerLine Systems Ltd.
+
+         All rights reserved, but no payment is requested for using        
+         this program.  No guarantees are given other than it works                
+         for the author and hasn't trashed his machine
+                                  YET ...
+
+                                ---- || ----
+
+This is a very simple 'shell' for Richard Russell's excellent VIDEOTEX.EXE 
+Viewdata terminal comms program.  It is for all those who prefer a dialling 
+directory to separate .BAT files for different services and options.
+
+VTDIAL will allow you to have up to 20 different entries in its dialling 
+directory, each one fully configurable so that they can be used for different 
+accounts, different services, different access nodes, use different scripts 
+or whatever suits you.
+
+It calls VIDEOTEX with a suitable command line for the service and/or 
+options you've specified.  When you exit VIDEOTEX you are back to the VTDIAL 
+dialling directory.
+
+VTDIAL.COM can be renamed to any valid MS-DOS executable file name and will 
+create and look for a dialling directory file with the same name and an 
+extension of .PHN.
+
+When you first run the program it will start off in 'create entry' mode to 
+create your .PHN directory file.  It asks you a series of questions very 
+similar to MAKEBAT.COM that comes with VIDEOTEX but with one or two extras 
+thrown in.  It offers a default for each entry, you can accept the default 
+by just hitting return, over type the default (the 1st character you type 
+other than just hitting Enter discards the default) or clear the field and 
+leave it blank by just hitting Backspace.
+
+VTDIAL asks if you want the Num Lock ON during VIDEOTEX.  If you have a new 
+style 101/102 key keyboard and normally have the NumLock set OFF but want it 
+on during VIDEOTEX then VTDIAL can set it on (whatever its initial state) 
+before it calls VIDEOTEX and restore it to its original state upon return.
+
+The main VTDIAL screen is the dialling directory displaying all the services 
+you have set up.
+
+To enter a new service hit the Insert key and answer the questions.  NOTE: 
+After the first service is set up the parameters for the first service become 
+the defaults offered for subsequent services.
+
+To edit an existing service to change some of the settings hit Home and 
+select the entry to edit.  NOTE: You can actually select the entry 3 ways: 
+i)   hit Home and then confirm by hitting Enter
+ii)  hit Home and select the entry by moving the highlight using the cursor 
+     keys and using Enter to select
+iii) hit Home and then type the letter for the service.
+
+To delete an entry from the dialling directory hit the Delete key and select 
+the entry using the same 3 methods as used to select an entry to edit above.
+
+                                ---- || ----
+
+Please feedback any comments re. VTDIAL to Richard Russell, email address 
+rtr@rd.bbc.co.uk or by post to the address given in VIDEOTEX.DOC.

@@ -1,0 +1,523 @@
+                  VIDEOTEX - Shareware from Richard Russell
+                  -----------------------------------------
+
+                     Copyright (C) R.T.Russell 1991-1997
+                             Release Version 1.30
+
+1. INTRODUCTION
+
+VIDEOTEX is a terminal emulator for the IBM PC, for use in accessing Videotex 
+services  such  as  Bank of Scotland home and  office  banking  (HOBS).   The 
+Videotex  screen  consists of 24 rows of 40 characters;  display  attributes, 
+such  as  colour and graphics, are controlled by  embedded  characters  which 
+occupy  space  on  the screen.  This format was  designed  to  suit  hardware 
+implementation  and it is difficult to perform a full emulation in  software; 
+this program is designed to provide a 100% emulation.
+
+VIDEOTEX  requires an EGA, with at least 128K of RAM, or a VGA/SVGA.   It  is 
+unusual in using the 512-character-font text mode of the EGA/VGA (rather than 
+a graphics mode) to achieve the full range of display attributes; it is  this 
+that  makes  it possible to perform a full emulation at a  reasonable  speed.  
+All features of the Videotex display are supported: colour text and  graphics 
+(contiguous and separated), background colour, flashing, double-height  (text 
+and graphics), held-graphics (for abrupt colour changes) and concealed text.
+
+The  full  Videotex (UK) character set is supported.   Those  characters  not 
+having an equivalent in the ASCII set are obtained from the following keys:
+
+     left arrow          [         long dash        _ (underscore)
+     right arrow         ]         divide sign      ~ (tilde)
+     up arrow            ^         double bar       |
+     one half            \         small block      CTRL-2 or CTRL-backspace
+     one quarter         {         pound sign       ` or œ
+     three quarters      }
+
+VIDEOTEX  is believed to be bug free... isn't all software!  If you  do  find 
+any problems please TELL US using the methods given at the end of this file.
+
+
+2. INSTALLATION
+
+VIDEOTEX  consists  of the single executable file VIDEOTEX.EXE, it  needs  no 
+installation.   The  only options are controlled by the REGISTER  program  or 
+from the command line:
+
+            VIDEOTEX [/b:baud] [/c:port] [/i:irqn] [dialstring][@scriptfile]
+
+/b:baud     Controls the speed to which the serial port will be set.   'baud' 
+            may  be  one of the following values: 75, 150,  300,  600,  1200, 
+            2400, 4800, 9600, 19200 or 38400.  For example, /b:2400 sets  the 
+            transmit  and receive speeds to 2400 baud.  If the /b  switch  is 
+            omitted the speed defaults to 9600 baud.
+
+/c:port     Determines which serial port (COM1 - COM4) is used.  For example, 
+            /c:2 selects port COM2.  If omitted the port defaults to COM1.
+
+/i:irqn     Determines  which serial port interrupt is used (IRQ3  -  IRQ15).  
+            For  example,  /i:5  selects  IRQ5.   If  omitted  the  interrupt 
+            defaults to IRQ4 for COM1 and IRQ3 for COM2.
+
+dialstring  An  optional character string which will be processed  as  though 
+            typed at the keyboard.  Note that the string may not contain  the 
+            characters  /, <, >, @ or |.  If any of these are needed,  use  a 
+            script file containing the required string.
+
+@scriptfile Processes  the contents of the specified file as though typed  at 
+            the keyboard; when the end-of-file is reached, the keyboard  will 
+            be  activated as usual.  Control codes are ignored, so  the  file 
+            may be split into separate lines to aid readability.
+
+The  tilde character (~) can be used in the dial string and script  files  to 
+allow  control characters and terminal commands to be incorporated.   Control 
+characters  are  generated  by ~ followed by an UPPER CASE  letter:  e.g.  ~M 
+represents the carriage return character.  Terminal commands are  represented 
+by  ~ followed by a lower case letter: i.e. ~a to ~z correspond to  ALT-A  to 
+ALT-Z  respectively.  Other codes which may be used are  ~? to send  the  DEL 
+character  (7F) and ~~ to send the ~ character itself.  In script files,  but 
+not in the dial string, ~0 to ~9, ~*, ~- and ~+ signify the user-defined keys 
+(see ALT-K).  More details of the script language are given later.
+
+You  can create batch files to access your favourite Videotex  services;  the 
+MAKEBAT  utility  has been provided to simplify producing  such  files.   For 
+example, the file HOBS.BAT might contain the following line:
+
+         VIDEOTEX /b:19200 ~m~oAT&B1&H1&M4DT0345626611~M~i4444444444
+
+
+3. OPERATION
+
+When  the unregistered version of VIDEOTEX is executed an initial  banner  is 
+displayed for five seconds or until a key is pressed (the registered  version 
+does  not display this banner).  VIDEOTEX initialises to the  Offline  state: 
+press ALT-O to go online.  The bottom row is a permanent status line.
+
+All  the alphanumeric keys generate the normal codes (see above  for  special 
+characters).   Control  codes  are sent conventionally:  for  example  CTRL-L 
+(clear screen) or CTRL-^ (home cursor) may be sent to an online editor.   ESC 
+and RETURN generate the standard codes.
+
+The  'arrow'  keys generate the appropriate cursor-movement codes  and  other 
+special keys are pre-programmed with appropriate character sequences:
+
+                    Home      *0#       (go to index page)
+                    End       *90#      (leave)
+                    PgUp      *#        (recall previous page)
+                    PgDn      #         (enter / next page)
+
+                    Backspace           (delete previous character)
+                    Tab                 (tabulate)
+                    SHIFT-Tab           (back-tab)
+
+                    Ins       ESC i     (insert character)
+                    Del       ESC d     (delete character)
+                    CTRL <-   ESC b     (word left)
+                    CTRL ->   ESC f     (word right)
+                    CTRL Home ESC K     (edit start)
+                    CTRL End  ESC J     (edit end)
+
+Function keys:
+
+The  function keys, in conjunction with SHIFT and CTRL, can be used  to  send 
+attribute  codes to line (or direct to the screen if in Offline mode).   Some 
+response frames do not allow all these codes to be used.
+
+               normal              with SHIFT          with CTRL
+
+     F1        alpha red           graphics red        separated graphics
+     F2        alpha green         graphics green      contiguous graphics
+     F3        alpha yellow        graphics yellow     hold graphics
+     F4        alpha blue          graphics blue       release graphics
+     F5        alpha magenta       graphics magenta
+     F6        alpha cyan          graphics cyan
+     F7        alpha white         graphics white
+     F8        flash               steady
+     F9        new background      black background
+    F10        double height       normal height       conceal
+
+
+The carousel:
+
+A carousel of previously-viewed frames is kept in memory; if the memory fills 
+the  oldest frame in the carousel is overwritten.  When the current frame  is 
+cleared  from the screen (by receipt of the CTRL-L code) it is first  written 
+to  the  carousel; note that if the frame is cleared by another  method  (for 
+example  recalling  another  frame from disk) then it is not  stored  in  the 
+carousel.
+
+The  contents  of the carousel may be reviewed, when in  offline  mode,  (see 
+section 5) or may be saved to disk (ALT-F).  There is no command to clear the 
+carousel, but this may be achieved by loading the carousel from the NUL  file 
+(ALT-G command).
+
+
+Mailbox editing:
+
+Mailbox messages can be prepared off-line to save time and telephone charges.  
+To  do  this  you should first save to disk the empty  mailbox  frame  (ALT-S  
+command);  this need only be done once.  When offline you can then load  this 
+frame  (ALT-L), add/edit your message and save the completed frame  to  disk.  
+Take  care to enter your text only within the area provided for the  message, 
+and  avoid use of the # character.  Several different frames may be  prepared 
+this way, each saved to disk with a different filename.
+
+When next online, go to the page containing the blank mailbox frame which you 
+previously saved.  When this frame is displayed, with the cursor at the first 
+location  of the message area, recall the filled-in frame from disk  (ALT-L).  
+Transmit  the  frame  using the ALT-T command, if all is  well  your  message 
+should  be transferred to the remote host; if necessary use *00 to check  it.  
+The usual prompts should then be followed to send the message.
+
+If the message is corrupted, for example because of line noise, then  re-load 
+the  frame from disk and try again.  Some response frames initially move  the 
+cursor by two spaces, which can cause the transmitted frame to be shifted; if 
+this is a problem press right-arrow then left-arrow before issuing the ALT-T.
+
+Script language:
+
+A simple script language is provided to allow automation of some  operations, 
+such  as  logging onto HOBS, downloading a number of frames and  logging  off 
+again.   The  script  language  has only three commands,  each  of  which  is 
+introduced by the ~ (tilde) character:
+
+          ~{        Start a block
+          ~}        End a block
+          ~|<expr>  Exit from a block if <expr> is true
+
+The  contents  of a script file between a start-block code and  an  end-block 
+code are repeated indefinitely.  In other words, on encountering an end-block 
+code  a  'jump' to the matching start-block code is made.  The  only  way  to 
+leave a block (other than with CTRL-BREAK) is with the exit-block code;  this 
+is followed by a conditional expression which can evaluate to TRUE or  FALSE.  
+If  FALSE, execution continues after the exit-block command; if TRUE, a  jump 
+is made to the end-block code and execution continues after this.  Blocks may 
+be  nested to a depth of nine levels.  An exit-block code not within a  block 
+will cause termination of the script file if the condition is TRUE.
+
+The  only  conditional  tests currently provided are for the  presence  of  a 
+specified  string on the screen or the existence of a specified file  in  the 
+current directory:
+
+      ~|"Hello"        exits the block if "Hello" is displayed on the screen
+      ~|#"Filename"    exits the block if the file "Filename" exists 
+
+The  sense  of  a test may be reversed by prefixing  the  expression  with  ! 
+(signifying NOT), for example:
+
+      ~|!"Hello"
+
+will  exit  the block if the string "Hello" is NOT displayed.  Tests  may  be 
+combined with the logical | (OR) and & (AND) operators, but in this case  the 
+entire expression must be enclosed in parentheses, for example:
+
+      ~|("Hello"&"there")
+
+will  exit  the  block if both "Hello" and "there"  are  displayed.   The  OR 
+operator may be used to cope with uncertainties about spelling etc., e.g.:
+
+      ~|("Hello"|"hello"|"HELLO")
+
+A  null string ("") is always TRUE so this can be used for  an  unconditional 
+jump.  For example, comments may be included using the following syntax:
+
+      ~{~|"" The unconditional exit causes this comment to be skipped ~}
+
+REPEAT...UNTIL,  WHILE...DO and IF...THEN constructs can be  fabricated  from 
+the primitive commands as follows:
+
+      ~{<operation>~|<condition>~}       REPEAT <operation> UNTIL <condition>
+
+      ~{~|!<condition><operation>~}      WHILE <condition> DO <operation>
+
+      ~{~|!<condition><operation>~|""~}  IF <condition> THEN <operation>
+
+4. TERMINAL FUNCTIONS
+                    
+ALT-A   Awaits a receive timeout.  For use in script files (~a).
+
+ALT-B   Sends a 'break', of approximately 0.2 seconds, to the serial output.
+
+ALT-C   Show  codes:  disables  the action of all  attribute  characters  and 
+        instead displays them as special two-letter symbols, as follows (note 
+        that the split-screen mode, if selected, is cancelled):
+
+               NU   NUL *               DL   DLE *
+               AR   alpha red           GR   graphics red
+               AG   alpha green         GG   graphics green
+               AY   alpha yellow        GY   graphics yellow
+               AB   alpha blue          GB   graphics blue
+               AM   alpha magenta       GM   graphics magenta
+               AC   alpha cyan          GC   graphics cyan
+               AW   alpha white         GW   graphics white
+               FL   flash               CD   conceal display
+               ST   steady              CG   contiguous graphics
+               EB   end box *           SG   separated graphics
+               SB   start box *         EC   ESC *
+               NH   normal height       BB   black background
+               DH   double height       NB   new background
+               SO   shift out *         HG   hold graphics
+               SI   shift in *          RG   release graphics
+
+        *  these symbols correspond to undefined escape sequences and  should 
+        not  normally  be seen.  They relate to the  stored  attribute  codes 
+        rather than the characters received; e.g. NUL results from ESC @. 
+
+        The  status  line  is replaced by a list of these  symbols,  in  code 
+        order, as an 'aide memoire'.  In this mode, any characters which were 
+        received with a parity error (odd parity rather than even parity) are 
+        displayed on a red background.  Press any key to exit this mode.
+
+ALT-D   Dumps  the  currently  displayed frame as a  colour  graphics  bitmap 
+        (.BMP)  file. You are prompted for a filename; press RETURN  when  it 
+        has been entered; to abort the operation press ESC.
+
+ALT-E   Erases  a  file from the disk.  You are prompted  for  the  filename: 
+        wildcards are not allowed.  To abort the operation press ESC.
+
+ALT-F   Files  (saves) the carousel.  You are prompted for a filename;  press 
+        RETURN when it has been entered.  To abort the operation press ESC.
+
+ALT-G   Gets (loads) a saved carousel. You are prompted for a filename; press 
+        RETURN when it has been entered.  To abort the operation press ESC.
+
+ALT-H   Calls up a 'help' page.  Press any key to return to normal.
+
+ALT-I   Waits  until receipt of the ENQ character, or a local  keypress  (for 
+        use in script files).  May be aborted with CTRL-BREAK.
+
+ALT-J   As ALT-T but transmits the rest of the frame (not just up to the next 
+        # character) and converts trailing spaces to CR LF sequences, even if 
+        the cursor is not in the 'home' location (top left-hand corner).
+
+ALT-K   Programs a user-defined key.  The key combinations ALT-0 to ALT-9 and 
+        keypad *-+ can be programmed to produce character sequences.  You are 
+        prompted for the key to define (0-9, *, -, +) and for the string  you 
+        wish  to  place in the key: press RETURN to enter  the  string.   The 
+        total length of all the user-defined strings is limited to 240 bytes.  
+        The  tilde (~) character may be used to introduce  terminal  commands 
+        and control characters as per script files, except that ~{, ~| and ~} 
+        signify the PgUp, Home and PgDn keys respectively.  The keys can also 
+        be permanently pre-programmed using the REGISTER utility.
+
+ALT-L   Loads  the  screen from a file.  You are prompted for  the  filename; 
+        press RETURN when it has been entered.  To abort the load press ESC.
+
+ALT-M   Move screen contents to right-hand side (or enter split-screen mode).
+
+ALT-N   Pulses the DTR line for approximately 0.2 seconds and issues the ATH0 
+        command, which will cause most modems to hang-up the telephone line.
+
+ALT-O   Toggles between online (remote) and offline (local) operation.   When 
+        offline  the status line shows the message 'Offline'  and  everything 
+        entered  at the keyboard is sent to the local display rather than  to 
+        line.  Characters received whilst offline will still be displayed.
+
+ALT-P   Prints  the  currently displayed frame.  Requires an Epson  FX80,  HP 
+        Laserjet  or Canon compatible printer (configured using the  REGISTER 
+        utility)  connected to the LPT1 port, which may be re-directed  using 
+        the DOS MODE command.  To abort the print press CTRL-BREAK;  however, 
+        if the printer is switched off the program may not respond.
+
+ALT-Q   Quits  from  the program, and sets the RTS line  inactive.   You  are 
+        prompted for confirmation; any keypress other than Y aborts the exit.
+
+ALT-R   Reveals any concealed text. This key has a toggle action: pressing it 
+        again  conceals  the  text.   Receipt of  a  clear  screen  character 
+        establishes the 'concealed' state.
+
+ALT-S   Saves the displayed frame to a file. You are prompted for a filename; 
+        press RETURN when it has been entered.  To abort the save press ESC.
+
+ALT-T   Transmits the currently displayed frame to line.  This operation  has 
+        two  modes, depending on the initial cursor position.  If the  cursor 
+        is in the 'home' location (top left corner of the screen) the  entire 
+        frame  is  sent,  with  trailing spaces  being  converted  to  CR  LF 
+        sequences.  If the cursor is not in the 'home' location, the  portion 
+        of the frame from the cursor position to the next # character (or  to 
+        the  end  of the frame if there are no # characters)  will  be  sent; 
+        trailing spaces are not converted to CR LFs.  See also ALT-J.
+
+ALT-U   Uploads  a file as if typed at the keyboard; ~ sequences  within  the 
+        file will be processed as for a script file.  You are prompted for  a 
+        filename, press ESC to abort.
+
+ALT-V   Views  the  disk directory.  All files in the current  directory  are 
+        listed;  if the screen fills the program waits for a keypress  before 
+        scrolling the display.  Press any key to return to normal.
+
+ALT-W   Pauses  for  one second.  This is primarily intended for  use  within 
+        script files (~w) and is not generally very useful from the keyboard.
+
+ALT-Y   Changes  the current disk drive or directory.  If a drive name  alone 
+        is  entered (e.g. A:) the default drive is changed.  If  a  directory 
+        path is entered, the current directory is changed.
+
+ALT-Z   Telesoftware  download.   Should  be entered  when  the  telesoftware 
+        'header' frame is displayed, to initiate transfer of CET-encoded data 
+        to  a  disk file on your machine.  You are prompted for  a  filename, 
+        which defaults to that given in the 'header'; press RETURN to  accept 
+        that filename, or enter another.  To abort the command press ESC;  to 
+        abort the download once started press CTRL-BREAK (this may result  in 
+        an incomplete file being left on your disk).
+
+
+5. OFFLINE EDITING
+
+When  the terminal is offline, frames may be edited locally.  A frame can  be 
+loaded from disk with the ALT-L command, edited, then saved back to disk with 
+the ALT-S command.  The following keys are active in this mode:
+
+left arrow   Moves the cursor left one character.
+
+right arrow  Moves the cursor right one character.
+
+down arrow   Moves the cursor down one line.
+
+up arrow     Moves the cursor up one line.
+
+Tab          Moves the cursor right to the next 8-character-wide column.
+
+SHIFT-Tab    Moves the cursor left to the previous 8-character-wide column.
+
+CTRL <-      Moves the cursor left until it is at the start of a word.
+
+CTRL ->      Moves the cursor right until it is after the end of a word.
+
+RETURN       Moves the cursor to the start of the line.
+
+Backspace    Deletes the character to the left of the cursor.
+
+Ins          Inserts  a space at the cursor position.  All  characters  after 
+             the cursor are moved right.  The last character is lost.
+
+Del          Deletes the character at the cursor position.
+
+CTRL PgDn    Inserts  a blank line at the cursor position.  All  lines  below 
+             the cursor are moved down.  The bottom line is lost.
+
+CTRL PgUp    Deletes the line containing the cursor.
+
+Home         Moves to and recalls the first frame in the carousel.
+
+End          Moves to and recalls the last frame in the carousel.
+
+PgUp         Moves back one frame in the carousel.
+
+PgDn         Moves forward one frame in the carousel.
+
+CTRL L       Writes the frame to the carousel, then clears the screen.
+
+CTRL ^       Moves the cursor to the top-left (home) position.
+
+CTRL Q       Turns on the cursor.
+
+CTRL T       Turns off the cursor.
+
+CTRL W       Toggles  the  top-left graphics 'sixel' at  the  current  cursor 
+             position, assuming the graphics mode is active.
+
+CTRL E       As CTRL W, but toggles the top-right 'sixel'.
+
+CTRL S       As CTRL W, but toggles the centre-left 'sixel'.
+
+CTRL D       As CTRL W, but toggles the centre-right 'sixel'.
+
+CTRL X       As CTRL W, but toggles the bottom-left 'sixel'.
+
+CTRL C       As CTRL W, but toggles the bottom-right 'sixel'.
+
+ESC o        Turns off the colour/word wrapping mode.
+
+ESC w        Turns on the colour/word wrapping mode.
+
+
+6. ERROR MESSAGES
+
+If  an  error  occurs a flashing message will appear in  the  centre  of  the 
+screen;  press any key to clear this message.  The possible messages  are  as 
+follows:
+
+Access denied      A file could not be created or opened (e.g. an attempt  to 
+                   create a new file with the same name as a read-only file).
+
+Bad directory      The specified disk drive/directory does not exist.
+
+Device fault       A device fault occurred, e.g. while printing a frame.
+
+Disk fault         The disk is faulty, e.g. unformatted or not inserted.
+
+Disk full          The  output  file cannot be written because  the  disk  is 
+                   full.
+
+Disk read only     The  file  cannot be written, because the disk  is  write-
+                   protected.
+
+Download fault     An  irrecoverable download error occurred, e.g.  incorrect 
+                   number of frames or maximum retries exceeded.
+
+File not found     An attempt was made to read a file which does not exist.
+
+File system error  A miscellaneous filing system (i.e. disk) error occurred.
+
+Handshake?         The  receive  buffer has overflowed, owing to  failure  of 
+                   hardware  (RTS) and/or XON-XOFF handshaking.   Handshaking 
+                   should only be required at very high data rates.
+
+Invalid header     The Download command was issued but no valid  telesoftware 
+                   header  frame is displayed.  If necessary, re-display  the 
+                   frame with *00.
+
+Nested too deep    Blocks in a script file are nested more than nine deep.
+
+RX overrun         An incoming data byte was lost.  This can be caused by the 
+                   KEYB  utility  which disables interrupts for  an  extended 
+                   period.   A replacement KEYB routine is available  if  you 
+                   find this to be a problem.
+
+RX parity          A  parity error was detected on the incoming serial  data.  
+                   As checking is disabled, this error should not occur.
+
+Script syntax      A script file command cannot be understood.
+
+TX timeout         A  character  could  not be sent  to  the  serial  output.  
+                   Probably  caused by the CTS handshaking line being low  or 
+                   disconnected.  Check the wiring of your modem connection.
+
+User abort         The user has pressed CTRL-BREAK to abort an operation.
+
+
+7. REGISTRATION
+
+This  program  is *ShareWare*, NOT public domain or free software.   You  may 
+freely share it with friends and upload it to Bulletin Boards, FTP sites etc. 
+but only in a completely unmodified form including all the original  program, 
+documentation  and  support  files.  No charge or payment may  be  levied  or 
+accepted  and  the  program may not be distributed as part  of  a  commercial 
+product other than by prior arrangement with the author.
+
+If you find this program useful please register it and support the  Shareware 
+concept.   Registering the program also allows you to customise  the  printer 
+type  (Epson-compatible,  HP  Laserjet-compatible  or  Canon-compatible)  and 
+permanently  define up to thirteen user-defined keys.  Registered  users  can 
+obtain  technical support direct from the author (email: rtr@rd.bbc.co.uk  or 
+rrussell@cix.compulink.co.uk).
+
+To register your copy of the program please send a cheque or postal order for 
+GBP 20 plus VAT (VAT Regd. No. 374 6761 19) to:
+
+                              R. T. Russell
+                              19 Welling Road
+                              Orsett
+                              Essex
+                              RM16 3DF
+
+Cheques should be made payable to 'R. T. Russell'; please state your name and 
+address  on the back of the cheque or in a letter accompanying it.  You  will 
+be  sent  a unique registration number to enter via the REGISTER  program  to 
+register  your  copy of VIDEOTEX.  Once registered the program  MUST  NOT  be 
+passed on to others.  Registered versions do not display the Shareware banner 
+displayed by the non-registered version.
+
+Note that although this software is thought to be free from serious bugs, and 
+it  is  highly unlikely it could do any harm to other  software  or  systems, 
+there is NO warranty that it will not and its use is at your own risk.
+

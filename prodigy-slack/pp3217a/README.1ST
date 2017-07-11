@@ -1,0 +1,40 @@
+The dialing directory is set up with several phone numbers
+for BBSes that support NAPLPS. Before calling one, check the
+COM port selection and the modem speed setting. Also check the
+area code in case one of the BBSes is in your calling area.
+
+Entry #0 is set up for viewing files from your hard drive. 
+Select 0, press enter, then Ctrl-F2. Enter NAPLPS.000 at the
+filename prompt, then 11 at the next prompt and set 20 seconds
+for the pause. The program will cycle through the images
+with 20 seconds between each one. Press PgUp to see the next
+one or Ctrl-PgUp to see the previous one.
+
+Entry number 1 is set up to run PP3 after dialing with another
+modem program such as Telix. To use this entry, create a script
+in your modem program to run "PP3 /NC 1" and it will start
+up without hanging up the line and will use the settings in
+selection 1. You could define a function key to run the script
+if your program allows it. If your program does not support
+scripts, but does support external upload/download protocols
+you could run PP3 from a batch file and start the batch file
+by issuing a download command (kludgy, but it works).
+
+The following is a sample Telix script which I have installed as
+Alt-1 by defining Alt-1 to be @pp3 in the Alt-K menu.
+
+main()
+{
+  newdir("C:\APPS\NAPLPS");       // Puts you in the PP3 directory
+  run("PP3","/NC 1");
+  newdir(_telix_dir);             // Puts you back in the Telix directory
+  prints("PP3 completed.");
+}
+
+If you get garbled ASCII characters on your screen, the file you are
+viewing or BBS you are calling did not transmit the proper code to
+start NAPLPS. You can toggle in and out of NAPLPS mode with Alt-F9.
+
+When you want to download/upload a file with your main comm program,
+simple press Ctrl-Home to exit PP3 and return to the comm program.
+
