@@ -11,6 +11,7 @@ import java.util.Base64;
 // http://ascii.cl/control-characters.htm
 // https://stackoverflow.com/questions/36519977/how-to-convert-string-into-a-7-bit-binary
 // http://www.dcode.fr/ascii-code
+// https://forum.processing.org/one/topic/need-help-in-converting-data-types.html
 
 byte[] readNBits(String str, int n) {
     byte[] bytes = new byte[str.length() * n];

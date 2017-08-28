@@ -32,7 +32,7 @@ void setup() {
   //println(stringsNumeric);
   //println(stringsAscii);
   
-  printBytesFromStringArray(stringsAscii);
+  printBytesFromByteArray(bytes);
   
 }
 
@@ -45,12 +45,32 @@ void printBytesFromStringArray(String[] input) {
   for (int i=0; i<input.length; i++) {
     int len = input[i].length();
     for (int j=0; j<len; j++) {
-      print(byte(input[i].charAt(j)));
+      byte b = (byte) input[i].charAt(j);
+      
+      print(b);
       if (j < len-1) {
         print(", ");
       } else {
         print("\n");
       }
+    }
+  }
+}
+
+void printBytesFromByteArray(byte[] input) {
+  for (int i=0; i<input.length; i++) {
+    byte b;
+    if (byteSize == 7) {
+      b = (byte) (input[i] & 0x7F);
+    } else {
+      b = (byte) (input[i] & 0xFF);
+    }
+    
+    print(b);
+    if (i < input.length-1) {
+      print(", ");
+    } else {
+      print("\n");
     }
   }
 }
