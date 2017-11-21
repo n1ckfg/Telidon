@@ -1,0 +1,189 @@
+.TH "accudate" "1" "1.0.7 OCT 23 2006" "drm_tools" "User Commands"
+.SH "NAME"
+.TP 
+accudate \- shows dates or elapsed times to the millisecond
+
+.SH SYNOPSIS
+.PP 
+.BI accudate " [options...]"
+
+
+.SH DESCRIPTION
+.B accudate
+emits time and date related information with 
+more accuracy than the standard 
+.B date
+program.  This information is written
+to stdout.  It may be used
+to create time stamps or to measure elapsed times.  Times are
+shown down to the millisecond but since the program itself requires
+finite time to run output may not be significant to the final digit.
+
+.B accudate
+may be obtained as part of the 
+.B drm_tools
+package from:
+.B http://sourceforge.net/projects/drmtools/
+
+.SH OPTIONS
+.TP 
+.B [none]
+write time as 
+.B YYYY\-MM\-DD:hh:mm:ss.lll
+to stdout.  This fixed width, fixed field, format is easily
+sorted or parsed.  The  numeric fields are:
+.B YYYY
+year
+.B MM
+month
+.B DD
+day of the month
+.B hh
+hours (24 hour clock)
+.B mm
+minutes
+.B ss
+seconds
+.B lll
+milliseconds
+
+.TP 
+.B \-s
+Write time instead as
+.B YYYY\-MM\-DD hh:mm:ss.lll
+to stdout.
+
+.TP 
+.B \-touch
+Write time instead as
+.B YYYYMMDDhhmm.ss
+to stdout.  For use with the Unix
+.B touch
+program.
+
+.TP 
+.BI \-toff " <seconds>"
+Add 
+.B <seconds>
+to the current time before emitting it.  This
+value may be positive or negative.  Common offsets are:hour=3600,
+day=86400, week=604800, year (365 days)=1536000.
+WARNING:  consider leap years, daylight savings, time zones, and so forth!
+
+.TP 
+.B \-t0
+Write time as
+.B seconds microseconds
+to stdout.  These values
+may then be fed back into the program later with the
+.B \-df
+or
+.B \-ds
+flags to show elapsed times.
+
+.TP 
+.BI \-df " <seconds microseconds>"
+Write elapsed time as 
+.B DDDD\-hh:mm.ss.lll
+to stdout.  The value of
+.B <seconds microseconds>
+having been previously generated
+using the
+.B \-t0
+flag.  Use this format to time very long events, up to 9999 days.
+
+.TP 
+.BI \-ds " <seconds microseconds>"
+Write elapsed time as
+.B ssssss.lll
+to stdout.  The value of
+.B <seconds microseconds>
+having been previously generated
+using the
+.B \-t0
+flag.  Use this format to time very short events.
+
+.TP 
+.B \-h \-help \-\-help \-? \-\-??
+Print the help message. (Default \- do not print help message.)
+
+.TP 
+.B \-i
+Emit version, copyright, license and contact information.( Default \- do not emit information.)
+
+
+.SH EXAMPLES
+.PD 0 
+.TP 
+.B % accudate \-h
+List the the command line options.
+
+.TP 
+.B % echo `accudate` "message" >>logfile 
+Time stamp a log file with:
+.B 2002\-12\-12:09:56:01.123
+message.
+
+
+.PP 
+.B % STARTTIME=`accudate \-t0` 
+.PP 
+.B % # other operations
+.TP 
+.B % echo `accudate \-df $STARTTIME` "message" >>logfile 
+Log elapsed time as:
+.B 0000\-00:01.56.456
+message
+
+
+.PP 
+.B % STARTTIME=`accudate \-t0` 
+.PP 
+.B % # other operations
+.TP 
+.B % echo `accudate \-ds $STARTTIME` "message" >>logfile 
+Log elapsed time as:  
+.B 000016.456
+message.
+
+
+.PP 
+.B % STARTTIME=`accudate \-t0`
+.br 
+.B % accudate \-ds $STARTTIME
+.br 
+.B % accudate \-ds $STARTTIME
+.TP
+.B % accudate \-ds $STARTTIME
+Series of commands which may be used to estimate the smallest times
+which
+.B accudate
+can measure reliably.
+
+
+.TP 
+.B % touch \-t `accudate \-toff \-3600 \-touch` filename
+Set the time on
+.B filename
+to one hour before the current time.
+
+
+.SH SEE ALSO
+none
+
+
+.SH LICENSE
+
+GNU General Public License 2
+
+.SH COPYRIGHT
+Copyright (C) 2002, 2003, 2004, 2005, 2006 David Mathog and Caltech.
+
+
+.SH ACKNOWLEDGEMENTS
+none
+
+
+.SH AUTHORS
+David Mathog, Biology Division, Caltech <mathog@caltech.edu>
+

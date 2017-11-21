@@ -1,0 +1,327 @@
+<html><head><title>Manual Page - columnadd(1)</title></head><body alink="#ff0000" bgcolor="#f0f0f0" link="#0000ff" text="#000000" vlink="#c000c0"><a name="top"></a>
+<!-- .TH "columnadd" "1" "1.0.2 OCT 23 2006" "drm_tools" "User Commands" -->
+<center>
+<h1><hr><i>Manual Reference Pages &nbsp;-&nbsp;</i><nobr>columnadd (1)</nobr><hr></h1>
+</center>
+<p>
+<!-- .SH NAME -->
+<a name="0">
+
+     <h3>NAME</h3>
+
+</a>
+</p><blockquote>
+<p>
+columnadd -  add multiple columns of [signed] integers, decimals, and times
+</p><p>
+<!-- .SH SYNOPSIS -->
+</p></blockquote>
+<a name="contents"></a><h3>CONTENTS</h3>
+<blockquote>
+<a href="#1">Synopsis</a><br>
+<a href="#2">Description</a><br>
+<a href="#3">Options</a><br>
+<a href="#4">Examples</a><br>
+<a href="#5">See Also</a><br>
+<a href="#6">License</a><br>
+<a href="#7">Copyright</a><br>
+<a href="#8">Acknowledgements</a><br>
+<a href="#9">Authors</a><br>
+</blockquote>
+<a name="10">
+
+     <h3>SYNOPSIS</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .BI columnadd " [options...]" -->
+<b>columnadd</b><i> [options...]</i> </p><p>
+<!-- .SH DESCRIPTION -->
+</p></blockquote>
+<a name="2">
+
+     <h3>DESCRIPTION</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .B columnadd -->
+<b>columnadd</b> adds columns of integers, decimals, and or times.  Column positions must be
+set with spaces as tabs will not be expanded.  There must
+be enough spaces between value columns
+so that the absolute value of the sum of the positive
+terms and the absolute value of the sum of the negative
+terms do not overflow into adjacent columns or off the front
+of the line.  Numeric precision is limited only by the line length.
+The program does not operate correctly on numbers with exponents or with
+numbers that are not base 10.
+</p><p>
+<!-- .B columnadd -->
+<b>columnadd</b> accepts numeric formats:
+<br>
+      [-]digits[.digits]
+<br>
+     [-][digits].digits
+</p><p>
+<!-- .B columnadd -->
+<b>columnadd</b> accepts time formats:
+<br>
+      [-]d hh:mm[:[ss[.c]]]
+<br>
+        [-]hh:mm[:[ss[.c]]]
+<br>
+           [-]mm:[ss[.[c]]]
+<br>
+          [-]:mm:[ss[.[c]]]
+</p><p>
+</p><p>
+h,m,s may have only 2 digits.  The maximum value in each case is 99
+and this value will carry correctly.  For instance, these are equivalent:
+03:90:00 and 04:30:00.
+</p><p>
+d and c  may have as many digits as will fit in the longest possible line,
+which is specified by
+<!-- .B \-lw -->
+<b>-lw</b> and is usually very large.
+</p><p>
+</p><p>
+<!-- .B columnadd -->
+<b>columnadd</b> may be obtained as part of the
+<!-- .B drm_tools -->
+<b>drm_tools</b> package from:
+<!-- .B http://sourceforge.net/projects/drmtools/ -->
+<b><a href="http://sourceforge.net/projects/drmtools/">http://sourceforge.net/projects/drmtools/</a></b> </p><p>
+<!-- .SH OPTIONS -->
+</p></blockquote>
+<a name="3">
+
+     <h3>OPTIONS</h3>
+
+</a>
+<blockquote>
+<!-- .TP  -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B [none] -->
+<b>[none]</b> </td><td valign="bottom">
+Sum numeric values in columns. Read from stdin. Write to stdout.  Accept
+times and negative values.  Emit a sum at each blank line.  Zero any column
+that is found to contain an illegal character, for instance, a letter.
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI \-append " OUTFILE" -->
+<b>-append</b><i> OUTFILE</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Append output to
+<!-- .B OUTFILE. -->
+<b>OUTFILE.</b> Default is to write to stdout.
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B \-echo -->
+<b>-echo</b> </td><td valign="bottom">
+Echo input lines to the output.  The default is not to echo input lines.
+Blank lines are normally replaced by a sum line, unless
+<!-- .B \-nb -->
+<b>-nb</b> is also specified, in which case the blank line is also echoed.
+<p>
+</p><p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B \-h \-help \-\-help \-? \-\-? -->
+<b>-h -help --help -? --?</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Print the help message. (Default - do not print help message.)
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B \-i -->
+<b>-i</b> </td><td valign="bottom">
+Emit version, copyright, license and contact information.( Default - do not emit information.)
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI \-in " INFILE" -->
+<b>-in</b><i> INFILE</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Read data from
+<!-- .B INFILE. -->
+<b>INFILE.</b> If
+<!-- .B INFILE -->
+<b>INFILE</b> is
+<!-- .B \- -->
+<b>-</b> (a dash) or
+<!-- .B \-in -->
+<b>-in</b> is not present on the command line then data is read from stdin.
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI \-lw " N" -->
+<b>-lw</b><i> N</i> </td><td valign="bottom">
+Set the maximum line width.  The default may be changed at compile time but
+is typically at least 16384.  To see the default value use the
+<!-- .BI \-i -->
+<b>-i</b> option.
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B \-nb -->
+<b>-nb</b> </td><td valign="bottom">
+Do not emit or zero sums at blank lines.  Instead the entire input file
+is added with a single sum line emitted at the EOF.  Note that a blank line
+is defined as one containing no characters other than the EOL character(s).
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B \-nn -->
+<b>-nn</b> </td><td valign="bottom">
+No negatives, parse but do not sum negative numbers.  Do not use with
+<!-- .B \-np. -->
+<b>-np.</b> <p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B \-np -->
+<b>-np</b> </td><td valign="bottom">
+No positives, parse but do not sum positive numbers.  Do not use with
+<!-- .B \-nn. -->
+<b>-nn.</b> <p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B \-nt -->
+<b>-nt</b> </td><td valign="bottom">
+Disable time sums
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B \-nz -->
+<b>-nz</b> </td><td valign="bottom">
+Do not zero a column on an illegal character.  Can be used to continue
+addition in a sequence of values in a column like: 5, NA, -2. Without
+<!-- .B \-nz  -->
+<b>-nz</b> the result is a blank space on the output line.  With
+<!-- .B \-nz -->
+<b>-nz</b> the result is 3.
+<br>
+ 
+<!-- .TP  -->
+</td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI \-out " OUTFILE" -->
+<b>-out</b><i> OUTFILE</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Write output to
+<!-- .B OUTFILE. -->
+<b>OUTFILE.</b> If
+<!-- .B OUTFILE -->
+<b>OUTFILE</b> is
+<!-- .B \- -->
+<b>-</b> (a dash) or
+<!-- .B \-out -->
+<b>-out</b> is not present on the command line then data is written to stdout.
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI \-pre " STRING" -->
+<b>-pre</b><i> STRING</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Insert
+<!-- .B STRING -->
+<b>STRING</b> at the beginning of each sum line.
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI \-sr " N" -->
+<b>-sr</b><i> N</i> </td><td valign="bottom">
+Shift the input right
+<!-- .B N -->
+<b>N</b> spaces. The default shift is 0.  This option may be used to provide space
+at the front of the line so that the sum does not overflow leftwards off
+the front of the line.  This is only sufficient to avoid a overflow if the
+data does not contain multiple independent columns of numeric data.  If needed
+use
+<!-- .B extract -->
+<b>extract</b> or some other similar program to parse the input data and insert spaces between
+the data columns.
+<p>
+<!-- .SH EXAMPLES -->
+</p></td></tr>
+<tr></tr></tbody></table></blockquote>
+<a name="4">
+
+     <h3>EXAMPLES</h3>
+
+</a>
+<blockquote>
+none
+<p>
+<!-- .SH SEE ALSO -->
+</p></blockquote>
+<a name="5">
+
+     <h3>SEE ALSO</h3>
+
+</a>
+<blockquote>
+none
+<p>
+</p><p>
+<!-- .SH LICENSE -->
+</p></blockquote>
+<a name="6">
+
+     <h3>LICENSE</h3>
+
+</a>
+<blockquote>
+<p>
+GNU General Public License 2
+</p><p>
+</p><p>
+<!-- .SH COPYRIGHT -->
+</p></blockquote>
+<a name="7">
+
+     <h3>COPYRIGHT</h3>
+
+</a>
+<blockquote>
+Copyright (C) 2006 David Mathog and Caltech.
+<p>
+</p><p>
+<!-- .SH ACKNOWLEDGEMENTS -->
+</p></blockquote>
+<a name="8">
+
+     <h3>ACKNOWLEDGEMENTS</h3>
+
+</a>
+<blockquote>
+none
+<p>
+</p><p>
+</p><p>
+<!-- .SH AUTHORS -->
+</p></blockquote>
+<a name="9">
+
+     <h3>AUTHORS</h3>
+
+</a>
+<blockquote>
+David Mathog, Biology Division, Caltech &lt;<a href="mailto:mathog@caltech.edu">mathog@caltech.edu</a>&gt;
+<p>
+</p></blockquote>
+<p></p><hr>
+<table width="100%"><tbody><tr> <td width="33%"><i>drm_tools</i></td> <td align="center" width="33%">columnadd (1)</td> <td align="right" width="33%"><i>1.0.2 OCT 23 2006</i></td> </tr></tbody></table><font size="-1">Generated by <a href="http://www.squarebox.co.uk/download/manServer.shtml">manServer 1.07</a> from /usr/common/man/man1/columnadd.1 using man macros.</font>
+
+</body></html>

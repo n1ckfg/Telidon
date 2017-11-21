@@ -1,0 +1,506 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Manual Page - binreplace(1)</title>
+</head><body link="#0000ff" text="#000000" vlink="#c000c0" alink="#ff0000" bgcolor="#f0f0f0"><a name="top"></a>
+<!-- .TH "binreplace" "1" "1.0.0 Aug 31 2010" "drm_tools" "User Commands" -->
+<center>
+<h1><hr><i>Manual Reference Pages &nbsp;-&nbsp;</i><nobr>binreplace (1)</nobr><hr></h1>
+</center>
+<p>
+<!-- .SH NAME -->
+<a name="0">
+
+     <h3>NAME</h3>
+
+</a>
+</p><blockquote>
+<p>
+binreplace - search or search/replace a binary data stream
+</p><p>
+<!-- .SH SYNOPSIS -->
+</p></blockquote>
+<a name="contents"></a><h3>CONTENTS</h3>
+<blockquote>
+<a href="#1">Synopsis</a><br>
+<a href="#2">Description</a><br>
+<a href="#3">Options</a><br>
+<a href="#4">Examples</a><br>
+<a href="#5">License</a><br>
+<a href="#6">Copyright</a><br>
+<a href="#7">Authors</a><br>
+</blockquote>
+<a name="8">
+
+     <h3>SYNOPSIS</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .BI binreplace " [options...]" -->
+<b>binreplace</b><i> [options...]</i> </p><p>
+<!-- .SH DESCRIPTION -->
+</p></blockquote>
+<a name="2">
+
+     <h3>DESCRIPTION</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .B binreplace -->
+<b>binreplace</b> is used to search a binary data stream for a binary sequence.  Once found
+the position and/or sequence may be reported, and a replacement binary
+sequence inserted into the data stream. Reads from stdin, writes to stdout.
+</p><p>
+</p><p>
+<!-- .B binreplace -->
+<b>binreplace</b> may be obtained as part of the
+<!-- .B drm_tools -->
+<b>drm_tools</b> package from:
+<!-- .B http://sourceforge.net/projects/drmtools/ -->
+<b><a href="http://sourceforge.net/projects/drmtools/">http://sourceforge.net/projects/drmtools/</a></b> </p><p>
+</p><p>
+<!-- .SH OPTIONS -->
+</p></blockquote>
+<a name="3">
+
+     <h3>OPTIONS</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .BI  -find " <FIND>" -->
+<b>-find</b><i> &lt;FIND&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Locate binary sequence
+<!-- .B FIND -->
+<b>FIND</b> in the data stream.  The positions and matching patterns will be written
+to stderr, depending upon the value of the
+<!-- .B -verbose -->
+<b>-verbose</b> parameter.  If
+<!-- .B -replace -->
+<b>-replace</b> is not also specified nothing is written to stdout.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI  -replace " <REPLACE>" -->
+<b>-replace</b><i> &lt;REPLACE&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Replace each
+<!-- .B FIND  -->
+<b>FIND</b> match with binary sequence
+<!-- .B REPLACE -->
+<b>REPLACE</b> and send the resulting stream to stdout.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI  -mask " <MASK>" -->
+<b>-mask</b><i> &lt;MASK&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Optional processing for each position in
+<!-- .B FIND.  -->
+<b>FIND.</b> The number of bytes in the binary sequences
+<!-- .B FIND -->
+<b>FIND</b> and
+<!-- .B MASK -->
+<b>MASK</b> must be the same. [Default - no
+<!-- .B MASK -->
+<b>MASK</b> ]
+<!-- .br -->
+<!-- Need break --><br>
+  0  Is the corresponding character in FIND
+<!-- .br -->
+<!-- Need break --><br>
+  2  Is alphanumeric
+<!-- .br -->
+<!-- Need break --><br>
+  4  Is alphabetic
+<!-- .br -->
+<!-- Need break --><br>
+  6  Is blank
+<!-- .br -->
+<!-- Need break --><br>
+  8  Is control
+<!-- .br -->
+<!-- Need break --><br>
+ 10  Is digit
+<!-- .br -->
+<!-- Need break --><br>
+ 12  Is printable, but not space
+<!-- .br -->
+<!-- Need break --><br>
+ 14  Is printable, includes space
+<!-- .br -->
+<!-- Need break --><br>
+ 16  Is lower case
+<!-- .br -->
+<!-- Need break --><br>
+ 18  Is upper case
+<!-- .br -->
+<!-- Need break --><br>
+ 20  Is either case
+<!-- .br -->
+<!-- Need break --><br>
+ 22  Is punctuation
+<!-- .br -->
+<!-- Need break --><br>
+ 24  Is white space
+<!-- .br -->
+<!-- Need break --><br>
+ 26  Is hexadecimal digit
+<!-- .br -->
+<!-- Need break --><br>
+ 28  Is any value (wildcard)
+<!-- .br -->
+<!-- Need break --><br>
+  1  NOT, modifies all of the above, example: 7 = NOT blank
+<!-- .br -->
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -verbose " <VALUE>" -->
+<b>-verbose</b><i> &lt;VALUE&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Control messages sent to stderr during processing.
+<!-- .B VALUE -->
+<b>VALUE</b> is a bit mask, if no bits are set only fatal error messages are emitted.
+<!-- .br -->
+<!-- Need break --><br>
+1  Emit FIND positions [Default]
+<!-- .br -->
+<!-- Need break --><br>
+2  Warn if file size might change [Default]
+<!-- .br -->
+<!-- Need break --><br>
+4  Emit FIND matches (as hex)
+<!-- .br -->
+<!-- Need break --><br>
+8  Emit FIND matches (as text)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -first " <FIRST>" -->
+<b>-first</b><i> &lt;FIRST&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+First byte in the data stream that
+<!-- .B FIND -->
+<b>FIND</b> may match. Numbered from 0.  [Default 0].
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -length " <LENGTH>" -->
+<b>-length</b><i> &lt;LENGTH&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Last byte in the data stream, counting from
+<!-- .B FIRST -->
+<b>FIRST</b> , that
+<!-- .B FIND -->
+<b>FIND</b> may match.  [Default: maximum value of data type unsigned long long
+(usually at least 9223372036854775807)]
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fformat " <FFORMAT>" -->
+<b>-fformat</b><i> &lt;FFORMAT&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Format of the
+<!-- .B FIND -->
+<b>FIND</b> string on the command line.  This determines how
+it is converted to a binary sequence.  In the Decimal modes
+either commas or spaces may be used to delimit the values. In all modes
+a repeat count like
+<!-- .B \e\e123\e\evalue -->
+<b>\\123\\value</b> will cause the immediately following
+<!-- .B value  -->
+<b>value</b> to be repeated
+<!-- .B 123 -->
+<b>123</b> times.  In text input backslashes
+must be escaped by an immediately preceding backslash.
+<!-- .br -->
+<!-- Need break --><br>
+0   8 bit text: &#8217;09Af&#8217;  -&gt; bytes&#8217;30 39 41 66&#8217; [Default]
+<!-- .br -->
+<!-- Need break --><br>
+1   8 bit text, case INSENSITIVE
+<!-- .br -->
+<!-- Need break --><br>
+2  16 bit text: &#8217;09Af&#8217;  -&gt; bytes&#8217;30 00 39 00 41 00 66 00&#8217;
+<!-- .br -->
+<!-- Need break --><br>
+3  16 bit text, case INSENSITIVE
+<!-- .br -->
+<!-- Need break --><br>
+4  Hexadecimal: &#8217;09Af&#8217;  -&gt; bytes&#8217;09 AF&#8217;
+<!-- .br -->
+<!-- Need break --><br>
+5  Hexadecimal, case INSENSITIVE
+<!-- .br -->
+<!-- Need break --><br>
+6  Decimal:     &#8217;9,175&#8217; -&gt; bytes&#8217;09 AF&#8217;
+<!-- .br -->
+<!-- Need break --><br>
+7  Decimal, case INSENSITIVE
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -rformat " <RFORMAT>" -->
+<b>-rformat</b><i> &lt;RFORMAT&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Format of the
+<!-- .B REPLACE -->
+<b>REPLACE</b> string.  The same options apply as for
+<!-- .B FFORMAT -->
+<b>FFORMAT</b> except the case insensitivity bit is ignored.  [Default: same as
+<!-- .B FFORMAT  -->
+<b>FFORMAT</b> ]
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -mformat " <MFORMAT>" -->
+<b>-mformat</b><i> &lt;MFORMAT&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Format of the
+<!-- .B MASK -->
+<b>MASK</b> string.  The same options apply as for
+<!-- .B RFORMAT.   -->
+<b>RFORMAT.</b> [Default: 6 (Decimal list)].
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -maxpattern " <N>" -->
+<b>-maxpattern</b><i> &lt;N&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Size in bytes to allocate for each binary sequence buffer. [Default 1024]
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -h -help --help -? --?? -->
+<b>-h -help --help -? --??</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Print the help message. (Default - do not print help message.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -hexamples -->
+<b>-hexamples</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Print examples. (Default - do not print examples.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -i -->
+<b>-i</b> </td><td valign="bottom">
+Emit version, copyright, license and contact information.( Default - do not emit information.)
+<p>
+</p><p>
+</p><p>
+</p><p>
+<!-- .SH EXAMPLES -->
+</p></td></tr>
+<tr></tr></tbody></table></p></blockquote>
+<a name="4">
+
+     <h3>EXAMPLES</h3>
+
+</a>
+<blockquote>
+<p>
+</p><p>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .B % binreplace -h -->
+<b>% binreplace -h</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+List the the command line options.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo 'F123 abc' | binreplace -find '23 ' -verbose 15 -->
+<b>% echo &#8217;F123 abc&#8217; | binreplace -find &#8217;23 &#8217; -verbose 15</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Find an exactly matching string, show position, and binary sequence in
+hexadecimal and ascii.  Emits:
+<!-- .br -->
+<!-- Need break --><br>
+2 [ 32 33 20] [23 ]
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo 'F123 abc' | binreplace -find '23 ' -verbose 0 -replace '09' -->
+<b>% echo &#8217;F123 abc&#8217; | binreplace -find &#8217;23 &#8217; -verbose 0 -replace &#8217;09&#8217;</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Find and replace a string in the data stream. Since the replace string
+is one byte shorter than the find pattern, the data stream is reduced in length
+by one.  The associated warning is suppressed by settig
+<!-- .B verbose -->
+<b>verbose</b> to 0.  Emits:
+<!-- .br -->
+<!-- Need break --><br>
+F109abc
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo 'F123 abc' | binreplace -find 'xxx' -verbose 15 -mask  '10 24 16' -->
+<b>% echo &#8217;F123 abc&#8217; | binreplace -find &#8217;xxx&#8217; -verbose 15 -mask &#8217;10 24 16&#8217;</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Find a property pattern: number, white space, lower case. Emits:
+<!-- .br -->
+<!-- Need break --><br>
+3 [ 33 20 61] [3 a]
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo 'F123 abc' | binreplace -find 'xx' -verbose 15 -mask  '10 10' -->
+<b>% echo &#8217;F123 abc&#8217; | binreplace -find &#8217;xx&#8217; -verbose 15 -mask &#8217;10 10&#8217;</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Only the first of two overlapping matches are emitted or replaced.  Here the
+pattern matches both &#8217;12&#8217; and &#8217;23&#8217;, but since they overlap, only the former is
+found. Emits:
+<!-- .br -->
+<!-- Need break --><br>
+1 [ 31 32] [12]
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo 'F123 abc' | binreplace -find 'x' -verbose 15 -mask  '11' -->
+<b>% echo &#8217;F123 abc&#8217; | binreplace -find &#8217;x&#8217; -verbose 15 -mask &#8217;11&#8217;</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Find by NOT digits.  Emits:
+<!-- .br -->
+<!-- Need break --><br>
+0 [ 46] [F]
+<!-- .br -->
+<!-- Need break --><br>
+4 [ 20] [ ]
+<!-- .br -->
+<!-- Need break --><br>
+5 [ 61] [a]
+<!-- .br -->
+<!-- Need break --><br>
+6 [ 62] [b]
+<!-- .br -->
+<!-- Need break --><br>
+7 [ 63] [c]
+<!-- .br -->
+<!-- Need break --><br>
+8 [ 0A] [~]
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo 'F123 abc' | binreplace -find 'xxxAB' -verbose 15 -mask  '28 28 28 0 0' -fformat 1 -->
+<b>% echo &#8217;F123 abc&#8217; | binreplace -find &#8217;xxxAB&#8217; -verbose 15 -mask &#8217;28 28 28 0 0&#8217; -fformat 1</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Retrieve data next to a known case insensitive tag.  Emits:
+<!-- .br -->
+<!-- Need break --><br>
+2 [ 32 33 20 61 62] [23 ab]
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo 'F123 abc' | binreplace -find 'Fxxxxxxx' -verbose 0 -mask  '0 10 10 10 24 16 16 16' -replace 'G789 new' -->
+<b>% echo &#8217;F123 abc&#8217; | binreplace -find &#8217;Fxxxxxxx&#8217; -verbose 0 -mask &#8217;0 10 10 10 24 16 16 16&#8217; -replace &#8217;G789 new&#8217;</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Replace a complex pattern.  Emits:
+<!-- .br -->
+<!-- Need break --><br>
+G789 new
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % (echo 'F123 abc'; echo 'second') | ./binreplace -find '0000000A' -fformat 4  -verbose 15 -replace '7071720A' -mask '28 28 28 0' -->
+<b>% (echo &#8217;F123 abc&#8217;; echo &#8217;second&#8217;) | ./binreplace -find &#8217;0000000A&#8217; -fformat 4 -verbose 15 -replace &#8217;7071720A&#8217; -mask &#8217;28 28 28 0&#8217;</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Use hexadecimal find and replace strings combined with mask pattern.  Emits:
+<!-- .br -->
+<!-- Need break --><br>
+5 [ 61 62 63 0A] [abc~]
+<!-- .br -->
+<!-- Need break --><br>
+F123 pqr               
+<!-- .br -->
+<!-- Need break --><br>
+12 [ 6F 6E 64 0A] [ond~]
+<!-- .br -->
+<!-- Need break --><br>
+secpqr                 
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo 'F123 abc' | binreplace -find 'xx' -mask '28,28' -verbose 15 -replace 'XY'  -first 2 -length 4 -->
+<b>% echo &#8217;F123 abc&#8217; | binreplace -find &#8217;xx&#8217; -mask &#8217;28,28&#8217; -verbose 15 -replace &#8217;XY&#8217; -first 2 -length 4</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Replace in a restricted area, here positions 2 through 5. Emits:
+<!-- .br -->
+<!-- Need break --><br>
+2 [ 32 33] [23]
+<!-- .br -->
+<!-- Need break --><br>
+4 [ 20 61] [ a]
+<!-- .br -->
+<!-- Need break --><br>
+F1XYXYbc      
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B %echo 'F123 abc' |  binreplace -find '\e6\exc' -mask '\e6\e28 0' -verbose 31  -->
+<b>%echo &#8217;F123 abc&#8217; | binreplace -find &#8217;\6\xc&#8217; -mask &#8217;\6\28 0&#8217; -verbose 31</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Use repeat counts to shorten binary sequence specifications.  Emits:
+<!-- .br -->
+<!-- Need break --><br>
+FIND PATTERN:  78 78 78 78 78 78 33
+<!-- .br -->
+<!-- Need break --><br>
+MASK PATTERN:  1C 1C 1C 1C 1C 1C 00
+<!-- .br -->
+<!-- Need break --><br>
+1 [ 31 32 33 20 61 62 63] [123 abc]
+<p>
+</p><p>
+<!-- .SH LICENSE -->
+</p></td></tr>
+<tr></tr></tbody></table></p></blockquote>
+<a name="5">
+
+     <h3>LICENSE</h3>
+
+</a>
+<blockquote>
+<p>
+GNU General Public License 2
+</p><p>
+<!-- .SH COPYRIGHT -->
+</p></blockquote>
+<a name="6">
+
+     <h3>COPYRIGHT</h3>
+
+</a>
+<blockquote>
+<p>
+Copyright (C) 2010 David Mathog and Caltech.
+</p><p>
+<!-- .SH AUTHORS -->
+</p></blockquote>
+<a name="7">
+
+     <h3>AUTHORS</h3>
+
+</a>
+<blockquote>
+<p>
+David Mathog, Biology Division, Caltech &lt;<a href="mailto:mathog@caltech.edu">mathog@caltech.edu</a>&gt;
+</p><p>
+</p><p>
+</p><p>
+</p></blockquote>
+<p></p><hr>
+<table width="100%"><tbody><tr> <td width="33%"><i>drm_tools</i></td> <td width="33%" align="center">binreplace (1)</td> <td width="33%" align="right"><i>1.0.0 Aug 31 2010</i></td> </tr></tbody></table><font size="-1">Generated by <a href="http://www.squarebox.co.uk/download/manServer.shtml">manServer 1.07</a> from /usr/common/man/man1/binreplace.1 using man macros.</font>
+</body></html>

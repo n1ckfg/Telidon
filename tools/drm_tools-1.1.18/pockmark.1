@@ -1,0 +1,100 @@
+.TH "pockmark" "1" "1.0.1 Jun 22 2010" "drm_tools" "User Commands"
+
+.SH NAME
+
+pockmark \- corrupt a data stream
+
+.SH SYNOPSIS
+
+.BI pockmark " [options...]"
+
+.SH DESCRIPTION
+
+.B pockmark
+is used to corrupt a data stream, usually for testing error correction
+and other recovery codes.  There are three modes of corruption:
+overwrite, insert, or delete.  The first does not change the size of the data
+stream.  Reads from stdin, writes to stdout.
+
+
+.B pockmark
+may be obtained as part of the 
+.B drm_tools
+package from:
+.B http://sourceforge.net/projects/drmtools/
+
+
+.SH OPTIONS
+
+.TP
+.BI  -method " <N>"
+Corruption method applied: 0 overwrite, 1 insert, 2 delete [default 0]
+
+.TP
+.BI  -maxgap " <N>"
+Longest number of blocks between corruptions [range 1-2147483647, default 64000]
+
+.TP
+.BI  -maxrun " <N>"
+Longest run of blocks corrupted [range 1-2147483647, default 1024]
+
+.TP
+.BI -bs " <N>"
+Specify the blocksize in bytes.  [Default is 1, act on bytes].
+
+.TP
+.BI -fill " <N>"
+Integer inserted or overwritten at corrupted locations [range 0-255, default 0]
+
+.TP
+.BI -seed " <N>"
+Large integer seed for the random number generator [default is time in seconds]
+
+.TP
+.B -h -help --help -? --??
+Print the help message. (Default - do not print help message.)
+
+
+.TP
+.B -i
+Emit version, copyright, license and contact information.( Default - do not emit information.)
+
+
+
+
+.SH EXAMPLES
+
+
+.TP
+.B % pockmark -h
+List the the command line options.
+
+.TP
+.B % cat file | pockmark -maxgap 1000 -maxrun 20 -bs 512 > file.pox
+Mimic corruption on a block oriented device like a CDROM.
+Make a corrupted version of the file with block size 512, runs of up to 20
+corrupted blocks, and gaps between corrupted regions of up to 1000 blocks.
+Corrupted regions are filled with null bytes.
+
+.TP
+.B % cat file | pockmark -maxgap 1000 -maxrun 20 -bs 512 -fill 36 > file.pox
+Mimic corruption on a serial line or other byte oriented device.
+Make a corrupted version of the file with runs of up to 20
+corrupted bytes, and gaps between corrupted regions of up to 1000 bytes.
+Corrupted positions are filled with percent characters.
+
+
+.SH LICENSE
+
+GNU General Public License 2
+
+.SH COPYRIGHT
+
+Copyright (C) 2010 David Mathog and Caltech.
+
+.SH AUTHORS
+
+David Mathog, Biology Division, Caltech <mathog@caltech.edu>
+
+
+

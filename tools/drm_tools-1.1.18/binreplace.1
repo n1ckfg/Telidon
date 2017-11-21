@@ -1,0 +1,306 @@
+.TH "binreplace" "1" "1.0.0 Aug 31 2010" "drm_tools" "User Commands"
+
+.SH NAME
+
+binreplace \- search or search/replace a binary data stream
+
+.SH SYNOPSIS
+
+.BI binreplace " [options...]"
+
+.SH DESCRIPTION
+
+.B binreplace
+is used to search a binary data stream for a binary sequence.  Once found
+the position and/or sequence may be reported, and a replacement binary
+sequence inserted into the data stream.  Reads from stdin, writes to stdout.
+
+
+.B binreplace
+may be obtained as part of the 
+.B drm_tools
+package from:
+.B http://sourceforge.net/projects/drmtools/
+
+
+.SH OPTIONS
+
+.TP
+.BI  -find " <FIND>"
+Locate binary sequence 
+.B FIND
+in the data stream.  The positions and matching patterns will be written
+to stderr, depending upon the value of the
+.B -verbose
+parameter.  If 
+.B -replace
+is not also specified nothing is written to stdout.
+
+.TP
+.BI  -replace " <REPLACE>"
+Replace each 
+.B FIND 
+match with binary sequence 
+.B REPLACE
+and send the resulting stream to stdout.
+
+.TP
+.BI  -mask " <MASK>"
+Optional processing for each position in 
+.B FIND. 
+The number of bytes in the binary sequences 
+.B FIND
+and 
+.B MASK
+must be the same. [Default - no 
+.B MASK
+]
+.br
+  0  Is the corresponding character in FIND
+.br
+  2  Is alphanumeric
+.br
+  4  Is alphabetic
+.br
+  6  Is blank
+.br
+  8  Is control
+.br
+ 10  Is digit
+.br
+ 12  Is printable, but not space
+.br
+ 14  Is printable, includes space
+.br
+ 16  Is lower case
+.br
+ 18  Is upper case
+.br
+ 20  Is either case
+.br
+ 22  Is punctuation
+.br
+ 24  Is white space
+.br
+ 26  Is hexadecimal digit
+.br
+ 28  Is any value (wildcard)
+.br
+  1  NOT, modifies all of the above, example: 7 = NOT blank
+.br
+
+
+.TP
+.BI -verbose " <VALUE>"
+Control messages sent to stderr during processing.
+.B VALUE
+is a bit mask, if no bits are set only fatal error messages are emitted.
+.br
+1  Emit FIND positions [Default]
+.br
+2  Warn if file size might change [Default]
+.br
+4  Emit FIND matches (as hex)
+.br
+8  Emit FIND matches (as text)
+
+.TP
+.BI -first " <FIRST>"
+First byte in the data stream that
+.B FIND
+may match. Numbered from 0.  [Default 0].
+
+.TP
+.BI -length " <LENGTH>"
+Last byte in the data stream, counting from
+.B FIRST
+, that
+.B FIND
+may match.  [Default: maximum value of data type unsigned long long
+(usually at least 9223372036854775807)]
+
+.TP
+.BI -fformat " <FFORMAT>"
+Format of the 
+.B FIND
+string on the command line.  This determines how
+it is converted to a binary sequence.  In the Decimal modes
+either commas or spaces may be used to delimit the values. In all modes
+a repeat count like 
+.B \e\e123\e\evalue
+will cause the immediately following 
+.B value 
+to be repeated 
+.B 123
+times.  In text input backslashes
+must be escaped by an immediately preceding backslash.
+.br
+0   8 bit text: '09Af'  -> bytes'30 39 41 66' [Default]
+.br
+1   8 bit text, case INSENSITIVE
+.br
+2  16 bit text: '09Af'  -> bytes'30 00 39 00 41 00 66 00'
+.br
+3  16 bit text, case INSENSITIVE
+.br
+4  Hexadecimal: '09Af'  -> bytes'09 AF'
+.br
+5  Hexadecimal, case INSENSITIVE
+.br
+6  Decimal:     '9,175' -> bytes'09 AF'
+.br
+7  Decimal, case INSENSITIVE
+
+.TP
+.BI -rformat " <RFORMAT>"
+Format of the 
+.B REPLACE
+string.  The same options apply as for
+.B FFORMAT
+except the case insensitivity bit is ignored.  [Default: same as 
+.B FFORMAT 
+]
+
+.TP
+.BI -mformat " <MFORMAT>"
+Format of the 
+.B MASK
+string.  The same options apply as for
+.B RFORMAT.  
+[Default: 6 (Decimal list)].
+
+.TP
+.BI -maxpattern " <N>"
+Size in bytes to allocate for each binary sequence buffer. [Default 1024]
+
+
+.TP
+.B -h -help --help -? --??
+Print the help message. (Default - do not print help message.)
+
+.TP
+.B -hexamples
+Print examples. (Default - do not print examples.)
+
+.TP
+.B -i
+Emit version, copyright, license and contact information.( Default - do not emit information.)
+
+
+
+
+.SH EXAMPLES
+
+
+.TP
+.B % binreplace -h
+List the the command line options.
+
+.TP
+.B % echo 'F123 abc' | binreplace -find '23 ' -verbose 15
+Find an exactly matching string, show position, and binary sequence in
+hexadecimal and ascii.  Emits:
+.br
+2 [ 32 33 20] [23 ]
+
+
+.TP
+.B % echo 'F123 abc' | binreplace -find '23 ' -verbose 0 -replace '09'
+Find and replace a string in the data stream. Since the replace string
+is one byte shorter than the find pattern, the data stream is reduced in length
+by one.  The associated warning is suppressed by settig 
+.B verbose
+to 0.  Emits:
+.br
+F109abc
+
+.TP
+.B % echo 'F123 abc' | binreplace -find 'xxx' -verbose 15 -mask  '10 24 16'
+Find a property pattern: number, white space, lower case. Emits:
+.br
+3 [ 33 20 61] [3 a]
+
+
+.TP
+.B % echo 'F123 abc' | binreplace -find 'xx' -verbose 15 -mask  '10 10'
+Only the first of two overlapping matches are emitted or replaced.  Here the
+pattern matches both '12' and '23', but since they overlap, only the former is
+found. Emits:
+.br
+1 [ 31 32] [12]
+
+.TP
+.B % echo 'F123 abc' | binreplace -find 'x' -verbose 15 -mask  '11'
+Find by NOT digits.  Emits:
+.br
+0 [ 46] [F]
+.br
+4 [ 20] [ ]
+.br
+5 [ 61] [a]
+.br
+6 [ 62] [b]
+.br
+7 [ 63] [c]
+.br
+8 [ 0A] [~]
+
+.TP
+.B % echo 'F123 abc' | binreplace -find 'xxxAB' -verbose 15 -mask  '28 28 28 0 0' -fformat 1
+Retrieve data next to a known case insensitive tag.  Emits:
+.br
+2 [ 32 33 20 61 62] [23 ab]
+
+.TP
+.B % echo 'F123 abc' | binreplace -find 'Fxxxxxxx' -verbose 0 -mask  '0 10 10 10 24 16 16 16' -replace 'G789 new'
+Replace a complex pattern.  Emits:
+.br
+G789 new 
+
+.TP
+.B % (echo 'F123 abc'; echo 'second') | ./binreplace -find '0000000A' -fformat 4  -verbose 15 -replace '7071720A' -mask '28 28 28 0'
+Use hexadecimal find and replace strings combined with mask pattern.  Emits:
+.br
+5 [ 61 62 63 0A] [abc~] 
+.br
+F123 pqr                
+.br
+12 [ 6F 6E 64 0A] [ond~]
+.br
+secpqr                  
+
+.TP
+.B % echo 'F123 abc' | binreplace -find 'xx' -mask '28,28' -verbose 15 -replace 'XY'  -first 2 -length 4
+Replace in a restricted area, here positions 2 through 5. Emits:
+.br
+2 [ 32 33] [23]
+.br
+4 [ 20 61] [ a]
+.br
+F1XYXYbc       
+
+.TP
+.B %echo 'F123 abc' |  binreplace -find '\e6\exc' -mask '\e6\e28 0' -verbose 31 
+Use repeat counts to shorten binary sequence specifications.  Emits:
+.br
+FIND PATTERN:  78 78 78 78 78 78 33
+.br
+MASK PATTERN:  1C 1C 1C 1C 1C 1C 00
+.br
+1 [ 31 32 33 20 61 62 63] [123 abc]
+
+
+.SH LICENSE
+
+GNU General Public License 2
+
+.SH COPYRIGHT
+
+Copyright (C) 2010 David Mathog and Caltech.
+
+.SH AUTHORS
+
+David Mathog, Biology Division, Caltech <mathog@caltech.edu>
+
+
+

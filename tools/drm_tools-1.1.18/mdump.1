@@ -1,0 +1,222 @@
+.TH "mdump" "1" "1.0.5 OCT 23 2006" "drm_tools" "User Commands"
+.SH NAME
+
+mdump \- dump data from a binary file
+
+.SH SYNOPSIS
+
+.B mdump [options...]
+
+.SH DESCRIPTION
+
+.B mdump
+reads data from a specified input file or
+stdin and dumps data elements from it to a specified output file
+or stdout after formatting them as indicated.  mdump may be
+either used as a replacement for
+.B od
+or to extract data from simple binary files
+without having to write a specialized program.
+
+.B mdump
+may be obtained as part of the 
+.B drm_tools
+package from:
+.B http://sourceforge.net/projects/drmtools/
+
+
+.SH OPTIONS
+
+.TP
+.BI -blocks " <blocks>"
+The number of data blocks to emit. 0 = all = default.
+
+.TP
+.BI -dtype " <data_type>"
+Set the type of the data elements:
+.br
+.B c
+= char
+.br
+.B s
+= short int
+.br
+.B l
+= (long) int
+.B (default)
+.br
+.B g
+= long long (not available on all platforms)
+.br
+.B f
+= float
+.br
+.B d
+= double
+
+
+.TP
+.B -ds
+Emit data sizes and exit.
+
+.TP
+.B -flip
+Invert byte order.  Default is to leave byte order as is.
+
+
+
+
+.TP
+.BI -format " <format_string>"
+ 
+.B <format_string>
+contains a C printf format string which controls the
+formatting of data elements. 
+The syntax of this string is:
+.B %Width.PrecisionSpecifier.
+The C format Specifiers are:
+.B c
+(character);
+.B o
+(octal),
+.B x
+(hexadecimal);
+.B d
+(decimal),
+.B ll[d,u,o,x]
+long long variants;
+.B f
+(floating point);
+.B e
+(exponent).
+The valid format specifiers for each data type are:
+.nf
+dtype  Specifiers  Default
+c      c,d,o,x     %c
+s      d,o,x       %9d
+l      d,o,x       %9d
+g      ll[u,d,o,x] %18llu
+f      f,e         %9e
+d      f,e         %9e
+.fi
+
+.TP
+.B -h -help --help -? --??
+Print the help message and exit. 
+
+.TP
+.B -i
+Emit version, copyright, license and contact information and exit.
+
+.TP
+.BI -in " <input_file>"
+Read input from the specified file.  (Default is to read from stdin.)
+
+.TP
+.BI -interval " <interval>"
+Set the number of data elements in each repeat block.  Default is 1.
+
+.TP
+.BI -multiple " <multiple>"
+The number of data elements to dump from each block (all to one line).
+Defaults to 
+.B <interval>.
+
+.TP
+.BI -offset " <offset>"
+Emit data elements starting at 
+.B " <offset>"
+data elements from the
+beginning of the file.  Default is 0.
+
+.TP
+.BI -out " <output_file>"
+Write output to the specified file.  (Default is to write to stdout.)
+
+.TP
+.BI -show  " <show>"
+Controls numbering of output lines.  Positions are offsets relative to
+.B <offset>.
+That is, if 
+.B <offset>
+is 5 then element 5 is shown with position 0.
+Options are:
+.br
+.B 0 
+do not number output lines (default)
+.br
+.B 1
+number by bytes (hexadecimal)
+.br
+.B 2
+number by data element (hexadecimal)
+.br
+.B 3
+number by blocks (hexadecimal)
+.br
+.B 4
+number by bytes (octal)
+.br
+.B 5
+number by data element (octal)
+.br
+.B 6
+number by blocks (octal)
+.br
+.B 7
+number by bytes (decimal)
+.br
+.B 8
+number by data element (decimal)
+.br
+.B 9
+number by blocks (decimal)
+
+.TP
+.B -signed
+Default is for integer data elements to be unsigned.  This flag makes them signed.
+Ignored for 
+.B f
+,
+.B d
+, and 
+.B g
+data types.  To obtain signed output for
+.B g
+type use
+a format string like 
+.B %18lld.
+
+.SH EXAMPLES
+
+.TP
+.B % mdump -h
+List the the command line options.
+
+
+.TP
+.B % mdump -dtype l -format ' %8.8x' -interval 4 -show 2 somefile
+Dump in hex format integer elements in blocks of 4 per line
+and number the lines by data block.
+
+.TP
+.B % echo ABCD | mdump -dtype c -format ' %3.3o' -interval 4 -blocks 1
+Emits the octal values for the four ascii characters ABCD.
+
+.SH SEE ALSO
+
+.B od(1)
+
+.SH LICENSE
+
+GNU General Public License 2
+
+.SH COPYRIGHT
+
+Copyright (C) 2002, 2006 David Mathog and Caltech.
+
+.SH AUTHORS
+
+
+David Mathog, Biology Division, Caltech <mathog@caltech.edu>
+

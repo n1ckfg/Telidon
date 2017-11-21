@@ -1,0 +1,2985 @@
+.TH "extract" "1" "1.1.9 Jun 13 2013" "drm_tools" "User Commands"
+
+.SH NAME
+
+extract \- extract and format data from text files
+
+.SH SYNOPSIS
+
+.BI extract " [options...]"
+
+.SH DESCRIPTION
+
+.B extract
+reads a text file (or files) and extracts a range of rows
+and columns (character positions), optionally reformats this data,
+and then outputs it. 
+.B extract
+can also process tokens, either delimited or defined by patterns, instead of
+or in addition to character columns.  Complex logic and data manipulations
+may be defined with a scripting language that supports both text and numeric operations.
+The intent is that \fBextract\fP be able to handle increasingly difficult tasks
+through the use of more advanced features, without requiring that those same advanced
+features be employed for simple tasks.  The \fBEXAMPLES\fP section shows the easier
+end of the this spectrum, with the methods for the more difficult end of the spectrum
+described in the other sections of this document. 
+
+.B extract
+may be obtained as part of the 
+.B drm_tools
+package from:
+.B http://sourceforge.net/projects/drmtools/
+
+.SH OPERATOR ORDER
+     
+.PP
+There are many
+.B extract
+command line options but only those whose default values are not
+appropriate for a particular text modification must be specified
+subject to the caveat that at least one command line option must be
+specified.
+The order in which operations are executed and the command line
+options that affect those operations are:
+
+.PD 0
+process extra command line arguments, define variables:
+.B cmd,eoc,v
+.br
+emit help or other information:
+.B i,h,help,?,hfmt,hmath,hpat,hvar,hexamples
+.br
+set parse options for making tokens: 
+.B s,dl,dq,dqs,po,xc
+.br
+.br
+set buffer sizes:
+.B wl,xc,xe
+.br
+convert scripting statements to runnable form:
+.B sect,op,psN,pmN,v,dbga
+.br
+open input and output files, use binary output:
+.B in,out,b
+.br
+emit output file prefix string:
+.B filebol
+.br
+run \fBBefore\fP script section:
+.B sect,op,psN,pmN,v,dbgm,dbgp,dbgs
+.br
+Begin processing loop, for each line in the input file(s):
+.RS 3
+read input files, template match two files:
+.B in,indl,eqlen,template
+.br
+handle embedded null characters:
+.B hnr,hnd,hns,hnsubs
+.br
+handle
+.B Carriage Return
+at end of input lines:
+.B crok
+.br
+merge/unmerge input lines:
+.B merge,unmerge,mdl
+.br
+make tokens for input:
+.B mt
+.br
+run \fBMain\fP script section:
+.B sect,op,psN,pmN,v,dbgm,dbgp,dbgs
+.br
+\fI(Note: the \fP\fBMain\fP\fI script may disable or modify everything after it down to the \fP\fBAfter\fP\fI script.)\fP
+.br
+select rows
+.B [
+.RS 3
+unconditionally:
+.B sr,er,nr
+.br
+conditionally:
+.B if,ifonly,ifn,ifterm,ifnorestart, all
+.RE
+.B ]
+.RS 3
+select columns (fields)
+.B [
+.RS 3
+explicitly: 
+.B fmt
+.br
+implicitly: 
+.B sc,ec,nc,is,rm
+.RE
+.B ]
+.br
+emit output line prefix string:
+.B bol,ifbol,iftermbol
+.br
+emit input line count:
+.B n
+.br
+emit input line length:
+.B ll
+.br
+emit input line token count:
+.B lt
+.br
+Output processing on each selected field:
+.RS 3
+.br
+emit debugging information:
+.B dbg,dbgv
+.br
+sort multitoken fields:
+.B sortas,sortac,sortan,sortds,sortdc,sortdn
+.br
+substitute empty fields:
+.B rs
+.br
+substitute characters:
+.B rcds,rcdc,rcss
+.br
+substitute text:
+.B rtds,rtdc,rtss
+.br
+pattern match/substitute text:
+.B ps
+.br
+add backslashes:
+.B bs,ba,b2,ecc
+.br
+format numerics:
+.B fff,fffe,ffd,ffu,ffo,ffx,fp,nz
+.br
+pad or set field width 
+.B pd,fw
+.br
+trim whitespace:
+.B trl,trr,trb,trc
+.br
+justify:
+.B jl,jc,jr
+.br
+adjust case:
+.B cu,cl,cf
+.br
+add delimiters (tokens only):
+.B dv,dl,d-,dt
+.br
+.RE
+emit output line
+.br
+emit output line suffix string:
+.B eol,ifeol,iftermeol
+.RE
+.RE
+.br
+emit output file suffix string:
+.B fileeol
+.br
+run \fBAfter\fP script section:
+.B sect,op,psN,pmN,v,dbgm,dbgp,dbgs
+
+.SH Options (alphabetically)
+
+.TP
+.B -all
+Emit unprocessed the text rows outside of the range specified with
+.B -sr
+,
+.B -er
+,
+.B -nr.
+(Default is not to emit these rows.)
+
+
+.TP
+.BI -b
+Binary output mode.  The default output is text.  On some operating systems
+these are the same, and on others not.  The primary difference in most cases
+is the handling of '\\n', the end of line character.  In text mode (the default) 
+this character is expanded to the local end of line sequence.  On Unix/Linux systems
+this is again '\\n' and there is no difference between the two modes, but 
+on Windows this sequence is '\\r\\n'.  If \fB-b\fP is specified then extract
+tries to use binary output, where the end of line character has no special
+meaning.  This should always succeed if \fB-out filename\fP is used,
+but may fail when the output is to stdout.
+
+
+.TP
+.BI -bol " <bolstring>"
+When set the prefix 
+.B <bolstring>
+is emitted before any 
+output for each input row.  Specifically, there will be one prefix string
+emitted for
+each input row even if the rest of the output row is empty.
+.B <bolstring>
+may be an empty string.  Note that the
+prefix precedes any line numbers triggered by 
+.B -n.
+(Default is an empty string.)
+
+
+.TP
+.B -bs -ba -b2
+Add backslashes (unix escape characters) before any character
+(other than alphabet, numeric, underscore, period, or slash), before
+all characters, or before all but the first character.  If
+.B -ecc
+is also used the specified character is used instead of backslash.
+Note that
+this only applies within a field, so that, for instance, if the
+program is running in token mode a token range
+.B [1,3]
+would apply the
+backslashes between characters within each token but
+not between tokens.  To work around that limitation use
+.B [dv\e:1,3].
+(Default is not to add backslashes.)
+
+.TP
+.BI -cmd " cmdfile"
+Once all command line options are consumed reading more from
+.B cmdfile.
+Input is read until the end of the input or an 
+.B -eoc.
+Use 
+.B -cmd -
+to read commands from stdin, then after 
+.B -eoc
+the following lines are treated as input.
+Options are delimited by spaces, tabs and End of Lines .
+Strings containing these characters may be double quoted.
+Single quotes have no special meaning.
+.nf
+.B Special first characters in an input line:
+_  (underscore) Remainder of line is the next option.
+   It is read verbatim and so need not be quoted.
+#  The line is a comment - it is ignored.
+.B Special first characters in a token:
+## The rest of the line is a comment and is ignored.
+.B Example:
+-mt -dl " \et"
+# this is a comment and is ignored
+## as is this
+-fmt "[mt:1,4]" ##the text before this is script, but this comment is ignored
+# The next line is full of double quotes and spaces
+# but is pulled in verbatim because of the leading underscore.
+_This would be a "Mess\e34 to  quote [1,4]
+-eoc
+.fi
+
+.TP
+.BI -cols " <format>"
+Deprecated synonom for
+.B -fmt.
+
+
+.TP
+.B -crok
+Retain a 
+.B Carriage Return
+character which appears before
+the 
+.B End of Line
+character.  (Default is to delete it.) 
+
+
+.TP
+.B -cu -cl -cf
+In selected characters/tokens change case to upper, lower, or first letter
+upper and rest lower.  (Default is to leave case unmodified.) 
+
+
+.TP
+.B -dbg
+Emit state and parsing information as each input line is processed.
+Only a developer modifying the program's code is likely to find
+this useful. (Default is
+not to emit this information.)
+
+
+.TP
+.B -dbga
+Emit autolabel information.  Use this to find problems in scripts
+with automatic labels: 
+.B c,{,}{,
+and
+.B }
+
+
+.TP
+.B -dbgm
+Emit a representation of a script showing which
+.B TARGET
+is to be tested and which operations are to be run based on the results of
+that test.
+
+
+.TP
+.B -dbgp
+Emit raw substrings on pattern matches.  This is useful for working out
+regular expressions or sequential pattern matching logic.  For instance,
+to see what a regular expression produces from a test input
+use something like this:
+.br
+.B echo match_this | extract -pm "p:A_Regular_Expression" "" -dbgp
+
+
+
+.TP
+.B -dbgs
+Emit call and stack information while a script runs.  Used for debugging
+flow problems in a script.
+
+
+.TP
+.B -dbgv
+Emit information for all 26 \fBSTRING\fP variables.  This is done once in the read loop,
+before the 
+.B -fmt
+is executed.  For debugging in scripts use instead
+.B -op "~VLIST",
+which shows the information for just the variables in
+.B VLIST
+at a particular place in the script.
+
+
+.TP
+.BI -dl " <delimiter_string>"
+Change the delimiters used to define tokens.  
+Typically 
+.B <delimiter_string>
+must be quoted or escaped on the command line so
+that the shell does not interpret it.  (Default string contains
+the characters
+.B space,
+.B colon, 
+and
+.B tab
+)
+
+
+.TP
+.B -dt
+When tokens are emitted followed by delimiters use as that delimiter that which defined the end
+of the current token.  (Default).  See also 
+.B -d-
+and 
+.B -dv.
+
+
+.TP
+.B -dq -dqs
+While parsing tokens ignore delimiters within double quotes.   
+.B -dq
+returns the token
+with the surrounding double quotes, 
+.B -dqs
+returns the token without the quotes.  (Default is to recognize delimiters
+no matter where they occur.)
+
+.TP
+.BI -dv " <delimit_character>"
+When tokens are emitted followed by delimiters use 
+.B -dv " <delimit_character>".
+(Default is 
+.B -dt
+).
+
+
+.TP
+.B -d-
+Do not emit a delimiter following a token.  This is most often used
+in combination with the 
+.B -s, 
+.B -pd,
+.B -fw,
+and 
+.B -j*
+switches. (Default is 
+.B -dt
+, see also 
+.B -dv
+).
+
+
+.TP
+.BI -desc
+Process (Do) ESCapes at output, converts \e\e to \e and so forth. The last
+character in a string cannot act as an escape even if it is a backslash.
+Differs from 
+.B STRING SYNTAX
+substitution in that [[ and ]] are not special.
+(Default is that backslash is not a special character.)
+
+
+.TP
+.BI -ec " <end_column>"
+The last character column to select.  (Default is 
+.B -1,
+the last column.)
+
+.TP
+.BI -ecc " <escape_character>"
+When set the escape character for the
+.B -bs,ba,b2
+commands becomes
+.B "<escape_character>".
+This may be used to separate character based columns with delimiters so that
+the result can be read into a spreadsheet easily.  (The default escape character is a backslash.)
+
+
+
+.TP
+.BI -eoc
+Terminate input from a 
+.B -cmd
+file.
+
+
+.TP
+.BI -eol " <eolstring>"
+When set the output from each input row is terminated with 
+.B "<eolstring>."
+Specifically, there will be one 
+.B "<eolstring>"
+emitted for each input row even if the rest of the output row is empty.
+.B "<eolstring>"
+may be an empty string.
+This may be used to compress multiple input lines into a single
+output line. Typically 
+.B \en
+would be injected into the output
+through 
+.B -if
+and/or 
+.B -fmt
+and a comma, space
+or colon would be used for 
+.B <eolstring>.
+(Default value of
+.B <eolstring>
+is 
+.B \en
+)
+
+
+.TP
+.B -eqlen
+When reading from multiple input files require that they all have exactly the
+same number of lines.  (Default is to read as many lines as are present in each.)
+
+
+.TP
+.BI -er " <end_row>"
+The last text row to process.  (Default is the last row in the file.)
+
+
+.TP
+.BI -esc
+Respect escapes (backslashes) when parsing text into tokens.  If the input
+is "foo\e bar two" the default 
+.B -mt
+parsing will produce three tokens "foo\e", "bar", and "two".
+With 
+.B -esc
+it will produce two tokens "foo\e bar" and "two".
+Note that the escape character is not removed, use
+.B -desc
+for that.
+(Default is that backslash is not a special character.)
+
+
+.TP
+.B -ffe -fff -ffd -ffu -ffo -ffx
+Format a text fragment assuming it contains a numeric representation.  If the fragment cannot
+be converted into a valid number a fatal error will result.  Also sets the default
+format for numeric variables.   Numeric values are formatted starting from a double
+precision floating representation.  That type is used directly for exponent \fB-ffe\fP and floating
+\fB-ffd\fP formats, is first converted to a signed integer for \fB-ffd\fP format, or converted to
+an unsigned integer for \fB-ffu\fP, \fB-ffo\fP, or \fB-ffx\fP (decimal, octal, or hexadecimal)
+formats.  Integer conversions truncate at the upper or lower limits if the initial value is out
+of that integer type's range.  The precision is set by 
+.B -fp
+and is the number of
+digits after the decimal point for a floating point value, or the number of digits shown for an integer
+value.   For integer values this is how leading zero characters are determined.  The field
+width is set by 
+.B -fw
+or 
+.B -pd.
+If
+the resulting formatted number will not fit into the designated width
+the output will be expanded to fit, so be sure to leave enough
+space for the largest possible number.  Formatting examples (for the
+value 123.4567 with precision 6): 1.234567e+02 (\fB-ffe\fP)
+, 123.456700(\fB-ffd\fP)
+, 000123(\fB-ffd\fP)
+, 000123(\fB-ffu\fP)
+, 000173(\fB-ffo\fP)
+, 00007b(\fB-ffx\fP).  (Default is to format fields as text.)
+
+
+.TP
+.BI -filebol " <STRING>"
+Writes 
+.B "<STRING>"
+before the stream of data to the output file. 
+See also 
+.B -fileeol.
+(Default is not to write a string before the data stream.)
+
+
+.TP
+.BI -fileeol " <STRING>"
+Writes 
+.B "<STRING>"
+after the stream of data to the output file. 
+See also 
+.B -filebol.
+( Default is not to send a string after the data stream.)
+
+.TP
+.BI -fmt " <format>"
+Specify in great detail the format of the output line including the selection
+of multiple columns from each input line. <format> consists of any combination
+of 
+.B STRINGs
+and
+.B FIELDs.
+(Default is to select a single column, which may be the entire input line.)
+ 
+When 
+.B -fmt
+is specified the other command line options specify the
+default values for all column fields.
+Multiple column fields (indicated by 
+.B []
+brackets within 
+.B " <format>"
+) may be specified.
+Text strings containing any symbol, including escaped characters,
+may be introduced between column fields.  See
+.B String Syntax
+for examples. 
+.B [
+and
+.B ]
+must be escaped in a string
+or they will be intrepreted as the limits of a column field.
+Column fields contain zero or more options delimited by colons (
+.B :
+) followed by a mandatory range value.
+Characters 
+.B [
+and
+.B ] 
+are not allowed within a column field but all other characters are and
+escapes may be used to include colons. 
+Arbitrary combinations of text strings and column fields
+may be employed, freely mixing token and character mode columns,
+and emitting columns in any order, including emitting
+a single column multiple times.
+Typically 
+.B <format>
+must be quoted or escaped on the command line so
+that the shell does not mangle it before passing it into the program.
+When one or more consecutive 
+.B FIELDs 
+operate in token mode
+delimiters are emitted (subject to 
+.B -dt, dV,
+etc.) after each token until
+interrupted by a 
+.B STRING, 
+character or numeric 
+.B FIELD,
+or the end of the line.
+
+The options for a column field are:
+.B +
+=
+.B as_set
+match command line specifications;
+.B p
+=
+.B default
+match program defaults  (overrides 
+.B -pd
+,
+.B -lj
+,
+.B -uc
+, etc.);
+.B \-
+=
+.B disable
+options.  If employed as a single character it applies to all settings
+and must be the first option within a column field.  As a
+suffix these may be applied singly to each of the
+.B -fmt
+options.
+
+
+.B mt/mc/m-/mp/m+
+token mode/character mode/disable/default/as_set.  Also sets the
+delimit state in some instances to match the command line, but this may be overridden again
+by a subsequent :d*: clause in the same column field.   (overrides 
+.B -mt
+,
+.B -mc
+)
+
+
+.B jl/jr/jc/j-/jp/j+
+justify left/right/center/disable/default/as_set (overrides 
+.B -j*
+)
+
+
+.B trl/trr/trb/trc/tr-/trp/tr+
+trim left/right/both/compress/disable/default/as_set (overrides 
+.B -tr*
+)
+
+
+.B cu/cl/cf/c-/cp/c+
+case upper/lower/first/disable/default/as_set (overrides 
+.B -c*
+)
+
+
+.B bs/ba/b2/b-/bp/b+
+backslashes  apply(as needed)/all/all but first/disable/default/as_set (overrides
+.B -bs
+)
+
+.B eccCHAR/eccp/ecc+
+escape character is 
+.B CHAR
+/default/as_set (overrides
+.B -ecc
+)
+
+.B dt/dvN/d-/dp/d+
+emit actual token delimiter / char
+.B N
+/ disable / default / as_set. 
+Restriction: the delimit character
+.B N
+must be escaped if it is a colon or a backslash, ie 
+.B \e:
+and 
+.B \e\e.
+(overrides 
+.B -d*
+)
+
+.B de/de-/dep/de+        
+Process escapes/ disable/default/as_set.  (overrides
+-.B -desc
+)
+
+.B pd###/pd-/pdp/pd+
+pad with ### spaces/disable/default/as_set (overrides
+.B -pd
+and
+.B -fw
+)
+
+.B fw###/fw-/fwp/fw+
+field width ### spaces/disable/default/as_set (overrides
+.B -pd
+and
+.B -fw
+)
+
+.B fp###/fp-/fpp/fp+
+floating point/integer precision ### spaces/disable/default/as_set (overrides
+.B -fp
+)
+
+.B fff/ffe/ffd/ffu/ffo/ffx/ff-/ffp/ff+
+floating point format to float/exponent/int/unsigned int/octal int/hex int/default/as_set (overrides
+.B -ffe, -fff, -ffd, -ffu, -ffo,
+and 
+.B -ffx
+)
+
+.B nz/nz-/nzp/nz+
+print -0 as -0 for \fBfff\fP and \fBffe\fP, otherwise print it as 0, enable/disable/default/as_set
+
+.B psP/ps-/psp/ps+
+Pattern substitution at output.  The match/substitution is written directly to the output buffer
+so that the input buffer is not modified in any way. P = predefined pattern {0-9}.
+Pattern substitution is: From pattern P/disable/default/as_set
+Examples: ps or ps0 use pattern 0, ps3 uses pattern 3. (overrides \fB-ps\fP).
+
+.B rsSTR/rs-/rsp/rs+
+replacement string is
+.B STR
+/disable/default/as_set.  Restriction:
+.B STR
+may not contain a colon. (overrides
+.B -rs
+)
+
+.B rcdsSTR/rcdcSTR/rcd-/rcdp/rcd+
+rcds string is 
+.B STR
+/case insensitive
+.B STR
+/disable/default/as_set.  Restriction:
+.B STR
+may not contain a colon. (overrides
+.B -rcds
+)
+
+
+.B rcssSTR/rcs-/rcsp/rcs+
+rcss string is 
+.B STR
+/disable/default/as_set.  Restriction:
+.B STR
+may not contain a colon. (overrides
+.B -rcss
+)
+
+.B rtdsSTR/rtdcSTR/rtd-/rtdp/rtd+
+rtds string is
+.B STR
+/case insensitive
+.B STR
+/disable/default/as_set.  Restriction: 
+.B STR
+may not contain a colon. (overrides  
+.B -rtds
+)
+
+.B rtssSTR/rtsvN/rts-/rtsp/rts+
+rtss string is
+.B STR
+/variable N/disable/default/as_set.  Restriction: 
+.B STR
+may not contain a colon. (overrides
+.B -rtss
+)
+
+.B sortas/sortds/sortac/sortac/sortan/sortdn/sort-/sortp/sort+
+sort methods ... /disable/default/as_set.  (overrides
+.B -sortas etc.
+)
+
+.B map$M/ump$M
+Map/\fBU\fPn\fBM\fPa\fBP\fP input token positions to output positions.
+Numeric variable \fB$M\fP holds a \fBMAP\fP. For \fBmap\fP the token at output
+position \fIi\fP is that from input position \fB$M[\fp\fIi\fP\fB]\fP.
+For \fBump\fP the token at output
+position \fB$M[\fp\fIi\fP\fB]\fP is that from input position \fIi\fP.
+There is no 
+corresponding command line option. Overrides
+Range, setting it to \fB[1,N,1]\fP, where \fBN\fP is the \fBMAP\fP size.
+A single field may not combine \fBmap\fP,\fBump\fP and \fBsort\fP modifiers.
+
+.B Range
+The region to process, for instance [1,5] is the first 5 columns
+or tokens, depending on mode. See
+.B DEFINITIONS
+for the range syntax.
+
+
+The default source is the input line, but variables may be used instead by
+specifying one of the following within the [] range specifier:
+.RS 6
+.br
+.B vABC...Z
+Variable values, in the order listed. Character or token mode.
+A variable may appear more than once on the list.  The values are
+selected by the range value, the specified formatting applied,
+and then the values are concatenated.
+.br
+.B =ABC...Z
+Variable token values interleaved, missing filled from \fB-rs\fP. TOKEN MODE only.
+.br
+.B @ABC...Z
+Variable token values interleaved by token.  TOKEN MODE only.
+If a variable's Nth token does not exist it is replaced with
+by its first/last token for positive/negative range increments.
+.br
+\fBv$VLIST\fP, \fB=$VLIST\fP, or \fB@$VLIST\fP use numeric variables instead.
+Numeric and string variables cannot be combined in a single [] field.
+.RE
+
+
+.TP
+.BI -fp " <precision>"
+The precision for floating point formats. 
+See 
+.B -fff
+etc.
+(Default precision is 6.)
+
+
+.TP
+.BI -fw " <number_of_characters>"
+.B <number_of_characters>
+specifies the field width.  The input field is either padded
+or truncated as required.  See also 
+.B -pd.
+(Default is 0 - no change to field sizes.)
+
+
+.TP
+.B -h -help --help -? --??
+Print the help message. (Default is not to print help message.)
+
+
+.TP
+.B -hexamples
+Print examples. (Default is not to print examples.)
+
+
+.TP
+.B -hfmt
+Print detailed 
+.B -fmt
+help. (Default is not to print the
+.B -fmt
+help message.)
+
+
+.TP
+.B -hmath
+Print detailed information on math expression. (Default is not to print
+this help message.)
+
+
+.TP
+.B -hnd
+If embedded null characters are encountered in the input they
+are deleted.
+.B hnd
+is an acronym for "Handle Nulls Delete".  See also 
+.B -hnr,-hns,-hnd,-hnsubs.
+(Default is 
+.B -hnr
+)
+
+
+.TP
+.B -hnr
+If embedded null characters are encountered in the input they
+are retained.  However, the appearance of such a null character
+is a fatal event since a string containing them cannot be further
+processed.  
+.B hnr
+is an acronym for "Handle Nulls Retain".  See also 
+.B -hnd,-hns,-hnsubs.
+(Default)
+
+.TP
+.B -hns
+If embedded null characters are encountered in the input they
+are substituted with \e255.
+.B hns
+is an acronym for "Handle Nulls Substitute". 
+See also 
+.B -hnr,-hnd,-hnsubs.
+(Default is 
+.B -hnr.
+)
+
+.TP
+.BI -hnsubs " <CHAR>"
+If embedded null characters are encountered in the input they
+are substituted with 
+.B <CHAR>.
+.B hnsubs
+is an acronym for "Handle Nulls Substitute".  See also 
+.B -hnr,-hnd,-hns.
+(Default is 
+.B -hnr.
+)
+
+
+.TP
+.B -hpat
+Print detailed pattern mode help. (Default is not to print this help.)
+
+
+.TP
+.B -hvar
+Print detailed variable usage help. (Default is not to print this help.)
+
+
+.TP
+.B -i
+Emit version, copyright, license and contact information.
+(Default is not to emit information.)
+
+
+.TP
+.BI -if " <tag>"
+Conditionally operate on an input line.  The syntax for 
+.B <tag>
+is
+.B "[!][^]string[$]"
+, where:
+.B string
+is any text which may contain tab and numeric escapes
+as for 
+.B -dl
+;
+.B ^
+string is located at the front of a line
+;
+.B $
+string is located at the end of a line
+;
+.B !
+invert logic - operate when string is not found.
+If neither 
+.B ^
+nor 
+.B $
+is present 
+.B string
+may appear anywhere in a line.
+These special characters must be escaped when they are part of the 
+.B string
+part of the expression:
+.B ^
+, 
+.B $
+, 
+.B !
+, and 
+.B \e.
+Lines containing the 
+.B <tag>
+are processed, other
+lines are just echoed to the output.  Use 
+.B ^$
+to match an empty string and
+.B !^$
+to match all nonempty strings.  (An empty string is one containing
+no characters.)   Command line interpreters may interfere with some of
+the special characters.  If that occurs use decimal representations: 
+.B \e33
+for 
+.B !
+,
+.B \e94
+for 
+.B ^
+,
+.B \e36
+for 
+.B $.
+See also 
+.B -ifonly.
+(Default is to process all lines within the specified row range.)
+
+
+.TP
+.B -ifbol
+When set those rows in an if block are emitted
+without the BOL string prefixed. 
+This is used primarily to mark all rows other than those in
+the if block with a prefix tag.  (Default is to emit the
+.B BOL
+string.)
+
+
+.TP
+.B -ifeol
+When set those rows in an if block are emitted
+without an EOL character.  This may be used to compress multiple input lines
+within an if block into a single output line.
+(Default is to emit the
+.B EOL
+string.)
+
+
+.TP
+.BI -ifn " <N>"
+Extends the condition set by 
+.B -if
+for 
+.B <N>
+more lines.
+May not be combined with 
+.B -ifterm.
+(Default is not to extend the conditional processing.)
+
+
+.TP
+.B -ifonly
+When set only those rows satisfying 
+.B -if
+and 
+.B -ifn
+are emitted.  (Default is to emit other lines
+unchanged.)
+
+
+.TP
+.B -ifnorestart
+Normally within an
+.B -if
+block each line is tested to see if it matches the
+.B -if " <tag>"
+and if it does the block is extended.  This happens when
+either
+.BI -ifn " <N>"
+or
+.BI -ifterm " <endtag>"
+is also specified.  If
+.B -ifnorestart
+is specified under these conditions lines within an existing 
+.B -if
+block are not tested and so the block will not be "restarted".
+(Default is to restart.)
+
+
+.TP
+.BI -ifterm " <endtag>"
+Extends the condition set by 
+.B -if
+through the first
+line containing the 
+.B <endtag>.
+The rules for
+processing the 
+.B <endtag>
+are the same as for the
+.BI -if " <tag>".
+May not be combined with 
+.B -ifn.
+When the tags are chosen so
+that the beginning 
+.B -if
+and terminating 
+.B -ifterm
+are not
+the same line use 
+.BI -iftermeol " <STRING>"
+to finish off 
+the end of the if block.  When these tags are the same 
+the 
+.B <endtag>
+really indicates the input line
+following the preceding if block.  In this case use 
+.BI -iftermbol " <STRING>"
+to write a string between the
+two if blocks and do not use 
+.B -iftermeol.
+(Default is not to extend conditional processing.)
+
+
+.TP
+.BI -iftermbol " <STRING>"
+Writes 
+.B <STRING>
+before the first character in the last line of an
+.B -if
+block.  That line is determined by either
+.BI -ifn " <N>" 
+or
+.BI -ifterm " <endtag>"
+or the end of the file.  Primarily this
+is useful when 
+.BI -ifterm " <endtag>"
+and 
+.BI -if " <tag>"
+are the same and a separator needs to be written between consecutive
+if blocks. Only one 
+.B <STRING>
+is written for each if block terminator no matter
+how many input lines the block contains.
+(Default value is an empty string.)
+
+.TP
+.BI -iftermeol " <STRING>"
+Writes 
+.B <STRING>
+after the last character in an 
+.B -if
+block.  The end of the block is determined from
+.BI  -ifn " <N>"
+, or 
+.BI -ifterm " <endtag>"
+, or if neither of these are specified, the first line not matching
+.BI -if " <tag>"
+, or the end of the file.  Only one
+.B <STRING>
+is written for each if block terminator no matter how many
+input lines the block contains.
+(Default value is an empty string.)
+
+
+.TP
+.BI -in " file1[,file2,file3,..fileN]"
+Read input from one or more specified files
+in a comma delimited list. 
+When reading from more than one
+file the lines from each are concatenated
+into a single input line in the order shown.  Use 
+.B -indl
+to delimit the substrings.  The special
+file name 
+.B \-
+corresponds to stdin.  Only a single
+input file may be read from stdin.  See also  
+.B -eqlen.
+The
+.B -h
+option displays the maximum number of input files.
+(Default is to read from stdin.)
+
+
+.TP
+.BI -indl " <StreamDelimit>"
+When reading from more than one input file the string 
+.B <StreamDelimit>
+is placed between each substring in the resultant final input string. 
+(Default is an empty string - input strings are directly concatenated.)
+
+
+.TP
+.B -is
+Modify the indicated character or token range "in situ" and
+emit them and the unmodified surrounding region. 
+This option may not be used
+with 
+.B -rm
+or 
+.B -fmt.
+(Default is to emit only
+the selected character/token range.)
+
+
+.TP
+.B -jl -jc -jr
+Justify field left, center, or right. 
+(Default is not to change justification.)
+
+
+.TP
+.B -ll
+Prefix each line of output with  "line_length:".  The line
+length is the number of characters in the final input line
+after reading a line from all input files and inserting delimiters.
+(Default is  not to emit line lengths.) 
+
+
+.TP
+.B -lt
+Prefix each line of output with  "token_count:".  The token
+count is the number of tokens in the final input line
+after reading a line from all input files and inserting delimiters.
+This value will be zero unless 
+.B -mt
+is specified, or 
+.B mt
+is used in a 
+.B -fmt
+field.
+(Default is  not to emit line token counts.) 
+
+
+.TP
+.B -mc
+Process lines as character columns. See also 
+.B -mt.
+(Default.)
+
+
+.TP
+.BI -merge " <N>"
+Examine the 
+.B <N>
+first characters in consecutive rows.  If they
+are the same emit the 
+.B <N>
+character prefix once and the remainder
+of each matching row in sequence as one new row.  Use 
+.B -mdl 
+to place
+delimiters between these fragments.  The comparison is case sensitive.
+Prefix based merging follows merging from multiple input files and 
+precedes any 
+.B if
+contingent operations.  See also 
+.B -unmerge.
+(Default is not to merge based on common prefix.)
+
+
+.TP
+.BI -mdl " <MergeDelimit>"
+When 
+.B -merge
+is set and consecutive rows are being concatenated
+introduce the string 
+.B <MergeDelimit>
+between the fragments from
+each row. (Default is an empty string - input strings are
+directly concatenated.)
+
+
+.TP
+.B -mt
+Process lines as tokens.  In this mode 
+.B -sc
+,
+.B -ec
+, and 
+.B -nc
+values refer to token numbers.
+If a single
+token is emitted then no delimiter is emitted with it.  However, two or more 
+tokens are emitted as:
+.br
+.B token1 delim1 token2 delim2 token3 ... tokenN
+.br
+Where:
+.B delim1
+is the first delimiter following 
+.B token1.
+Note that no terminal delimiter is added after
+the last token.
+This mode is appropriate when delimiters are white space.
+Add 
+.B -s
+when every delimiter indicates a token and empty tokens
+are allowed.  For instance, when reading spreadsheet data.
+See also
+.B -dl.
+(Default is
+.B -mc.
+)
+
+
+.TP
+.B -n
+Prefix each line of output with:  "line_number:".  The line number
+is that line's position in the input file.
+(Default is not to number input lines.)
+
+
+.TP
+.BI -nc " <number_of_columns>"
+Number of columns to process starting from 
+.B sc. 
+Do not specify both 
+.B -nc
+and 
+.B -ec. 
+(Default is to process all columns.)
+
+
+.TP
+.BI -nr " <number_of_rows>"
+Number of text rows to process starting from 
+.B sr.
+Do not specify both 
+.B -nr
+and 
+.B -er. 
+(Default is to process all rows.)
+
+
+.TP
+.B -nz
+Print -0 as -0 in \fBffe\fP and \fBfff\fP formats (Default = print as 0).
+
+
+.TP
+.BI -op "N <OPERATIONS>"
+Run the 
+.B OPERATIONS,
+all of which must be in the True branch.  It is an error if any are present
+in the (unreachable) False branch. If
+.B N
+is specified the \fBTARGET\fP is a variable A-Z, otherwise the 
+\fBTARGET\fP  is the input.
+An unlimited number of these may be used on the command line via the
+.B -cmd, -eoc
+mechanism and incorporated into scripts.  See 
+.B DEFINITIONS
+for the syntax for 
+.B OPERATIONS.
+
+
+.TP
+.BI -out " file0[,file1,...file9]"
+Open up to 10 output files.  Use "-" to direct one stream to stdout.
+Only scripts are able to direct output to streams 1-9.
+(Default is to write everything to stdout.)
+
+
+.TP
+.BI -pd " <number_of_characters>"
+Specifies the 
+.B <number_of_characters>
+(spaces) to be added to the
+right side of the field.   When fields are processed
+they are padded, then justified, then the character cases adjusted.  See also 
+.B -fw. 
+(Default is 0 - no padding.)
+
+
+.TP
+.BI -pm "N <PATTERN> <OPERATIONS>"
+Pattern match.  If 
+.B N
+is specified the  
+.B TARGET
+is a variable A-Z, otherwise the  
+.B TARGET
+is the input.
+An unlimited number of these may be used on the command line via the
+.B -cmd, -eoc
+mechanism and incorporated into scripts.  If
+.B PATTERN
+matches then the True branch of
+.B OPERATIONS
+executes, otherwise, the
+False branch executes.  See 
+.B DEFINITIONS
+for the syntax for  
+.B PATTERN 
+and  
+.B OPERATIONS.
+
+
+.TP
+.BI -po "N <parse_options>"
+Create up to 10 sets of parse options (for 
+.I N
+= 0-9), which determine the rules
+for finding tokens within a string.  The first is applied to the input line if tokens 
+are needed.  All may be used to parse strings stored in
+variables by using the \fBpo#\fP\fIVLIST\fP operation in an \fB-op/-pm/-pmN\fP statement (see
+\fBOPERATIONS\fP).
+The first one may be set with 
+.B -dq/-dqs/-esc/-s/-dl/-mdl
+on the command line.  It may also be set using 
+.B <parse_options>
+which is a colon delimited string of parsing specifiers.
+The other parse option groups must be entered using colon delimited
+specifiers.  Multiple 
+.B -po 
+options must be entered sequentially in ascending order. 
+.B -po
+is synonymous with
+.B -po0.
+The syntax for the specifiers is:
+
+.B dq,dqs,dq-,dqp,dq+
+modifies parsing of double quoted text (like
+.B -dq, -dqs
+):
+respect, respect & strip, disable, default, as_set
+
+.B sd,sd-,sdp,sd+
+modifies parsing of delimiter runs (like 
+.B -s
+):
+token for: each, run, default, as_set
+
+.B esc,esc-,escp,esc+
+modifies parsing of escape sequences (like 
+.B -esc
+):
+process escapes: yes, no, default, as_set
+
+.B dlvSTR,dlp,dl+
+sets delimiter string (like 
+.B -dl
+):
+becomes STR, default, as_set.  (There is no
+.B dl- 
+because tokens cannot be parsed without delimiters.)
+
+.B mdlvSTR,mdlp,mdl+
+sets merge delimiter string (like 
+.B -mdl
+): becomes STR, default, as_set.  mdl- is forbidden.
+
+Example: 
+.B -po3 'dq:dlv\et' 
+.br
+Parse options for group 3 are: respect double quotes and 
+the only delimiters are tabs.
+
+
+
+
+.TP
+.BI -ps "# <PATTERN> <REPLACE>"
+Pattern match and then substitute during output.  
+The  
+.B TARGET
+is the input line.
+Up to 10 of these may be used on the command line but they
+must be numbered sequentially starting from 0. 
+.B -ps
+is equivalent to
+.B -ps0.
+If no
+.B -fmt
+is present the substitutions will be attempted in the
+order specified.  If these numbered
+.B -ps
+statements are referenced in a
+.B -fmt
+field ([]) they may be in any order. See 
+\fBDEFINITIONS\fP, \fBPATTERNS\fP, and  
+\fBREPLACEMENTS\fP for syntax information.
+
+
+.TP
+.BI -ps "N <PATTERN> <REPLACE>"
+Pattern match and then substitute in a script.  
+.B N
+specifies that the  
+.B TARGET
+is a variable A-Z.
+An unlimited number of these may be used on the command line via the
+.B -cmd, -eoc
+mechanism and incorporated into scripts.  See 
+\fBDEFINITIONS\fP, \fBPATTERNS\fP, and  
+\fBREPLACEMENTS\fP for syntax information.
+
+
+
+.TP
+.BI -rcdc " <RCDS_STRING>"
+Case insensitive form of 
+.B -rcds
+
+
+.TP
+.BI -rcds " <RCDS_STRING>"
+Remove from the output any characters found in the string 
+.B <RCDS_STRING>.
+If that string begins with 
+.B !
+only those characters which match will be retained.
+This option may be combined with 
+.B -rcss
+to induce substitution instead of deletion.
+.B rcds
+is an acronym for "Replace Character Delete String".
+(Default is to emit all characters without filtering.)
+
+
+.TP
+.BI -rcss " <RCSS_STRING>"
+When a character matches in 
+.B <RCDS_STRING>
+it is substituted from the same
+position in 
+.B <RCSS_STRING>.
+These two strings must be the same length.
+When substituting a 
+.B !
+in 
+.B " <RCDS_STRING>"
+has no special meaning.
+.B rcss
+is an acronym for "Replace Character Substitute String".
+(Default is to emit all characters without filtering.)
+
+
+
+.TP
+.B -rm
+Remove the selected character columns/tokens instead of emitting them.
+This option may not be used
+with 
+.B -is
+or 
+.B -fmt.
+(Default is to emit only the selected character/token range.)
+
+
+.TP
+.BI -rs " <replacement_string>"
+.B <replacement_string>
+substitutes for empty fields.  Typically employed to insert 
+.B NA
+or 
+.B 0
+in a tab delimited file which left unspecified values as empty fields.
+Note, a colon (
+.B :
+) is used to delimit fields filled with
+.B <replacement_string>.
+Use
+.B -dv
+to change this.
+(Default leave empty fields empty.)
+
+
+.TP
+.BI -rtdc " <RTDC_STRING>"
+Case insensitive form of 
+.B -rtds
+
+
+.TP
+.BI -rtds " <RTDS_STRING>"
+Remove from the input string the text contained in 
+.B <RTDS_STRING>.
+Multiple instances, if present, will be removed.
+This option may be combined with 
+.B -rtss
+to induce substitution instead of deletion.
+.B rtds
+is an acronym for "Replace Text Delete String".
+(Default is to emit all text without replacement.)
+
+
+.TP
+.BI -rtss " <RTSS_STRING>"
+When a part of a line of text matches 
+.B <RTDS_STRING>
+it is substituted with
+.B <RTSS_STRING>.
+These two strings need not be the same length.
+.B rtss
+is an acronym for "Replace Text Substitute String".
+(Default is to emit all text without replacement.)
+
+
+.TP
+.BI -rtsv "N"
+When a part of a line of text matches 
+.B <RTDS_STRING>
+it is substituted with
+.B <variable N>.
+These two strings need not be the same length.
+.B rtsv
+is an acronym for "Replace Text Substitute Variable".
+(Default is to emit all text without replacement.)
+
+
+.TP
+.B -s
+Emit a token for each delimiter encountered.    When 
+.B -s
+is specified tokens may consist
+of empty strings.  This mode is for use with delimited data as
+from a spreadsheet. (Default is to emit one token for
+each run of delimiters.)
+
+
+.TP
+.BI -sc " <start_column>"
+The first character column to select.  Columns are numbered from 1.  Negative values
+are allowed and represent columns measured from the end of the line, where -1 is the last
+column.  (Default is
+.B 1,
+the first column.)
+
+
+.TP
+.BI -sect " <section>"
+Defines a section of a script stored in a 
+.B -cmd
+file. 
+.B section
+may be 
+.B Common, Before, Main,
+or
+.B After
+(not case sensitive).  Script lines placed in \fBCommon\fP only
+execute when called from another section - this is where functions
+should be placed that are used in all other sections.  Any function defined
+in \fBCommon\fP  must be referenced from every other defined section or it triggers a "not used"
+error.  The three other sections execute at different times. 
+.B Before
+executes once before the program enters the input loop,
+.B Main
+executes once for each line during the input loop,
+and 
+.B After
+executes once after the loop.  This allows for set up, run, and
+tear down sections in a script.  If no sections are defined all
+.B -pm, -op,
+and
+.B -psN
+operations are placed in \fBMain\fP.
+
+
+.TP
+.BI -sr " <start_row>"
+The first text row (line of text) to process.  Rows are numbered from 1. 
+(Default is
+.B 1,
+the first row.)
+
+
+.TP
+.B -sortac -sortas -sortan -sortdc -sortds -sortdn
+Sort tokens within an output field before any other formatting.  Requires
+.B -mt
+on the command line or
+.B mt
+in the 
+.B -fmt
+[] field to generate the tokens.  Only fields with more than one token are
+sorted.  The a or d following
+.B -sort
+specifies Ascending or Descending order.  The s, c, or n after that specifies
+the type of token to sort: case sensitive string, case insensitive string, or
+numbers.  Tokens with the same collating values, which are numeric (1e-1 and 0.1)
+or case insensitive strings (x and X), will sort in arbitrary order.  A long
+string that begins with all the characters of a short string has a larger
+collating value than the short string. (Default is no sort.)
+
+
+.TP
+.BI -template " <N>"
+Template match two files.  This is used to fill in the holes in a
+column of a table if all of the rows are known.  Use 
+.BI -in " <template,file>"
+to specify which is the 
+.B <template>
+(the first) and which is the 
+.B <file>
+to compare to it (the second.)
+The contents of the two files must be in the same order (for instance,
+sorted, but any order is ok). The 
+.B <file>
+may contain a subset of the rows
+present in the 
+.B <template>.
+It may not contain any rows not present in the 
+.B <template>.
+Compare the first 
+.B <N>
+characters in a case sensitive manner and
+if they are the same pass the row from the 
+.B <file>
+into the program. If they are
+different this indicates a "hole" in the file.  Instead, pass the first 
+.B <N>
+characters from the 
+.B <template>
+followed by the string specified by 
+.B -indl.  
+Normally this would be set to something like "NA", to indicate the
+presence of the hole.
+.B -template
+is incompatible with 
+.B -merge.
+It may be used with 
+.B -eqlen
+to verify
+that all expected rows are present.  It is strongly suggested
+that the data in the first
+.B <N>
+columns of both files be justified and padded with spaces - otherwise "AB"
+will not match "AB  data" for 
+.B <N>
+= 4.  When a template is compared to
+a file the first blank line in each
+will act as an end of file. (Default is no template processing.)
+
+
+.TP
+.B -trl -trr -trb -trc
+Trim out whitespace (spaces and tabs) in the field on the
+left, right, or both sides. Internal whitespace is not affected.
+.B -trc
+eliminates white space on both ends and compresses runs of
+internal whitespace to a single space.
+(Default is to leave the whitespace as is.)
+
+
+.TP
+.BI -unmerge " <N>"
+Take a line consisting of multiple tokens and treat it as several
+lines, each beginning with the same first token, and containing sequential
+groups of 
+.B <N>
+tokens, until all are consumed.  Token delimiters
+are from 
+.B -mdl
+, or if that isn't specified, 
+.B -dl.
+Character column data must be converted to token (delimited) data
+before it may be processed with 
+.B -unmerge.
+Each line number emitted by 
+.B -n
+when 
+.B -unmerge
+is active derives from the
+original input line.  If an input line is unmerged into four lines each
+will have the same line number.  See also 
+.B -merge.
+(Default is not to unmerge.)
+
+
+.TP
+.BI -v "N <String>"
+create a 
+.B DEFINED
+variable or initialize a 
+.B SET
+variable.
+.B N
+is a single letter A-Z.  If 
+.B String
+contains a 
+.B FIELD
+the former occurs, otherwise the latter.  See 
+.B DEFINITIONS
+for more information.
+
+
+.TP
+.BI -wl " <widest_line>"
+Widest input line in characters.  (Default is
+.B 16000
+characters.)
+
+
+.TP
+.BI -xc " <maXimum_Columns>"
+Initial maximum number of column fields ([]) in 
+.B -fmt.
+More space is automatically allocated
+as needed. (Default is
+.B 128
+fields.)
+
+
+.TP
+.BI -xe " <maXimum_dEscriptions>"
+Initial maximum number of static descriptions (not []) in 
+.B -fmt.
+More space is automatically allocated
+as needed. (Default is
+.B 128
+descriptions.)
+
+.SH Options (by function)
+
+.TP 
+Processing modes:
+.B mc,mt
+
+.TP
+Input/Output:
+.B in,out,cmd,eoc,b
+
+.TP
+Unconditional row/column limits:
+.B sc,ec,ncsr,er,nr,all,rm,s
+
+.TP
+Unconditional begin/end strings:
+.B filbol,fileeol,eol,bol
+
+.TP
+Input processing:
+.B merge,unmerge,template,indl,mdl,eqlen,crok   
+.B hnr,hnd,hns,hnsubs
+
+.TP
+Conditional output:
+.B if,ifnorestart,ifn,ifterm,ifonly
+.B iftermeol,iftermbol,ifeol,ifbol
+
+.TP
+Delimiter based parsing of input into tokens:
+.B dl,s,dq,dqs,esc,po
+
+.TP
+Pattern based token generation, complex logic, scripting :
+.B v,sect,pm,op,ps
+
+.TP
+Output field processing:
+.B fmt,
+.B dt,dv,d-,    
+.B pd,fw,fp,
+.B fff,ffe,ffd,ffu,ffo,ffx,
+.B nz,
+.B jl,jr,jc,
+.B trl,trr,trb,trc,
+.B cu,cf,cl, 
+.B bs,ba,b2,       
+.B ecc,
+.B sortas,sortds,sortac,sortdc,sortan,sortdn, 
+.B rs,rcds,rcdc,rcss,rtds,rtdc,rtss,rtsv,
+.B ps
+   
+.TP
+Output line processing:
+.B n,ll,lt
+
+.TP
+Data size allocation:
+.B xc,xe,wl
+
+.TP
+Debugging:
+.B dbg,dbgv,dbgp,dbgm,dbgs,dbga
+
+.TP
+Help and information:
+.B h,hfmt,hpat,hvar,hexamples,i       
+
+
+
+.SH DEFINITIONS
+These terms are used throughout this document:
+
+
+
+.TP
+.B COLUMN NUMBER
+is a signed integer which specifies a particular character in the 
+.B TARGET.
+If the
+.B COLUMN NUMBER
+is a positive number N then it is the Nth column.  If the 
+.B COLUMN NUMBER
+is a negative number N and there are M characters total, then it is the
+M + N -1 character.  That is, -1 is the last character, 1 is the first character.
+
+.TP
+.B FIELD
+is a colon delimited list of formatting options followed by a
+.B RANGE
+all of which is enclosed in '[]'.  
+.B FIELDS
+specify a range of columns or tokens to extract as well as some processing
+options to be applied to this data.  These are used  by
+.B -fmt
+and 
+.B -vN
+as well as some of the scripting operations.  See
+.B -fmt
+for the list of options which may be included in a
+.B FIELD.
+
+.TP
+.B INPUT BUFFER
+holds the line(s) read and possibly merged from the input
+file(s) on each cycle of the main loop.
+
+.TP
+.B PATTERN
+is defined by a single specifier and determines what is to be matched within 
+a 
+.BR TARGET , 
+or which properties of a 
+.B STRING
+or
+.B NUMERIC
+variable are to be tested, in a \fB-pm/-pmN/-psN\fP command.  See
+.B PATTERNS
+for more information.
+
+.TP
+.B RANGE
+is the mandatory final entry in a 
+.B FIELD.
+The
+.B RANGE
+consists of up to 3 integers [Colunn/Start, End, Increment] in one of these
+forms: 
+.B [] [,] [c] [s,e] [s,] [,e] [s,,i] [,e,i] [,,i].  
+Defaults for implied range values are: [First, Last, 1]. 
+In token mode Start and End are 
+.B TOKEN NUMBERS,
+in column mode they are 
+.B COLUMN NUMBERS. 
+If Start and End have the same sign then it is an error for Start > End.
+For mixed signs the range may be empty for some 
+line lengths, but this is not an error.  (Example: 
+.B [3,-3]
+for lines <5
+characters long.) The increment value may be anything other than zero.
+Increments only function in token mode - in character mode they are ignored. The
+range 
+.B [,,-1]
+emits all tokens in a line in reverse order.  The \fBmap\fP and \fBump\fP field modifiers 
+(see \fB-fmt\fP) override the explicit \fBRANGE\fP and replace it with \fB[1,N]\fP, where
+\fBN\fP is the number of terms in the \fBMAP\fP.
+
+Alternatively, a range may be specified by the contents of a 
+\fBNUMERIC\fP variable as [\fBNUMERIC\fP variable, index]: 
+\fB[$V]\fP \fB[$V,idx]\fP. In the \fBNUMERIC\fP variable forms a 
+\fBc/s,e,i\fP triplet is retrieved from
+the 3 elements starting at the index.  If the index is omitted retrieval
+starts at the first element.
+.TP
+.B "MAP        "
+is an array of \fBTOKEN NUMBERS\fP stored in an
+\fBNUMERIC VARIABLE\fp that is used to map/unmap input positions to output
+positions.  A \fBMAP\fP is valid for a map operation if it contains
+any \fIcombination\fP of the positions {1,2...N}.
+A \fBMAP\fP is valid for an unmap (ump) operation if it contains any
+\fIpermutation\fP of those positions.  A \fBMAP\fP may contain any
+combination of negative and positive \fBTOKEN NUMBERS\fP that satisfies these
+positional constraints.  Maps may be generated by using the functions
+\fBidx,six,tix,\fP and  \fBtcx\fP in \fBMath Expressions\fP. 
+
+.TP
+.B REPLACE
+is one or more text strings from one or more sources. 
+These are used to replace \fBpattern\fP matches sequentially in
+a \fB-psN/-pS\fP operation.  See \fBREPLACEMENTS\fP for more information. 
+
+.TP
+.B  RESULT
+is the final number calculated by \fBMath Expressions\fP.  It may be tested
+with the \fB-pm '?'\fP operator or assigned to the
+.B SWITCH INDEX
+with the \fB'ir'\fP operator.
+
+.TP
+.B ROW NUMBER
+in an unsigned integer indicating a particular input line.  The first line is 1.
+
+.TP
+.B SUBSTRING LIST 
+holds the results of match operations.  The list consists of zero or more (start,end)
+pairs which indicate which strings in the target were matched. There
+is only one such list. \fBPATTERN\fP
+match operations may clear it or append to it.  The substrings corresponding
+to the list entries may be appended to one or more  \fBVARIABLEs\fP using 
+\fBOPERATIONS\fP. The list values may also be stored in
+a \fBNUMERIC\fP variable with the \fBsls()\fP\fBMATH EXPRESSION\fP function.
+
+.TP
+.B STRING
+is a simple text string.  It may contain escaped characters.
+
+.TP
+.B SWITCH INDEX
+holds an integer which is read by the \fBsw\fP (switch) operator, which jumps to the appropriate
+case, and then clears the index.  There is only one such index and its value
+is set by certain 
+.B OPERATIONS.
+
+.TP
+.B TARGET
+is the \fBINPUT BUFFER\fP for 
+.BR "-op" ", " "-pm" " and " -ps" ";"
+\fB STRING VARIABLE\fP N for
+.BR "-opN" ", " "-pmN" " and " "-psN" ";"
+or an entry in a
+.BR "VLIST" "."
+
+.TP
+.B TOKEN
+is a substring in a 
+.B TARGET.
+When tokens are created using
+.B -po
+in a 
+.B TARGET
+the process is conservative.  That is, the token information is
+added but the original string in the 
+.B TARGET
+is unchanged.  This is why 
+.B -dqs
+appears to remove surrounding double quotes, but
+.B -esc
+leaves escape characters. 
+.B TOKENs
+can be zero length or empty strings.  They also have a delimiter value.
+When tokens are generated by
+.B -po,
+(which is done automatically if 
+.B -mt
+is specified on the command line or there is an
+.B mt
+in any 
+.B FIELD
+)
+this is the character immediately following the token.  
+When
+.B TOKENs
+are created from a
+.B SUBSTRING LIST
+following pattern matches, or when the last character in the token is the final
+character in the \fBTARGET\fP, the delimiter is
+arbitrarily set to "\e0", which effectively means "undefined". 
+
+.TP
+.B TOKEN NUMBER
+is a signed integer which specifies a particular token in the \
+.B TARGET.
+If the
+.B TOKEN NUMBER
+is a positive number N then it is the Nth token.  If the 
+.B TOKEN NUMBER
+is a negative number N and there are M tokens total, then it is the
+M + N -1 token.  That is, -1 is the last token, 1 is the first token.
+
+.TP
+.B TOKEN LIST
+is a list of \fBTOKEN NUMBER\fPs generated by the \fBPATTERN\fP test \fBt:\fP and used
+by the corresponding \fBREPLACE\fP operator \fBt:\fP.  Each \fBTOKEN NUMBER\fP is from
+the matching query \fBTOKEN\fP.  The \fBSUBSTRING LIST\fP is
+also produced.   The token list indicates which queries matched (in order) while
+the substring list indicates the string which they matched in the target.  A token list may
+stored in a \fBNUMERIC\fP variable with the \fBtls()\fP\fBMATH EXPRESSION\fP function.
+
+.TP
+.B VARIABLE
+is one storage area from one of two sets of 26 storage areas named A-Z and $A-$Z (not case sensitive).
+The former contains \fBSTRING\fP variables and the latter \fBNUMERIC\fP 
+variables.  Both \fBSTRING\fP and  \fBNUMERIC\fP variables may be used in a
+\fB-fmt\fP or \fB-vN\fP statement via the \fBvN,=N,\fP
+and \fB@N\fP options \fBFIELD\fP.
+To indicate the use of \fBNUMERIC\fP
+variables these are written instead as
+\fBv$N\fP, \fB=$N\fP, and\fB@$N\fP.
+See \fB-fmt\fP
+for more information.  Only \fBNUMERIC\fP
+variables  may used to the left of an assignment in a math
+expression.
+
+.RS 3
+.TP 
+.B STRING VARIABLES
+may be undefined or hold a text string and a
+.B TOKEN
+representation of that string. 
+.B STRING
+variables may be in one of three states:
+.B CLEAR
+= undefined,
+.B EMPTY
+= defined but holding only an empty string, or
+.B SET
+= holding some characters.  There are in addition two types of
+\fBSTRING\fP variables:  \fBDEFINED\fP and \fBSET\fP.
+A
+.B DEFINED
+variable is very much like a 
+.B -fmt
+statement.  It contains a description of the
+.B TARGET(s)
+including one or more fields.  The definition is created with a
+.B -v
+statement, and data is entered into it with a
+.B vN
+operation in an
+.B -op
+or 
+.B -pm
+statement.
+A 
+.B SET
+variable may be initialized with a 
+.B -v
+statement that contains no 
+.B FIELDs.
+It may be cleared or appended to by various
+.B OPERATIONS.
+(Note, there is no explicit set operation, to do that clear and then append.)
+
+.TP 
+.B NUMERIC VARIABLES
+contain one or more double precision numbers. Initially they consist of
+a single element with a value preset to zero.  Additional elements may be added
+so that each 
+.B NUMERIC
+variable
+may be used as an array.  
+.B RANGE
+syntax is similar to that for
+.B STRING
+varibles, with the first element being 1 and the last being -1.  In math expressions
+$N[] is a synonym for $N[1,-1], both mean "the entire array".  
+.RE
+
+.TP
+.B VLIST
+is a list of single letter
+.B VARIABLES,
+like 'ABC', it must have
+at least one entry. In some contexts, it may include '-', which means, again
+depending on the context, the \fBINPUT BUFFER\fP, the \fBRESULT\fP, or "none".
+In most cases entries may be repeated, like 'ABBA'.
+
+.TP
+.B OPERATIONS 
+is a list of actions which are performed conditionally
+.RB "(" "-pm" ")"
+or unconditionally
+.RB "(" "-op" ")."
+Scripts are constructed from a series of statements, each of which contains one or more
+operatons.  See the
+.B OPERATIONS
+section for more information.
+
+
+
+.SH STRING SYNTAX
+
+Text strings which appear in the 
+.B -fmt, -v, -rs, -dl,
+or 
+.B -dv
+options are subject to
+the following substitutions:
+
+.PD 0
+.PP
+.B "\e\e"
+->
+.B "\e"
+.br
+.B \en
+->
+.B LF character
+.br
+.B \er
+\-> 
+.B CR character
+.br
+.B \et
+\-> 
+.B tab
+.br
+.B [[
+\-> 
+.B [
+.br
+.B \e[
+\-> 
+.B [
+.br
+.B ]]
+\-> 
+.B ]
+.br
+.B \e]
+\-> 
+.B ]
+.br
+.B \e12
+\-> 
+.B character whose value is 12 (values 1-255 only)
+.br
+.B \e1200
+\-> 
+.B 1200 (because number was not in the allowed range)
+.br
+.B \eanything_else
+\-> 
+.B anything_else
+
+When 
+.B \e
+is the last character on a line it does not escape the line
+terminator and it is emitted.  So 
+.B -fmt '[1] \e'
+will emit
+lines ending with 
+.B \e.
+
+.SH PATTERNS
+The pattern specifier indicates
+which string or regular expression in PCRE syntax is the query for a
+match or substitution.
+(For PCRE information see http://www.pcre.org/pcre.txt)
+The results of a match are placed on the 
+.B SUBSTRING LIST
+and correspond to different parts of, or repeats of, a 
+.B PATTERN.
+For PCRE pattern "(too)l(box)"
+matching the string "toolbox" would make the list: "toolbox", 
+"toolbox", "too", and "box", where the substrings are not strictly
+sequential.  Results from other pattern types will always be sequential.
+
+Pattern specifiers may also define other types of tests which do not
+result in changes to the
+.BR "SUBSTRING LIST" .
+
+Specifiers have the format \fBBASE[MODIFIERS]\fP:[\fIWHAT\fP] which describes what they are
+trying to match or test in the \fBTARGET\fP.  \fBMODIFIERS\fP follow the \fBBASE\fP and
+precede the colon delimiter.  The \fIWHAT\fP string cannot be blank.
+.nf
+.BI "BASE:" "WHAT" " that (may) create or modify the SUBSTRING LIST:"
+  \fBp\fP:\fIRE\fP            (PCRE regular expression) \fIRE\fP
+  \fBs\fP:\fISTRING\fP        (string) \fISTRING\fP
+  \fBv\fP:\fIVLIST\fP         (string(s)) any of the listed variable(s)
+  \fBn#\fP:\fIVLIST\fP        (string(s)) token # in any of the listed variable(s)
+                  # of 0 uses \fBRESULT\fP for the \fBTOKEN NUMBER\fP (see \fBMath Expressions\fP).
+  \fBt\fP:\fIVLIST\fP         (string(s)) any token(s) in the listed variable(s)
+.BI "BASE:" "WHAT" " that do not create or modify the SUBSTRING LIST:"
+  \fBm\fP:              always true.  (Normally one would use \fB-op\fP instead of \fB-pm 'm:'\fP)
+  \fB?\fP:\fIVLIST\fP         Test for existence of TARGET (input, variable, or token).
+                  True if all in list are defined.
+  \fB?CMP\fP:\fIVLIST\fP      Test the value or status of \fBNUMERIC\fP variables in VLIST.
+                  True if all CMP comparisons are true. CMP values are listed in MODIFIERS
+                  below. 
+  \fBi#\fP:             True if input stream # is open, False otherwise.
+                  Streams are 1->N, N from the number of entries with \fB-in\fP.
+                  # of 0 uses \fBRESULT\fP for the stream number (see \fBMath Expressions\fP).
+                  These are equivalent: \fBi:\fP and \fBi1:\fP.
+.B MODIFIERS
+  \fBc\fP               case invariant (default is case sensitive)
+  \fBg\fP               global (repeated search).
+  \fB/#[/#...]\fP       (PCRE only.) only keep the substring(s) indicated by the
+                  number.  For -[v]ps and complex patterns /1 will often
+                  be needed so that the outer expression is substituted.
+                  Numbers must be in the range 1-255 and be in increasing order.
+  \fBr\fP               remainder (search resumes in same target after previous match)
+  \fB^\fP               (not for PCRE) starts at first character 
+  \fB$\fP               (not for PCRE) ends at last character 
+.B MODIFIERS that determine the action when there are multiple search strings:
+  \fBq\fP               se\fBQ\fPuential search. Each string searches the remainder
+                     of the target.  True if all strings are found.
+  \fBf\fP               test until \fBF\fPirst string matches.
+  \fB<\fP               test all, nearest to the start of the target matches [DEFAULT].
+  \fB>\fP               test all, nearest to the end of the target matches.
+.B Modifiers for Existence tests
+  \fBt\fP               test tokens (instead of variables)
+  \fB#\fP               Without t, minimum variable size. If 0, RESULT specifies.
+                     With t, token number to test. If 0, RESULT specifies.
+.B MODIFIERS (CMP operations) for math tests, one and only one must be specified:
+  \fB?\fP               Value is normal (not NaN or +/-inf)
+  \fB=\fP               Value is zero.
+  \fB<\fP               Value is < zero.
+  \fB>\fP               Value is > zero.
+  \fB#\fP               Element number to test.  If 0, RESULT specifies.
+.B PATTERN Examples:
+  \fBs:Fred\fP        Fred (anywhere in the string)
+  \fBsc^$:Fred\fP     A string containing only Fred (or fred or FRED etc.)
+  \fBv:ABC\fP         Matches ...<vA>.. or ..<vB>.. or ..<vC>..
+  \fBvq:ABC\fP        Matches ...<vA>...<vB>...<vC>..
+  \fBvqr:ABC\fP       Matches ...<PREVIOUSMATCH>...<vA>...<vB>...<vC>..
+                 but not ...<vA>...<PREVIOUSMATCH>...<vB>...<vC>..
+  \fBp:Fred\fP        Fred
+  \fBp:(?i)Fred\fP    Fred, fred, FRED etc.  Better to use the "c" modifier.
+  \fBp:^Fred$\fP      A line containing just Fred and no other characters
+  \fBp:(?i)(Fred).*(Ginger)\fP
+                Matches: ... fred ... ginger ...
+                This creates a list of 3 matches: the whole pattern,
+                fred, and ginger, which may be assigned to variables
+                using \fBOPERATIONS\fP.
+  \fB?:-\fP           Always true (input buffer always exists).
+  \fB?e:-\fP          True if the input buffer is empty.
+  \fB?t3:-\fP         True if -mt and >=3 tokens were parsed from the input buffer.
+  \fB?:ABC\fP         True if A,B, and C are all defined (not cleared).
+  \fB?t-4:ABC\fP      True if \fBTOKEN NUMBER\fP -4 exists in A,B,and C.
+  \fB?te3:ABC\fP      True if \fBTOKEN NUMBER\fP 3 exists and is empty in A,B,and C.
+  \fB?<:ABC\fP        True if all elements in \fBNUMERIC\fP variables A,B,C are negative.
+  \fB?>3:ABC\fP       True if element 3 in \fBNUMERIC\fP variables A,B,C is positive.
+  \fB??:ABC\fP        True if all elements in \fBNUMERIC\fP variables A,B,C are normal numbers.
+  \fB?>:-\fP          True if \fBRESULT\fP is greater than zero.
+                [May be used to test for "token 3 of A is at least 5 characters
+                long" by preceding with \fB-op "? tln(a[3])-4"\fP.  (see \fBMath Expressions\fP).]
+.fi
+
+.SH REPLACEMENTS
+Replacement specifications describe the source of the strings which are used
+to replace each match in a \fB-ps/-psN\fP command.  If all of the strings in
+the specification are used replacement starts over again with the first one.
+The syntax is \fBBASE\fP:\fIWHAT\fP as shown below.
+.nf
+\fBs\fP:\fISTRING\fP      replace with (string) STRING
+\fBv\fP:\fIVLIST\fP       replace with (string(s)) from the variable(s)
+\fBn#\fP:\fIVLIST\fP      replace with (string(s)) in token # from the variable(s)
+              # of 0 uses \fBRESULT\fP for the \fBTOKEN NUMBER\fP (see \fBMath Expressions\fP).
+\fBt\fP:\fIVLIST\fP       replace with (string(s)) in all token(s) from the variable
+              If a \fBTOKEN NUMBER LIST\fP was generated by the \fBt:\fP \fBPATTERN\fP specifier
+              replacement will be in the order specified by that list.  This provides a way to do
+              multiple defined replacements with one operation.  Side effect: the \fBTOKEN NUMBER
+              LIST\fP is consumed.
+                           
+.B REPLACMEMENTS Examples:
+  \fB-psA "sc:Fred" "v:BC"\fP
+          If variable \fBA\fP is "Fred1fred2fRed3" and variables \fBB,C\fP
+          are respectively "one" and "two", then after the operation the
+          value of variable \fBA\fP will be "one1two2one3" while the
+          values of variables \fBB,C\fP will be unchanged.
+  \fB-psA "sc:Fred" "t:B"\fP
+          If variable \fBA\fP is "Fred1fred2fRed3FRED4" and variable \fBB\fP
+          consists of 3 tokens "one","two", and "three", then after the operation the
+          value of variable \fBA\fP will be "one1two2three3one4" while the
+          values of variable \fBB\fP will be unchanged.
+
+   [ Substitutions using the four different multiple string query modes when 
+     variable \fBC\fP is "12331233", variable \fBA\fP has tokens  {1,2,3}, 
+     and variable \fBB\fP has tokens {A,B,C}. ]
+  \fB-psC "tQg:A" "t:B"\fP
+          C becomes "ABC3ABC3".
+  \fB-psC "tFg:A" "t:B"\fP
+          C becomes "A233ABCC".
+  \fB-psC "t<g:A" "t:B"\fP
+          C becomes "ABCCABCC".  This is the default mode.
+  \fB-psC "t>g:A" "t:B"\fP
+          C becomes "12C31BCC".
+.fi
+.SH OPERATIONS
+Operations are presented in a semicolon separated list containing one or more 
+of the action elements listed below.  Elements may be preceded by spaces
+but must be immediately followed by a delimiter (";" or end of token).
+Whenever a 
+.B -pm
+or
+.B -op
+is executed its operations are run before the
+next pattern match is attempted.  
+.B OPERATIONS
+are written as a
+single list, but that list is logically divided into True and False
+sections by a "\fB!\fP" operation, with each part of the list executing
+conditionally on the match or test.  Unless otherwise specified, 
+in this section all variables are \fBSTRING\fP variables.  
+.nf
+.B logic control:
+ \fB!\fP         Elements in an operations list before this execute when the match or test is true,
+           after it, when it is false. One or the other set may be empty,
+           which means do nothing for that condition.  May not be used with an
+           \fB-op\fP.
+.B pattern match interpretation:
+ \fB%COND\fP     COND is any combination of {\fBBHIA\fP}. These modify 
+           the SUBSTRING LIST and affect how the list entries 
+           are assigned to tokens by the "\fB>\fP" operator.
+           Default is to assign the list as is.  By specifying \fBB\fPefore(first hit),
+           \fBH\fPit, \fBI\fPnterior (between hits),\fBA\fPfter (last hit) these other substrings
+           are derived and added to the substring list. If a specified 
+           interpolated substring does not exist, for instance, no Before
+           because the first hit is at the first character, an empty token is created.
+           Use with care for PCRE matches, which may not be sequential!
+           Should only be used once for each set of operations!
+           \fBALL\fP is equivalent to \fBBHIA\fP.  Defaults to \fBH\fP (use pattern matches as is).
+
+\fBvariable and input/output\fP (all except \fBv\fP must be applied to SET variables [see \fBDEFINITIONS\fP]):
+ \fBx\fP\fIVLIST\fP    Clear the listed Set variables (they may not be a TARGET again until set).
+ \fBx#\fP\fIVLIST\fP   Remove from \fBTOKEN NUMBER\fP # to the last token.
+           Token number at or before the first token clears all.
+           Token number after the last token clears none.
+           # of 0 uses \fBRESULT\fP for the \fBTOKEN NUMBER\fP (see \fBMath Expressions\fP).
+           These are equivalent: \fB-x1A\fP and \fB-xA\fP. 
+ \fBv\fP\fIVLIST\fP    Apply the \fB-vN\fP definitions of the variables to the \fBTARGET\fP.
+ \fBv\fP\fIVLIST\fP\fB<\fP\fIN\fP  Like the preceding, but default input is from vN. \fBVLIST\fP should not include vN.
+           (These are equivalent:  \fB-pmA "m:" "vB"\fP and \fB-pm "m: "vB<A"\fP.)
+ \fB|\fP\fIVLIST\fP    Append a new line (\en) to any variables in VLIST that are not empty.
+           Also change the last token's delimiter value to \n.
+ \fB>\fP\fIVLIST\fP    Append to one or more SET variables from the \fBSUBSTRING LIST\fP,
+           using one \fBSUBSTRING LIST\fP entry for each variable in the VLIST.
+           Variables are A->Z or -, - means ignore that part of the match.
+           Variables are processed in the order listed.  If the number
+           of substrings is longer than the list the list is processed again.
+           The \fBSUBSTRING LIST\fP is not consumed.  Examples, for 7 entries:
+             \fB>ABC\fP appends 1,4,7 to \fBA\fP, 2,5 to \fBB\fP, 3,6 to \fBC\fP.
+             \fB>A-A\fP appends 1,3,4,6,7 to \fBA\fP.
+             \fB>A\fP   appends 1,2,3,4,5,6,7 to \fBA\fP.
+ \fB+\fP\fIN\fP        Append the entire \fBTARGET\fP to variable \fBN\fP (extends the string, adds token[s]).
+           corresponding to the extended region).
+           For any of the append operations, if \fBTARGET\fP is the input line
+           an \fB-mt\fP or \fB[:mt:]\fP is needed or no tokens will have been generated.
+ \fB+\fP\fIN\fP\fB<=\fP\fISTR\fP   Append STR to vN (extends the string, adds one token).
+           STR may include \en and similar escape sequences.
+ \fB+\fP\fIN\fP\fB<[\fP\fIFMT\fP\fB]\fP  Append \fB[FMT]\fP to variable \fBN\fP (extends the string, adds tokens).
+           See \fB-fmt\fP for [] options. Example \fB+A<[mt:1,3]\fP adds 3 tokens.
+ \fB+\fP\fIN\fP\fB<\fP\fIVLIST\fP  Append all of each variable in VLIST to vN.
+           A "-" in VLIST appends from the input.
+           (These are equivalent:  \fB-opA "+B"\fP and \fB-op "+B<A"\fP.)
+ \fB+\fP\fIN\fP\fB<#\fP      Append \fBTOKEN NUMBER\fP \fB#\fP from \fBTARGET\fP to \fBN\fP. 
+           # of 0 uses \fBRESULT\fP for the \fBTOKEN NUMBER\fP (see \fBMath Expressions\fP).
+ \fB+\fP\fIN\fP\fB<#\fP\fIVLIST\fP Like \fB+\fP\fIN\fP\fB<#\fP but \fBTARGET\fP\ is \fBVLIST\fP. A "-" for input is allowed in VLIST.
+           (These are equivalent:  \fB-opA "+B<1"\fP and \fB-op "+B<1A"\fP.)
+ \fB?\fP\fIEXPR\fP     Run the math expression EXPR.  See \fBMATH EXPRESSIONS\fP for syntax.
+ \fBm\fP\fIVLIST\fP    If a variable is SET, merge all tokens into one.  Otherwise, do nothing.
+           (This is the inverse of the \fBpo\fP operation, see below.)
+ \fBm#\fP\fIVLIST\fP   If a variable is set, merge from \fBTOKEN NUMBER\fP # to the end. 
+           Token number at or before the first token merges all.
+           Token number at or after the last token merges none.
+           # of 0 uses \fBRESULT\fP for the \fBTOKEN NUMBER\fP (see \fBMath Expressions\fP).
+           These are equivalent: \fB-m1A\fP and \fB-mA\fP. 
+ \fB>#\fP        Read the next line from input stream # into the \fBINPUT BUFFER\fP. 
+           # is 1->N, where N is the number of files in the \fB-in\fP statement.
+           Safe in \fB-sect Before\fP and \fBAfter\fP, but not recommended for \fB-sect Main\fP, where
+           there will be complex interactions with the built in read loop.
+           # of 0 uses \fBRESULT\fP for the input stream (see \fBMath Expressions\fP).
+           These are equivalent: \fB>\fP and \fB>1\fP.
+ \fB<#\fP\fIVLIST\fP   Emit each variable in VLIST to the # output stream.
+           Output streams match \fB-out\fP entries, counting from 0.
+           The number may be omitted for the default (0) output stream.
+           A "-" in VLIST emits the input.
+ \fB<#=\fP\fISTR\fP    Emit STR to the # output stream.
+ \fB<#[\fP\fIFMT\fP\fB]\fP   Emit FMT to the # output stream. See \fB-fmt\fP for [] options.
+ \fB~\fP\fIVLIST\fP    Dump each \fBSTRING\fP variable in VLIST (for debugging).
+ \fB~\fP\fI$VLIST\fP   Dump each \fBNUMERIC\fP variable in VLIST (for debugging).
+ \fBpo#\fP\fIVLIST\fP  Make tokens for each variable in VLIST using the parse option set
+           # (0-9) created with \fB-po\fP.  \fBpoA\fP is equivalent to \fBpo0A\fP.
+
+\fBConditional output control\fP (These apply only in \fB-sect\fP \fIMain\fP):
+ [ \fB-fmt\fP is applied when \fB-if\fP is true, see also \fB-ifonly\fP ].
+ \fBif1\fP       Equivalent to a true \fB-if\fP statement (without \fB-ifn\fP or -\fBifterm\fP).
+ \fBifc\fP       Equivalent to a true \fB-if\fP statement (with \fB-ifn\fP).
+ \fBif+\fP       Equivalent to a true \fB-if\fP statement (with \fB-ifterm\fP).
+ \fBif-\fP       Equivalent to a true \fB-ifterm\fP statement,
+ \fBifr\fP       Equivalent to an \fB-ifnorestart\fP statement,
+             \fBif+-\fP is allowed.  Also terminates \fBifc\fP.
+             \fBif[c+]r\fP is like \fB-if\fP \fB-ifnorestart\fP.
+ \fBn#\fP        Equivalent to \fB-ifN #\fP.
+ \fBafmt#\fP     Make \fB-fmt#\fP active for this input line.  # is 0->9.
+ \fBnfmt#\fP     Make \fB-fmt#\fP active next, after completing the current input.
+ \fBhide\fP      Suppress \fB-fmt\fP and default output (overrides \fB-if\fP logic).
+ \fBshow\fP      Allow \fB-fmt\fP and default output. (Accept \fB-if\fP logic, [Default])
+           [hide and show "stick" once set, affecting all subsequent output.]
+ \fBeof\fP       Close the input. (No more input results in no more output.)
+
+\fBflow control\fP (through the \fB-op/pm/pmN/psN\fP list):
+ [By default statements execute sequentially in the order entered.
+ Other patterns may be achieved using these operations.  Automatic 
+ labels provide a way to specify jump targets without having to separately
+ name each statement.  However, getting there still requires using an explicit
+ jump operation: "\fB^\fP" or "\fBsw\fP". Labels alone have no effect on flow control,
+ use a \fBret\fP or a \fBbrk\fP to prevent flow from passing down to the next line.]
+ \fB=\fP\fILBL\fP      Label this \fB-op/pm/pmN/psN\fP command as \fBLBL\fP.  The label may
+           appear anywhere in the \fBOPERATIONS\fP list.  However, the script
+           is easiest to read if labels are first in the \fBOPERATIONS\fP list.
+           \fBLBL\fP may not begin with digits, contain spaces or semicolons, or
+           be a valid automatic label [ \fB{,}{,},c,c#\fP, or \fBc#-#\fP ]. Labels are 
+           not case sensitive.
+           The special label MAIN may mark the script line where execution begins.
+           If MAIN is not employed execution starts on the first line of the script.           
+ \fB&\fP\fILBL\fP      Call function at \fBLBL\fP. Recursion is allowed, but note that all 
+           variables have global scope.  On returning from the call
+           the remainder of the statement's operations are processed.
+ \fB{, }{, }\fP  Generate automatic nestable labels.  May be used to create
+           if/then/else, if/ifelse/else, while and other logical structures
+           without requiring explicit labels for each jump target  Braces must
+           appear in an operation before any jumps that reference positions in this
+           structure, else that jump will reference the enclosing structure.
+           A "\fB{\fP" need not be a jump target, but all "\fB}{\fP" and "\fB}\fP" must be.
+           Use \fB-dbga\fP to resolve related syntax issues.
+ \fBc, c#, c#-#\fP
+           Generate (automatic) nestable case labels for a switch statement.
+           The number of case labels must match the switch specification, 
+           "\fBswC\fP", see below. If present, each # is an integer from 0 -> C-1.
+           \fBc25\fP is a single case, \fBc2-5\fP is a range of 4 cases.  Without
+           explicit numbering the "\fBc\fP" labels are numbered sequentially from 0. 
+           The numeric and nonnumeric forms may not be mixed in a single switch
+           statement. Multiple case labels may be applied to the same statement.
+           Case labels may be applied to \fB-pm[N]\fP statements.
+ \fBi\fP\fIm\fP        Set the \fBSWITCH INDEX\fP to the token number of the last "\fBt:N\fP" match
+           (1->N).  If the last test failed, the \fBSWITCH INDEX\fP is set to 0.
+ \fBi\fP\fIp\fP        Set the \fBSWITCH INDEX\fP by the character position of the first match
+           (1->N).  If the last test failed, the \fBSWITCH INDEX\fP is set to 0.
+ \fBi\fP\fI#\fP        Shift \fBSWITCH INDEX\fP 1 bit left and set (#=1) or clear (#=0) the low bit.
+ \fBi\fP\fIr\fP        Set \fBSWITCH INDEX\fP with \fBRESULT\fP from the last math expression.
+ [The following terminate processing of a statement's \fBOPERATIONS\fP.]
+ \fB^LBL\fP      Jump to the \fB-op/pm/pmN/psN\fP with the corresponding label.
+           Reserved labels are "{[{...]","}{", and "}[}...]", which 
+           jump to the corresponding automatic label in this (single brace)
+           or an enclosing (multiple braces) structure.  That is, \fB^}}\fP
+           jumps to the terminating brace in the structure enclosing
+           this one.
+ \fB^N\fP        Skip forward # statements. ^0 is a one line loop, and
+           ^1 is pointless, since the next line would execute next anyway.
+ \fBsw\fP\fIC\fP       Switch. Jump to the statement ([automatically] labeled as "\fBcX\fP"), 
+           where \fBX\fP is the value of the \fBSWITCH INDEX\fP, then clear that index. 
+           The number of cases is set by \fBC\fP. The value of \fBX\fP must be in the
+           range 0 -> C-1.
+ \fBret\fP       Return from a function call.
+ \fBbrk\fP       Skip the remainder of the \fB-op/pm/pmN/psN\fP statements.
+           The action that results depends on the section:  in \fBMain\fP
+           it is another read cycle, in \fBBefore\fP  it is a transition
+           to the next section, and in \fBAfter\fP the program exits.
+ \fBexit\fP      Exit the program with SUCCESS status.
+ \fBfail\fP      Exit the program with FAILURE status.
+.B abbreviations:
+    In a \fB-cmd\fP file (only) an abbreviated syntax may be used:
+      Long  short
+      \fB-pm   m
+      -pmN  mN
+      -psN  sN
+      -op   o
+      -opN  oN\fP
+    Labels may be placed in a separate token at the beginning of the line - 
+    see the examples.  It is legal to have some labels in
+    separate tokens and others in the \fBOPERATIONS\fP string for the
+    same statement.  Terminal "\fB}\fP"s may be used
+    without a following argument.  Because tokens are delimited by
+    spaces and EOL "\fBc4 c1;c3 (new line)c2\fP" is equivalent to
+    "\fBc4;c1;c3;c2\fP". 
+    A '};' may appear on an otherwise blank line to close a
+    set of braces. The semicolon prevents the label from joining 
+    with the next statement, which would be invalid if it resulted 
+    in '}' and '{' appearing together.  A trailing '}' at the
+    end of a section does not require a semicolon, nor does one
+    which precedes a statement with no brace labels.
+.B Examples:
+ \fB-pm "s:Match?" "+A; !;x1A"\fP
+              If match/test is true, append TARGET to vA. If
+              false, delete most recent token from vA
+ \fB-pm "s:Match?" "+A;po1A;+B<3A"\fP
+              If match/test is true, append TARGET to vA,
+              make tokens using po1, append the 3rd token which
+              results to vB.  If false, do nothing.
+ \fB-pm "s:Match?" "if+; !; brk"\fP
+              If match/test is true, set the IF state to "true until terminated",
+              unless it is already true, in which case do nothing.
+              If false, stop processing -op/pm/pmN/psN logic for
+              this input line. 
+ \fB-pm "s:Match?" "=Label; &Func1;!;<= Some failure\en;fail"\fP
+              Identify this line as "Label". If match/test is true
+              call Func1. If false emit a failure message and exit.
+ \fB-pm "s:Match?" "{; !; ^}}"\fP
+               Generate an automatic label for this line.  If match/test
+               is true fall through, else jump outward in the nested
+               braces one level to the enclosing final brace.               
+ \fB-pm "s:Fred"   "i1; !;i0"
+ -pm "s:Ginger" "i1; !;i0"
+ -pm "s:Dance"  "i1; !;i0"\fP
+\fB -op "{;                       sw8"
+ -op  "c;      <=some action\en;  ^}" ##case 0
+ -op  "c;c;c;  <=some action\en;  ^}" ##cases 1,2,3
+ -op  "c;      <=some action\en;  ^}" ##case 4
+ -op  "c;      <=some action\en;  ^}" ##case 5
+ -op  "c;c;    <=some action\en;  ^}" ##cases 6,7
+ -op "}"\fP
+               Construct a switch index based on the results of three
+               match/tests.
+               An 8 case switch construct with single line cases,
+               the labels are automatic but the cases are commented.
+               The (automatic) labels are on the left side, the
+               jumps (\fBsw\fP and \fB^\fP) on the right.
+\fB -op "{;                       sw4"
+  -op  "c0;c3;  <=some action for 0,3\en;  ^}"
+  -op  "c1;c2;  <=some action for 1,2\en;  ^}"
+ -op "}"\fP
+               A 4 case switch construct with single line cases,
+               the explicit case labels are not in sequential order.
+\fB  {
+            o "sw4"
+    c0;c3   o "  <=some action for 0,3\en;  ^}"
+    c1
+    c2
+            o "  <=some action for 1,2\en;  ^}"
+  };\fP 
+               The same 4 case switch construct using
+               the abbreviated syntax.  Note the semicolon
+               following the close brace, which precludes collisions
+               with a following line - because a label like '};{;' is forbidden.
+\fB  -sect BEFORE
+           o         "hide; +A<=abcdefghijklmnopqrstuvwxyz1234567890"
+  -sect MAIN
+           o         "xB;+B<[mc:1]"  ## put the first character in B
+           mA "vc:B" ""              ## find B in A, case invariant
+  {        o         "ip; sw37"      ## position->index, then switch
+    c0     o         "<=*; ^}"
+    c1-26  o         "<=A; ^}"
+    c27-36 o         "<=9; ^}"
+  }
+  -sect AFTER
+           o         "<=\en"\fP
+               Classify the first letter of each input line as: A=alphabet,
+               9=number, *=other.  Note the case ranges.
+.fi
+
+
+
+.SH MATH EXPRESSIONS 
+Math expressions use an algebraic syntax to operate on either
+.B NUMERIC 
+($N) or 
+.B STRING
+(N) variables.  The latter are allowed when they contain only purely
+numeric text like '12.34', and without that constraint in functions which
+measure their properties.  When a 
+.B STRING
+variable contains text that cannot be converted to a valid double precision number it is
+converted instead to 'Not a Number', which prints as
+.B nan.
+The test \fB-pm '??'\fP may be used to detect this condition.    
+
+These math expressions are also available in the separate program \fBdmath\fP.
+.nf
+  \fBRESULT\fP: is the final number calculated in an expression.  It may be tested
+    with the \fB-pm '?'\fP operator.
+    RESULT may be loaded as \fB$-\fP, but \fB$-\fP cannot be assigned.
+  Variables: may either be \fBNUMERIC\fP ($A) or \fBSTRING\fP (A,if holding
+    purely numeric text like '12.34').
+    Cells/Tokens may be indexed as 1->N (from start) or -1->-N (from end).
+  Scalar and Array math:  Unless otherwise noted operators and functions will
+    work with either scalar or array operands.  If array operands are used
+    the result will also be an array, with intermediate values stored in the
+    leftmost array at each operation.  In scalar math the \fBRETURN\fp
+    value is meaningful, but it is not in array math. Except for a straight 
+    assignment only \fBNUMERIC\fP variables may be used in Array math.
+  Operands:
+    \fB12e-1,120,0xF0,0o77,0b1010\fP 
+                         numbers in float, integer, hexadecimal, octal, or binary formats
+    \fB$A\fP                   \fBNUMERIC\fP variable ($A is the same as $A[1])
+    \fB$A[12],$A[3,4],$A[]\fP  One element, range of elements, all elements
+    \fBA\fP                    All of \fBSTRING\fP variable A
+    \fBA[2],A[3,4],A[]\fP      One token, range of tokens, all tokens
+  Assignment:
+    \fB$A[6]  = 1+$B[$C[3]]\fP to an element
+    \fB$A[1,2]= $B[3,4]\fP     to a range of elements (number of elements must match)
+    \fB$A[]   = 3\fP           to an entire array
+    Only \fBNUMERIC\fP variables may appear to the left of an '\fB=\fP' operator.
+    Expressions may contain 0 or 1 '\fB=\fP' assignments.
+  Operators:  val1 OP val2
+    \fB+\fP        addition
+    \fB-\fP        subtraction
+    \fB*\fP        multiplication
+    \fB\fP%        remainder
+    \fB^\fP        power (val1 ^ val2)
+    \fB?\fP        compare (returns 1,0,-1 if val1 >,==,< val2) 
+  Functions(val):
+    \fBlog\fP      base 10 log
+    \fBln\fP       natural log
+    \fBe10\fP      10^val
+    \fBee\fP       e^val 
+    \fBchs\fP      change sign
+    \fBabs\fP      absolute value
+    \fBrnd\fP      round to nearest int
+    \fBlid\fP      round away from zero to next integer
+    \fBtrc\fP      round towards zero to next integer
+    \fBsin,asin\fP sine, arc sine (angle in radians)
+    \fBcos,acos\fP cosine, arc cosine
+    \fBtan,atan\fP tangent, arc tangent
+    \fBd2r\fP      degrees to radians
+    \fBr2d\fP      radians to degress
+    \fBsinh,cosh,tanh\fP    hyperbolic sine, cosine,tangent
+    \fBnot\fP      bitwise not (unsigned integer)
+  Functions(val1,val2):
+    \fBmax\fP      maximum
+    \fBmin\fP      minimum
+    \fBand,or,xor\fP   bitwise and, or, xor (unsigned integer).
+    \fBshl,shr\fP   bitwise shift left/right (unsigned integer).
+  Functions($A[range])  [scalar results only]:  
+    \fBlen\fP      number of cells
+    \fBsum\fP      sum of cells
+    \fBsm2\fP      sum of squares of cells
+    \fBinv\fP      invert order of cells in range,  Returns 0.
+    \fBdel\fP      delete cells in range.  Returns elements remaining.
+             (If all deleted, variable is reset to one element with value zero.)
+    \fBidx\fP      replace elements with their array positions (1-N).  Returns 0.
+    \fBsrt\fP      sort elements into ascending order.  Returns 0.
+    \fBsix\fP      replace elements with the positions they would occupy
+             if sorted into ascending order.  Ie {5,10,-21} -> {2,3,1}. Returns 0.
+    \fBnml\fP      test for normal numbers. 0=all elements normal, 1=at least one
+             infinite, 2=at least one NaN, 3=some infinite and some NaN
+    \fBtls\fP      (re)dim the variable and store the token list from the last \fBt:\fP
+             pattern match. Returns the size of the \fBTOKEN NUMBER LIST\fP.  The \fBTOKEN NUMBER
+             LIST\fP is consumed.
+    \fBsls\fP      (re)dim the variable and store the \fBSUBSTRING LIST\fP (start/end pairs)
+             from the last pattern match.
+             Returns the number of matches in the \fBSUBSTRING LIST\fP (1/2 the list size).
+             The \fBSUBSTRING LIST\fP is not altered.
+  Functions($A[],value)  [scalar results only]:
+    \fBdim\fP       (Re)size $A to value entries.  New elements = 0.0. Returns 0.
+  Functions($A[],val1,val2,...)  [scalar results only]:
+    \fBcat\fP       Add values as new elements to $A, returns new length.
+    \fBini\fP       (Re)initialize $A with values as elements, returns (new) length.
+  Functions($A[],$B[])  [array results only]
+      Rearrange array contents.  \fBRETURN\fp value is not meaningful.
+    \fBmap\fP      $A[i]    = $A[$B[i]] for all i in the range. 
+    \fBump\fP      $A[$B[i]]= $A[i]     for all i in the range (unmap). 
+  Functions(A[range])  [scalar results only]
+    \fBtok\fP      the number of tokens.
+    \fBtln\fP      the sum of the token lengths.
+    \fBsln\fP      the length of the entire string (range values are ignored).
+  Functions($A[range],B[range])  [scalar results only]
+    \fBtix\fP      make a \fBMAP\fP in the indicated range in \fB$A\fP that corresponds
+             to the TOKENS in the indicated range in \fBSTRING\fP variable \fBB\fP
+             sorted into ascending order. Case sensitive.  The resulting
+             \fBMAP\fP will have all positive values.  Returns 0.
+    \fBtcx\fP      case invariant form of \fBtix\fP.
+  Operator Precedence:
+    \fB^\fP  >  \fB*/%\fP  >  \fB+-\fP  >  \fB?\fP > \fB(),\fP > \fB=\fP
+
+  Examples:
+\fB    -op '? (5/ee(5)) + $A[-1]'\fP
+         RESULT=(5 divided by e^5) + contents of last element in array $A
+\fB    -op '? $A = log(3+$B[6])'\fP
+         RESULT=(expression), and is also stored in $A[1]
+\fB    -op '?$A[-1] = A[-2]'\fP
+         RESULT=(2nd to last token from A), also stored in the last cell of $A.
+         If that token could not be converted to a valid number the RESULT
+         and stored value are nan (not a number).
+\fB    -op '? dim($A[],5); ? idx($A[]); ? sum(log($A[]))'\fP
+         RESULT=sum of the logs of 1->5. log(1)->log(5) are stored in
+         $A elements 1->5.
+\fB    -op        '? $B=1;     ? $A=10'\fP
+\fB    -pm '?>:A' '? $B=$B*$A; ? $A=$A-1; ^0;'\fP
+         RESULT=10 factorial.  Also stored in $B.  Note the conditional
+         single line loop, which jumps to itself (\fB^0\fP) while \fB$A\fP 
+         is greater than zero.
+\fB    -op 'log(max($A[1,4]*2.1,$B[3,6]))'\fP
+         RESULT=(not meaningful).  Multiply all elements in array $A[1,4]
+         by 2.1 and store in place.  Take the maximum with the corresponding
+         elements (1->3, 2->4..4->6) of $B and store back into $A,  Then take
+         the log of each element in the range and store that in place too.
+         Only elements 1->4 of $A are modified.
+.fi
+
+
+.SH EXAMPLES
+
+
+.TP
+.B % extract -h
+List the command line options.
+
+.TP
+.B % cat file | extract -sr 1
+Echo all text from stdin to stdout.  (Specifying any one command
+line option with its default value will do the same.)
+
+
+.TP
+.B % extract -sc 50 <infile.txt >outfile.txt
+Extract characters 50 to end of row for every line in infile.txt and write them
+to outfile.txt.
+
+
+.TP
+.B % extract -sr 4 -sc 5 -ec 10 <infile.txt >outfile.txt
+Extract characters 5-10 from rows 4 to end of infile.txt and write them to outfile.txt.
+
+
+
+.TP
+.B % extract -sc 5 -nc 10 <infile.txt >outfile.txt
+Extract characters 5-14 from all rows in infile.txt and write them to outfile.txt.
+
+
+
+.TP
+.B % extract -sc 2 -ec 3 -mt -dl ':,;' <infile.txt >outfile.txt
+Extract the 2nd and 3rd tokens delimited by one or more 
+.B :,;
+characters
+from each row in infile.txt and write them to outfile.txt.
+
+
+.TP
+.B % extract -sr 4 -er 40 -sc 2 -ec 3 -mt -dl ':,;' -s -all -rm <infile.txt >outfile.txt
+Process infile.txt as follows:
+.br
+1.  Emit verbatim rows 1 through 3.
+.br
+2.  For rows 4 though 40 emit the 1st, and 4th through Nth tokens delimited by a single 
+.B :,;
+character.
+.br
+3.  Emit verbatim rows 41 to the final row in the file.
+
+
+.TP
+.B   % ( cd / ; du -k ) | extract -fmt '[jr:fw14:1] [2]' -mt  
+Lists the size of all directories on a Unix system with
+the size field right formatted so that the columns all line up.
+
+
+.TP
+.B   % ls -al | extract -fmt '[mc:1,32][fw14:jr:5] [6] [fw2:7] [jr:fw5:8] [9]' -mt -dl ' ' 
+Straighten the columns in a directory listing on a Unix system with large files.
+
+
+.TP
+.B   % extract -b -fmt '[,-2]' <infile.txt 
+Converts a Windows CRLF text file to a Unix LF text file.  Will always work
+on a Unix system.  Will usually work on a Windows system but may fail if
+the build does not support the \fB-b\fP switch.
+
+
+.TP
+.B   % extract -fmt 'foo[cu:jl:fw20:3,5]blah[-:mc:10,30]er[1]' -mt -fw 30 <infile.txt 
+Process each line of infile.txt as follows:
+.br
+1. Emit "foo".
+.br
+2. Emit tokens 3,4, and 5 upper cased in a 20 character field, left justified.
+.br
+3. Emit "blah".
+.br
+4. Emit characters 10 through 30.
+.br
+5. Emit "er".
+.br
+6. Emit column 1 in a field of width 30.
+
+
+.TP
+.B % extract <infile.txt >outfile.txt -if '^>' -fmt '>SPECIAL [1,]'
+Lines beginning with 
+.B >
+are emitted with the modification shown.  All other lines
+are echoed unchanged.
+
+
+.TP
+.B % extract -mt -dv '\et' -fmt '[1,5]\en[[WOW!]][6]' <infile.txt
+Emit the first five tokens separated by tabs and then on the next line
+emit [WOW!] followed immediately by the sixth token.
+
+
+.TP
+.B % extract -eol ',' -if Teacher -fmt '\en[1,]' -fileeol '\en' <infile.txt
+If the infile consists of "Teacher name" lines each followed
+by many lines of student names, the output will consist of
+one blank line (assuming the first input line has "Teacher"
+in it) followed by lines like: 
+"Teacher name, student1,student2,...studentn,". 
+
+.PD 0
+.PP
+.B % extract -mt -if Teacher -ifterm Teacher -iftermbol \en
+.TP
+.B "  -ifeol -fmt '[2],' <infile.txt"
+If the infile consists of many instances of a "Teacher: Name" line
+followed by N "Student: Name" lines the output will consist of
+several lineslike: "Teacher name, student1,student2,...studentn,". 
+
+
+.TP
+.B % extract -indl ',' -in file1,file2,- 
+Merge the contents of file1, file2, and stdin, placing a comma
+between the part of the line from each file.
+
+
+.TP
+.B % extract -mdl ',' -merge 4 -in file1,file2,- 
+As above but also merge consecutive rows which begin with
+the same 4 character prefix.  If three such rows were
+"foo 1", "foo 2", and "foo 3" the single output row
+would be "foo 1, 2, 3".
+
+
+.TP
+.B % extract -rcds '\er\e12' -in file1 
+Remove carriage returns and linefeeds from the file and 
+emit to stdout.
+
+
+.TP
+.B % extract -rcds 'Tt' -rcss 'Uu' -in file1 
+Substitute characters 
+.B T->U
+and 
+.B t->u
+and emit to stdout.
+
+
+.TP
+.B % extract -rtds 'Thomas' -rtss 'Tom' -in file1 
+Substitute string 
+.B Tom
+for 
+.B Thomas
+and emit to stdout.
+
+
+.TP
+.B % extract -merge 5 -mdl ',' -in file1 
+If file1 contained the lines "abcd_ 1", "abcde 2", "abcde 3","abcdf 4"
+the output would be "abcd_ 1", "abcde 2,3" ,"abcdf 4"
+
+
+.TP
+.B % extract -unmerge 2 -in file1 
+If file1 contained the line: "blah a b c d e"  
+the output would be: "blah ab", "blah cd", "blah e".
+
+
+.TP
+.B % extract  -in template,file -indl ' MISS' -template 3 -out fout 
+If template contains "120","121","122" and file
+contains "120 fred","122 mary" write 
+"120 fred","121 MISS""122 mary" to fout.
+
+
+.TP
+.B % find . | extract -fmt 'extract -in [1,] -out foo.tmp -rtds /usr/bin/perl -rtss /usr/bin/perl5 ; mv foo.tmp [1,]\' | execinput
+Use 
+.B extract
+recursively as a stream editor. For each input file found by 
+.B find
+the first
+.B extract
+prepares a command line where a second instance of 
+.B extract
+converts each instance of
+.B /usr/bin/perl
+to
+.B /usr/bin/perl5.
+The final 
+.B execinput
+executes these command lines
+one at a time.  (Note that the output first goes to a
+temporary file and is then copied
+back over the original input file.)
+
+
+.TP
+.B % extract -nr 1 -sc 3 -all -in unicode.txt -hnd
+Delete embedded null characters from 16 bit unicode text.
+If the 
+.B -hnd
+was omitted there would be a fatal error when the
+first null character was encountered during the reading of this file.
+Also deletes the first two characters of the first line only, which
+comprise the unicode Byte Order Mark.
+
+.TP
+.B % extract -b2 -ecc ',' -in data.txt -out comma_delimited.txt
+Place a comma between every character in data.txt.
+The result may be read into a spreadsheet with one character
+per cell.
+
+.TP
+.B % echo 'z Y x 1 3e-1 -123.45' | extract  -mt -fmt '[sortac:1,3] [sortdn:4,]'
+Emits "x Y z 1 3e-1 -123.45"
+
+.TP
+.B % echo 'z Y x 1 3e-1 -123.45' | extract  -mt -fmt '[sortac:1] [sortdn:6]'
+Emits "z -123.45" because neither field contains
+more than one token, so no sort will occur.
+
+
+.SH SEE ALSO
+
+execinput(1),
+dmath(1)
+
+
+.SH LICENSE
+
+GNU General Public License 2
+
+.SH COPYRIGHT
+
+Copyright (C) 2011 David Mathog and Caltech.
+
+
+.SH ACKNOWLEDGEMENTS
+
+This program was inspired by Pat Rankin's 
+.B EXTRACT 
+utility for VMS.
+
+
+.SH AUTHORS
+
+David Mathog, Biology Division, Caltech <mathog@caltech.edu>

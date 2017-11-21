@@ -1,0 +1,182 @@
+.TH "mbin" "1" "1.0.0 OCT 23 2006" "drm_tools" "User Commands"
+
+.SH NAME
+
+mbin \- buffer a binary data stream through multiple files
+
+.SH SYNOPSIS
+
+.BI mbin " [options...]"
+
+.SH DESCRIPTION
+
+.B mbin
+stands for Multiple Buffer INput.  With the matching program
+.B mbout
+it provides
+a way to buffer large amounts of data to disk files which are then reassembled
+and written to the final target.  In particular it is designed to buffer
+binary information destined for a streaming tape drive which must first
+be transmitted slowly over a network.  Rather than writing the incoming
+data slowly to a tape drive, which results in stalling and increased drive
+wear, the data is first written into a buffer file.  When that first buffer
+file is full
+.B mbin
+writes a lock file and a notification to the output.
+.B mbin
+then proceeds to
+write more input into the next buffer file.  Simultaneously 
+.B mbout
+will read the notification and copy the buffered data at full speed to the
+tape drive.  When done copying data from a buffer file
+.B mbout
+will clear the associated lock file.  
+
+.B mbin
+writes the following information to its output, each on a separate line:
+the block size (an integer),
+the number of buffer files (an integer),
+the name of the first buffer file,
+the name of the second buffer file,
+etc.,
+the name of the first lock file,
+the name of the second lock file,
+and so forth.  This describes the buffers for the downstream
+program
+.B mbout.
+Then 
+.B mbin
+writes a series of lines each of which contain this
+information:  blocks_in_buffer buffer_file_number (two integers).  This tells
+.B mbout
+that a block of data is ready to be copied. When 
+.B mbin
+is done processing it writes either
+.B DONE message
+or
+.B ABORT message
+depending upon whether it completed processing normally or not.  In response
+to either of those signals
+.B mbout
+will clean up by deleting all buffer and lock files. It will also close its
+output file and exit.
+
+.B mbin
+may be obtained as part of the 
+.B drm_tools
+package from:
+.B http://sourceforge.net/projects/drmtools/
+
+On many operating systems
+.B mbin
+must be compiled with large file support if it is to read or write files above a
+few gigabytes in size.  If compiled with the
+.B gcc
+compiler add the command line switches
+.B -D_LARGE_FILE_SOURCE -D_FILE_OFFSET_BITS=64 
+to include large file support.  The
+.B -i
+option will show whether or not large files are supported.
+
+
+.SH OPTIONS
+
+.TP
+.BI  -in " <input_file>"
+Read binary data from the specified file.  (Default or - read from stdin.)
+
+.TP
+.BI  -out " <out_file>"
+Write status messages to the specified file.  (Default or - write to stdout.)
+
+.TP
+.BI  -log " <log_file>"
+Write error messages to the specified file.  (Default or - write to stderr.)
+
+.TP
+.BI -bs " <blocksize>"
+Specify the blocksize in bytes.  Note that if the end of the data stream does not
+come out to an even number of blocks it will be padded with zero bytes so
+that it is an even number of blocks.  (Default is 10240 bytes).
+
+.TP
+.BI -nb " <N>"
+Specify the number of buffer files to use.  The default is 2, the minimum
+is 1, and the maximum is 10.  Under normal circumstances 2 should suffice.
+
+.TP
+.BI -fN " <name>"
+Specify the name of the Nth buffer.  By default the name is
+.B mbbuf1
+and so forth.  Use this option to place buffer files on different storage devices in order
+to minimize IO contention.  Note that the lock file name is formed by appending
+.B _lock
+to the buffer name.  That is, 
+.B mbbuf1
+has lock file 
+.B mbbuf1_lock.
+
+.TP
+.BI -s " <blocks>"
+Specify the default size in blocks of all buffers.  The default value is
+1572864  (15 Gb with the default blocksize).
+
+.TP
+.BI -sN " <blocks>"
+Specify the size in blocks of the Nth buffer.  This may be used
+to tailor the size of a buffer file to better fit the available storage space.
+
+.TP
+.B -h -help --help -? --??
+Print the help message. (Default - do not print help message.)
+
+
+.TP
+.B -i
+Emit version, copyright, license and contact information.( Default - do not emit information.)
+
+
+
+
+.SH EXAMPLES
+
+
+.TP
+.B % mbin -h
+List the the command line options.
+
+.TP
+.B % (ssh remotemachine 'dump -f - filesystem') | mbin | mbout > /dev/tapedrive
+Buffer the binary input from the remote machine through two 15Gb local
+files.
+
+.TP
+.B % (ssh remotemachine 'dump -f - filesystem') | mbin -rr 3 -f2 /disk2/foo2 -f3 /disk3/foo3 -s 200000 -s3 100000 | mbout > /dev/tapedrive
+As above but use as buffer files
+.B mbbuf1
+in the current directory,
+.B /disk2/foo2,
+and
+.B /disk3/foo3.
+Additionally set the size of the first two as 200000 blocks and the size
+of the third one as 100000.  Since the blocksize was not specified it
+defaults to 10240 bytes per block.
+
+.SH SEE ALSO
+
+.B mbout(1), buffer(1), mbuffer(1)
+
+.SH LICENSE
+
+GNU General Public License 2
+
+.SH COPYRIGHT
+
+Copyright (C) 2006 David Mathog and Caltech.
+
+.SH AUTHORS
+
+David Mathog, Biology Division, Caltech <mathog@caltech.edu>
+
+
+

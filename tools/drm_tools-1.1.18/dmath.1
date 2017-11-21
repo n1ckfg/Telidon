@@ -1,0 +1,249 @@
+.TH "dmath" "1" "0.0.8 Dec 12 2012" "drm_tools" "User Commands"
+.SH "NAME"
+.TP 
+dmath - a double precision calculator.
+
+.SH SYNOPSIS
+.PP 
+.BI dmath
+.br
+(There are no command line options.)
+
+
+.SH DESCRIPTION
+.B dmath
+is a double precision calculator that takes its commands from stdin
+and writes its results to stdout.  It also supports bitwise operations
+on integer values - which are converted out of and back into double
+precision float represenation as needed.  Operations are supported both
+on scalar and array operands.
+
+.B dmath
+may be obtained as part of the 
+.B drm_tools
+package from:
+.B http://sourceforge.net/projects/drmtools/
+
+.SH INTERACTIVE COMMANDS
+.TP 
+.B help,h,?
+Show the help message
+
+.TP
+.B hexp
+Show the syntax for math expressions
+
+.TP
+\fB=\fP\fIA\fP
+Store the last result in variable \fBA\fP.
+
+.TP
+\fB>\fP\fIA\fP
+Add an element to array \fBA\fP and store last result in it.
+
+.TP
+\fB<\fP\fIA\fP
+List all values in \fBA\fP.
+
+.TP
+\fB>>\fP\fIName\fP
+Store the last operation as \fBName\fP.
+
+.TP
+\fB<<\fP\fIName\fP
+Run stored operation \fBName\fP.
+
+.TP
+\fBxx\fP\fIName\fP
+Delete stored operation \fBName\fP.
+
+.TP
+.B ??
+List the stored operations.
+
+.TP
+.B [no]echo
+Echo input to output (instead of just results).
+
+.TP
+.B digits #
+The number of digits shown after the decimal for double precision
+notations and the total number of digits shown for
+integer notations.  (default is 6)
+
+.TP
+.B sci,eng    
+Set scientific/engineering notation and show double precision numbers.
+
+.TP
+.B sint,uint,oint,xint    
+Set signed, unsigned, octal, and hexadecimal notation and show integer numbers
+(converted with truncation from double precision numbers).
+
+.TP
+.B pnz,nnz    
+Print -0 as 0/-0 in scientific and engineering notation.
+
+.TP
+.I math expression 
+A \fBMATH EXPRESSION\fP to calculate.
+
+.TP
+.B info
+Show version and copyright information.
+
+.TP
+.B exit,quit
+Exit the program.
+
+.SH MATH EXPRESSIONS 
+Math expressions use an algebraic syntax to operate on 26
+variables ($A-$Z, not case sensitive). 
+ 
+Scalar and Array math:  Unless otherwise noted operators and functions will
+work with either scalar or array operands.  If array operands are used
+the result will also be an array, with intermediate values stored in the
+leftmost array at each operation.  In scalar math the \fBRETURN\fp
+value is meaningful, but it is not in array math. 
+
+Array elements are indexed as 1->N (from start) or -1->-N
+(from end).
+.nf
+  Operands:
+    \fB12e-1,120,0xF0,0o77,0b1010\fP 
+                         numbers in float, integer, hexadecimal, octal, or binary formats
+    \fB$A\fP                   variable ($A is the same as $A[1])
+    \fB$A[12],$A[3,4],$A[]\fP  element, range of elements, all elements
+  Assignment:
+    \fB$A[6]  = 1+$B[$C[3]]\fP to an element
+    \fB$A[1,2]= $B[3,4]\fP     to a range of alements (number must match)
+    \fB$A[]   = 3\fP           to an entire array
+    Expressions may contain 0 or 1 '\fB=\fP' assignments.
+  Operators:  val1 OP val2
+    \fB+\fP        addition
+    \fB-\fP        subtraction
+    \fB*\fP        multiplication
+    \fB\fP%        remainder
+    \fB^\fP        power (val1 ^ val2)
+    \fB?\fP        compare (returns 1,0,-1 if value is >,==,< zero) 
+  Functions(val):
+    \fBlog\fP      base 10 log
+    \fBln\fP       natural log
+    \fBe10\fP      10^val
+    \fBee\fP       e^val 
+    \fBchs\fP      change sign
+    \fBabs\fP      absolute value
+    \fBrnd\fP      round to nearest int
+    \fBlid\fP      round away from zero to next integer
+    \fBtrc\fP      round towards zero to next integer
+    \fBsin,asin\fP sine, arc sine (angle in radians)
+    \fBcos,acos\fP cosine, arc cosine
+    \fBtan,atan\fP tangent, arc tangent
+    \fBd2r\fP      degrees to radians
+    \fBr2d\fP      radians to degress
+    \fBsinh,cosh,tanh\fP    hyperbolic sine, cosine,tangent
+    \fBnot\fP      bitwise not (unsigned integer)
+  Functions(val1,val2):
+    \fBmax\fP      maximum
+    \fBmin\fP      minimum
+    \fBand,or,xor\fP   bitwise and, or, xor (unsigned integer).
+    \fBshl,shr\fP   bitwise shift left/right (unsigned integer).
+  Functions($A[range])  [scalar results only]:  
+    \fBlen\fP      number of cells
+    \fBsum\fP      sum of cells
+    \fBsm2\fP      sum of squares of cells
+    \fBinv\fP      invert order of cells in range,  Returns 0.
+    \fBdel\fP      delete cells in range.  Returns elements remaining.
+             (If all deleted, variable is reset to one element with value zero.)
+    \fBidx\fP      replace elements with their array positions (1-N).  Returns 0.
+    \fBsrt\fP      sort elements into ascending order.  Returns 0.
+    \fBsix\fP      replace elements with the positions they would occupy
+             if sorted into ascending order.  Ie {5,10,-21} -> {2,3,1}. Returns 0.
+    \fBnml\fP      test for normal numbers. 0=all elements normal, 1=at least one
+             infinite, 2=at least one NaN, 3=some infinite and some NaN
+  Functions($A[],value)  [scalar results only]:
+    \fBdim\fP       (Re)size $A to value entries.  New elements = 0.0. Returns 0.
+  Functions($A[],val1,val2,...)  [scalar results only]:
+    \fBcat\fP       Add values as new elements to $A, returns new length.
+    \fBini\fP       (Re)initialize $A with values as elements, returns (new) length.
+  Functions($A[],$B[])  [array results only]
+      Rearrange array contents.  \fBRETURN\fp value is not meaningful.
+    \fBmap\fP      $A[i]    = $A[$B[i]] for all i in the range. 
+    \fBump\fP      $A[$B[i]]= $A[i]     for all i in the range (unmap). 
+  Operator Precedence:
+    \fB^\fP  >  \fB*/%\fP  >  \fB+-\fP  >  \fB?\fP > \fB(),\fP > \fB=\fP
+
+.fi
+
+.SH EXAMPLES
+.nf
+These examples assume they are run in the order shown, so that results
+from preceding operations are present.
+
+\fB5+3/6\fP
+         Emits \fB5.500000\fP.
+
+\fBini($A[],1,20,3,4,10)\fP
+         Initialize the variable $A as an array with 5 values 1,20,3,4,10.
+         Emits \fB5.000000\fP, the number of elements in $A.
+
+\fBee(1)
+>A\fP
+         Emits \fB2.718282\fP and then appends that value as a new element to 
+         variable $A.
+
+\fB<A\fP
+         Emits:
+            \fB1 1.000000
+            2 20.000000
+            3 3.000000
+            4 4.000000
+            5 10.000000
+            6 2.718282\fP
+         
+\fBdigits 3
+sci
+$A[6]\fP
+         Emits: \fB2.718e+00\fP
+         
+ 
+\fB
+eng
+dim($B[],len($A[]))
+$B[]=$A[]
+$B[1,3] - 5 - sum($B[2,5])
+<B\fP   
+         Emits:
+         0.000   \fIfrom dim() \fP
+         6.000   \fIfrom array assignment,number of elements\fP
+         1.000   \fIfrom array math, value has no significance\fP
+            1 -31.000 \fIContents of $B following array math\fP
+            2 -12.000
+            3 -29.000
+            4 4.000
+            5 10.000
+            6 2.718
+             
+
+      
+.fi
+
+.SH SEE ALSO
+extract(1)
+
+
+.SH LICENSE
+
+GNU General Public License 2
+
+.SH COPYRIGHT
+Copyright (C) 2012 David Mathog and Caltech.
+
+
+.SH ACKNOWLEDGEMENTS
+none
+
+
+.SH AUTHORS
+David Mathog, Biology Division, Caltech <mathog@caltech.edu>
+

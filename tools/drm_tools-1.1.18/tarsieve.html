@@ -1,0 +1,541 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Manual Page - tarsieve(1)</title>
+</head><body link="#0000ff" text="#000000" vlink="#c000c0" alink="#ff0000" bgcolor="#f0f0f0"><a name="top"></a>
+<!-- .TH "tarsieve" "1" "1.0.0 JUN 24 2013" "drm_tools" "User Commands" -->
+<center>
+<h1><hr><i>Manual Reference Pages &nbsp;-&nbsp;</i><nobr>tarsieve (1)</nobr><hr></h1>
+</center>
+<p>
+<!-- .SH NAME -->
+<a name="0">
+
+     <h3>NAME</h3>
+
+</a>
+</p><blockquote>
+<p>
+tarsieve - filter, then list or split, a tar file or tar data stream
+</p><p>
+<!-- .SH SYNOPSIS -->
+</p></blockquote>
+<a name="contents"></a><h3>CONTENTS</h3>
+<blockquote>
+<a href="#1">Synopsis</a><br>
+<a href="#2">Description</a><br>
+<a href="#3">Filtering Options</a><br>
+<a href="#4">Splitting Options</a><br>
+<a href="#5">Listing Options</a><br>
+<a href="#6">Other Options</a><br>
+<a href="#7">Examples</a><br>
+<a href="#8">See Also</a><br>
+<a href="#9">License</a><br>
+<a href="#10">Copyright</a><br>
+<a href="#11">Authors</a><br>
+</blockquote>
+<a name="12">
+
+     <h3>SYNOPSIS</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .BI tarsieve " [options...]" -->
+<b>tarsieve</b><i> [options...]</i> </p><p>
+<!-- .SH DESCRIPTION -->
+</p></blockquote>
+<a name="2">
+
+     <h3>DESCRIPTION</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .B tarsieve -->
+<b>tarsieve</b> selects a set of records from a tar file or tar data stream and then either
+lists them or emits them to one or more tar files, or as a single tar data stream
+to stdout.
+<!-- .B tarsieve -->
+<b>tarsieve</b> is primarily designed for working with collections of data files which have
+been  stored in a tar archive, and where only some of the archive&#8217;s records are
+needed for a partiular task.  This subset may be selected
+by name, modification time, size, and so forth.  There are options to eliminate
+path  information from names and to eliminate the data payload from files.
+<!-- .B tarsieve -->
+<b>tarsieve</b> does not itself create files from a tar file or tar data stream,
+<!-- .B tar -->
+<b>tar</b> must be employed for that purpose.
+</p><p>
+<!-- .B tarsieve -->
+<b>tarsieve</b> may be obtained as part of the
+<!-- .B drm_tools -->
+<b>drm_tools</b> package from:
+<!-- .B http://sourceforge.net/projects/drmtools/ -->
+<b><a href="http://sourceforge.net/projects/drmtools">http://sourceforge.net/projects/drmtools</a>/</b> </p><p>
+On many operating systems
+<!-- .B tarsieve -->
+<b>tarsieve</b> must be compiled with large file support if it is to read or write files above a
+few gigabytes in size.  If compiled with the
+<!-- .B gcc -->
+<b>gcc</b> compiler add the command line switches
+<!-- .B -D_LARGE_FILE_SOURCE -D_FILE_OFFSET_BITS=64  -->
+<b>-D_LARGE_FILE_SOURCE -D_FILE_OFFSET_BITS=64</b> to include large file support.  The
+<!-- .B -i -->
+<b>-i</b> option will show whether or not large files are supported.
+</p><p>
+When
+<!-- .B tarsieve -->
+<b>tarsieve</b> is used to split a tar file or tar data stream the default output file name
+template is
+<!-- .B frag%.3d.tar.  -->
+<b>frag%.3d.tar.</b> The value of the environmental symbol
+<!-- .B TARSIEVETEMPLATE  -->
+<b>TARSIEVETEMPLATE</b> overrides this default. 
+</p><p>
+GNU long name records are processed differently than the others.  These
+are always read and stored.  They are emitted before the following record
+only when the following record has been selected.
+</p><p>
+Tar files end with two or more null blocks.  These are always ignored on
+input and new ones are written at the end of output tar files or tar data
+streams.  This allows
+<!-- .B tarsieve -->
+<b>tarsieve</b> to accept concatenated tar files as input.  (See the
+<!-- .B EXAMPLES -->
+<b><a href="#7">EXAMPLES</a></b> )
+</p><p>
+<!-- .SH FILTERING OPTIONS -->
+</p></blockquote>
+<a name="3">
+
+     <h3>FILTERING OPTIONS</h3>
+
+</a>
+<blockquote>
+All tests are optional, and if present, are applied in the order
+shown below.  Records that fail any test are dropped, others are retained.
+<p>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .BI -fnge,-fnle " <RECNUM>" -->
+<b>-fnge,-fnle</b><i> &lt;RECNUM&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Record number [&gt;= , &lt;=] RECNUM. 
+Records are numbered 1 to N.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fdge,-fdle " <DATE>" -->
+<b>-fdge,-fdle</b><i> &lt;DATE&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Records with date [&gt;= , &lt;=] DATE (YYYY-MM-DD hh:mm:ss).
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fsge,-fsle " <SIZE>" -->
+<b>-fsge,-fsle</b><i> &lt;SIZE&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Records with size [&gt;= , &lt;=] SIZE (decimal size in bytes).
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fgeq " <GID>" -->
+<b>-fgeq</b><i> &lt;GID&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Records with gid == GID (octal value).
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fueq " <UID>" -->
+<b>-fueq</b><i> &lt;UID&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Records with uid == UID (octal value).
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fgrp " <GROUP>" -->
+<b>-fgrp</b><i> &lt;GROUP&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Records with gname == GROUP (a string like
+<!-- .B users -->
+<b>users</b> ).
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fown " <OWNER>" -->
+<b>-fown</b><i> &lt;OWNER&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Records with uname == OWNER (a string like
+<!-- .B John -->
+<b>John</b> ).
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -frec " <TYPE>" -->
+<b>-frec</b><i> &lt;TYPE&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Records with record type == TYPE.
+TYPE is a comma dilimited list of tar record types:
+<!-- .br -->
+<!-- .B all -->
+<!-- Need break --><br>
+<b>all</b> All of the following
+<!-- .br -->
+<!-- .B reg -->
+<!-- Need break --><br>
+<b>reg</b> Regular file
+<!-- .br -->
+<!-- .B lnk -->
+<!-- Need break --><br>
+<b>lnk</b> Hard link
+<!-- .br -->
+<!-- .B sym -->
+<!-- Need break --><br>
+<b>sym</b> Symbolic link
+<!-- .br -->
+<!-- .B chr -->
+<!-- Need break --><br>
+<b>chr</b> Character special
+<!-- .br -->
+<!-- .B blk -->
+<!-- Need break --><br>
+<b>blk</b> Block special
+<!-- .br -->
+<!-- .B dir -->
+<!-- Need break --><br>
+<b>dir</b> Directory
+<!-- .br -->
+<!-- .B fifo -->
+<!-- Need break --><br>
+<b>fifo</b> Named pipe
+<!-- .br -->
+<!-- .B cont -->
+<!-- Need break --><br>
+<b>cont</b> Contiguous file
+<!-- .br -->
+<!-- .B other -->
+<!-- Need break --><br>
+<b>other</b> all other types
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -ffre  " <REGEXP>" -->
+<b>-ffre</b><i> &lt;REGEXP&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Records whose file name matches the PCRE regular expression.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fdre  " <REGEXP>" -->
+<b>-fdre</b><i> &lt;REGEXP&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Records whose directory name matches the PCRE regular expression.
+The tar record
+<!-- .B name -->
+<b>name</b> field actually holds both the file name and the directory name. 
+Two filters are provided so that each part of the name may
+be targeted separately
+<p>
+</p><p>
+</p><p>
+<!-- .SH SPLITTING OPTIONS -->
+</p></td></tr>
+<tr></tr></tbody></table></p></blockquote>
+<a name="4">
+
+     <h3>SPLITTING OPTIONS</h3>
+
+</a>
+<blockquote>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -n  " <STREAMS>" -->
+<b>-n</b><i> &lt;STREAMS&gt;</i> </td><td valign="bottom">
+Set the number of tar streams to produce, STREAMS must be &gt;0.
+(Default = 1).
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -p  " <PHASE>" -->
+<b>-p</b><i> &lt;PHASE&gt;</i> </td><td valign="bottom">
+PHASE = 0 or default, emit STREAMS streams to STREAMS files.
+<!-- .br -->
+<!-- Need break --><br>
+1 &lt;= PHASE &lt;= STREAMS, only emit contents of the stream specified by PHASE to stdout.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -c  " <COUNT>" -->
+<b>-c</b><i> &lt;COUNT&gt;</i> </td><td valign="bottom">
+Emit COUNT tar records for each PHASE to each stream (Default=1).
+<p>
+</p><p>
+</p><p>
+<!-- .SH LISTING OPTIONS -->
+</p></td></tr>
+<tr></tr></tbody></table></blockquote>
+<a name="5">
+
+     <h3>LISTING OPTIONS</h3>
+
+</a>
+<blockquote>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -l -->
+<b>-l</b> </td><td valign="bottom">
+Emit listing information to stderr.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -lx -->
+<b>-lx</b> </td><td valign="bottom">
+Like
+<!-- .B -l, -->
+<b>-l,</b> but also block all other output.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -lf  " <FIELDS>" -->
+<b>-lf</b><i> &lt;FIELDS&gt;</i> </td><td valign="bottom">
+FIELDS is a comma delimited list of fields to
+show in a
+<!-- .B -l -->
+<b>-l</b> or
+<!-- .B -lx -->
+<b>-lx</b> listing.  Fields are:
+<!-- .br -->
+<!-- .B all -->
+<!-- Need break --><br>
+<b>all</b> all fields
+<!-- .br -->
+<!-- .B nam -->
+<!-- Need break --><br>
+<b>nam</b> file name
+<!-- .br -->
+<!-- .B mod -->
+<!-- Need break --><br>
+<b>mod</b> file protection mask
+<!-- .br -->
+<!-- .B uid -->
+<!-- Need break --><br>
+<b>uid</b> user id
+<!-- .br -->
+<!-- .B gid -->
+<!-- Need break --><br>
+<b>gid</b> group id
+<!-- .br -->
+<!-- .B siz -->
+<!-- Need break --><br>
+<b>siz</b> file size
+<!-- .br -->
+<!-- .B mtm -->
+<!-- Need break --><br>
+<b>mtm</b> mtime
+<!-- .br -->
+<!-- .B csm -->
+<!-- Need break --><br>
+<b>csm</b> chksum
+<!-- .br -->
+<!-- .B typ -->
+<!-- Need break --><br>
+<b>typ</b> record type
+<!-- .br -->
+<!-- .B lnm -->
+<!-- Need break --><br>
+<b>lnm</b> linkname
+<!-- .br -->
+<!-- .B unm -->
+<!-- Need break --><br>
+<b>unm</b> uname
+<!-- .br -->
+<!-- .B gnm -->
+<!-- Need break --><br>
+<b>gnm</b> gname
+<!-- .br -->
+<!-- .B dmj -->
+<!-- Need break --><br>
+<b>dmj</b> devmajor
+<!-- .br -->
+<!-- .B dmn -->
+<!-- Need break --><br>
+<b>dmn</b> devminor
+<!-- .br -->
+<!-- .B pre -->
+<!-- Need break --><br>
+<b>pre</b> prefix
+<p>
+The default FIELDS value is:
+<!-- .B siz,typ,nam -->
+<b>siz,typ,nam</b> </p><p>
+<!-- .SH OTHER OPTIONS -->
+</p></td></tr>
+<tr></tr></tbody></table></blockquote>
+<a name="6">
+
+     <h3>OTHER OPTIONS</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI  -in " <FILE>" -->
+<b>-in</b><i> &lt;FILE&gt;</i> </td><td valign="bottom">
+Read input from FILE.  (Default or -, input is from stdin.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI  -z -->
+<b>-z</b> </td><td valign="bottom">
+Zero record size.  Selected files are emitted but their contents are dropped.
+(Default, retain file contents.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI  -np -->
+<b>-np</b> </td><td valign="bottom">
+No Path.  Remove the path from the record name.  If nothing remains, drop
+the record.  (Default, retain paths in file names.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -h -help --help -? --?? -->
+<b>-h -help --help -? --??</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Print the help message. (Default - do not print help message.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -i -->
+<b>-i</b> </td><td valign="bottom">
+Emit version, copyright, license and contact information.( Default - do not emit information.)
+<p>
+</p><p>
+<!-- .SH EXAMPLES -->
+</p></td></tr>
+<tr></tr></tbody></table></p></blockquote>
+<a name="7">
+
+     <h3>EXAMPLES</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .B % tarsieve -h -->
+<b>% tarsieve -h</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+List the the command line options.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % tarsieve -in a.tar -n 4 -p 0 -c 5 -->
+<b>% tarsieve -in a.tar -n 4 -p 0 -c 5</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+(
+<!-- .B a.tar -->
+<b>a.tar</b> holds 20 tar records.)
+Split the input into four output files. 
+Records 1-5 go to frag001.tar,
+6-10 to frag002.tar,
+11-15 to frag003.tar, and 16-20 to frag004.tar.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % tarsieve -in a.tar -n 4 -p 2 -c 3 -->
+<b>% tarsieve -in a.tar -n 4 -p 2 -c 3</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+(
+<!-- .B a.tar -->
+<b>a.tar</b> holds 20 tar records.)
+Write records 4-6 and 16-17 to stdout.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % cat a.tar b.tar c.tar | tarsieve -lx -lf typ,nam -->
+<b>% cat a.tar b.tar c.tar | tarsieve -lx -lf typ,nam</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+List the concatenated contents of the three tar files, showing
+only the record type and name fields.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % tarsieve -in a.tar -fuid 0 -fgid 1 -frec reg -np >b.tar -->
+<b>% tarsieve -in a.tar -fuid 0 -fgid 1 -frec reg -np &gt;b.tar</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Select from
+<!-- .B a.tar -->
+<b>a.tar</b> only those records with
+<!-- .B uid -->
+<b>uid</b> 0,
+<!-- .B gid -->
+<b>gid</b> 1,
+and containing a regular file. Remove the path part of the name field
+from these records and store the results in
+<!-- .B b.tar. -->
+<b>b.tar.</b> <p>
+</p><p>
+<!-- .SH SEE ALSO -->
+</p></td></tr>
+<tr></tr></tbody></table></p></blockquote>
+<a name="8">
+
+     <h3>SEE ALSO</h3>
+
+</a>
+<blockquote>
+<p>
+<a href="http://oldsaf.bio.caltech.edu/cgi-bin/caltech/manpages.pl/tar.1">tar(1)</a>,
+<a href="http://oldsaf.bio.caltech.edu/cgi-bin/caltech/manpages.pl/PCRE.3">PCRE(3)</a>
+</p><p>
+<!-- .SH LICENSE -->
+</p></blockquote>
+<a name="9">
+
+     <h3>LICENSE</h3>
+
+</a>
+<blockquote>
+<p>
+GNU General Public License 2
+</p><p>
+<!-- .SH COPYRIGHT -->
+</p></blockquote>
+<a name="10">
+
+     <h3>COPYRIGHT</h3>
+
+</a>
+<blockquote>
+<p>
+Copyright (C) 2013 David Mathog and Caltech.
+</p><p>
+<!-- .SH AUTHORS -->
+</p></blockquote>
+<a name="11">
+
+     <h3>AUTHORS</h3>
+
+</a>
+<blockquote>
+<p>
+David Mathog, Biology Division, Caltech &lt;<a href="mailto:mathog@caltech.edu">mathog@caltech.edu</a>&gt;
+</p><p>
+</p><p>
+</p><p>
+</p></blockquote>
+<p></p><hr>
+<table width="100%"><tbody><tr> <td width="33%"><i>drm_tools</i></td> <td width="33%" align="center">tarsieve (1)</td> <td width="33%" align="right"><i>1.0.0 JUN 24 2013</i></td> </tr></tbody></table><font size="-1">Generated by <a href="http://www.squarebox.co.uk/download/manServer.shtml">manServer 1.08</a> from /usr/common/man/man1/tarsieve.1 using man macros.</font>
+</body></html>

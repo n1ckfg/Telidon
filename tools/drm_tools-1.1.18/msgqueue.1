@@ -1,0 +1,253 @@
+.TH "msgqueue" "1" "1.0.2 OCT 23 2006" "drm_tools" "User Commands"
+
+.SH NAME
+
+
+msgqueue \- message queue utility
+
+.SH SYNOPSIS
+
+.B msgqueue [options...] 
+
+.SH DESCRIPTION
+
+.B msgqueue
+is a command line utility that permits message
+queues to be created, removed, queried, or modified.  Each queue
+is identified by a unique key.  Messages may be written and
+read from these queues.  An integer type associated with messages
+allows some control over the order in which messages are
+read from the queue.  Queue access is restricted by a mask
+similar to that used in the Unix file system. 
+
+.B msgqueue
+may be obtained as part of the 
+.B drm_tools
+package from:
+.B http://sourceforge.net/projects/drmtools/
+
+
+.SH OPTIONS
+
+.TP
+.B -c,-create
+Create a message queue.  
+Requires
+.BI -key " <KEYVAL>"
+and
+.BI -mask " <MASK>".
+The queue will be owned by the person who created it.
+
+
+
+.TP
+.B -r,-remove
+Remove the message queue.
+Requires
+.BI -key " <KEYVAL>".
+
+
+.TP
+.B -n,-info
+Show information about the message queue.  
+Requires
+.BI -key " <KEYVAL>".
+
+.TP
+.B -s,-send
+Send the input from stdin as a message to the queue.
+Requires
+.BI -key " <KEYVAL>"
+;
+.BI -lock " <KEYVAL>"
+and 
+.BI -type " <TYPEVAL>"
+are optional. 
+
+
+
+.TP
+.BI -t,-text " <message>"
+Modifies 
+.B -send.
+Sends
+.B <message>
+instead of
+.B stdin.
+
+
+.TP
+.B -d,-guided
+Modifies 
+.B -send. 
+Each line read from 
+.B stdin
+is expected
+to have the format:
+.B KEYVAL TYPEVAL MSG.
+The message 
+.B MSG
+is sent to the queue indicated by the decimal integer
+.B KEYVAL
+with integer type 
+.B TYPEVAL.
+An 
+.B EOF
+read from 
+.B stdin
+causes the program to exit.
+
+.TP
+.B -g,-get
+Get the next message from the queue and send it to stdout.
+Requires
+.BI -key " <KEYVAL>"
+;
+.BI -lock " <KEYVAL>"
+and 
+.BI -type " <TYPEVAL>"
+are optional.  
+
+
+
+.TP
+.B -next
+Default mode for 
+.B -get.
+Reads the next message without regard to 
+.BI -type " <TYPEVAL>".
+
+.TP
+.B -match
+Alternate mode for 
+.B -get. 
+Reads the next message which matches 
+.BI -type " <TYPEVAL>".  
+
+
+
+.TP
+.B -except
+Alternate mode for 
+.B -get.
+Reads the next message which does not match 
+.BI -type " <TYPEVAL>".  
+
+
+
+.TP
+.BI -modify " <Qbytes>"
+Modifies the specified queue so that it can hold 
+.B <Qbytes>
+bytes of message.  This mode only works for the superuser. 
+Requires
+.BI -key " <KEYVAL>"
+and 
+.BI -mask " <MASKVAL>". 
+
+.TP
+.B -n,info
+Write information about the specified queue to stdout.  
+Requires
+.BI -key " <KEYVAL>". 
+
+.TP
+.BI -y,-type " <TYPEVAL>"
+Specifies the integer type of a message.  This value is used with 
+the 
+.B -get
+command to control message retrieval.  Defaults to 1
+if not specified explicitly.
+
+.TP
+.BI -m,-mask " <MASKVAL>"
+Specifies the octal protection mask for the queue, analogous to
+the protection mask on a Unix file.  For instance, 666 allows
+everybody  read and write access to the message queue.
+
+
+.TP
+.B -mm,-maxm
+Experimentally determines the largest message which may be written
+to a message queue.  Requires
+.BI -key " <KEYVAL>"
+which must specify
+an existing, empty, message queue.  The result is written to stdout.
+This value is highly platform dependent.
+
+
+
+.TP
+.BI -k[x],-key[x] " <KEYVAL>"
+Specifies the integer key which determines the queue to act upon.
+This flag is mandatory with most modes of this program.  The [x]
+variants expect a hexadecimal value, the regular variants a decimal
+value.
+
+.TP
+.B -l,-lock
+Modifies the behavior of 
+.B -get
+and 
+.B -send.
+Normally these
+execute without waiting for notification of completion.  This
+allows msgqueue to be used in a polling mode.  If this flag is
+employed the program will lock until the action completes.  For
+instance, when reading from a queue, it will wait forever for the
+next message to appear.
+
+.TP
+.B -h -help --help -? --??
+Print the help message. (Default - do not print help message.)
+
+.TP
+.B -i
+Emit version, copyright, license and contact information.( Default - do not emit information.)
+
+
+.SH EXAMPLES
+
+.PD 0
+.TP
+.B % msgqueue -h
+List the the command line options.
+
+.TP
+.B % msgqueue -c -k 1 -m 660 
+Create a queue to be identified with key = 1 with an access mask 660.
+
+.TP
+.B  % ps -ef | msgqueue -k 1 -send -type 123
+Pipe the output of the command into a message and send it without
+locking to the specified queue.  Note that this may fail if the output
+is larger than the maximum message size.
+
+.TP
+.B  % msgqueue -k 1 -get -type 123 -match -lock
+Read from the message queue the next message having type 123
+and write it to stdout.  Wait for that next message if
+one is not already present.
+
+.SH SEE ALSO
+
+ipcs(8), ipcrm(8), msgrcv(2), msgsnd(2), msgctl(2)
+
+.br
+On Solaris ipcs and ipcrm are found in section (1).
+
+.SH LICENSE
+
+GNU General Public License 2
+
+.SH COPYRIGHT
+
+Copyright (C) 2002, 2006 David Mathog and Caltech.
+
+.SH ACKNOWLEDGEMENTS
+
+none
+
+.SH AUTHORS
+
+David Mathog, Biology Division, Caltech <mathog@caltech.edu>

@@ -1,0 +1,409 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Manual Page - dmath(1)</title>
+</head><body alink="#ff0000" bgcolor="#F0F0F0" link="#0000ff" text="#000000" vlink="#C000C0"><a name="top"></a>
+<!-- .TH "dmath" "1" "0.0.8 Dec 12 2012" "drm_tools" "User Commands" -->
+<center>
+<h1><hr><i>Manual Reference Pages &nbsp;-&nbsp;</i><nobr>dmath (1)</nobr><hr></h1>
+</center>
+<!-- .SH "NAME" -->
+<a name="">
+
+     <h3>NAME</h3>
+
+</a>
+<blockquote>
+<!-- .TP  -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td colspan="2">
+dmath - a double precision calculator
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<p>
+<!-- .SH SYNOPSIS -->
+</p></td></tr>
+<tr></tr></tbody></table></blockquote>
+<a name="contents"></a><h3>CONTENTS</h3>
+<blockquote>
+<a href="#1">Description</a><br>
+<a href="#2">Interactive Commands</a><br>
+<a href="#3">Math Expressions</a><br>
+<a href="#4">Examples</a><br>
+<a href="#5">See Also</a><br>
+<a href="#6">License</a><br>
+<a href="#7">Copyright</a><br>
+<a href="#8">Acknowledgements</a><br>
+<a href="#9">Authors</a><br>
+</blockquote>
+<a name="10">
+
+     <h3>SYNOPSIS</h3>
+
+</a>
+<blockquote>
+<!-- .PP  -->
+<p>
+<!-- .BI dmath -->
+<b>dmath</b> <!-- .br -->
+<!-- Need break --><br>
+(There are no command line options.)
+</p><p>
+</p><p>
+<!-- .SH DESCRIPTION -->
+</p></blockquote>
+<a name="1">
+
+     <h3>DESCRIPTION</h3>
+
+</a>
+<blockquote>
+<!-- .B dmath -->
+<b>dmath</b> is a double precision calculator that takes its commands from stdin
+and writes its results to stdout.  It also supports bitwise operations
+on integer values - which are converted out of and back into double
+precision float represenation as needed.  Operations are supported both
+on scalar and array operands.
+<p>
+<!-- .B dmath -->
+<b>dmath</b> may be obtained as part of the
+<!-- .B drm_tools -->
+<b>drm_tools</b> package from:
+<!-- .B http://sourceforge.net/projects/drmtools/ -->
+<b><a href="http://sourceforge.net/projects/drmtools/">http://sourceforge.net/projects/drmtools/</a></b> </p><p>
+<!-- .SH INTERACTIVE COMMANDS -->
+</p></blockquote>
+<a name="2">
+
+     <h3>INTERACTIVE COMMANDS</h3>
+
+</a>
+<blockquote>
+<!-- .TP  -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .B help,h,? -->
+<b>help,h,?</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Show the help message
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B hexp -->
+<b>hexp</b> </td><td valign="bottom">
+Show the syntax for math expressions
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<b>=</b><i>A</i>
+</td><td valign="bottom">
+Store the last result in variable <b>A</b>.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<b>&gt;</b><i>A</i>
+</td><td valign="bottom">
+Add an element to array <b>A</b> and store last result in it.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<b>&lt;</b><i>A</i>
+</td><td valign="bottom">
+List all values in <b>A</b>.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<b>&gt;&gt;</b><i>Name</i>
+</td><td valign="bottom">
+Store the last operation as <b>Name</b>.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<b>&lt;&lt;</b><i>Name</i>
+</td><td valign="bottom">
+Run stored operation <b>Name</b>.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<b>xx</b><i>Name</i>
+</td><td valign="bottom">
+Delete stored operation <b>Name</b>.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B ?? -->
+<b>??</b> </td><td valign="bottom">
+List the stored operations.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B [no]echo -->
+<b>[no]echo</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Echo input to output (instead of just results).
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B digits # -->
+<b>digits #</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+The number of digits shown after the decimal for double precision
+notations and the total number of digits shown for
+integer notations.  (default is 6)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B sci,eng     -->
+<b>sci,eng</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Set scientific/engineering notation and show double precision numbers.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B sint,uint,oint,xint     -->
+<b>sint,uint,oint,xint</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Set signed, unsigned, octal, and hexadecimal notation and show integer numbers
+(converted with truncation from double precision numbers).
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B pnz,nnz     -->
+<b>pnz,nnz</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Print -0 as 0/-0 in scientific and engineering notation.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .I math expression  -->
+<i>math expression</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+A <b>MATH EXPRESSION</b> to calculate.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B info -->
+<b>info</b> </td><td valign="bottom">
+Show version and copyright information.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B exit,quit -->
+<b>exit,quit</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Exit the program.
+<p>
+<!-- .SH MATH EXPRESSIONS  -->
+</p></td></tr>
+<tr></tr></tbody></table></blockquote>
+<a name="3">
+
+     <h3>MATH EXPRESSIONS</h3>
+
+</a>
+<blockquote>
+Math expressions use an algebraic syntax to operate on 26
+variables ($A-$Z, not case sensitive).
+<p>
+Scalar and Array math:  Unless otherwise noted operators and functions will
+work with either scalar or array operands.  If array operands are used
+the result will also be an array, with intermediate values stored in the
+leftmost array at each operation.  In scalar math the <b>RETURN</b><tt>
+value is meaningful, but it is not in array math.
+</tt></p><p><tt>
+Array elements are indexed as 1-&gt;N (from start) or -1-&gt;-N
+(from end).
+<!-- .nf -->
+</tt></p><pre><tt>  Operands:
+    </tt><b>12e-1,120,0xF0,0o77,0b1010</b>
+                         numbers in float, integer, hexadecimal, octal, or binary formats
+    <b>$A</b>                   variable ($A is the same as $A[1])
+    <b>$A[12],$A[3,4],$A[]</b>  element, range of elements, all elements
+  Assignment:
+    <b>$A[6]  = 1+$B[$C[3]]</b> to an element
+    <b>$A[1,2]= $B[3,4]</b>     to a range of alements (number must match)
+    <b>$A[]   = 3</b>           to an entire array
+    Expressions may contain 0 or 1 &#8217;<b>=</b>&#8217; assignments.
+  Operators:  val1 OP val2
+    <b>+</b>        addition
+    <b>-</b>        subtraction
+    <b>*</b>        multiplication
+    <b></b>%        remainder
+    <b>^</b>        power (val1 ^ val2)
+    <b>?</b>        compare (returns 1,0,-1 if value is &gt;,==,&lt; zero)
+  Functions(val):
+    <b>log</b>      base 10 log
+    <b>ln</b>       natural log
+    <b>e10</b>      10^val
+    <b>ee</b>       e^val
+    <b>chs</b>      change sign
+    <b>abs</b>      absolute value
+    <b>rnd</b>      round to nearest int
+    <b>lid</b>      round away from zero to next integer
+    <b>trc</b>      round towards zero to next integer
+    <b>sin,asin</b> sine, arc sine (angle in radians)
+    <b>cos,acos</b> cosine, arc cosine
+    <b>tan,atan</b> tangent, arc tangent
+    <b>d2r</b>      degrees to radians
+    <b>r2d</b>      radians to degress
+    <b>sinh,cosh,tanh</b>    hyperbolic sine, cosine,tangent
+    <b>not</b>      bitwise not (unsigned integer)
+  Functions(val1,val2):
+    <b>max</b>      maximum
+    <b>min</b>      minimum
+    <b>and,or,xor</b>   bitwise and, or, xor (unsigned integer).
+    <b>shl,shr</b>   bitwise shift left/right (unsigned integer).
+  Functions($A[range])  [scalar results only]: 
+    <b>len</b>      number of cells
+    <b>sum</b>      sum of cells
+    <b>sm2</b>      sum of squares of cells
+    <b>inv</b>      invert order of cells in range,  Returns 0.
+    <b>del</b>      delete cells in range.  Returns elements remaining.
+             (If all deleted, variable is reset to one element with value zero.)
+    <b>idx</b>      replace elements with their array positions (1-N).  Returns 0.
+    <b>srt</b>      sort elements into ascending order.  Returns 0.
+    <b>six</b>      replace elements with the positions they would occupy
+             if sorted into ascending order.  Ie {5,10,-21} -&gt; {2,3,1}. Returns 0.
+    <b>nml</b>      test for normal numbers. 0=all elements normal, 1=at least one
+             infinite, 2=at least one NaN, 3=some infinite and some NaN
+  Functions($A[],value)  [scalar results only]:
+    <b>dim</b>       (Re)size $A to value entries.  New elements = 0.0. Returns 0.
+  Functions($A[],val1,val2,...)  [scalar results only]:
+    <b>cat</b>       Add values as new elements to $A, returns new length.
+    <b>ini</b>       (Re)initialize $A with values as elements, returns (new) length.
+  Functions($A[],$B[])  [array results only]
+      Rearrange array contents.  <b>RETURN</b><tt> value is not meaningful.
+    </tt><b>map</b>      $A[i]    = $A[$B[i]] for all i in the range.
+    <b>ump</b>      $A[$B[i]]= $A[i]     for all i in the range (unmap).
+  Operator Precedence:
+    <b>^</b>  &gt;  <b>*/%</b>  &gt;  <b>+-</b>  &gt;  <b>?</b> &gt; <b>(),</b> &gt; <b>=</b>
+<p>
+<!-- .fi -->
+</p></pre>
+<p>
+<!-- .SH EXAMPLES -->
+</p></blockquote>
+<a name="4">
+
+     <h3>EXAMPLES</h3>
+
+</a>
+<blockquote>
+<!-- .nf -->
+<pre>These examples assume they are run in the order shown, so that results
+from preceding operations are present.
+<p>
+<b>5+3/6</b>
+         Emits <b>5.500000</b>.
+</p><p>
+<b>ini($A[],1,20,3,4,10)</b>
+         Initialize the variable $A as an array with 5 values 1,20,3,4,10.
+         Emits <b>5.000000</b>, the number of elements in $A.
+</p><p>
+<b>ee(1)
+&gt;A</b>
+         Emits <b>2.718282</b> and then appends that value as a new element to
+         variable $A.
+</p><p>
+<b>&lt;A</b>
+         Emits:
+            <b>1 1.000000
+            2 20.000000
+            3 3.000000
+            4 4.000000
+            5 10.000000
+            6 2.718282</b>
+        
+<b>digits 3
+sci
+$A[6]</b>
+         Emits: <b>2.718e+00</b>
+        
+</p><p>
+<b>
+eng
+dim($B[],len($A[]))
+$B[]=$A[]
+$B[1,3] - 5 - sum($B[2,5])
+&lt;B</b>  
+         Emits:
+         0.000   <i>from dim() </i>
+         6.000   <i>from array assignment,number of elements</i>
+         1.000   <i>from array math, value has no significance</i>
+            1 -31.000 <i>Contents of $B following array math</i>
+            2 -12.000
+            3 -29.000
+            4 4.000
+            5 10.000
+            6 2.718
+            
+</p><p>
+     
+<!-- .fi -->
+</p></pre>
+<p>
+<!-- .SH SEE ALSO -->
+</p></blockquote>
+<a name="5">
+
+     <h3>SEE ALSO</h3>
+
+</a>
+<blockquote>
+<a href="http://oldsaf.bio.caltech.edu/cgi-bin/caltech/manpages.pl/extract.1">extract(1)</a>
+<p>
+</p><p>
+<!-- .SH LICENSE -->
+</p></blockquote>
+<a name="6">
+
+     <h3>LICENSE</h3>
+
+</a>
+<blockquote>
+<p>
+GNU General Public License 2
+</p><p>
+<!-- .SH COPYRIGHT -->
+</p></blockquote>
+<a name="7">
+
+     <h3>COPYRIGHT</h3>
+
+</a>
+<blockquote>
+Copyright (C) 2012 David Mathog and Caltech.
+<p>
+</p><p>
+<!-- .SH ACKNOWLEDGEMENTS -->
+</p></blockquote>
+<a name="8">
+
+     <h3>ACKNOWLEDGEMENTS</h3>
+
+</a>
+<blockquote>
+none
+<p>
+</p><p>
+<!-- .SH AUTHORS -->
+</p></blockquote>
+<a name="9">
+
+     <h3>AUTHORS</h3>
+
+</a>
+<blockquote>
+David Mathog, Biology Division, Caltech &lt;<a href="mailto:mathog@caltech.edu">mathog@caltech.edu</a>&gt;
+<p>
+</p></blockquote>
+<p></p><hr>
+<table width="100%"><tbody><tr> <td width="33%"><i>drm_tools</i></td> <td align="center" width="33%">dmath (1)</td> <td align="right" width="33%"><i>0.0.8 Dec 12 2012</i></td> </tr></tbody></table><font size="-1">Generated by <a href="http://www.squarebox.co.uk/download/manServer.shtml">manServer 1.08</a> from /usr/common/man/man1/dmath.1 using man macros.</font>
+
+</body></html>

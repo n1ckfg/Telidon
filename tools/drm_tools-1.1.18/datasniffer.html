@@ -1,0 +1,467 @@
+<html><head><title>Manual Page - datasniffer(1)</title></head><body alink="#ff0000" bgcolor="#f0f0f0" link="#0000ff" text="#000000" vlink="#c000c0"><a name="top"></a>
+<!-- .TH "datasniffer" "1" "1.0.3 DEC 17 2008" "drm_tools" "User Commands" -->
+<center>
+<h1><hr><i>Manual Reference Pages &nbsp;-&nbsp;</i><nobr>datasniffer (1)</nobr><hr></h1>
+</center>
+<!-- .SH NAME -->
+<a name="0">
+
+     <h3>NAME</h3>
+
+</a>
+<blockquote>
+<p>
+datasniffer - dump data from a binary file
+</p><p>
+<!-- .SH SYNOPSIS -->
+</p></blockquote>
+<a name="contents"></a><h3>CONTENTS</h3>
+<blockquote>
+<a href="#1">Synopsis</a><br>
+<a href="#2">Description</a><br>
+<a href="#3">Options</a><br>
+<a href="#4">Examples</a><br>
+<a href="#5">See Also</a><br>
+<a href="#6">License</a><br>
+<a href="#7">Copyright</a><br>
+<a href="#8">Authors</a><br>
+</blockquote>
+<a name="9">
+
+     <h3>SYNOPSIS</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .B datasniffer [options...] -->
+<b>datasniffer [options...]</b> </p><p>
+<!-- .SH DESCRIPTION -->
+</p></blockquote>
+<a name="2">
+
+     <h3>DESCRIPTION</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .B datasniffer -->
+<b>datasniffer</b> is intended for use in reverse engineering binary data files whose contents
+are known (more or less) but whose internal organization is not known.
+<!-- .B datasniffer -->
+<b>datasniffer</b> reads data from a specified input one byte at a time and dumps the indicated data types to
+a specified output after formatting each data type
+as requested.  Each input byte results in an output line containing
+all of the requested formats of all of the requested data types.
+By examining this output a user may find the expected values and from that
+may be able to determine the file&#8217;s internal structure.
+</p><p>
+<!-- .B datasniffer -->
+<b>datasniffer</b> is part of the
+<!-- .B drm_tools -->
+<b>drm_tools</b> package which may be obtained from:
+<!-- .B http://sourceforge.net/projects/drmtools/ -->
+<b><a href="http://sourceforge.net/projects/drmtools/">http://sourceforge.net/projects/drmtools/</a></b> </p><p>
+</p><p>
+<!-- .SH OPTIONS -->
+</p></blockquote>
+<a name="3">
+
+     <h3>OPTIONS</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .BI -in " <input_file>" -->
+<b>-in</b><i> &lt;input_file&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Read input from the specified file.  Use
+<!-- .B - -->
+<b>-</b> to read from stdin.  Default is to read from stdin.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -out " <output_file>" -->
+<b>-out</b><i> &lt;output_file&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Write output to the specified file.  Use
+<!-- .B - -->
+<b>-</b> to write to stdout.  Default is to write to stdout.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -o " <offset>" -->
+<b>-o</b><i> &lt;offset&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Emit data starting at
+<!-- .B " <offset>" -->
+<b> &lt;offset&gt;</b> bytes from the
+beginning of the file.  Default is 0.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -l " <multiple>" -->
+<b>-l</b><i> &lt;multiple&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+The number of bytes to dump.  Default is 0 = all.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -c " <columns>" -->
+<b>-c</b><i> &lt;columns&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Emit formatted data for
+<!-- .B " <columns>" -->
+<b> &lt;columns&gt;</b> bytes for each output line.  The first "column"
+in a line will show all combinations of data types, formats, and byte orders
+for the data starting on that byte.
+The second column will do the same for the next byte, and so forth.
+Consequently the resulting data dump
+is most legible when only a single data type, format and byte order
+are displayed.
+Default is 1. 
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -n  " <number>" -->
+<b>-n</b><i> &lt;number&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Specify line numbering options by including one or more of the
+characters from the list below.  Default is
+<!-- .B a0xd. -->
+<b>a0xd.</b> Note that when any specification of number options must include
+at least one of
+<!-- .BR "x" ", " "d" ", or " "o" "." -->
+<b>x</b>, <b>d</b>, or <b>o</b>. <!-- .nf -->
+<pre><!-- .BR "n" " no numbering" -->
+<b>n</b> no numbering 
+<!-- .BR "a" " absolute position  (number from start of file)" -->
+<b>a</b> absolute position  (number from start of file) 
+<!-- .BR "r" " relative  position (number from offset)" -->
+<b>r</b> relative  position (number from offset) 
+<!-- .BR "0" " number from 0" -->
+<b>0</b> number from 0 
+<!-- .BR "1" " number from 1" -->
+<b>1</b> number from 1 
+<!-- .BR "x" " print position in hexadecimal" -->
+<b>x</b> print position in hexadecimal 
+<!-- .BR "d" " print position in decimal" -->
+<b>d</b> print position in decimal 
+<!-- .BR "o" " print position in octal" -->
+<b>o</b> print position in octal 
+<!-- .fi -->
+</pre>
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -d " <data_type>" -->
+<b>-d</b><i> &lt;data_type&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Specify the types of data to display by including characters from the list below.
+Default is
+<!-- .B CSL. -->
+<b>CSL.</b> <!-- .nf -->
+<pre><!-- .BR "c" " signed char" -->
+<b>c</b> signed char 
+<!-- .BR "s" " signed short int" -->
+<b>s</b> signed short int 
+<!-- .BR "l" " signed (long) int" -->
+<b>l</b> signed (long) int 
+<!-- .BR "g" " signed long long (not available on all platforms)" -->
+<b>g</b> signed long long (not available on all platforms) 
+<!-- .BR "f" " signed float" -->
+<b>f</b> signed float 
+<!-- .BR "d" " signed double" -->
+<b>d</b> signed double 
+<!-- .BR "C" " unsigned char" -->
+<b>C</b> unsigned char 
+<!-- .BR "S" " unsigned short int" -->
+<b>S</b> unsigned short int 
+<!-- .BR "L" " unsigned (long) int" -->
+<b>L</b> unsigned (long) int 
+<!-- .BR "G" " unsigned long long (not available on all platforms)" -->
+<b>G</b> unsigned long long (not available on all platforms) 
+<!-- .fi -->
+</pre>
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -b " <byte_order>" -->
+<b>-b</b><i> &lt;byte_order&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Specify the order of bytes in the data by including characters from the list below.
+Default is
+<!-- .B f. -->
+<b>f.</b> <!-- .nf -->
+<pre><!-- .BR "f" " forward (as read from data)" -->
+<b>f</b> forward (as read from data) 
+<!-- .BR "r" " reverse (invert order for each data size)" -->
+<b>r</b> reverse (invert order for each data size) 
+<!-- .fi -->
+</pre>
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -r " <N>" -->
+<b>-r</b><i> &lt;N&gt;</i> </td><td valign="bottom">
+Header line control. The default value is
+<!-- .B INT_MAX -->
+<b>INT_MAX</b> which results in a single header line at the start of the output.
+<!-- .nf -->
+<pre><!-- .BR "0" " no headers" -->
+<b>0</b> no headers 
+<!-- .BR "N" " one header at start of output and then every " "N" " output lines after that" -->
+<b>N</b> one header at start of output and then every <b>N</b> output lines after that 
+<!-- .fi -->
+</pre>
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -p -->
+<b>-p</b> </td><td valign="bottom">
+Emit a page break before every header except the first.  If printed as text
+most printers will respect the page break and start a new page before
+each header line.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -ds -->
+<b>-ds</b> </td><td valign="bottom">
+Emit data sizes and exit.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -h -help --help -? --?? -->
+<b>-h -help --help -? --??</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Print the help message and exit.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -i -->
+<b>-i</b> </td><td valign="bottom">
+Emit version, copyright, license and contact information and exit.
+<p>
+</p><p>
+</p><p>
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Format options which may be specified for the -f* parameters:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B c -->
+<b>c</b> char,
+<!-- .B d  -->
+<b>d</b> decimal,
+<!-- .B x -->
+<b>x</b> hexadecimal,
+<!-- .B o -->
+<b>o</b> octal,
+<!-- .B f -->
+<b>f</b> float,
+<!-- .B e -->
+<b>e</b> exp.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI   -fc " [cdxo]" -->
+<b>-fc</b><i> [cdxo]</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .BR "" "Emit the " "c" " and " "C" " data types with the formats specified. " -->
+<b></b>Emit the <b>c</b> and <b>C</b> data types with the formats specified.  If the character isn&#8217;t printable c format emits an "NP".  Default is
+<!-- .BR "cx" "." -->
+<b>cx</b>. <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI   -fs " [dxo]" -->
+<b>-fs</b><i> [dxo]</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .BR "" "Emit the " "s" " and " "S" " data types with the formats specified. " -->
+<b></b>Emit the <b>s</b> and <b>S</b> data types with the formats specified.  Default is
+<!-- .BR "dx" "." -->
+<b>dx</b>. <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI   -fl " [dxo]" -->
+<b>-fl</b><i> [dxo]</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .BR "" "Emit the " "l" " and " "L" " data types with the formats specified. " -->
+<b></b>Emit the <b>l</b> and <b>L</b> data types with the formats specified.  Default is
+<!-- .BR "dx" "." -->
+<b>dx</b>. <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI   -fg " [dxo]" -->
+<b>-fg</b><i> [dxo]</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .BR "" "Emit the " "g" " and " "G" " data types with the formats specified. " -->
+<b></b>Emit the <b>g</b> and <b>G</b> data types with the formats specified.  Default is
+<!-- .BR "dx" "." -->
+<b>dx</b>. <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI   -ff " [fe]" -->
+<b>-ff</b><i> [fe]</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .BR "" "Emit the " "f" " data type with the formats specified. " -->
+<b></b>Emit the <b>f</b> data type with the formats specified.  Note that format
+<!-- .B f -->
+<b>f</b> may exceed the field width, in which case the data is
+shown as a "*". Use format
+<!-- .B e -->
+<b>e</b> to see the full range of the data.  Default is
+<!-- .BR "f" "." -->
+<b>f</b>. <p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI   -fd " [fe]" -->
+<b>-fd</b><i> [fe]</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .BR "" "Emit the " "d" " data type with the formats specified. " -->
+<b></b>Emit the <b>d</b> data type with the formats specified.  Note that format
+<!-- .B f -->
+<b>f</b> may exceed the field width, in which case the data is
+shown as a "*". Use format
+<!-- .B e -->
+<b>e</b> to see the full range of the data.   Default is
+<!-- .BR "f" "." -->
+<b>f</b>. <p>
+<!-- .SH EXAMPLES -->
+</p></td></tr>
+<tr></tr></tbody></table></p></blockquote>
+<a name="4">
+
+     <h3>EXAMPLES</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .B % datasniffer -h -->
+<b>% datasniffer -h</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+List the the command line options.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B "% echo ABCD | datasniffer -d cs -n d -fc c -fs x -b fr" -->
+<b>% echo ABCD | datasniffer -d cs -n d -fc c -fs x -b fr</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .nf -->
+<pre> P0AbsDec  c(+,%c)  c(-,%c)  s(+,%x)  s(-,%x)
+        0        A        A       41     4100
+        1        B        B     4142     4241
+        2        C        C     4243     4342
+        3        D        D     4344     4443
+        4       NP       NP     440a      a44
+<!-- .fi -->
+</pre>
+Dump for each byte of the input data types
+<!-- .BR "c" " and " "x" "." -->
+<b>c</b> and <b>x</b>. <!-- .BR "" "Use format " "c" " with data type " "c" " and format " "x" " with data type " "s" "." -->
+<b></b>Use format <b>c</b> with data type <b>c</b> and format <b>x</b> with data type <b>s</b>. Also show the data for both directions, forward and reversed.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B "% echo ABCD | datasniffer -d c -n d" -->
+<b>% echo ABCD | datasniffer -d c -n d</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .nf -->
+<pre> P0AbsDec  c(+,%c)  c(+,%x)
+        0        A       41
+        1        B       42
+        2        C       43
+        3        D       44
+        4       NP        a
+<!-- .fi -->
+</pre>
+<p>
+Emit a single header line followed by one data line each for
+the four ascii characters ABCD and the trailing newline.  Each
+such line shows the absolute position of that byte (numbered from zero),
+the character it corresponds to, and the hexadecimal value of the byte
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B "% echo ABCDEFGHIJKLMNOPQRSTUVWXYZ \e" -->
+<b>% echo ABCDEFGHIJKLMNOPQRSTUVWXYZ \</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B "| datasniffer -d s  -fs x -c 5 -n d" -->
+<b>| datasniffer -d s  -fs x -c 5 -n d</b> <!-- .nf -->
+<pre> P0RelDec  s(+,%x)  s(+,%x)  s(+,%x)  s(+,%x)  s(+,%x)
+        0       41     4142     4243     4344     4445
+        5     4546     4647     4748     4849     494a
+       10     4a4b     4b4c     4c4d     4d4e     4e4f
+       15     4f50     5051     5152     5253     5354
+       20     5455     5556     5657     5758     5859
+       25     595a     5a0a
+<!-- .fi -->
+</pre>
+Emit multiple columns of data on each line.
+<p>
+</p><p>
+<!-- .SH SEE ALSO -->
+</p></td></tr>
+<tr></tr></tbody></table></p></blockquote>
+<a name="5">
+
+     <h3>SEE ALSO</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .BR "od" "(1), " "mdump" "(1)" -->
+<a href="http://saf.bio.caltech.edu/cgi-bin/caltech/manpages.pl/od.1">od(1)</a>, 
+<a href="http://saf.bio.caltech.edu/cgi-bin/caltech/manpages.pl/mdump.1">mdump(1)</a>
+</p><p>
+<!-- .SH LICENSE -->
+</p></blockquote>
+<a name="6">
+
+     <h3>LICENSE</h3>
+
+</a>
+<blockquote>
+<p>
+GNU General Public License 2
+</p><p>
+<!-- .SH COPYRIGHT -->
+</p></blockquote>
+<a name="7">
+
+     <h3>COPYRIGHT</h3>
+
+</a>
+<blockquote>
+<p>
+Copyright (C) 2008 David Mathog and Caltech.
+</p><p>
+<!-- .SH AUTHORS -->
+</p></blockquote>
+<a name="8">
+
+     <h3>AUTHORS</h3>
+
+</a>
+<blockquote>
+<p>
+</p><p>
+David Mathog, Biology Division, Caltech &lt;<a href="mailto:mathog@caltech.edu">mathog@caltech.edu</a>&gt;
+</p><p>
+</p></blockquote>
+<p></p><hr>
+<table width="100%"><tbody><tr> <td width="33%"><i>drm_tools</i></td> <td align="center" width="33%">datasniffer (1)</td> <td align="right" width="33%"><i>1.0.3 DEC 17 2008</i></td> </tr></tbody></table><font size="-1">Generated by <a href="http://www.squarebox.co.uk/download/manServer.shtml">manServer 1.07</a> from /usr/common/man/man1/datasniffer.1 using man macros.</font>
+
+</body></html>

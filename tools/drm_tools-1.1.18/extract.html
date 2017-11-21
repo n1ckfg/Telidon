@@ -1,0 +1,3723 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Manual Page - extract(1)</title>
+</head><body alink="#ff0000" bgcolor="#F0F0F0" link="#0000ff" text="#000000" vlink="#C000C0"><a name="top"></a>
+<!-- .TH "extract" "1" "1.1.9 Jun 13 2013" "drm_tools" "User Commands" -->
+<center>
+<h1><hr><i>Manual Reference Pages &nbsp;-&nbsp;</i><nobr>extract (1)</nobr><hr></h1>
+</center>
+<p>
+<!-- .SH NAME -->
+<a name="0">
+
+     </a></p><h3><a name="0">NAME</a></h3><a name="0">
+
+</a>
+<blockquote>
+<p>
+extract - extract and format data from text files
+</p><p>
+<!-- .SH SYNOPSIS -->
+</p></blockquote>
+<a name="contents"></a><h3>CONTENTS</h3>
+<blockquote>
+<a href="#1">Synopsis</a><br>
+<a href="#2">Description</a><br>
+<a href="#3">Operator Order</a><br>
+<a href="#4">Options (alphabetically)</a><br>
+<a href="#5">Options (by function)</a><br>
+<a href="#6">Definitions</a><br>
+<a href="#7">String Syntax</a><br>
+<a href="#8">Patterns</a><br>
+<a href="#9">Replacements</a><br>
+<a href="#10">Operations</a><br>
+<a href="#11">Math Expressions</a><br>
+<a href="#12">Examples</a><br>
+<a href="#13">See Also</a><br>
+<a href="#14">License</a><br>
+<a href="#15">Copyright</a><br>
+<a href="#16">Acknowledgements</a><br>
+<a href="#17">Authors</a><br>
+</blockquote>
+<a name="18">
+
+     <h3>SYNOPSIS</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .BI extract " [options...]" -->
+<b>extract</b><i> [options...]</i> </p><p>
+<!-- .SH DESCRIPTION -->
+</p></blockquote>
+<a name="2">
+
+     <h3>DESCRIPTION</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .B extract -->
+<b>extract</b> reads a text file (or files) and extracts a range of rows
+and columns (character positions), optionally reformats this data,
+and then outputs it.
+<!-- .B extract -->
+<b>extract</b> can also process tokens, either delimited or defined by patterns, instead of
+or in addition to character columns.  Complex logic and data manipulations
+may be defined with a scripting language that supports both text and numeric operations.
+The intent is that <b>extract</b> be able to handle increasingly difficult tasks
+through the use of more advanced features, without requiring that those same advanced
+features be employed for simple tasks.  The <b><a href="#12">EXAMPLES</a></b> section shows the easier
+end of the this spectrum, with the methods for the more difficult end of the spectrum
+described in the other sections of this document.
+</p><p>
+<!-- .B extract -->
+<b>extract</b> may be obtained as part of the
+<!-- .B drm_tools -->
+<b>drm_tools</b> package from:
+<!-- .B http://sourceforge.net/projects/drmtools/ -->
+<b><a href="http://sourceforge.net/projects/drmtools/">http://sourceforge.net/projects/drmtools/</a></b> </p><p>
+<!-- .SH OPERATOR ORDER -->
+</p></blockquote>
+<a name="3">
+
+     <h3>OPERATOR ORDER</h3>
+
+</a>
+<blockquote>
+    
+<!-- .PP -->
+<p>
+There are many
+<!-- .B extract -->
+<b>extract</b> command line options but only those whose default values are not
+appropriate for a particular text modification must be specified
+subject to the caveat that at least one command line option must be
+specified.
+The order in which operations are executed and the command line
+options that affect those operations are:
+</p><p>
+<!-- .PD 0 -->
+process extra command line arguments, define variables:
+<!-- .B cmd,eoc,v -->
+<b>cmd,eoc,v</b> <!-- .br -->
+<!-- Need break --><br>
+emit help or other information:
+<!-- .B i,h,help,?,hfmt,hmath,hpat,hvar,hexamples -->
+<b>i,h,help,?,hfmt,hmath,hpat,hvar,hexamples</b> <!-- .br -->
+<!-- Need break --><br>
+set parse options for making tokens:
+<!-- .B s,dl,dq,dqs,po,xc -->
+<b>s,dl,dq,dqs,po,xc</b> <!-- .br -->
+<!-- .br -->
+<!-- Need break --><br>
+set buffer sizes:
+<!-- .B wl,xc,xe -->
+<b>wl,xc,xe</b> <!-- .br -->
+<!-- Need break --><br>
+convert scripting statements to runnable form:
+<!-- .B sect,op,psN,pmN,v,dbga -->
+<b>sect,op,psN,pmN,v,dbga</b> <!-- .br -->
+<!-- Need break --><br>
+open input and output files, use binary output:
+<!-- .B in,out,b -->
+<b>in,out,b</b> <!-- .br -->
+<!-- Need break --><br>
+emit output file prefix string:
+<!-- .B filebol -->
+<b>filebol</b> <!-- .br -->
+<!-- Need break --><br>
+run <b>Before</b> script section:
+<!-- .B sect,op,psN,pmN,v,dbgm,dbgp,dbgs -->
+<b>sect,op,psN,pmN,v,dbgm,dbgp,dbgs</b> <!-- .br -->
+<!-- Need break --><br>
+Begin processing loop, for each line in the input file(s):
+<!-- .RS 3 -->
+</p><blockquote>
+read input files, template match two files:
+<!-- .B in,indl,eqlen,template -->
+<b>in,indl,eqlen,template</b> <!-- .br -->
+<!-- Need break --><br>
+handle embedded null characters:
+<!-- .B hnr,hnd,hns,hnsubs -->
+<b>hnr,hnd,hns,hnsubs</b> <!-- .br -->
+<!-- Need break --><br>
+handle
+<!-- .B Carriage Return -->
+<b>Carriage Return</b> at end of input lines:
+<!-- .B crok -->
+<b>crok</b> <!-- .br -->
+<!-- Need break --><br>
+merge/unmerge input lines:
+<!-- .B merge,unmerge,mdl -->
+<b>merge,unmerge,mdl</b> <!-- .br -->
+<!-- Need break --><br>
+make tokens for input:
+<!-- .B mt -->
+<b>mt</b> <!-- .br -->
+<!-- Need break --><br>
+run <b>Main</b> script section:
+<!-- .B sect,op,psN,pmN,v,dbgm,dbgp,dbgs -->
+<b>sect,op,psN,pmN,v,dbgm,dbgp,dbgs</b> <!-- .br -->
+<!-- Need break --><br>
+<i>(Note: the </i><b>Main</b><i> script may disable or modify everything after it down to the </i><b>After</b><i> script.)</i>
+<!-- .br -->
+<!-- Need break --><br>
+select rows
+<!-- .B [ -->
+<b>[</b> <!-- .RS 3 -->
+<blockquote>
+unconditionally:
+<!-- .B sr,er,nr -->
+<b>sr,er,nr</b> <!-- .br -->
+<!-- Need break --><br>
+conditionally:
+<!-- .B if,ifonly,ifn,ifterm,ifnorestart, all -->
+<b>if,ifonly,ifn,ifterm,ifnorestart, all</b> <!-- .RE -->
+</blockquote>
+<!-- .B ] -->
+<b>]</b> <!-- .RS 3 -->
+<blockquote>
+select columns (fields)
+<!-- .B [ -->
+<b>[</b> <!-- .RS 3 -->
+<blockquote>
+explicitly:
+<!-- .B fmt -->
+<b>fmt</b> <!-- .br -->
+<!-- Need break --><br>
+implicitly:
+<!-- .B sc,ec,nc,is,rm -->
+<b>sc,ec,nc,is,rm</b> <!-- .RE -->
+</blockquote>
+<!-- .B ] -->
+<b>]</b> <!-- .br -->
+<!-- Need break --><br>
+emit output line prefix string:
+<!-- .B bol,ifbol,iftermbol -->
+<b>bol,ifbol,iftermbol</b> <!-- .br -->
+<!-- Need break --><br>
+emit input line count:
+<!-- .B n -->
+<b>n</b> <!-- .br -->
+<!-- Need break --><br>
+emit input line length:
+<!-- .B ll -->
+<b>ll</b> <!-- .br -->
+<!-- Need break --><br>
+emit input line token count:
+<!-- .B lt -->
+<b>lt</b> <!-- .br -->
+<!-- Need break --><br>
+Output processing on each selected field:
+<!-- .RS 3 -->
+<blockquote>
+<!-- .br -->
+<!-- Need break --><br>
+emit debugging information:
+<!-- .B dbg,dbgv -->
+<b>dbg,dbgv</b> <!-- .br -->
+<!-- Need break --><br>
+sort multitoken fields:
+<!-- .B sortas,sortac,sortan,sortds,sortdc,sortdn -->
+<b>sortas,sortac,sortan,sortds,sortdc,sortdn</b> <!-- .br -->
+<!-- Need break --><br>
+substitute empty fields:
+<!-- .B rs -->
+<b>rs</b> <!-- .br -->
+<!-- Need break --><br>
+substitute characters:
+<!-- .B rcds,rcdc,rcss -->
+<b>rcds,rcdc,rcss</b> <!-- .br -->
+<!-- Need break --><br>
+substitute text:
+<!-- .B rtds,rtdc,rtss -->
+<b>rtds,rtdc,rtss</b> <!-- .br -->
+<!-- Need break --><br>
+pattern match/substitute text:
+<!-- .B ps -->
+<b>ps</b> <!-- .br -->
+<!-- Need break --><br>
+add backslashes:
+<!-- .B bs,ba,b2,ecc -->
+<b>bs,ba,b2,ecc</b> <!-- .br -->
+<!-- Need break --><br>
+format numerics:
+<!-- .B fff,fffe,ffd,ffu,ffo,ffx,fp,nz -->
+<b>fff,fffe,ffd,ffu,ffo,ffx,fp,nz</b> <!-- .br -->
+<!-- Need break --><br>
+pad or set field width
+<!-- .B pd,fw -->
+<b>pd,fw</b> <!-- .br -->
+<!-- Need break --><br>
+trim whitespace:
+<!-- .B trl,trr,trb,trc -->
+<b>trl,trr,trb,trc</b> <!-- .br -->
+<!-- Need break --><br>
+justify:
+<!-- .B jl,jc,jr -->
+<b>jl,jc,jr</b> <!-- .br -->
+<!-- Need break --><br>
+adjust case:
+<!-- .B cu,cl,cf -->
+<b>cu,cl,cf</b> <!-- .br -->
+<!-- Need break --><br>
+add delimiters (tokens only):
+<!-- .B dv,dl,d-,dt -->
+<b>dv,dl,d-,dt</b> <!-- .br -->
+<!-- .RE -->
+</blockquote>
+<!-- Need break --><br>
+emit output line
+<!-- .br -->
+<!-- Need break --><br>
+emit output line suffix string:
+<!-- .B eol,ifeol,iftermeol -->
+<b>eol,ifeol,iftermeol</b> <!-- .RE -->
+</blockquote>
+<!-- .RE -->
+</blockquote>
+<!-- .br -->
+<!-- Need break --><br>
+emit output file suffix string:
+<!-- .B fileeol -->
+<b>fileeol</b> <!-- .br -->
+<!-- Need break --><br>
+run <b>After</b> script section:
+<!-- .B sect,op,psN,pmN,v,dbgm,dbgp,dbgs -->
+<b>sect,op,psN,pmN,v,dbgm,dbgp,dbgs</b> <p>
+<!-- .SH Options (alphabetically) -->
+</p></blockquote>
+<a name="4">
+
+     <h3>Options (alphabetically)</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .TP -->
+<table cellpadding="0" cellspacing="0">
+<tbody><tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -all -->
+<b>-all</b> </td><td valign="bottom">
+Emit unprocessed the text rows outside of the range specified with
+<!-- .B -sr -->
+<b>-sr</b> ,
+<!-- .B -er -->
+<b>-er</b> ,
+<!-- .B -nr. -->
+<b>-nr.</b> (Default is not to emit these rows.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -b -->
+<b>-b</b> </td><td valign="bottom">
+Binary output mode.  The default output is text.  On some operating systems
+these are the same, and on others not.  The primary difference in most cases
+is the handling of &#8217;\n&#8217;, the end of line character.  In text mode (the default)
+this character is expanded to the local end of line sequence.  On Unix/Linux systems
+this is again &#8217;\n&#8217; and there is no difference between the two modes, but
+on Windows this sequence is &#8217;\r\n&#8217;.  If <b>-b</b> is specified then extract
+tries to use binary output, where the end of line character has no special
+meaning.  This should always succeed if <b>-out filename</b> is used,
+but may fail when the output is to stdout.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -bol " <bolstring>" -->
+<b>-bol</b><i> &lt;bolstring&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+When set the prefix
+<!-- .B <bolstring> -->
+<b>&lt;bolstring&gt;</b> is emitted before any
+output for each input row.  Specifically, there will be one prefix string
+emitted for
+each input row even if the rest of the output row is empty.
+<!-- .B <bolstring> -->
+<b>&lt;bolstring&gt;</b> may be an empty string.  Note that the
+prefix precedes any line numbers triggered by
+<!-- .B -n. -->
+<b>-n.</b> (Default is an empty string.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -bs -ba -b2 -->
+<b>-bs -ba -b2</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Add backslashes (unix escape characters) before any character
+(other than alphabet, numeric, underscore, period, or slash), before
+all characters, or before all but the first character.  If
+<!-- .B -ecc -->
+<b>-ecc</b> is also used the specified character is used instead of backslash.
+Note that
+this only applies within a field, so that, for instance, if the
+program is running in token mode a token range
+<!-- .B [1,3] -->
+<b>[1,3]</b> would apply the
+backslashes between characters within each token but
+not between tokens.  To work around that limitation use
+<!-- .B [dv\e:1,3]. -->
+<b>[dv\:1,3].</b> (Default is not to add backslashes.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -cmd " cmdfile" -->
+<b>-cmd</b><i> cmdfile</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Once all command line options are consumed reading more from
+<!-- .B cmdfile. -->
+<b>cmdfile.</b> Input is read until the end of the input or an
+<!-- .B -eoc. -->
+<b>-eoc.</b> Use
+<!-- .B -cmd - -->
+<b>-cmd -</b> to read commands from stdin, then after
+<!-- .B -eoc -->
+<b>-eoc</b> the following lines are treated as input.
+Options are delimited by spaces, tabs and End of Lines .
+Strings containing these characters may be double quoted.
+Single quotes have no special meaning.
+<!-- .nf -->
+<pre><!-- .B Special first characters in an input line: -->
+<b>Special first characters in an input line:</b> 
+_  (underscore) Remainder of line is the next option.
+   It is read verbatim and so need not be quoted.
+#  The line is a comment - it is ignored.
+<!-- .B Special first characters in a token: -->
+<b>Special first characters in a token:</b> 
+## The rest of the line is a comment and is ignored.
+<!-- .B Example: -->
+<b>Example:</b> 
+-mt -dl " \t"
+# this is a comment and is ignored
+## as is this
+-fmt "[mt:1,4]" ##the text before this is script, but this comment is ignored
+# The next line is full of double quotes and spaces
+# but is pulled in verbatim because of the leading underscore.
+_This would be a "Mess\34 to  quote [1,4]
+-eoc
+<!-- .fi -->
+</pre>
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -cols " <format>" -->
+<b>-cols</b><i> &lt;format&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Deprecated synonom for
+<!-- .B -fmt. -->
+<b>-fmt.</b> <p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -crok -->
+<b>-crok</b> </td><td valign="bottom">
+Retain a
+<!-- .B Carriage Return -->
+<b>Carriage Return</b> character which appears before
+the
+<!-- .B End of Line -->
+<b>End of Line</b> character.  (Default is to delete it.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -cu -cl -cf -->
+<b>-cu -cl -cf</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+In selected characters/tokens change case to upper, lower, or first letter
+upper and rest lower.  (Default is to leave case unmodified.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -dbg -->
+<b>-dbg</b> </td><td valign="bottom">
+Emit state and parsing information as each input line is processed.
+Only a developer modifying the program&#8217;s code is likely to find
+this useful. (Default is
+not to emit this information.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -dbga -->
+<b>-dbga</b> </td><td valign="bottom">
+Emit autolabel information.  Use this to find problems in scripts
+with automatic labels:
+<!-- .B c,{,}{, -->
+<b>c,{,}{,</b> and
+<!-- .B } -->
+<b>}</b> <p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -dbgm -->
+<b>-dbgm</b> </td><td valign="bottom">
+Emit a representation of a script showing which
+<!-- .B TARGET -->
+<b>TARGET</b> is to be tested and which operations are to be run based on the results of
+that test.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -dbgp -->
+<b>-dbgp</b> </td><td valign="bottom">
+Emit raw substrings on pattern matches.  This is useful for working out
+regular expressions or sequential pattern matching logic.  For instance,
+to see what a regular expression produces from a test input
+use something like this:
+<!-- .br -->
+<!-- .B echo match_this | extract -pm "p:A_Regular_Expression" "" -dbgp -->
+<!-- Need break --><br>
+<b>echo match_this | extract -pm p:A_Regular_Expression  -dbgp</b> <p>
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -dbgs -->
+<b>-dbgs</b> </td><td valign="bottom">
+Emit call and stack information while a script runs.  Used for debugging
+flow problems in a script.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -dbgv -->
+<b>-dbgv</b> </td><td valign="bottom">
+Emit information for all 26 <b>STRING</b> variables.  This is done once in the read loop,
+before the
+<!-- .B -fmt -->
+<b>-fmt</b> is executed.  For debugging in scripts use instead
+<!-- .B -op "~VLIST", -->
+<b>-op ~VLIST ,</b> which shows the information for just the variables in
+<!-- .B VLIST -->
+<b>VLIST</b> at a particular place in the script.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -dl " <delimiter_string>" -->
+<b>-dl</b><i> &lt;delimiter_string&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Change the delimiters used to define tokens. 
+Typically
+<!-- .B <delimiter_string> -->
+<b>&lt;delimiter_string&gt;</b> must be quoted or escaped on the command line so
+that the shell does not interpret it.  (Default string contains
+the characters
+<!-- .B space, -->
+<b>space,</b> <!-- .B colon,  -->
+<b>colon,</b> and
+<!-- .B tab -->
+<b>tab</b> )
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -dt -->
+<b>-dt</b> </td><td valign="bottom">
+When tokens are emitted followed by delimiters use as that delimiter that which defined the end
+of the current token.  (Default).  See also
+<!-- .B -d- -->
+<b>-d-</b> and
+<!-- .B -dv. -->
+<b>-dv.</b> <p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -dq -dqs -->
+<b>-dq -dqs</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+While parsing tokens ignore delimiters within double quotes.  
+<!-- .B -dq -->
+<b>-dq</b> returns the token
+with the surrounding double quotes,
+<!-- .B -dqs -->
+<b>-dqs</b> returns the token without the quotes.  (Default is to recognize delimiters
+no matter where they occur.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -dv " <delimit_character>" -->
+<b>-dv</b><i> &lt;delimit_character&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+When tokens are emitted followed by delimiters use
+<!-- .B -dv " <delimit_character>". -->
+<b>-dv  &lt;delimit_character&gt; .</b> (Default is
+<!-- .B -dt -->
+<b>-dt</b> ).
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -d- -->
+<b>-d-</b> </td><td valign="bottom">
+Do not emit a delimiter following a token.  This is most often used
+in combination with the
+<!-- .B -s,  -->
+<b>-s,</b> <!-- .B -pd, -->
+<b>-pd,</b> <!-- .B -fw, -->
+<b>-fw,</b> and
+<!-- .B -j* -->
+<b>-j*</b> switches. (Default is
+<!-- .B -dt -->
+<b>-dt</b> , see also
+<!-- .B -dv -->
+<b>-dv</b> ).
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -desc -->
+<b>-desc</b> </td><td valign="bottom">
+Process (Do) ESCapes at output, converts \\ to \ and so forth. The last
+character in a string cannot act as an escape even if it is a backslash.
+Differs from
+<!-- .B STRING SYNTAX -->
+<b><a href="#7">STRING SYNTAX</a></b> substitution in that [[ and ]] are not special.
+(Default is that backslash is not a special character.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -ec " <end_column>" -->
+<b>-ec</b><i> &lt;end_column&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+The last character column to select.  (Default is
+<!-- .B -1, -->
+<b>-1,</b> the last column.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -ecc " <escape_character>" -->
+<b>-ecc</b><i> &lt;escape_character&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+When set the escape character for the
+<!-- .B -bs,ba,b2 -->
+<b>-bs,ba,b2</b> commands becomes
+<!-- .B "<escape_character>". -->
+<b>&lt;escape_character&gt; .</b> This may be used to separate character based columns with delimiters so that
+the result can be read into a spreadsheet easily.  (The default escape character is a backslash.)
+<p>
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -eoc -->
+<b>-eoc</b> </td><td valign="bottom">
+Terminate input from a
+<!-- .B -cmd -->
+<b>-cmd</b> file.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -eol " <eolstring>" -->
+<b>-eol</b><i> &lt;eolstring&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+When set the output from each input row is terminated with
+<!-- .B "<eolstring>." -->
+<b>&lt;eolstring&gt;.</b> Specifically, there will be one
+<!-- .B "<eolstring>" -->
+<b>&lt;eolstring&gt;</b> emitted for each input row even if the rest of the output row is empty.
+<!-- .B "<eolstring>" -->
+<b>&lt;eolstring&gt;</b> may be an empty string.
+This may be used to compress multiple input lines into a single
+output line. Typically
+<!-- .B \en -->
+<b>\n</b> would be injected into the output
+through
+<!-- .B -if -->
+<b>-if</b> and/or
+<!-- .B -fmt -->
+<b>-fmt</b> and a comma, space
+or colon would be used for
+<!-- .B <eolstring>. -->
+<b>&lt;eolstring&gt;.</b> (Default value of
+<!-- .B <eolstring> -->
+<b>&lt;eolstring&gt;</b> is
+<!-- .B \en -->
+<b>\n</b> )
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -eqlen -->
+<b>-eqlen</b> </td><td valign="bottom">
+When reading from multiple input files require that they all have exactly the
+same number of lines.  (Default is to read as many lines as are present in each.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -er " <end_row>" -->
+<b>-er</b><i> &lt;end_row&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+The last text row to process.  (Default is the last row in the file.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -esc -->
+<b>-esc</b> </td><td valign="bottom">
+Respect escapes (backslashes) when parsing text into tokens.  If the input
+is "foo\ bar two" the default
+<!-- .B -mt -->
+<b>-mt</b> parsing will produce three tokens "foo\", "bar", and "two".
+With
+<!-- .B -esc -->
+<b>-esc</b> it will produce two tokens "foo\ bar" and "two".
+Note that the escape character is not removed, use
+<!-- .B -desc -->
+<b>-desc</b> for that.
+(Default is that backslash is not a special character.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -ffe -fff -ffd -ffu -ffo -ffx -->
+<b>-ffe -fff -ffd -ffu -ffo -ffx</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Format a text fragment assuming it contains a numeric representation.  If the fragment cannot
+be converted into a valid number a fatal error will result.  Also sets the default
+format for numeric variables.   Numeric values are formatted starting from a double
+precision floating representation.  That type is used directly for exponent <b>-ffe</b> and floating
+<b>-ffd</b> formats, is first converted to a signed integer for <b>-ffd</b> format, or converted to
+an unsigned integer for <b>-ffu</b>, <b>-ffo</b>, or <b>-ffx</b> (decimal, octal, or hexadecimal)
+formats.  Integer conversions truncate at the upper or lower limits if the initial value is out
+of that integer type&#8217;s range.  The precision is set by
+<!-- .B -fp -->
+<b>-fp</b> and is the number of
+digits after the decimal point for a floating point value, or the number of digits shown for an integer
+value.   For integer values this is how leading zero characters are determined.  The field
+width is set by
+<!-- .B -fw -->
+<b>-fw</b> or
+<!-- .B -pd. -->
+<b>-pd.</b> If
+the resulting formatted number will not fit into the designated width
+the output will be expanded to fit, so be sure to leave enough
+space for the largest possible number.  Formatting examples (for the
+value 123.4567 with precision 6): 1.234567e+02 (<b>-ffe</b>)
+, 123.456700(<b>-ffd</b>)
+, 000123(<b>-ffd</b>)
+, 000123(<b>-ffu</b>)
+, 000173(<b>-ffo</b>)
+, 00007b(<b>-ffx</b>).  (Default is to format fields as text.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -filebol " <STRING>" -->
+<b>-filebol</b><i> &lt;STRING&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Writes
+<!-- .B "<STRING>" -->
+<b>&lt;STRING&gt;</b> before the stream of data to the output file.
+See also
+<!-- .B -fileeol. -->
+<b>-fileeol.</b> (Default is not to write a string before the data stream.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fileeol " <STRING>" -->
+<b>-fileeol</b><i> &lt;STRING&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Writes
+<!-- .B "<STRING>" -->
+<b>&lt;STRING&gt;</b> after the stream of data to the output file.
+See also
+<!-- .B -filebol. -->
+<b>-filebol.</b> ( Default is not to send a string after the data stream.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fmt " <format>" -->
+<b>-fmt</b><i> &lt;format&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Specify in great detail the format of the output line including the selection
+of multiple columns from each input line. &lt;format&gt; consists of any combination
+of
+<!-- .B STRINGs -->
+<b>STRINGs</b> and
+<!-- .B FIELDs. -->
+<b>FIELDs.</b> (Default is to select a single column, which may be the entire input line.)
+<p>
+When
+<!-- .B -fmt -->
+<b>-fmt</b> is specified the other command line options specify the
+default values for all column fields.
+Multiple column fields (indicated by
+<!-- .B [] -->
+<b>[]</b> brackets within
+<!-- .B " <format>" -->
+<b> &lt;format&gt;</b> ) may be specified.
+Text strings containing any symbol, including escaped characters,
+may be introduced between column fields.  See
+<!-- .B String Syntax -->
+<b><a href="#7">String Syntax</a></b> for examples.
+<!-- .B [ -->
+<b>[</b> and
+<!-- .B ] -->
+<b>]</b> must be escaped in a string
+or they will be intrepreted as the limits of a column field.
+Column fields contain zero or more options delimited by colons (
+<!-- .B : -->
+<b>:</b> ) followed by a mandatory range value.
+Characters
+<!-- .B [ -->
+<b>[</b> and
+<!-- .B ]  -->
+<b>]</b> are not allowed within a column field but all other characters are and
+escapes may be used to include colons.
+Arbitrary combinations of text strings and column fields
+may be employed, freely mixing token and character mode columns,
+and emitting columns in any order, including emitting
+a single column multiple times.
+Typically
+<!-- .B <format> -->
+<b>&lt;format&gt;</b> must be quoted or escaped on the command line so
+that the shell does not mangle it before passing it into the program.
+When one or more consecutive
+<!-- .B FIELDs  -->
+<b>FIELDs</b> operate in token mode
+delimiters are emitted (subject to
+<!-- .B -dt, dV, -->
+<b>-dt, dV,</b> etc.) after each token until
+interrupted by a
+<!-- .B STRING,  -->
+<b>STRING,</b> character or numeric
+<!-- .B FIELD, -->
+<b>FIELD,</b> or the end of the line.
+</p><p>
+The options for a column field are:
+<!-- .B + -->
+<b>+</b> =
+<!-- .B as_set -->
+<b>as_set</b> match command line specifications;
+<!-- .B p -->
+<b>p</b> =
+<!-- .B default -->
+<b>default</b> match program defaults  (overrides
+<!-- .B -pd -->
+<b>-pd</b> ,
+<!-- .B -lj -->
+<b>-lj</b> ,
+<!-- .B -uc -->
+<b>-uc</b> , etc.);
+<!-- .B \- -->
+<b>-</b> =
+<!-- .B disable -->
+<b>disable</b> options.  If employed as a single character it applies to all settings
+and must be the first option within a column field.  As a
+suffix these may be applied singly to each of the
+<!-- .B -fmt -->
+<b>-fmt</b> options.
+</p><p>
+</p><p>
+<!-- .B mt/mc/m-/mp/m+ -->
+<b>mt/mc/m-/mp/m+</b> token mode/character mode/disable/default/as_set.  Also sets the
+delimit state in some instances to match the command line, but this may be overridden again
+by a subsequent :d*: clause in the same column field.   (overrides
+<!-- .B -mt -->
+<b>-mt</b> ,
+<!-- .B -mc -->
+<b>-mc</b> )
+</p><p>
+</p><p>
+<!-- .B jl/jr/jc/j-/jp/j+ -->
+<b>jl/jr/jc/j-/jp/j+</b> justify left/right/center/disable/default/as_set (overrides
+<!-- .B -j* -->
+<b>-j*</b> )
+</p><p>
+</p><p>
+<!-- .B trl/trr/trb/trc/tr-/trp/tr+ -->
+<b>trl/trr/trb/trc/tr-/trp/tr+</b> trim left/right/both/compress/disable/default/as_set (overrides
+<!-- .B -tr* -->
+<b>-tr*</b> )
+</p><p>
+</p><p>
+<!-- .B cu/cl/cf/c-/cp/c+ -->
+<b>cu/cl/cf/c-/cp/c+</b> case upper/lower/first/disable/default/as_set (overrides
+<!-- .B -c* -->
+<b>-c*</b> )
+</p><p>
+</p><p>
+<!-- .B bs/ba/b2/b-/bp/b+ -->
+<b>bs/ba/b2/b-/bp/b+</b> backslashes  apply(as needed)/all/all but first/disable/default/as_set (overrides
+<!-- .B -bs -->
+<b>-bs</b> )
+</p><p>
+<!-- .B eccCHAR/eccp/ecc+ -->
+<b>eccCHAR/eccp/ecc+</b> escape character is
+<!-- .B CHAR -->
+<b>CHAR</b> /default/as_set (overrides
+<!-- .B -ecc -->
+<b>-ecc</b> )
+</p><p>
+<!-- .B dt/dvN/d-/dp/d+ -->
+<b>dt/dvN/d-/dp/d+</b> emit actual token delimiter / char
+<!-- .B N -->
+<b>N</b> / disable / default / as_set.
+Restriction: the delimit character
+<!-- .B N -->
+<b>N</b> must be escaped if it is a colon or a backslash, ie
+<!-- .B \e: -->
+<b>\:</b> and
+<!-- .B \e\e. -->
+<b>\\.</b> (overrides
+<!-- .B -d* -->
+<b>-d*</b> )
+</p><p>
+<!-- .B de/de-/dep/de+         -->
+<b>de/de-/dep/de+</b> Process escapes/ disable/default/as_set.  (overrides
+-.B -desc
+)
+</p><p>
+<!-- .B pd###/pd-/pdp/pd+ -->
+<b>pd###/pd-/pdp/pd+</b> pad with ### spaces/disable/default/as_set (overrides
+<!-- .B -pd -->
+<b>-pd</b> and
+<!-- .B -fw -->
+<b>-fw</b> )
+</p><p>
+<!-- .B fw###/fw-/fwp/fw+ -->
+<b>fw###/fw-/fwp/fw+</b> field width ### spaces/disable/default/as_set (overrides
+<!-- .B -pd -->
+<b>-pd</b> and
+<!-- .B -fw -->
+<b>-fw</b> )
+</p><p>
+<!-- .B fp###/fp-/fpp/fp+ -->
+<b>fp###/fp-/fpp/fp+</b> floating point/integer precision ### spaces/disable/default/as_set (overrides
+<!-- .B -fp -->
+<b>-fp</b> )
+</p><p>
+<!-- .B fff/ffe/ffd/ffu/ffo/ffx/ff-/ffp/ff+ -->
+<b>fff/ffe/ffd/ffu/ffo/ffx/ff-/ffp/ff+</b> floating point format to float/exponent/int/unsigned int/octal int/hex int/default/as_set (overrides
+<!-- .B -ffe, -fff, -ffd, -ffu, -ffo, -->
+<b>-ffe, -fff, -ffd, -ffu, -ffo,</b> and
+<!-- .B -ffx -->
+<b>-ffx</b> )
+</p><p>
+<!-- .B nz/nz-/nzp/nz+ -->
+<b>nz/nz-/nzp/nz+</b> print -0 as -0 for <b>fff</b> and <b>ffe</b>, otherwise print it as 0, enable/disable/default/as_set
+</p><p>
+<!-- .B psP/ps-/psp/ps+ -->
+<b>psP/ps-/psp/ps+</b> Pattern substitution at output.  The match/substitution is written directly to the output buffer
+so that the input buffer is not modified in any way. P = predefined pattern {0-9}.
+Pattern substitution is: From pattern P/disable/default/as_set
+Examples: ps or ps0 use pattern 0, ps3 uses pattern 3. (overrides <b>-ps</b>).
+</p><p>
+<!-- .B rsSTR/rs-/rsp/rs+ -->
+<b>rsSTR/rs-/rsp/rs+</b> replacement string is
+<!-- .B STR -->
+<b>STR</b> /disable/default/as_set.  Restriction:
+<!-- .B STR -->
+<b>STR</b> may not contain a colon. (overrides
+<!-- .B -rs -->
+<b>-rs</b> )
+</p><p>
+<!-- .B rcdsSTR/rcdcSTR/rcd-/rcdp/rcd+ -->
+<b>rcdsSTR/rcdcSTR/rcd-/rcdp/rcd+</b> rcds string is
+<!-- .B STR -->
+<b>STR</b> /case insensitive
+<!-- .B STR -->
+<b>STR</b> /disable/default/as_set.  Restriction:
+<!-- .B STR -->
+<b>STR</b> may not contain a colon. (overrides
+<!-- .B -rcds -->
+<b>-rcds</b> )
+</p><p>
+</p><p>
+<!-- .B rcssSTR/rcs-/rcsp/rcs+ -->
+<b>rcssSTR/rcs-/rcsp/rcs+</b> rcss string is
+<!-- .B STR -->
+<b>STR</b> /disable/default/as_set.  Restriction:
+<!-- .B STR -->
+<b>STR</b> may not contain a colon. (overrides
+<!-- .B -rcss -->
+<b>-rcss</b> )
+</p><p>
+<!-- .B rtdsSTR/rtdcSTR/rtd-/rtdp/rtd+ -->
+<b>rtdsSTR/rtdcSTR/rtd-/rtdp/rtd+</b> rtds string is
+<!-- .B STR -->
+<b>STR</b> /case insensitive
+<!-- .B STR -->
+<b>STR</b> /disable/default/as_set.  Restriction:
+<!-- .B STR -->
+<b>STR</b> may not contain a colon. (overrides 
+<!-- .B -rtds -->
+<b>-rtds</b> )
+</p><p>
+<!-- .B rtssSTR/rtsvN/rts-/rtsp/rts+ -->
+<b>rtssSTR/rtsvN/rts-/rtsp/rts+</b> rtss string is
+<!-- .B STR -->
+<b>STR</b> /variable N/disable/default/as_set.  Restriction:
+<!-- .B STR -->
+<b>STR</b> may not contain a colon. (overrides
+<!-- .B -rtss -->
+<b>-rtss</b> )
+</p><p>
+<!-- .B sortas/sortds/sortac/sortac/sortan/sortdn/sort-/sortp/sort+ -->
+<b>sortas/sortds/sortac/sortac/sortan/sortdn/sort-/sortp/sort+</b> sort methods ... /disable/default/as_set.  (overrides
+<!-- .B -sortas etc. -->
+<b>-sortas etc.</b> )
+</p><p>
+<!-- .B map$M/ump$M -->
+<b>map$M/ump$M</b> Map/<b>U</b>n<b>M</b>a<b>P</b> input token positions to output positions.
+Numeric variable <b>$M</b> holds a <b>MAP</b>. For <b>map</b> the token at output
+position <i>i</i> is that from input position <b>$M[</b><tt></tt><i>i</i><b>]</b>.
+For <b>ump</b> the token at output
+position <b>$M[</b><tt></tt><i>i</i><b>]</b> is that from input position <i>i</i>.
+There is no
+corresponding command line option. Overrides
+Range, setting it to <b>[1,N,1]</b>, where <b>N</b> is the <b>MAP</b> size.
+A single field may not combine <b>map</b>,<b>ump</b> and <b>sort</b> modifiers.
+</p><p>
+<!-- .B Range -->
+<b>Range</b> The region to process, for instance [1,5] is the first 5 columns
+or tokens, depending on mode. See
+<!-- .B DEFINITIONS -->
+<b><a href="#6">DEFINITIONS</a></b> for the range syntax.
+</p><p>
+</p><p>
+The default source is the input line, but variables may be used instead by
+specifying one of the following within the [] range specifier:
+<!-- .RS 6 -->
+<!-- .br -->
+<!-- .B vABC...Z -->
+<!-- Need break --><br>
+<b>vABC...Z</b> Variable values, in the order listed. Character or token mode.
+A variable may appear more than once on the list.  The values are
+selected by the range value, the specified formatting applied,
+and then the values are concatenated.
+<!-- .br -->
+<!-- .B =ABC...Z -->
+<!-- Need break --><br>
+<b>=ABC...Z</b> Variable token values interleaved, missing filled from <b>-rs</b>. TOKEN MODE only.
+<!-- .br -->
+<!-- .B @ABC...Z -->
+<!-- Need break --><br>
+<b>@ABC...Z</b> Variable token values interleaved by token.  TOKEN MODE only.
+If a variable&#8217;s Nth token does not exist it is replaced with
+by its first/last token for positive/negative range increments.
+<!-- .br -->
+<!-- Need break --><br>
+<b>v$VLIST</b>, <b>=$VLIST</b>, or <b>@$VLIST</b> use numeric variables instead.
+Numeric and string variables cannot be combined in a single [] field.
+<!-- .RE -->
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fp " <precision>" -->
+<b>-fp</b><i> &lt;precision&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+The precision for floating point formats.
+See
+<!-- .B -fff -->
+<b>-fff</b> etc.
+(Default precision is 6.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -fw " <number_of_characters>" -->
+<b>-fw</b><i> &lt;number_of_characters&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B <number_of_characters> -->
+<b>&lt;number_of_characters&gt;</b> specifies the field width.  The input field is either padded
+or truncated as required.  See also
+<!-- .B -pd. -->
+<b>-pd.</b> (Default is 0 - no change to field sizes.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -h -help --help -? --?? -->
+<b>-h -help --help -? --??</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Print the help message. (Default is not to print help message.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -hexamples -->
+<b>-hexamples</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Print examples. (Default is not to print examples.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -hfmt -->
+<b>-hfmt</b> </td><td valign="bottom">
+Print detailed
+<!-- .B -fmt -->
+<b>-fmt</b> help. (Default is not to print the
+<!-- .B -fmt -->
+<b>-fmt</b> help message.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -hmath -->
+<b>-hmath</b> </td><td valign="bottom">
+Print detailed information on math expression. (Default is not to print
+this help message.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -hnd -->
+<b>-hnd</b> </td><td valign="bottom">
+If embedded null characters are encountered in the input they
+are deleted.
+<!-- .B hnd -->
+<b>hnd</b> is an acronym for "Handle Nulls Delete".  See also
+<!-- .B -hnr,-hns,-hnd,-hnsubs. -->
+<b>-hnr,-hns,-hnd,-hnsubs.</b> (Default is
+<!-- .B -hnr -->
+<b>-hnr</b> )
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -hnr -->
+<b>-hnr</b> </td><td valign="bottom">
+If embedded null characters are encountered in the input they
+are retained.  However, the appearance of such a null character
+is a fatal event since a string containing them cannot be further
+processed. 
+<!-- .B hnr -->
+<b>hnr</b> is an acronym for "Handle Nulls Retain".  See also
+<!-- .B -hnd,-hns,-hnsubs. -->
+<b>-hnd,-hns,-hnsubs.</b> (Default)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -hns -->
+<b>-hns</b> </td><td valign="bottom">
+If embedded null characters are encountered in the input they
+are substituted with \255.
+<!-- .B hns -->
+<b>hns</b> is an acronym for "Handle Nulls Substitute".
+See also
+<!-- .B -hnr,-hnd,-hnsubs. -->
+<b>-hnr,-hnd,-hnsubs.</b> (Default is
+<!-- .B -hnr. -->
+<b>-hnr.</b> )
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -hnsubs " <CHAR>" -->
+<b>-hnsubs</b><i> &lt;CHAR&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+If embedded null characters are encountered in the input they
+are substituted with
+<!-- .B <CHAR>. -->
+<b>&lt;CHAR&gt;.</b> <!-- .B hnsubs -->
+<b>hnsubs</b> is an acronym for "Handle Nulls Substitute".  See also
+<!-- .B -hnr,-hnd,-hns. -->
+<b>-hnr,-hnd,-hns.</b> (Default is
+<!-- .B -hnr. -->
+<b>-hnr.</b> )
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -hpat -->
+<b>-hpat</b> </td><td valign="bottom">
+Print detailed pattern mode help. (Default is not to print this help.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -hvar -->
+<b>-hvar</b> </td><td valign="bottom">
+Print detailed variable usage help. (Default is not to print this help.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -i -->
+<b>-i</b> </td><td valign="bottom">
+Emit version, copyright, license and contact information.
+(Default is not to emit information.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -if " <tag>" -->
+<b>-if</b><i> &lt;tag&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Conditionally operate on an input line.  The syntax for
+<!-- .B <tag> -->
+<b>&lt;tag&gt;</b> is
+<!-- .B "[!][^]string[$]" -->
+<b>[!][^]string[$]</b> , where:
+<!-- .B string -->
+<b>string</b> is any text which may contain tab and numeric escapes
+as for
+<!-- .B -dl -->
+<b>-dl</b> ;
+<!-- .B ^ -->
+<b>^</b> string is located at the front of a line
+;
+<!-- .B $ -->
+<b>$</b> string is located at the end of a line
+;
+<!-- .B ! -->
+<b>!</b> invert logic - operate when string is not found.
+If neither
+<!-- .B ^ -->
+<b>^</b> nor
+<!-- .B $ -->
+<b>$</b> is present
+<!-- .B string -->
+<b>string</b> may appear anywhere in a line.
+These special characters must be escaped when they are part of the
+<!-- .B string -->
+<b>string</b> part of the expression:
+<!-- .B ^ -->
+<b>^</b> ,
+<!-- .B $ -->
+<b>$</b> ,
+<!-- .B ! -->
+<b>!</b> , and
+<!-- .B \e. -->
+<b>\.</b> Lines containing the
+<!-- .B <tag> -->
+<b>&lt;tag&gt;</b> are processed, other
+lines are just echoed to the output.  Use
+<!-- .B ^$ -->
+<b>^$</b> to match an empty string and
+<!-- .B !^$ -->
+<b>!^$</b> to match all nonempty strings.  (An empty string is one containing
+no characters.)   Command line interpreters may interfere with some of
+the special characters.  If that occurs use decimal representations:
+<!-- .B \e33 -->
+<b>\33</b> for
+<!-- .B ! -->
+<b>!</b> ,
+<!-- .B \e94 -->
+<b>\94</b> for
+<!-- .B ^ -->
+<b>^</b> ,
+<!-- .B \e36 -->
+<b>\36</b> for
+<!-- .B $. -->
+<b>$.</b> See also
+<!-- .B -ifonly. -->
+<b>-ifonly.</b> (Default is to process all lines within the specified row range.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -ifbol -->
+<b>-ifbol</b> </td><td valign="bottom">
+When set those rows in an if block are emitted
+without the BOL string prefixed.
+This is used primarily to mark all rows other than those in
+the if block with a prefix tag.  (Default is to emit the
+<!-- .B BOL -->
+<b>BOL</b> string.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -ifeol -->
+<b>-ifeol</b> </td><td valign="bottom">
+When set those rows in an if block are emitted
+without an EOL character.  This may be used to compress multiple input lines
+within an if block into a single output line.
+(Default is to emit the
+<!-- .B EOL -->
+<b>EOL</b> string.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -ifn " <N>" -->
+<b>-ifn</b><i> &lt;N&gt;</i> </td><td valign="bottom">
+Extends the condition set by
+<!-- .B -if -->
+<b>-if</b> for
+<!-- .B <N> -->
+<b>&lt;N&gt;</b> more lines.
+May not be combined with
+<!-- .B -ifterm. -->
+<b>-ifterm.</b> (Default is not to extend the conditional processing.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -ifonly -->
+<b>-ifonly</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+When set only those rows satisfying
+<!-- .B -if -->
+<b>-if</b> and
+<!-- .B -ifn -->
+<b>-ifn</b> are emitted.  (Default is to emit other lines
+unchanged.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -ifnorestart -->
+<b>-ifnorestart</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Normally within an
+<!-- .B -if -->
+<b>-if</b> block each line is tested to see if it matches the
+<!-- .B -if " <tag>" -->
+<b>-if  &lt;tag&gt;</b> and if it does the block is extended.  This happens when
+either
+<!-- .BI -ifn " <N>" -->
+<b>-ifn</b><i> &lt;N&gt;</i> or
+<!-- .BI -ifterm " <endtag>" -->
+<b>-ifterm</b><i> &lt;endtag&gt;</i> is also specified.  If
+<!-- .B -ifnorestart -->
+<b>-ifnorestart</b> is specified under these conditions lines within an existing
+<!-- .B -if -->
+<b>-if</b> block are not tested and so the block will not be "restarted".
+(Default is to restart.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -ifterm " <endtag>" -->
+<b>-ifterm</b><i> &lt;endtag&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Extends the condition set by
+<!-- .B -if -->
+<b>-if</b> through the first
+line containing the
+<!-- .B <endtag>. -->
+<b>&lt;endtag&gt;.</b> The rules for
+processing the
+<!-- .B <endtag> -->
+<b>&lt;endtag&gt;</b> are the same as for the
+<!-- .BI -if " <tag>". -->
+<b>-if</b><i> &lt;tag&gt;</i><b>.</b> May not be combined with
+<!-- .B -ifn. -->
+<b>-ifn.</b> When the tags are chosen so
+that the beginning
+<!-- .B -if -->
+<b>-if</b> and terminating
+<!-- .B -ifterm -->
+<b>-ifterm</b> are not
+the same line use
+<!-- .BI -iftermeol " <STRING>" -->
+<b>-iftermeol</b><i> &lt;STRING&gt;</i> to finish off
+the end of the if block.  When these tags are the same
+the
+<!-- .B <endtag> -->
+<b>&lt;endtag&gt;</b> really indicates the input line
+following the preceding if block.  In this case use
+<!-- .BI -iftermbol " <STRING>" -->
+<b>-iftermbol</b><i> &lt;STRING&gt;</i> to write a string between the
+two if blocks and do not use
+<!-- .B -iftermeol. -->
+<b>-iftermeol.</b> (Default is not to extend conditional processing.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -iftermbol " <STRING>" -->
+<b>-iftermbol</b><i> &lt;STRING&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Writes
+<!-- .B <STRING> -->
+<b>&lt;STRING&gt;</b> before the first character in the last line of an
+<!-- .B -if -->
+<b>-if</b> block.  That line is determined by either
+<!-- .BI -ifn " <N>"  -->
+<b>-ifn</b><i> &lt;N&gt;</i> or
+<!-- .BI -ifterm " <endtag>" -->
+<b>-ifterm</b><i> &lt;endtag&gt;</i> or the end of the file.  Primarily this
+is useful when
+<!-- .BI -ifterm " <endtag>" -->
+<b>-ifterm</b><i> &lt;endtag&gt;</i> and
+<!-- .BI -if " <tag>" -->
+<b>-if</b><i> &lt;tag&gt;</i> are the same and a separator needs to be written between consecutive
+if blocks. Only one
+<!-- .B <STRING> -->
+<b>&lt;STRING&gt;</b> is written for each if block terminator no matter
+how many input lines the block contains.
+(Default value is an empty string.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -iftermeol " <STRING>" -->
+<b>-iftermeol</b><i> &lt;STRING&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Writes
+<!-- .B <STRING> -->
+<b>&lt;STRING&gt;</b> after the last character in an
+<!-- .B -if -->
+<b>-if</b> block.  The end of the block is determined from
+<!-- .BI  -ifn " <N>" -->
+<b>-ifn</b><i> &lt;N&gt;</i> , or
+<!-- .BI -ifterm " <endtag>" -->
+<b>-ifterm</b><i> &lt;endtag&gt;</i> , or if neither of these are specified, the first line not matching
+<!-- .BI -if " <tag>" -->
+<b>-if</b><i> &lt;tag&gt;</i> , or the end of the file.  Only one
+<!-- .B <STRING> -->
+<b>&lt;STRING&gt;</b> is written for each if block terminator no matter how many
+input lines the block contains.
+(Default value is an empty string.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -in " file1[,file2,file3,..fileN]" -->
+<b>-in</b><i> file1[,file2,file3,..fileN]</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Read input from one or more specified files
+in a comma delimited list.
+When reading from more than one
+file the lines from each are concatenated
+into a single input line in the order shown.  Use
+<!-- .B -indl -->
+<b>-indl</b> to delimit the substrings.  The special
+file name
+<!-- .B \- -->
+<b>-</b> corresponds to stdin.  Only a single
+input file may be read from stdin.  See also 
+<!-- .B -eqlen. -->
+<b>-eqlen.</b> The
+<!-- .B -h -->
+<b>-h</b> option displays the maximum number of input files.
+(Default is to read from stdin.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -indl " <StreamDelimit>" -->
+<b>-indl</b><i> &lt;StreamDelimit&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+When reading from more than one input file the string
+<!-- .B <StreamDelimit> -->
+<b>&lt;StreamDelimit&gt;</b> is placed between each substring in the resultant final input string.
+(Default is an empty string - input strings are directly concatenated.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -is -->
+<b>-is</b> </td><td valign="bottom">
+Modify the indicated character or token range "in situ" and
+emit them and the unmodified surrounding region.
+This option may not be used
+with
+<!-- .B -rm -->
+<b>-rm</b> or
+<!-- .B -fmt. -->
+<b>-fmt.</b> (Default is to emit only
+the selected character/token range.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -jl -jc -jr -->
+<b>-jl -jc -jr</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Justify field left, center, or right.
+(Default is not to change justification.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -ll -->
+<b>-ll</b> </td><td valign="bottom">
+Prefix each line of output with  "line_length:".  The line
+length is the number of characters in the final input line
+after reading a line from all input files and inserting delimiters.
+(Default is  not to emit line lengths.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -lt -->
+<b>-lt</b> </td><td valign="bottom">
+Prefix each line of output with  "token_count:".  The token
+count is the number of tokens in the final input line
+after reading a line from all input files and inserting delimiters.
+This value will be zero unless
+<!-- .B -mt -->
+<b>-mt</b> is specified, or
+<!-- .B mt -->
+<b>mt</b> is used in a
+<!-- .B -fmt -->
+<b>-fmt</b> field.
+(Default is  not to emit line token counts.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -mc -->
+<b>-mc</b> </td><td valign="bottom">
+Process lines as character columns. See also
+<!-- .B -mt. -->
+<b>-mt.</b> (Default.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -merge " <N>" -->
+<b>-merge</b><i> &lt;N&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Examine the
+<!-- .B <N> -->
+<b>&lt;N&gt;</b> first characters in consecutive rows.  If they
+are the same emit the
+<!-- .B <N> -->
+<b>&lt;N&gt;</b> character prefix once and the remainder
+of each matching row in sequence as one new row.  Use
+<!-- .B -mdl  -->
+<b>-mdl</b> to place
+delimiters between these fragments.  The comparison is case sensitive.
+Prefix based merging follows merging from multiple input files and
+precedes any
+<!-- .B if -->
+<b>if</b> contingent operations.  See also
+<!-- .B -unmerge. -->
+<b>-unmerge.</b> (Default is not to merge based on common prefix.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -mdl " <MergeDelimit>" -->
+<b>-mdl</b><i> &lt;MergeDelimit&gt;</i> </td><td valign="bottom">
+When
+<!-- .B -merge -->
+<b>-merge</b> is set and consecutive rows are being concatenated
+introduce the string
+<!-- .B <MergeDelimit> -->
+<b>&lt;MergeDelimit&gt;</b> between the fragments from
+each row. (Default is an empty string - input strings are
+directly concatenated.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -mt -->
+<b>-mt</b> </td><td valign="bottom">
+Process lines as tokens.  In this mode
+<!-- .B -sc -->
+<b>-sc</b> ,
+<!-- .B -ec -->
+<b>-ec</b> , and
+<!-- .B -nc -->
+<b>-nc</b> values refer to token numbers.
+If a single
+token is emitted then no delimiter is emitted with it.  However, two or more
+tokens are emitted as:
+<!-- .br -->
+<!-- .B token1 delim1 token2 delim2 token3 ... tokenN -->
+<!-- Need break --><br>
+<b>token1 delim1 token2 delim2 token3 ... tokenN</b> <!-- .br -->
+<!-- Need break --><br>
+Where:
+<!-- .B delim1 -->
+<b>delim1</b> is the first delimiter following
+<!-- .B token1. -->
+<b>token1.</b> Note that no terminal delimiter is added after
+the last token.
+This mode is appropriate when delimiters are white space.
+Add
+<!-- .B -s -->
+<b>-s</b> when every delimiter indicates a token and empty tokens
+are allowed.  For instance, when reading spreadsheet data.
+See also
+<!-- .B -dl. -->
+<b>-dl.</b> (Default is
+<!-- .B -mc. -->
+<b>-mc.</b> )
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -n -->
+<b>-n</b> </td><td valign="bottom">
+Prefix each line of output with:  "line_number:".  The line number
+is that line&#8217;s position in the input file.
+(Default is not to number input lines.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -nc " <number_of_columns>" -->
+<b>-nc</b><i> &lt;number_of_columns&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Number of columns to process starting from
+<!-- .B sc.  -->
+<b>sc.</b> Do not specify both
+<!-- .B -nc -->
+<b>-nc</b> and
+<!-- .B -ec.  -->
+<b>-ec.</b> (Default is to process all columns.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -nr " <number_of_rows>" -->
+<b>-nr</b><i> &lt;number_of_rows&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Number of text rows to process starting from
+<!-- .B sr. -->
+<b>sr.</b> Do not specify both
+<!-- .B -nr -->
+<b>-nr</b> and
+<!-- .B -er.  -->
+<b>-er.</b> (Default is to process all rows.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -nz -->
+<b>-nz</b> </td><td valign="bottom">
+Print -0 as -0 in <b>ffe</b> and <b>fff</b> formats (Default = print as 0).
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -op "N <OPERATIONS>" -->
+<b>-op</b><i>N &lt;OPERATIONS&gt;</i> </td><td valign="bottom">
+Run the
+<!-- .B OPERATIONS, -->
+<b>OPERATIONS,</b> all of which must be in the True branch.  It is an error if any are present
+in the (unreachable) False branch. If
+<!-- .B N -->
+<b>N</b> is specified the <b>TARGET</b> is a variable A-Z, otherwise the
+<b>TARGET</b>  is the input.
+An unlimited number of these may be used on the command line via the
+<!-- .B -cmd, -eoc -->
+<b>-cmd, -eoc</b> mechanism and incorporated into scripts.  See
+<!-- .B DEFINITIONS -->
+<b><a href="#6">DEFINITIONS</a></b> for the syntax for
+<!-- .B OPERATIONS. -->
+<b>OPERATIONS.</b> <p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -out " file0[,file1,...file9]" -->
+<b>-out</b><i> file0[,file1,...file9]</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Open up to 10 output files.  Use "-" to direct one stream to stdout.
+Only scripts are able to direct output to streams 1-9.
+(Default is to write everything to stdout.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -pd " <number_of_characters>" -->
+<b>-pd</b><i> &lt;number_of_characters&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Specifies the
+<!-- .B <number_of_characters> -->
+<b>&lt;number_of_characters&gt;</b> (spaces) to be added to the
+right side of the field.   When fields are processed
+they are padded, then justified, then the character cases adjusted.  See also
+<!-- .B -fw.  -->
+<b>-fw.</b> (Default is 0 - no padding.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -pm "N <PATTERN> <OPERATIONS>" -->
+<b>-pm</b><i>N &lt;PATTERN&gt; &lt;OPERATIONS&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Pattern match.  If
+<!-- .B N -->
+<b>N</b> is specified the 
+<!-- .B TARGET -->
+<b>TARGET</b> is a variable A-Z, otherwise the 
+<!-- .B TARGET -->
+<b>TARGET</b> is the input.
+An unlimited number of these may be used on the command line via the
+<!-- .B -cmd, -eoc -->
+<b>-cmd, -eoc</b> mechanism and incorporated into scripts.  If
+<!-- .B PATTERN -->
+<b>PATTERN</b> matches then the True branch of
+<!-- .B OPERATIONS -->
+<b><a href="#10">OPERATIONS</a></b> executes, otherwise, the
+False branch executes.  See
+<!-- .B DEFINITIONS -->
+<b><a href="#6">DEFINITIONS</a></b> for the syntax for 
+<!-- .B PATTERN  -->
+<b>PATTERN</b> and 
+<!-- .B OPERATIONS. -->
+<b>OPERATIONS.</b> <p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -po "N <parse_options>" -->
+<b>-po</b><i>N &lt;parse_options&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Create up to 10 sets of parse options (for
+<!-- .I N -->
+<i>N</i> = 0-9), which determine the rules
+for finding tokens within a string.  The first is applied to the input line if tokens
+are needed.  All may be used to parse strings stored in
+variables by using the <b>po#</b><i>VLIST</i> operation in an <b>-op/-pm/-pmN</b> statement (see
+<b><a href="#10">OPERATIONS</a></b>).
+The first one may be set with
+<!-- .B -dq/-dqs/-esc/-s/-dl/-mdl -->
+<b>-dq/-dqs/-esc/-s/-dl/-mdl</b> on the command line.  It may also be set using
+<!-- .B <parse_options> -->
+<b>&lt;parse_options&gt;</b> which is a colon delimited string of parsing specifiers.
+The other parse option groups must be entered using colon delimited
+specifiers.  Multiple
+<!-- .B -po  -->
+<b>-po</b> options must be entered sequentially in ascending order.
+<!-- .B -po -->
+<b>-po</b> is synonymous with
+<!-- .B -po0. -->
+<b>-po0.</b> The syntax for the specifiers is:
+<p>
+<!-- .B dq,dqs,dq-,dqp,dq+ -->
+<b>dq,dqs,dq-,dqp,dq+</b> modifies parsing of double quoted text (like
+<!-- .B -dq, -dqs -->
+<b>-dq, -dqs</b> ):
+respect, respect &amp; strip, disable, default, as_set
+</p><p>
+<!-- .B sd,sd-,sdp,sd+ -->
+<b>sd,sd-,sdp,sd+</b> modifies parsing of delimiter runs (like
+<!-- .B -s -->
+<b>-s</b> ):
+token for: each, run, default, as_set
+</p><p>
+<!-- .B esc,esc-,escp,esc+ -->
+<b>esc,esc-,escp,esc+</b> modifies parsing of escape sequences (like
+<!-- .B -esc -->
+<b>-esc</b> ):
+process escapes: yes, no, default, as_set
+</p><p>
+<!-- .B dlvSTR,dlp,dl+ -->
+<b>dlvSTR,dlp,dl+</b> sets delimiter string (like
+<!-- .B -dl -->
+<b>-dl</b> ):
+becomes STR, default, as_set.  (There is no
+<!-- .B dl-  -->
+<b>dl-</b> because tokens cannot be parsed without delimiters.)
+</p><p>
+<!-- .B mdlvSTR,mdlp,mdl+ -->
+<b>mdlvSTR,mdlp,mdl+</b> sets merge delimiter string (like
+<!-- .B -mdl -->
+<b>-mdl</b> ): becomes STR, default, as_set.  mdl- is forbidden.
+</p><p>
+Example:
+<!-- .B -po3 'dq:dlv\et'  -->
+<b>-po3 &#8217;dq:dlv\t&#8217;</b> <!-- .br -->
+<!-- Need break --><br>
+Parse options for group 3 are: respect double quotes and
+the only delimiters are tabs.
+</p><p>
+</p><p>
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -ps "# <PATTERN> <REPLACE>" -->
+<b>-ps</b><i># &lt;PATTERN&gt; &lt;REPLACE&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Pattern match and then substitute during output. 
+The 
+<!-- .B TARGET -->
+<b>TARGET</b> is the input line.
+Up to 10 of these may be used on the command line but they
+must be numbered sequentially starting from 0.
+<!-- .B -ps -->
+<b>-ps</b> is equivalent to
+<!-- .B -ps0. -->
+<b>-ps0.</b> If no
+<!-- .B -fmt -->
+<b>-fmt</b> is present the substitutions will be attempted in the
+order specified.  If these numbered
+<!-- .B -ps -->
+<b>-ps</b> statements are referenced in a
+<!-- .B -fmt -->
+<b>-fmt</b> field ([]) they may be in any order. See
+<b><a href="#6">DEFINITIONS</a></b>, <b><a href="#8">PATTERNS</a></b>, and 
+<b><a href="#9">REPLACEMENTS</a></b> for syntax information.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -ps "N <PATTERN> <REPLACE>" -->
+<b>-ps</b><i>N &lt;PATTERN&gt; &lt;REPLACE&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Pattern match and then substitute in a script. 
+<!-- .B N -->
+<b>N</b> specifies that the 
+<!-- .B TARGET -->
+<b>TARGET</b> is a variable A-Z.
+An unlimited number of these may be used on the command line via the
+<!-- .B -cmd, -eoc -->
+<b>-cmd, -eoc</b> mechanism and incorporated into scripts.  See
+<b><a href="#6">DEFINITIONS</a></b>, <b><a href="#8">PATTERNS</a></b>, and 
+<b><a href="#9">REPLACEMENTS</a></b> for syntax information.
+<p>
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -rcdc " <RCDS_STRING>" -->
+<b>-rcdc</b><i> &lt;RCDS_STRING&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Case insensitive form of
+<!-- .B -rcds -->
+<b>-rcds</b> <p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -rcds " <RCDS_STRING>" -->
+<b>-rcds</b><i> &lt;RCDS_STRING&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Remove from the output any characters found in the string
+<!-- .B <RCDS_STRING>. -->
+<b>&lt;RCDS_STRING&gt;.</b> If that string begins with
+<!-- .B ! -->
+<b>!</b> only those characters which match will be retained.
+This option may be combined with
+<!-- .B -rcss -->
+<b>-rcss</b> to induce substitution instead of deletion.
+<!-- .B rcds -->
+<b>rcds</b> is an acronym for "Replace Character Delete String".
+(Default is to emit all characters without filtering.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -rcss " <RCSS_STRING>" -->
+<b>-rcss</b><i> &lt;RCSS_STRING&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+When a character matches in
+<!-- .B <RCDS_STRING> -->
+<b>&lt;RCDS_STRING&gt;</b> it is substituted from the same
+position in
+<!-- .B <RCSS_STRING>. -->
+<b>&lt;RCSS_STRING&gt;.</b> These two strings must be the same length.
+When substituting a
+<!-- .B ! -->
+<b>!</b> in
+<!-- .B " <RCDS_STRING>" -->
+<b> &lt;RCDS_STRING&gt;</b> has no special meaning.
+<!-- .B rcss -->
+<b>rcss</b> is an acronym for "Replace Character Substitute String".
+(Default is to emit all characters without filtering.)
+<p>
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -rm -->
+<b>-rm</b> </td><td valign="bottom">
+Remove the selected character columns/tokens instead of emitting them.
+This option may not be used
+with
+<!-- .B -is -->
+<b>-is</b> or
+<!-- .B -fmt. -->
+<b>-fmt.</b> (Default is to emit only the selected character/token range.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -rs " <replacement_string>" -->
+<b>-rs</b><i> &lt;replacement_string&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B <replacement_string> -->
+<b>&lt;replacement_string&gt;</b> substitutes for empty fields.  Typically employed to insert
+<!-- .B NA -->
+<b>NA</b> or
+<!-- .B 0 -->
+<b>0</b> in a tab delimited file which left unspecified values as empty fields.
+Note, a colon (
+<!-- .B : -->
+<b>:</b> ) is used to delimit fields filled with
+<!-- .B <replacement_string>. -->
+<b>&lt;replacement_string&gt;.</b> Use
+<!-- .B -dv -->
+<b>-dv</b> to change this.
+(Default leave empty fields empty.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -rtdc " <RTDC_STRING>" -->
+<b>-rtdc</b><i> &lt;RTDC_STRING&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Case insensitive form of
+<!-- .B -rtds -->
+<b>-rtds</b> <p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -rtds " <RTDS_STRING>" -->
+<b>-rtds</b><i> &lt;RTDS_STRING&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Remove from the input string the text contained in
+<!-- .B <RTDS_STRING>. -->
+<b>&lt;RTDS_STRING&gt;.</b> Multiple instances, if present, will be removed.
+This option may be combined with
+<!-- .B -rtss -->
+<b>-rtss</b> to induce substitution instead of deletion.
+<!-- .B rtds -->
+<b>rtds</b> is an acronym for "Replace Text Delete String".
+(Default is to emit all text without replacement.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -rtss " <RTSS_STRING>" -->
+<b>-rtss</b><i> &lt;RTSS_STRING&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+When a part of a line of text matches
+<!-- .B <RTDS_STRING> -->
+<b>&lt;RTDS_STRING&gt;</b> it is substituted with
+<!-- .B <RTSS_STRING>. -->
+<b>&lt;RTSS_STRING&gt;.</b> These two strings need not be the same length.
+<!-- .B rtss -->
+<b>rtss</b> is an acronym for "Replace Text Substitute String".
+(Default is to emit all text without replacement.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -rtsv "N" -->
+<b>-rtsv</b><i>N</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+When a part of a line of text matches
+<!-- .B <RTDS_STRING> -->
+<b>&lt;RTDS_STRING&gt;</b> it is substituted with
+<!-- .B <variable N>. -->
+<b>&lt;variable N&gt;.</b> These two strings need not be the same length.
+<!-- .B rtsv -->
+<b>rtsv</b> is an acronym for "Replace Text Substitute Variable".
+(Default is to emit all text without replacement.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -s -->
+<b>-s</b> </td><td valign="bottom">
+Emit a token for each delimiter encountered.    When
+<!-- .B -s -->
+<b>-s</b> is specified tokens may consist
+of empty strings.  This mode is for use with delimited data as
+from a spreadsheet. (Default is to emit one token for
+each run of delimiters.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -sc " <start_column>" -->
+<b>-sc</b><i> &lt;start_column&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+The first character column to select.  Columns are numbered from 1.  Negative values
+are allowed and represent columns measured from the end of the line, where -1 is the last
+column.  (Default is
+<!-- .B 1, -->
+<b>1,</b> the first column.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -sect " <section>" -->
+<b>-sect</b><i> &lt;section&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Defines a section of a script stored in a
+<!-- .B -cmd -->
+<b>-cmd</b> file.
+<!-- .B section -->
+<b>section</b> may be
+<!-- .B Common, Before, Main, -->
+<b>Common, Before, Main,</b> or
+<!-- .B After -->
+<b>After</b> (not case sensitive).  Script lines placed in <b>Common</b> only
+execute when called from another section - this is where functions
+should be placed that are used in all other sections.  Any function defined
+in <b>Common</b>  must be referenced from every other defined section or it triggers a "not used"
+error.  The three other sections execute at different times.
+<!-- .B Before -->
+<b>Before</b> executes once before the program enters the input loop,
+<!-- .B Main -->
+<b>Main</b> executes once for each line during the input loop,
+and
+<!-- .B After -->
+<b>After</b> executes once after the loop.  This allows for set up, run, and
+tear down sections in a script.  If no sections are defined all
+<!-- .B -pm, -op, -->
+<b>-pm, -op,</b> and
+<!-- .B -psN -->
+<b>-psN</b> operations are placed in <b>Main</b>.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -sr " <start_row>" -->
+<b>-sr</b><i> &lt;start_row&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+The first text row (line of text) to process.  Rows are numbered from 1.
+(Default is
+<!-- .B 1, -->
+<b>1,</b> the first row.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -sortac -sortas -sortan -sortdc -sortds -sortdn -->
+<b>-sortac -sortas -sortan -sortdc -sortds -sortdn</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Sort tokens within an output field before any other formatting.  Requires
+<!-- .B -mt -->
+<b>-mt</b> on the command line or
+<!-- .B mt -->
+<b>mt</b> in the
+<!-- .B -fmt -->
+<b>-fmt</b> [] field to generate the tokens.  Only fields with more than one token are
+sorted.  The a or d following
+<!-- .B -sort -->
+<b>-sort</b> specifies Ascending or Descending order.  The s, c, or n after that specifies
+the type of token to sort: case sensitive string, case insensitive string, or
+numbers.  Tokens with the same collating values, which are numeric (1e-1 and 0.1)
+or case insensitive strings (x and X), will sort in arbitrary order.  A long
+string that begins with all the characters of a short string has a larger
+collating value than the short string. (Default is no sort.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -template " <N>" -->
+<b>-template</b><i> &lt;N&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Template match two files.  This is used to fill in the holes in a
+column of a table if all of the rows are known.  Use
+<!-- .BI -in " <template,file>" -->
+<b>-in</b><i> &lt;template,file&gt;</i> to specify which is the
+<!-- .B <template> -->
+<b>&lt;template&gt;</b> (the first) and which is the
+<!-- .B <file> -->
+<b>&lt;file&gt;</b> to compare to it (the second.)
+The contents of the two files must be in the same order (for instance,
+sorted, but any order is ok). The
+<!-- .B <file> -->
+<b>&lt;file&gt;</b> may contain a subset of the rows
+present in the
+<!-- .B <template>. -->
+<b>&lt;template&gt;.</b> It may not contain any rows not present in the
+<!-- .B <template>. -->
+<b>&lt;template&gt;.</b> Compare the first
+<!-- .B <N> -->
+<b>&lt;N&gt;</b> characters in a case sensitive manner and
+if they are the same pass the row from the
+<!-- .B <file> -->
+<b>&lt;file&gt;</b> into the program. If they are
+different this indicates a "hole" in the file.  Instead, pass the first
+<!-- .B <N> -->
+<b>&lt;N&gt;</b> characters from the
+<!-- .B <template> -->
+<b>&lt;template&gt;</b> followed by the string specified by
+<!-- .B -indl.   -->
+<b>-indl.</b> Normally this would be set to something like "NA", to indicate the
+presence of the hole.
+<!-- .B -template -->
+<b>-template</b> is incompatible with
+<!-- .B -merge. -->
+<b>-merge.</b> It may be used with
+<!-- .B -eqlen -->
+<b>-eqlen</b> to verify
+that all expected rows are present.  It is strongly suggested
+that the data in the first
+<!-- .B <N> -->
+<b>&lt;N&gt;</b> columns of both files be justified and padded with spaces - otherwise "AB"
+will not match "AB  data" for
+<!-- .B <N> -->
+<b>&lt;N&gt;</b> = 4.  When a template is compared to
+a file the first blank line in each
+will act as an end of file. (Default is no template processing.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -trl -trr -trb -trc -->
+<b>-trl -trr -trb -trc</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Trim out whitespace (spaces and tabs) in the field on the
+left, right, or both sides. Internal whitespace is not affected.
+<!-- .B -trc -->
+<b>-trc</b> eliminates white space on both ends and compresses runs of
+internal whitespace to a single space.
+(Default is to leave the whitespace as is.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -unmerge " <N>" -->
+<b>-unmerge</b><i> &lt;N&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Take a line consisting of multiple tokens and treat it as several
+lines, each beginning with the same first token, and containing sequential
+groups of
+<!-- .B <N> -->
+<b>&lt;N&gt;</b> tokens, until all are consumed.  Token delimiters
+are from
+<!-- .B -mdl -->
+<b>-mdl</b> , or if that isn&#8217;t specified,
+<!-- .B -dl. -->
+<b>-dl.</b> Character column data must be converted to token (delimited) data
+before it may be processed with
+<!-- .B -unmerge. -->
+<b>-unmerge.</b> Each line number emitted by
+<!-- .B -n -->
+<b>-n</b> when
+<!-- .B -unmerge -->
+<b>-unmerge</b> is active derives from the
+original input line.  If an input line is unmerged into four lines each
+will have the same line number.  See also
+<!-- .B -merge. -->
+<b>-merge.</b> (Default is not to unmerge.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .BI -v "N <String>" -->
+<b>-v</b><i>N &lt;String&gt;</i> </td><td valign="bottom">
+create a
+<!-- .B DEFINED -->
+<b>DEFINED</b> variable or initialize a
+<!-- .B SET -->
+<b>SET</b> variable.
+<!-- .B N -->
+<b>N</b> is a single letter A-Z.  If
+<!-- .B String -->
+<b>String</b> contains a
+<!-- .B FIELD -->
+<b>FIELD</b> the former occurs, otherwise the latter.  See
+<!-- .B DEFINITIONS -->
+<b><a href="#6">DEFINITIONS</a></b> for more information.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -wl " <widest_line>" -->
+<b>-wl</b><i> &lt;widest_line&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Widest input line in characters.  (Default is
+<!-- .B 16000 -->
+<b>16000</b> characters.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -xc " <maXimum_Columns>" -->
+<b>-xc</b><i> &lt;maXimum_Columns&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Initial maximum number of column fields ([]) in
+<!-- .B -fmt. -->
+<b>-fmt.</b> More space is automatically allocated
+as needed. (Default is
+<!-- .B 128 -->
+<b>128</b> fields.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -xe " <maXimum_dEscriptions>" -->
+<b>-xe</b><i> &lt;maXimum_dEscriptions&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Initial maximum number of static descriptions (not []) in
+<!-- .B -fmt. -->
+<b>-fmt.</b> More space is automatically allocated
+as needed. (Default is
+<!-- .B 128 -->
+<b>128</b> descriptions.)
+<p>
+<!-- .SH Options (by function) -->
+</p></td></tr>
+</tbody></table></p></blockquote>
+<a name="5">
+
+     <h3>Options (by function)</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .TP  -->
+<table cellpadding="0" cellspacing="0">
+<tbody><tr valign="top"><td colspan="2">
+Processing modes:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B mc,mt -->
+<b>mc,mt</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Input/Output:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B in,out,cmd,eoc,b -->
+<b>in,out,cmd,eoc,b</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Unconditional row/column limits:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B sc,ec,ncsr,er,nr,all,rm,s -->
+<b>sc,ec,ncsr,er,nr,all,rm,s</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Unconditional begin/end strings:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B filbol,fileeol,eol,bol -->
+<b>filbol,fileeol,eol,bol</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Input processing:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B merge,unmerge,template,indl,mdl,eqlen,crok    -->
+<b>merge,unmerge,template,indl,mdl,eqlen,crok</b> <!-- .B hnr,hnd,hns,hnsubs -->
+<b>hnr,hnd,hns,hnsubs</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Conditional output:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B if,ifnorestart,ifn,ifterm,ifonly -->
+<b>if,ifnorestart,ifn,ifterm,ifonly</b> <!-- .B iftermeol,iftermbol,ifeol,ifbol -->
+<b>iftermeol,iftermbol,ifeol,ifbol</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Delimiter based parsing of input into tokens:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B dl,s,dq,dqs,esc,po -->
+<b>dl,s,dq,dqs,esc,po</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Pattern based token generation, complex logic, scripting :
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B v,sect,pm,op,ps -->
+<b>v,sect,pm,op,ps</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Output field processing:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B fmt, -->
+<b>fmt,</b> <!-- .B dt,dv,d-,     -->
+<b>dt,dv,d-,</b> <!-- .B pd,fw,fp, -->
+<b>pd,fw,fp,</b> <!-- .B fff,ffe,ffd,ffu,ffo,ffx, -->
+<b>fff,ffe,ffd,ffu,ffo,ffx,</b> <!-- .B nz, -->
+<b>nz,</b> <!-- .B jl,jr,jc, -->
+<b>jl,jr,jc,</b> <!-- .B trl,trr,trb,trc, -->
+<b>trl,trr,trb,trc,</b> <!-- .B cu,cf,cl,  -->
+<b>cu,cf,cl,</b> <!-- .B bs,ba,b2,        -->
+<b>bs,ba,b2,</b> <!-- .B ecc, -->
+<b>ecc,</b> <!-- .B sortas,sortds,sortac,sortdc,sortan,sortdn,  -->
+<b>sortas,sortds,sortac,sortdc,sortan,sortdn,</b> <!-- .B rs,rcds,rcdc,rcss,rtds,rtdc,rtss,rtsv, -->
+<b>rs,rcds,rcdc,rcss,rtds,rtdc,rtss,rtsv,</b> <!-- .B ps -->
+<b>ps</b> <br>
+  
+<!-- .TP -->
+</td></tr>
+<tr valign="top"><td colspan="2">
+Output line processing:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B n,ll,lt -->
+<b>n,ll,lt</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Data size allocation:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B xc,xe,wl -->
+<b>xc,xe,wl</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Debugging:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B dbg,dbgv,dbgp,dbgm,dbgs,dbga -->
+<b>dbg,dbgv,dbgp,dbgm,dbgs,dbga</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+Help and information:
+</td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<!-- .B h,hfmt,hpat,hvar,hexamples,i        -->
+<b>h,hfmt,hpat,hvar,hexamples,i</b> <p>
+</p><p>
+</p><p>
+<!-- .SH DEFINITIONS -->
+</p></td></tr>
+</tbody></table></p></blockquote>
+<a name="6">
+
+     <h3>DEFINITIONS</h3>
+
+</a>
+<blockquote>
+These terms are used throughout this document:
+<p>
+</p><p>
+</p><p>
+<!-- .TP -->
+<table cellpadding="0" cellspacing="0">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .B COLUMN NUMBER -->
+<b>COLUMN NUMBER</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+is a signed integer which specifies a particular character in the
+<!-- .B TARGET. -->
+<b>TARGET.</b> If the
+<!-- .B COLUMN NUMBER -->
+<b>COLUMN NUMBER</b> is a positive number N then it is the Nth column.  If the
+<!-- .B COLUMN NUMBER -->
+<b>COLUMN NUMBER</b> is a negative number N and there are M characters total, then it is the
+M + N -1 character.  That is, -1 is the last character, 1 is the first character.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B FIELD -->
+<b>FIELD</b> </td><td valign="bottom">
+is a colon delimited list of formatting options followed by a
+<!-- .B RANGE -->
+<b>RANGE</b> all of which is enclosed in &#8217;[]&#8217;. 
+<!-- .B FIELDS -->
+<b>FIELDS</b> specify a range of columns or tokens to extract as well as some processing
+options to be applied to this data.  These are used  by
+<!-- .B -fmt -->
+<b>-fmt</b> and
+<!-- .B -vN -->
+<b>-vN</b> as well as some of the scripting operations.  See
+<!-- .B -fmt -->
+<b>-fmt</b> for the list of options which may be included in a
+<!-- .B FIELD. -->
+<b>FIELD.</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B INPUT BUFFER -->
+<b>INPUT BUFFER</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+holds the line(s) read and possibly merged from the input
+file(s) on each cycle of the main loop.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B PATTERN -->
+<b>PATTERN</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+is defined by a single specifier and determines what is to be matched within
+a
+<!-- .BR TARGET ,  -->
+<b>TARGET</b>, or which properties of a
+<!-- .B STRING -->
+<b>STRING</b> or
+<!-- .B NUMERIC -->
+<b>NUMERIC</b> variable are to be tested, in a <b>-pm/-pmN/-psN</b> command.  See
+<!-- .B PATTERNS -->
+<b><a href="#8">PATTERNS</a></b> for more information.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B RANGE -->
+<b>RANGE</b> </td><td valign="bottom">
+is the mandatory final entry in a
+<!-- .B FIELD. -->
+<b>FIELD.</b> The
+<!-- .B RANGE -->
+<b>RANGE</b> consists of up to 3 integers [Colunn/Start, End, Increment] in one of these
+forms:
+<!-- .B [] [,] [c] [s,e] [s,] [,e] [s,,i] [,e,i] [,,i].   -->
+<b>[] [,] [c] [s,e] [s,] [,e] [s,,i] [,e,i] [,,i].</b> Defaults for implied range values are: [First, Last, 1].
+In token mode Start and End are
+<!-- .B TOKEN NUMBERS, -->
+<b>TOKEN NUMBERS,</b> in column mode they are
+<!-- .B COLUMN NUMBERS.  -->
+<b>COLUMN NUMBERS.</b> If Start and End have the same sign then it is an error for Start &gt; End.
+For mixed signs the range may be empty for some
+line lengths, but this is not an error.  (Example:
+<!-- .B [3,-3] -->
+<b>[3,-3]</b> for lines &lt;5
+characters long.) The increment value may be anything other than zero.
+Increments only function in token mode - in character mode they are ignored. The
+range
+<!-- .B [,,-1] -->
+<b>[,,-1]</b> emits all tokens in a line in reverse order.  The <b>map</b> and <b>ump</b> field modifiers
+(see <b>-fmt</b>) override the explicit <b>RANGE</b> and replace it with <b>[1,N]</b>, where
+<b>N</b> is the number of terms in the <b>MAP</b>.
+<p>
+Alternatively, a range may be specified by the contents of a
+<b>NUMERIC</b> variable as [<b>NUMERIC</b> variable, index]:
+<b>[$V]</b> <b>[$V,idx]</b>. In the <b>NUMERIC</b> variable forms a
+<b>c/s,e,i</b> triplet is retrieved from
+the 3 elements starting at the index.  If the index is omitted retrieval
+starts at the first element.
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B "MAP        " -->
+<b>MAP        </b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+is an array of <b>TOKEN NUMBERS</b> stored in an
+<b>NUMERIC VARIABLE</b><tt> that is used to map/unmap input positions to output
+positions.  A </tt><b>MAP</b> is valid for a map operation if it contains
+any <i>combination</i> of the positions {1,2...N}.
+A <b>MAP</b> is valid for an unmap (ump) operation if it contains any
+<i>permutation</i> of those positions.  A <b>MAP</b> may contain any
+combination of negative and positive <b>TOKEN NUMBERS</b> that satisfies these
+positional constraints.  Maps may be generated by using the functions
+<b>idx,six,tix,</b> and  <b>tcx</b> in <b><a href="#11">Math Expressions</a></b>.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B REPLACE -->
+<b>REPLACE</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+is one or more text strings from one or more sources.
+These are used to replace <b>pattern</b> matches sequentially in
+a <b>-psN/-pS</b> operation.  See <b><a href="#9">REPLACEMENTS</a></b> for more information.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B  RESULT -->
+<b>RESULT</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+is the final number calculated by <b><a href="#11">Math Expressions</a></b>.  It may be tested
+with the <b>-pm &#8217;?&#8217;</b> operator or assigned to the
+<!-- .B SWITCH INDEX -->
+<b>SWITCH INDEX</b> with the <b>&#8217;ir&#8217;</b> operator.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B ROW NUMBER -->
+<b>ROW NUMBER</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+in an unsigned integer indicating a particular input line.  The first line is 1.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B SUBSTRING LIST  -->
+<b>SUBSTRING LIST</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+holds the results of match operations.  The list consists of zero or more (start,end)
+pairs which indicate which strings in the target were matched. There
+is only one such list. <b>PATTERN</b>
+match operations may clear it or append to it.  The substrings corresponding
+to the list entries may be appended to one or more  <b>VARIABLEs</b> using
+<b><a href="#10">OPERATIONS</a></b>. The list values may also be stored in
+a <b>NUMERIC</b> variable with the <b>sls()</b><b>MATH EXPRESSION</b> function.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B STRING -->
+<b>STRING</b> </td><td valign="bottom">
+is a simple text string.  It may contain escaped characters.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B SWITCH INDEX -->
+<b>SWITCH INDEX</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+holds an integer which is read by the <b>sw</b> (switch) operator, which jumps to the appropriate
+case, and then clears the index.  There is only one such index and its value
+is set by certain
+<!-- .B OPERATIONS. -->
+<b>OPERATIONS.</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B TARGET -->
+<b>TARGET</b> </td><td valign="bottom">
+is the <b>INPUT BUFFER</b> for
+<!-- .BR "-op" ", " "-pm" " and " -ps" ";" -->
+<b>-op</b>, <b>-pm</b> and <b>-ps</b> <b>;</b> <b> STRING VARIABLE</b> N for
+<!-- .BR "-opN" ", " "-pmN" " and " "-psN" ";" -->
+<b>-opN</b>, <b>-pmN</b> and <b>-psN</b>; or an entry in a
+<!-- .BR "VLIST" "." -->
+<b>VLIST</b>. <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B TOKEN -->
+<b>TOKEN</b> </td><td valign="bottom">
+is a substring in a
+<!-- .B TARGET. -->
+<b>TARGET.</b> When tokens are created using
+<!-- .B -po -->
+<b>-po</b> in a
+<!-- .B TARGET -->
+<b>TARGET</b> the process is conservative.  That is, the token information is
+added but the original string in the
+<!-- .B TARGET -->
+<b>TARGET</b> is unchanged.  This is why
+<!-- .B -dqs -->
+<b>-dqs</b> appears to remove surrounding double quotes, but
+<!-- .B -esc -->
+<b>-esc</b> leaves escape characters.
+<!-- .B TOKENs -->
+<b>TOKENs</b> can be zero length or empty strings.  They also have a delimiter value.
+When tokens are generated by
+<!-- .B -po, -->
+<b>-po,</b> (which is done automatically if
+<!-- .B -mt -->
+<b>-mt</b> is specified on the command line or there is an
+<!-- .B mt -->
+<b>mt</b> in any
+<!-- .B FIELD -->
+<b>FIELD</b> )
+this is the character immediately following the token. 
+When
+<!-- .B TOKENs -->
+<b>TOKENs</b> are created from a
+<!-- .B SUBSTRING LIST -->
+<b>SUBSTRING LIST</b> following pattern matches, or when the last character in the token is the final
+character in the <b>TARGET</b>, the delimiter is
+arbitrarily set to "\0", which effectively means "undefined".
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B TOKEN NUMBER -->
+<b>TOKEN NUMBER</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+is a signed integer which specifies a particular token in the 
+<!-- .B TARGET. -->
+<b>TARGET.</b> If the
+<!-- .B TOKEN NUMBER -->
+<b>TOKEN NUMBER</b> is a positive number N then it is the Nth token.  If the
+<!-- .B TOKEN NUMBER -->
+<b>TOKEN NUMBER</b> is a negative number N and there are M tokens total, then it is the
+M + N -1 token.  That is, -1 is the last token, 1 is the first token.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B TOKEN LIST -->
+<b>TOKEN LIST</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+is a list of <b>TOKEN NUMBER</b>s generated by the <b>PATTERN</b> test <b>t:</b> and used
+by the corresponding <b>REPLACE</b> operator <b>t:</b>.  Each <b>TOKEN NUMBER</b> is from
+the matching query <b>TOKEN</b>.  The <b>SUBSTRING LIST</b> is
+also produced.   The token list indicates which queries matched (in order) while
+the substring list indicates the string which they matched in the target.  A token list may
+stored in a <b>NUMERIC</b> variable with the <b>tls()</b><b>MATH EXPRESSION</b> function.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B VARIABLE -->
+<b>VARIABLE</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+is one storage area from one of two sets of 26 storage areas named A-Z and $A-$Z (not case sensitive).
+The former contains <b>STRING</b> variables and the latter <b>NUMERIC</b>
+variables.  Both <b>STRING</b> and  <b>NUMERIC</b> variables may be used in a
+<b>-fmt</b> or <b>-vN</b> statement via the <b>vN,=N,</b>
+and <b>@N</b> options <b>FIELD</b>.
+To indicate the use of <b>NUMERIC</b>
+variables these are written instead as
+<b>v$N</b>, <b>=$N</b>, and<b>@$N</b>.
+See <b>-fmt</b>
+for more information.  Only <b>NUMERIC</b>
+variables  may used to the left of an assignment in a math
+expression.
+<p>
+<!-- .RS 3 -->
+</p></td></tr>
+</tbody></table><table cellpadding="0" cellspacing="0">
+<tbody><tr><td width="3%">&nbsp;</td><td>
+<!-- .TP  -->
+<table cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .B STRING VARIABLES -->
+<b>STRING VARIABLES</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+may be undefined or hold a text string and a
+<!-- .B TOKEN -->
+<b>TOKEN</b> representation of that string.
+<!-- .B STRING -->
+<b>STRING</b> variables may be in one of three states:
+<!-- .B CLEAR -->
+<b>CLEAR</b> = undefined,
+<!-- .B EMPTY -->
+<b>EMPTY</b> = defined but holding only an empty string, or
+<!-- .B SET -->
+<b>SET</b> = holding some characters.  There are in addition two types of
+<b>STRING</b> variables:  <b>DEFINED</b> and <b>SET</b>.
+A
+<!-- .B DEFINED -->
+<b>DEFINED</b> variable is very much like a
+<!-- .B -fmt -->
+<b>-fmt</b> statement.  It contains a description of the
+<!-- .B TARGET(s) -->
+<b>TARGET(s)</b> including one or more fields.  The definition is created with a
+<!-- .B -v -->
+<b>-v</b> statement, and data is entered into it with a
+<!-- .B vN -->
+<b>vN</b> operation in an
+<!-- .B -op -->
+<b>-op</b> or
+<!-- .B -pm -->
+<b>-pm</b> statement.
+A
+<!-- .B SET -->
+<b>SET</b> variable may be initialized with a
+<!-- .B -v -->
+<b>-v</b> statement that contains no
+<!-- .B FIELDs. -->
+<b>FIELDs.</b> It may be cleared or appended to by various
+<!-- .B OPERATIONS. -->
+<b>OPERATIONS.</b> (Note, there is no explicit set operation, to do that clear and then append.)
+<p>
+<!-- .TP  -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B NUMERIC VARIABLES -->
+<b>NUMERIC VARIABLES</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+contain one or more double precision numbers. Initially they consist of
+a single element with a value preset to zero.  Additional elements may be added
+so that each
+<!-- .B NUMERIC -->
+<b>NUMERIC</b> variable
+may be used as an array. 
+<!-- .B RANGE -->
+<b>RANGE</b> syntax is similar to that for
+<!-- .B STRING -->
+<b>STRING</b> varibles, with the first element being 1 and the last being -1.  In math expressions
+$N[] is a synonym for $N[1,-1], both mean "the entire array". 
+<!-- .RE -->
+</td></tr>
+</tbody></table><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B VLIST -->
+<b>VLIST</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+is a list of single letter
+<!-- .B VARIABLES, -->
+<b>VARIABLES,</b> like &#8217;ABC&#8217;, it must have
+at least one entry. In some contexts, it may include &#8217;-&#8217;, which means, again
+depending on the context, the <b>INPUT BUFFER</b>, the <b>RESULT</b>, or "none".
+In most cases entries may be repeated, like &#8217;ABBA&#8217;.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B OPERATIONS  -->
+<b><a href="#10">OPERATIONS</a></b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+is a list of actions which are performed conditionally
+<!-- .RB "(" "-pm" ")" -->
+(<b>-pm</b>) or unconditionally
+<!-- .RB "(" "-op" ")." -->
+(<b>-op</b>). Scripts are constructed from a series of statements, each of which contains one or more
+operatons.  See the
+<!-- .B OPERATIONS -->
+<b><a href="#10">OPERATIONS</a></b> section for more information.
+<p>
+</p><p>
+</p><p>
+<!-- .SH STRING SYNTAX -->
+</p></td></tr>
+</tbody></table></p></blockquote>
+<a name="7">
+
+     <h3>STRING SYNTAX</h3>
+
+</a>
+<blockquote>
+<p>
+Text strings which appear in the
+<!-- .B -fmt, -v, -rs, -dl, -->
+<b>-fmt, -v, -rs, -dl,</b> or
+<!-- .B -dv -->
+<b>-dv</b> options are subject to
+the following substitutions:
+</p><p>
+<!-- .PD 0 -->
+<!-- .PP -->
+</p><p>
+<!-- .B "\e\e" -->
+<b>\\</b> -&gt;
+<!-- .B "\e" -->
+<b>\</b> <!-- .br -->
+<!-- .B \en -->
+<!-- Need break --><br>
+<b>\n</b> -&gt;
+<!-- .B LF character -->
+<b>LF character</b> <!-- .br -->
+<!-- .B \er -->
+<!-- Need break --><br>
+<b>\r</b> -&gt;
+<!-- .B CR character -->
+<b>CR character</b> <!-- .br -->
+<!-- .B \et -->
+<!-- Need break --><br>
+<b>\t</b> -&gt;
+<!-- .B tab -->
+<b>tab</b> <!-- .br -->
+<!-- .B [[ -->
+<!-- Need break --><br>
+<b>[[</b> -&gt;
+<!-- .B [ -->
+<b>[</b> <!-- .br -->
+<!-- .B \e[ -->
+<!-- Need break --><br>
+<b>\[</b> -&gt;
+<!-- .B [ -->
+<b>[</b> <!-- .br -->
+<!-- .B ]] -->
+<!-- Need break --><br>
+<b>]]</b> -&gt;
+<!-- .B ] -->
+<b>]</b> <!-- .br -->
+<!-- .B \e] -->
+<!-- Need break --><br>
+<b>\]</b> -&gt;
+<!-- .B ] -->
+<b>]</b> <!-- .br -->
+<!-- .B \e12 -->
+<!-- Need break --><br>
+<b>\12</b> -&gt;
+<!-- .B character whose value is 12 (values 1-255 only) -->
+<b>character whose value is 12 (values 1-255 only)</b> <!-- .br -->
+<!-- .B \e1200 -->
+<!-- Need break --><br>
+<b>\1200</b> -&gt;
+<!-- .B 1200 (because number was not in the allowed range) -->
+<b>1200 (because number was not in the allowed range)</b> <!-- .br -->
+<!-- .B \eanything_else -->
+<!-- Need break --><br>
+<b>\anything_else</b> -&gt;
+<!-- .B anything_else -->
+<b>anything_else</b> </p><p>
+When
+<!-- .B \e -->
+<b>\</b> is the last character on a line it does not escape the line
+terminator and it is emitted.  So
+<!-- .B -fmt '[1] \e' -->
+<b>-fmt &#8217;[1] \&#8217;</b> will emit
+lines ending with
+<!-- .B \e. -->
+<b>\.</b> </p><p>
+<!-- .SH PATTERNS -->
+</p></blockquote>
+<a name="8">
+
+     <h3>PATTERNS</h3>
+
+</a>
+<blockquote>
+The pattern specifier indicates
+which string or regular expression in PCRE syntax is the query for a
+match or substitution.
+(For PCRE information see <a href="http://www.pcre.org/pcre.txt">http://www.pcre.org/pcre.txt</a>)
+The results of a match are placed on the
+<!-- .B SUBSTRING LIST -->
+<b>SUBSTRING LIST</b> and correspond to different parts of, or repeats of, a
+<!-- .B PATTERN. -->
+<b>PATTERN.</b> For PCRE pattern "(too)l(box)"
+matching the string "toolbox" would make the list: "toolbox",
+"toolbox", "too", and "box", where the substrings are not strictly
+sequential.  Results from other pattern types will always be sequential.
+<p>
+Pattern specifiers may also define other types of tests which do not
+result in changes to the
+<!-- .BR "SUBSTRING LIST" . -->
+<b>SUBSTRING LIST</b>. </p><p>
+Specifiers have the format <b>BASE[MODIFIERS]</b>:[<i>WHAT</i>] which describes what they are
+trying to match or test in the <b>TARGET</b>.  <b>MODIFIERS</b> follow the <b>BASE</b> and
+precede the colon delimiter.  The <i>WHAT</i> string cannot be blank.
+<!-- .nf -->
+</p><pre><!-- .BI "BASE:" "WHAT" " that (may) create or modify the SUBSTRING LIST:" -->
+<b>BASE:</b><i>WHAT</i><b> that (may) create or modify the SUBSTRING LIST:</b> 
+  <b>p</b>:<i>RE</i>            (PCRE regular expression) <i>RE</i>
+  <b>s</b>:<i>STRING</i>        (string) <i>STRING</i>
+  <b>v</b>:<i>VLIST</i>         (string(s)) any of the listed variable(s)
+  <b>n#</b>:<i>VLIST</i>        (string(s)) token # in any of the listed variable(s)
+                  # of 0 uses <b>RESULT</b> for the <b>TOKEN NUMBER</b> (see <b><a href="#11">Math Expressions</a></b>).
+  <b>t</b>:<i>VLIST</i>         (string(s)) any token(s) in the listed variable(s)
+<!-- .BI "BASE:" "WHAT" " that do not create or modify the SUBSTRING LIST:" -->
+<b>BASE:</b><i>WHAT</i><b> that do not create or modify the SUBSTRING LIST:</b> 
+  <b>m</b>:              always true.  (Normally one would use <b>-op</b> instead of <b>-pm &#8217;m:&#8217;</b>)
+  <b>?</b>:<i>VLIST</i>         Test for existence of TARGET (input, variable, or token).
+                  True if all in list are defined.
+  <b>?CMP</b>:<i>VLIST</i>      Test the value or status of <b>NUMERIC</b> variables in VLIST.
+                  True if all CMP comparisons are true. CMP values are listed in MODIFIERS
+                  below.
+  <b>i#</b>:             True if input stream # is open, False otherwise.
+                  Streams are 1-&gt;N, N from the number of entries with <b>-in</b>.
+                  # of 0 uses <b>RESULT</b> for the stream number (see <b><a href="#11">Math Expressions</a></b>).
+                  These are equivalent: <b>i:</b> and <b>i1:</b>.
+<!-- .B MODIFIERS -->
+<b>MODIFIERS</b> 
+  <b>c</b>               case invariant (default is case sensitive)
+  <b>g</b>               global (repeated search).
+  <b>/#[/#...]</b>       (PCRE only.) only keep the substring(s) indicated by the
+                  number.  For -[v]ps and complex patterns /1 will often
+                  be needed so that the outer expression is substituted.
+                  Numbers must be in the range 1-255 and be in increasing order.
+  <b>r</b>               remainder (search resumes in same target after previous match)
+  <b>^</b>               (not for PCRE) starts at first character
+  <b>$</b>               (not for PCRE) ends at last character
+<!-- .B MODIFIERS that determine the action when there are multiple search strings: -->
+<b>MODIFIERS that determine the action when there are multiple search strings:</b> 
+  <b>q</b>               se<b>Q</b>uential search. Each string searches the remainder
+                     of the target.  True if all strings are found.
+  <b>f</b>               test until <b>F</b>irst string matches.
+  <b>&lt;</b>               test all, nearest to the start of the target matches [DEFAULT].
+  <b>&gt;</b>               test all, nearest to the end of the target matches.
+<!-- .B Modifiers for Existence tests -->
+<b>Modifiers for Existence tests</b> 
+  <b>t</b>               test tokens (instead of variables)
+  <b>#</b>               Without t, minimum variable size. If 0, RESULT specifies.
+                     With t, token number to test. If 0, RESULT specifies.
+<!-- .B MODIFIERS (CMP operations) for math tests, one and only one must be specified: -->
+<b>MODIFIERS (CMP operations) for math tests, one and only one must be specified:</b> 
+  <b>?</b>               Value is normal (not NaN or +/-inf)
+  <b>=</b>               Value is zero.
+  <b>&lt;</b>               Value is &lt; zero.
+  <b>&gt;</b>               Value is &gt; zero.
+  <b>#</b>               Element number to test.  If 0, RESULT specifies.
+<!-- .B PATTERN Examples: -->
+<b>PATTERN Examples:</b> 
+  <b>s:Fred</b>        Fred (anywhere in the string)
+  <b>sc^$:Fred</b>     A string containing only Fred (or fred or FRED etc.)
+  <b>v:ABC</b>         Matches ...&lt;vA&gt;.. or ..&lt;vB&gt;.. or ..&lt;vC&gt;..
+  <b>vq:ABC</b>        Matches ...&lt;vA&gt;...&lt;vB&gt;...&lt;vC&gt;..
+  <b>vqr:ABC</b>       Matches ...&lt;PREVIOUSMATCH&gt;...&lt;vA&gt;...&lt;vB&gt;...&lt;vC&gt;..
+                 but not ...&lt;vA&gt;...&lt;PREVIOUSMATCH&gt;...&lt;vB&gt;...&lt;vC&gt;..
+  <b>p:Fred</b>        Fred
+  <b>p:(?i)Fred</b>    Fred, fred, FRED etc.  Better to use the "c" modifier.
+  <b>p:^Fred$</b>      A line containing just Fred and no other characters
+  <b>p:(?i)(Fred).*(Ginger)</b>
+                Matches: ... fred ... ginger ...
+                This creates a list of 3 matches: the whole pattern,
+                fred, and ginger, which may be assigned to variables
+                using <b><a href="#10">OPERATIONS</a></b>.
+  <b>?:-</b>           Always true (input buffer always exists).
+  <b>?e:-</b>          True if the input buffer is empty.
+  <b>?t3:-</b>         True if -mt and &gt;=3 tokens were parsed from the input buffer.
+  <b>?:ABC</b>         True if A,B, and C are all defined (not cleared).
+  <b>?t-4:ABC</b>      True if <b>TOKEN NUMBER</b> -4 exists in A,B,and C.
+  <b>?te3:ABC</b>      True if <b>TOKEN NUMBER</b> 3 exists and is empty in A,B,and C.
+  <b>?&lt;:ABC</b>        True if all elements in <b>NUMERIC</b> variables A,B,C are negative.
+  <b>?&gt;3:ABC</b>       True if element 3 in <b>NUMERIC</b> variables A,B,C is positive.
+  <b>??:ABC</b>        True if all elements in <b>NUMERIC</b> variables A,B,C are normal numbers.
+  <b>?&gt;:-</b>          True if <b>RESULT</b> is greater than zero.
+                [May be used to test for "token 3 of A is at least 5 characters
+                long" by preceding with <b>-op "? tln(a[3])-4"</b>.  (see <b><a href="#11">Math Expressions</a></b>).]
+<!-- .fi -->
+</pre>
+<p>
+<!-- .SH REPLACEMENTS -->
+</p></blockquote>
+<a name="9">
+
+     <h3>REPLACEMENTS</h3>
+
+</a>
+<blockquote>
+Replacement specifications describe the source of the strings which are used
+to replace each match in a <b>-ps/-psN</b> command.  If all of the strings in
+the specification are used replacement starts over again with the first one.
+The syntax is <b>BASE</b>:<i>WHAT</i> as shown below.
+<!-- .nf -->
+<pre><b>s</b>:<i>STRING</i>      replace with (string) STRING
+<b>v</b>:<i>VLIST</i>       replace with (string(s)) from the variable(s)
+<b>n#</b>:<i>VLIST</i>      replace with (string(s)) in token # from the variable(s)
+              # of 0 uses <b>RESULT</b> for the <b>TOKEN NUMBER</b> (see <b><a href="#11">Math Expressions</a></b>).
+<b>t</b>:<i>VLIST</i>       replace with (string(s)) in all token(s) from the variable
+              If a <b>TOKEN NUMBER LIST</b> was generated by the <b>t:</b> <b>PATTERN</b> specifier
+              replacement will be in the order specified by that list.  This provides a way to do
+              multiple defined replacements with one operation.  Side effect: the <b>TOKEN NUMBER
+              LIST</b> is consumed.
+                          
+<!-- .B REPLACMEMENTS Examples: -->
+<b>REPLACMEMENTS Examples:</b> 
+  <b>-psA "sc:Fred" "v:BC"</b>
+          If variable <b>A</b> is "Fred1fred2fRed3" and variables <b>B,C</b>
+          are respectively "one" and "two", then after the operation the
+          value of variable <b>A</b> will be "one1two2one3" while the
+          values of variables <b>B,C</b> will be unchanged.
+  <b>-psA "sc:Fred" "t:B"</b>
+          If variable <b>A</b> is "Fred1fred2fRed3FRED4" and variable <b>B</b>
+          consists of 3 tokens "one","two", and "three", then after the operation the
+          value of variable <b>A</b> will be "one1two2three3one4" while the
+          values of variable <b>B</b> will be unchanged.
+<p>
+   [ Substitutions using the four different multiple string query modes when
+     variable <b>C</b> is "12331233", variable <b>A</b> has tokens  {1,2,3},
+     and variable <b>B</b> has tokens {A,B,C}. ]
+  <b>-psC "tQg:A" "t:B"</b>
+          C becomes "ABC3ABC3".
+  <b>-psC "tFg:A" "t:B"</b>
+          C becomes "A233ABCC".
+  <b>-psC "t&lt;g:A" "t:B"</b>
+          C becomes "ABCCABCC".  This is the default mode.
+  <b>-psC "t&gt;g:A" "t:B"</b>
+          C becomes "12C31BCC".
+<!-- .fi -->
+</p></pre>
+<!-- .SH OPERATIONS -->
+</blockquote>
+<a name="10">
+
+     <h3>OPERATIONS</h3>
+
+</a>
+<blockquote>
+Operations are presented in a semicolon separated list containing one or more
+of the action elements listed below.  Elements may be preceded by spaces
+but must be immediately followed by a delimiter (";" or end of token).
+Whenever a
+<!-- .B -pm -->
+<b>-pm</b> or
+<!-- .B -op -->
+<b>-op</b> is executed its operations are run before the
+next pattern match is attempted. 
+<!-- .B OPERATIONS -->
+<b><a href="#10">OPERATIONS</a></b> are written as a
+single list, but that list is logically divided into True and False
+sections by a "<b>!</b>" operation, with each part of the list executing
+conditionally on the match or test.  Unless otherwise specified,
+in this section all variables are <b>STRING</b> variables. 
+<!-- .nf -->
+<pre><!-- .B logic control: -->
+<b>logic control:</b> 
+ <b>!</b>         Elements in an operations list before this execute when the match or test is true,
+           after it, when it is false. One or the other set may be empty,
+           which means do nothing for that condition.  May not be used with an
+           <b>-op</b>.
+<!-- .B pattern match interpretation: -->
+<b>pattern match interpretation:</b> 
+ <b>%COND</b>     COND is any combination of {<b>BHIA</b>}. These modify
+           the SUBSTRING LIST and affect how the list entries
+           are assigned to tokens by the "<b>&gt;</b>" operator.
+           Default is to assign the list as is.  By specifying <b>B</b>efore(first hit),
+           <b>H</b>it, <b>I</b>nterior (between hits),<b>A</b>fter (last hit) these other substrings
+           are derived and added to the substring list. If a specified
+           interpolated substring does not exist, for instance, no Before
+           because the first hit is at the first character, an empty token is created.
+           Use with care for PCRE matches, which may not be sequential!
+           Should only be used once for each set of operations!
+           <b>ALL</b> is equivalent to <b>BHIA</b>.  Defaults to <b>H</b> (use pattern matches as is).
+<p>
+<b>variable and input/output</b> (all except <b>v</b> must be applied to SET variables [see <b><a href="#6">DEFINITIONS</a></b>]):
+ <b>x</b><i>VLIST</i>    Clear the listed Set variables (they may not be a TARGET again until set).
+ <b>x#</b><i>VLIST</i>   Remove from <b>TOKEN NUMBER</b> # to the last token.
+           Token number at or before the first token clears all.
+           Token number after the last token clears none.
+           # of 0 uses <b>RESULT</b> for the <b>TOKEN NUMBER</b> (see <b><a href="#11">Math Expressions</a></b>).
+           These are equivalent: <b>-x1A</b> and <b>-xA</b>.
+ <b>v</b><i>VLIST</i>    Apply the <b>-vN</b> definitions of the variables to the <b>TARGET</b>.
+ <b>v</b><i>VLIST</i><b>&lt;</b><i>N</i>  Like the preceding, but default input is from vN. <b>VLIST</b> should not include vN.
+           (These are equivalent:  <b>-pmA "m:" "vB"</b> and <b>-pm "m: "vB&lt;A"</b>.)
+ <b>|</b><i>VLIST</i>    Append a new line (\n) to any variables in VLIST that are not empty.
+           Also change the last token&#8217;s delimiter value to 0
+ <b>&gt;</b><i>VLIST</i>    Append to one or more SET variables from the <b>SUBSTRING LIST</b>,
+           using one <b>SUBSTRING LIST</b> entry for each variable in the VLIST.
+           Variables are A-&gt;Z or -, - means ignore that part of the match.
+           Variables are processed in the order listed.  If the number
+           of substrings is longer than the list the list is processed again.
+           The <b>SUBSTRING LIST</b> is not consumed.  Examples, for 7 entries:
+             <b>&gt;ABC</b> appends 1,4,7 to <b>A</b>, 2,5 to <b>B</b>, 3,6 to <b>C</b>.
+             <b>&gt;A-A</b> appends 1,3,4,6,7 to <b>A</b>.
+             <b>&gt;A</b>   appends 1,2,3,4,5,6,7 to <b>A</b>.
+ <b>+</b><i>N</i>        Append the entire <b>TARGET</b> to variable <b>N</b> (extends the string, adds token[s]).
+           corresponding to the extended region).
+           For any of the append operations, if <b>TARGET</b> is the input line
+           an <b>-mt</b> or <b>[:mt:]</b> is needed or no tokens will have been generated.
+ <b>+</b><i>N</i><b>&lt;=</b><i>STR</i>   Append STR to vN (extends the string, adds one token).
+           STR may include \n and similar escape sequences.
+ <b>+</b><i>N</i><b>&lt;[</b><i>FMT</i><b>]</b>  Append <b>[FMT]</b> to variable <b>N</b> (extends the string, adds tokens).
+           See <b>-fmt</b> for [] options. Example <b>+A&lt;[mt:1,3]</b> adds 3 tokens.
+ <b>+</b><i>N</i><b>&lt;</b><i>VLIST</i>  Append all of each variable in VLIST to vN.
+           A "-" in VLIST appends from the input.
+           (These are equivalent:  <b>-opA "+B"</b> and <b>-op "+B&lt;A"</b>.)
+ <b>+</b><i>N</i><b>&lt;#</b>      Append <b>TOKEN NUMBER</b> <b>#</b> from <b>TARGET</b> to <b>N</b>.
+           # of 0 uses <b>RESULT</b> for the <b>TOKEN NUMBER</b> (see <b><a href="#11">Math Expressions</a></b>).
+ <b>+</b><i>N</i><b>&lt;#</b><i>VLIST</i> Like <b>+</b><i>N</i><b>&lt;#</b> but <b>TARGET</b> is <b>VLIST</b>. A "-" for input is allowed in VLIST.
+           (These are equivalent:  <b>-opA "+B&lt;1"</b> and <b>-op "+B&lt;1A"</b>.)
+ <b>?</b><i>EXPR</i>     Run the math expression EXPR.  See <b><a href="#11">MATH EXPRESSIONS</a></b> for syntax.
+ <b>m</b><i>VLIST</i>    If a variable is SET, merge all tokens into one.  Otherwise, do nothing.
+           (This is the inverse of the <b>po</b> operation, see below.)
+ <b>m#</b><i>VLIST</i>   If a variable is set, merge from <b>TOKEN NUMBER</b> # to the end.
+           Token number at or before the first token merges all.
+           Token number at or after the last token merges none.
+           # of 0 uses <b>RESULT</b> for the <b>TOKEN NUMBER</b> (see <b><a href="#11">Math Expressions</a></b>).
+           These are equivalent: <b>-m1A</b> and <b>-mA</b>.
+ <b>&gt;#</b>        Read the next line from input stream # into the <b>INPUT BUFFER</b>.
+           # is 1-&gt;N, where N is the number of files in the <b>-in</b> statement.
+           Safe in <b>-sect Before</b> and <b>After</b>, but not recommended for <b>-sect Main</b>, where
+           there will be complex interactions with the built in read loop.
+           # of 0 uses <b>RESULT</b> for the input stream (see <b><a href="#11">Math Expressions</a></b>).
+           These are equivalent: <b>&gt;</b> and <b>&gt;1</b>.
+ <b>&lt;#</b><i>VLIST</i>   Emit each variable in VLIST to the # output stream.
+           Output streams match <b>-out</b> entries, counting from 0.
+           The number may be omitted for the default (0) output stream.
+           A "-" in VLIST emits the input.
+ <b>&lt;#=</b><i>STR</i>    Emit STR to the # output stream.
+ <b>&lt;#[</b><i>FMT</i><b>]</b>   Emit FMT to the # output stream. See <b>-fmt</b> for [] options.
+ <b>~</b><i>VLIST</i>    Dump each <b>STRING</b> variable in VLIST (for debugging).
+ <b>~</b><i>$VLIST</i>   Dump each <b>NUMERIC</b> variable in VLIST (for debugging).
+ <b>po#</b><i>VLIST</i>  Make tokens for each variable in VLIST using the parse option set
+           # (0-9) created with <b>-po</b>.  <b>poA</b> is equivalent to <b>po0A</b>.
+</p><p>
+<b>Conditional output control</b> (These apply only in <b>-sect</b> <i>Main</i>):
+ [ <b>-fmt</b> is applied when <b>-if</b> is true, see also <b>-ifonly</b> ].
+ <b>if1</b>       Equivalent to a true <b>-if</b> statement (without <b>-ifn</b> or -<b>ifterm</b>).
+ <b>ifc</b>       Equivalent to a true <b>-if</b> statement (with <b>-ifn</b>).
+ <b>if+</b>       Equivalent to a true <b>-if</b> statement (with <b>-ifterm</b>).
+ <b>if-</b>       Equivalent to a true <b>-ifterm</b> statement,
+ <b>ifr</b>       Equivalent to an <b>-ifnorestart</b> statement,
+             <b>if+-</b> is allowed.  Also terminates <b>ifc</b>.
+             <b>if[c+]r</b> is like <b>-if</b> <b>-ifnorestart</b>.
+ <b>n#</b>        Equivalent to <b>-ifN #</b>.
+ <b>afmt#</b>     Make <b>-fmt#</b> active for this input line.  # is 0-&gt;9.
+ <b>nfmt#</b>     Make <b>-fmt#</b> active next, after completing the current input.
+ <b>hide</b>      Suppress <b>-fmt</b> and default output (overrides <b>-if</b> logic).
+ <b>show</b>      Allow <b>-fmt</b> and default output. (Accept <b>-if</b> logic, [Default])
+           [hide and show "stick" once set, affecting all subsequent output.]
+ <b>eof</b>       Close the input. (No more input results in no more output.)
+</p><p>
+<b>flow control</b> (through the <b>-op/pm/pmN/psN</b> list):
+ [By default statements execute sequentially in the order entered.
+ Other patterns may be achieved using these operations.  Automatic
+ labels provide a way to specify jump targets without having to separately
+ name each statement.  However, getting there still requires using an explicit
+ jump operation: "<b>^</b>" or "<b>sw</b>". Labels alone have no effect on flow control,
+ use a <b>ret</b> or a <b>brk</b> to prevent flow from passing down to the next line.]
+ <b>=</b><i>LBL</i>      Label this <b>-op/pm/pmN/psN</b> command as <b>LBL</b>.  The label may
+           appear anywhere in the <b><a href="#10">OPERATIONS</a></b> list.  However, the script
+           is easiest to read if labels are first in the <b><a href="#10">OPERATIONS</a></b> list.
+           <b>LBL</b> may not begin with digits, contain spaces or semicolons, or
+           be a valid automatic label [ <b>{,}{,},c,c#</b>, or <b>c#-#</b> ]. Labels are
+           not case sensitive.
+           The special label MAIN may mark the script line where execution begins.
+           If MAIN is not employed execution starts on the first line of the script.          
+ <b>&amp;</b><i>LBL</i>      Call function at <b>LBL</b>. Recursion is allowed, but note that all
+           variables have global scope.  On returning from the call
+           the remainder of the statement&#8217;s operations are processed.
+ <b>{, }{, }</b>  Generate automatic nestable labels.  May be used to create
+           if/then/else, if/ifelse/else, while and other logical structures
+           without requiring explicit labels for each jump target  Braces must
+           appear in an operation before any jumps that reference positions in this
+           structure, else that jump will reference the enclosing structure.
+           A "<b>{</b>" need not be a jump target, but all "<b>}{</b>" and "<b>}</b>" must be.
+           Use <b>-dbga</b> to resolve related syntax issues.
+ <b>c, c#, c#-#</b>
+           Generate (automatic) nestable case labels for a switch statement.
+           The number of case labels must match the switch specification,
+           "<b>swC</b>", see below. If present, each # is an integer from 0 -&gt; C-1.
+           <b>c25</b> is a single case, <b>c2-5</b> is a range of 4 cases.  Without
+           explicit numbering the "<b>c</b>" labels are numbered sequentially from 0.
+           The numeric and nonnumeric forms may not be mixed in a single switch
+           statement. Multiple case labels may be applied to the same statement.
+           Case labels may be applied to <b>-pm[N]</b> statements.
+ <b>i</b><i>m</i>        Set the <b>SWITCH INDEX</b> to the token number of the last "<b>t:N</b>" match
+           (1-&gt;N).  If the last test failed, the <b>SWITCH INDEX</b> is set to 0.
+ <b>i</b><i>p</i>        Set the <b>SWITCH INDEX</b> by the character position of the first match
+           (1-&gt;N).  If the last test failed, the <b>SWITCH INDEX</b> is set to 0.
+ <b>i</b><i>#</i>        Shift <b>SWITCH INDEX</b> 1 bit left and set (#=1) or clear (#=0) the low bit.
+ <b>i</b><i>r</i>        Set <b>SWITCH INDEX</b> with <b>RESULT</b> from the last math expression.
+ [The following terminate processing of a statement&#8217;s <b><a href="#10">OPERATIONS</a></b>.]
+ <b>^LBL</b>      Jump to the <b>-op/pm/pmN/psN</b> with the corresponding label.
+           Reserved labels are "{[{...]","}{", and "}[}...]", which
+           jump to the corresponding automatic label in this (single brace)
+           or an enclosing (multiple braces) structure.  That is, <b>^}}</b>
+           jumps to the terminating brace in the structure enclosing
+           this one.
+ <b>^N</b>        Skip forward # statements. ^0 is a one line loop, and
+           ^1 is pointless, since the next line would execute next anyway.
+ <b>sw</b><i>C</i>       Switch. Jump to the statement ([automatically] labeled as "<b>cX</b>"),
+           where <b>X</b> is the value of the <b>SWITCH INDEX</b>, then clear that index.
+           The number of cases is set by <b>C</b>. The value of <b>X</b> must be in the
+           range 0 -&gt; C-1.
+ <b>ret</b>       Return from a function call.
+ <b>brk</b>       Skip the remainder of the <b>-op/pm/pmN/psN</b> statements.
+           The action that results depends on the section:  in <b>Main</b>
+           it is another read cycle, in <b>Before</b>  it is a transition
+           to the next section, and in <b>After</b> the program exits.
+ <b>exit</b>      Exit the program with SUCCESS status.
+ <b>fail</b>      Exit the program with FAILURE status.
+<!-- .B abbreviations: -->
+<b>abbreviations:</b> 
+    In a <b>-cmd</b> file (only) an abbreviated syntax may be used:
+      Long  short
+      <b>-pm   m
+      -pmN  mN
+      -psN  sN
+      -op   o
+      -opN  oN</b>
+    Labels may be placed in a separate token at the beginning of the line -
+    see the examples.  It is legal to have some labels in
+    separate tokens and others in the <b><a href="#10">OPERATIONS</a></b> string for the
+    same statement.  Terminal "<b>}</b>"s may be used
+    without a following argument.  Because tokens are delimited by
+    spaces and EOL "<b>c4 c1;c3 (new line)c2</b>" is equivalent to
+    "<b>c4;c1;c3;c2</b>".
+    A &#8217;};&#8217; may appear on an otherwise blank line to close a
+    set of braces. The semicolon prevents the label from joining
+    with the next statement, which would be invalid if it resulted
+    in &#8217;}&#8217; and &#8217;{&#8217; appearing together.  A trailing &#8217;}&#8217; at the
+    end of a section does not require a semicolon, nor does one
+    which precedes a statement with no brace labels.
+<!-- .B Examples: -->
+<b>Examples:</b> 
+ <b>-pm "s:Match?" "+A; !;x1A"</b>
+              If match/test is true, append TARGET to vA. If
+              false, delete most recent token from vA
+ <b>-pm "s:Match?" "+A;po1A;+B&lt;3A"</b>
+              If match/test is true, append TARGET to vA,
+              make tokens using po1, append the 3rd token which
+              results to vB.  If false, do nothing.
+ <b>-pm "s:Match?" "if+; !; brk"</b>
+              If match/test is true, set the IF state to "true until terminated",
+              unless it is already true, in which case do nothing.
+              If false, stop processing -op/pm/pmN/psN logic for
+              this input line.
+ <b>-pm "s:Match?" "=Label; &amp;Func1;!;&lt;= Some failure\n;fail"</b>
+              Identify this line as "Label". If match/test is true
+              call Func1. If false emit a failure message and exit.
+ <b>-pm "s:Match?" "{; !; ^}}"</b>
+               Generate an automatic label for this line.  If match/test
+               is true fall through, else jump outward in the nested
+               braces one level to the enclosing final brace.              
+ <b>-pm "s:Fred"   "i1; !;i0"
+ -pm "s:Ginger" "i1; !;i0"
+ -pm "s:Dance"  "i1; !;i0"</b>
+<b> -op "{;                       sw8"
+ -op  "c;      &lt;=some action\n;  ^}" ##case 0
+ -op  "c;c;c;  &lt;=some action\n;  ^}" ##cases 1,2,3
+ -op  "c;      &lt;=some action\n;  ^}" ##case 4
+ -op  "c;      &lt;=some action\n;  ^}" ##case 5
+ -op  "c;c;    &lt;=some action\n;  ^}" ##cases 6,7
+ -op "}"</b>
+               Construct a switch index based on the results of three
+               match/tests.
+               An 8 case switch construct with single line cases,
+               the labels are automatic but the cases are commented.
+               The (automatic) labels are on the left side, the
+               jumps (<b>sw</b> and <b>^</b>) on the right.
+<b> -op "{;                       sw4"
+  -op  "c0;c3;  &lt;=some action for 0,3\n;  ^}"
+  -op  "c1;c2;  &lt;=some action for 1,2\n;  ^}"
+ -op "}"</b>
+               A 4 case switch construct with single line cases,
+               the explicit case labels are not in sequential order.
+<b>  {
+            o "sw4"
+    c0;c3   o "  &lt;=some action for 0,3\n;  ^}"
+    c1
+    c2
+            o "  &lt;=some action for 1,2\n;  ^}"
+  };</b>
+               The same 4 case switch construct using
+               the abbreviated syntax.  Note the semicolon
+               following the close brace, which precludes collisions
+               with a following line - because a label like &#8217;};{;&#8217; is forbidden.
+<b>  -sect BEFORE
+           o         "hide; +A&lt;=abcdefghijklmnopqrstuvwxyz1234567890"
+  -sect MAIN
+           o         "xB;+B&lt;[mc:1]"  ## put the first character in B
+           mA "vc:B" ""              ## find B in A, case invariant
+  {        o         "ip; sw37"      ## position-&gt;index, then switch
+    c0     o         "&lt;=*; ^}"
+    c1-26  o         "&lt;=A; ^}"
+    c27-36 o         "&lt;=9; ^}"
+  }
+  -sect AFTER
+           o         "&lt;=\n"</b>
+               Classify the first letter of each input line as: A=alphabet,
+               9=number, *=other.  Note the case ranges.
+<!-- .fi -->
+</p></pre>
+<p>
+</p><p>
+</p><p>
+<!-- .SH MATH EXPRESSIONS  -->
+</p></blockquote>
+<a name="11">
+
+     <h3>MATH EXPRESSIONS</h3>
+
+</a>
+<blockquote>
+Math expressions use an algebraic syntax to operate on either
+<!-- .B NUMERIC  -->
+<b>NUMERIC</b> ($N) or
+<!-- .B STRING -->
+<b>STRING</b> (N) variables.  The latter are allowed when they contain only purely
+numeric text like &#8217;12.34&#8217;, and without that constraint in functions which
+measure their properties.  When a
+<!-- .B STRING -->
+<b>STRING</b> variable contains text that cannot be converted to a valid double precision number it is
+converted instead to &#8217;Not a Number&#8217;, which prints as
+<!-- .B nan. -->
+<b>nan.</b> The test <b>-pm &#8217;??&#8217;</b> may be used to detect this condition.   
+<p>
+These math expressions are also available in the separate program <b>dmath</b>.
+<!-- .nf -->
+</p><pre>  <b>RESULT</b>: is the final number calculated in an expression.  It may be tested
+    with the <b>-pm &#8217;?&#8217;</b> operator.
+    RESULT may be loaded as <b>$-</b>, but <b>$-</b> cannot be assigned.
+  Variables: may either be <b>NUMERIC</b> ($A) or <b>STRING</b> (A,if holding
+    purely numeric text like &#8217;12.34&#8217;).
+    Cells/Tokens may be indexed as 1-&gt;N (from start) or -1-&gt;-N (from end).
+  Scalar and Array math:  Unless otherwise noted operators and functions will
+    work with either scalar or array operands.  If array operands are used
+    the result will also be an array, with intermediate values stored in the
+    leftmost array at each operation.  In scalar math the <b>RETURN</b><tt>
+    value is meaningful, but it is not in array math. Except for a straight
+    assignment only </tt><b>NUMERIC</b> variables may be used in Array math.
+  Operands:
+    <b>12e-1,120,0xF0,0o77,0b1010</b>
+                         numbers in float, integer, hexadecimal, octal, or binary formats
+    <b>$A</b>                   <b>NUMERIC</b> variable ($A is the same as $A[1])
+    <b>$A[12],$A[3,4],$A[]</b>  One element, range of elements, all elements
+    <b>A</b>                    All of <b>STRING</b> variable A
+    <b>A[2],A[3,4],A[]</b>      One token, range of tokens, all tokens
+  Assignment:
+    <b>$A[6]  = 1+$B[$C[3]]</b> to an element
+    <b>$A[1,2]= $B[3,4]</b>     to a range of elements (number of elements must match)
+    <b>$A[]   = 3</b>           to an entire array
+    Only <b>NUMERIC</b> variables may appear to the left of an &#8217;<b>=</b>&#8217; operator.
+    Expressions may contain 0 or 1 &#8217;<b>=</b>&#8217; assignments.
+  Operators:  val1 OP val2
+    <b>+</b>        addition
+    <b>-</b>        subtraction
+    <b>*</b>        multiplication
+    <b></b>%        remainder
+    <b>^</b>        power (val1 ^ val2)
+    <b>?</b>        compare (returns 1,0,-1 if val1 &gt;,==,&lt; val2)
+  Functions(val):
+    <b>log</b>      base 10 log
+    <b>ln</b>       natural log
+    <b>e10</b>      10^val
+    <b>ee</b>       e^val
+    <b>chs</b>      change sign
+    <b>abs</b>      absolute value
+    <b>rnd</b>      round to nearest int
+    <b>lid</b>      round away from zero to next integer
+    <b>trc</b>      round towards zero to next integer
+    <b>sin,asin</b> sine, arc sine (angle in radians)
+    <b>cos,acos</b> cosine, arc cosine
+    <b>tan,atan</b> tangent, arc tangent
+    <b>d2r</b>      degrees to radians
+    <b>r2d</b>      radians to degress
+    <b>sinh,cosh,tanh</b>    hyperbolic sine, cosine,tangent
+    <b>not</b>      bitwise not (unsigned integer)
+  Functions(val1,val2):
+    <b>max</b>      maximum
+    <b>min</b>      minimum
+    <b>and,or,xor</b>   bitwise and, or, xor (unsigned integer).
+    <b>shl,shr</b>   bitwise shift left/right (unsigned integer).
+  Functions($A[range])  [scalar results only]: 
+    <b>len</b>      number of cells
+    <b>sum</b>      sum of cells
+    <b>sm2</b>      sum of squares of cells
+    <b>inv</b>      invert order of cells in range,  Returns 0.
+    <b>del</b>      delete cells in range.  Returns elements remaining.
+             (If all deleted, variable is reset to one element with value zero.)
+    <b>idx</b>      replace elements with their array positions (1-N).  Returns 0.
+    <b>srt</b>      sort elements into ascending order.  Returns 0.
+    <b>six</b>      replace elements with the positions they would occupy
+             if sorted into ascending order.  Ie {5,10,-21} -&gt; {2,3,1}. Returns 0.
+    <b>nml</b>      test for normal numbers. 0=all elements normal, 1=at least one
+             infinite, 2=at least one NaN, 3=some infinite and some NaN
+    <b>tls</b>      (re)dim the variable and store the token list from the last <b>t:</b>
+             pattern match. Returns the size of the <b>TOKEN NUMBER LIST</b>.  The <b>TOKEN NUMBER
+             LIST</b> is consumed.
+    <b>sls</b>      (re)dim the variable and store the <b>SUBSTRING LIST</b> (start/end pairs)
+             from the last pattern match.
+             Returns the number of matches in the <b>SUBSTRING LIST</b> (1/2 the list size).
+             The <b>SUBSTRING LIST</b> is not altered.
+  Functions($A[],value)  [scalar results only]:
+    <b>dim</b>       (Re)size $A to value entries.  New elements = 0.0. Returns 0.
+  Functions($A[],val1,val2,...)  [scalar results only]:
+    <b>cat</b>       Add values as new elements to $A, returns new length.
+    <b>ini</b>       (Re)initialize $A with values as elements, returns (new) length.
+  Functions($A[],$B[])  [array results only]
+      Rearrange array contents.  <b>RETURN</b><tt> value is not meaningful.
+    </tt><b>map</b>      $A[i]    = $A[$B[i]] for all i in the range.
+    <b>ump</b>      $A[$B[i]]= $A[i]     for all i in the range (unmap).
+  Functions(A[range])  [scalar results only]
+    <b>tok</b>      the number of tokens.
+    <b>tln</b>      the sum of the token lengths.
+    <b>sln</b>      the length of the entire string (range values are ignored).
+  Functions($A[range],B[range])  [scalar results only]
+    <b>tix</b>      make a <b>MAP</b> in the indicated range in <b>$A</b> that corresponds
+             to the TOKENS in the indicated range in <b>STRING</b> variable <b>B</b>
+             sorted into ascending order. Case sensitive.  The resulting
+             <b>MAP</b> will have all positive values.  Returns 0.
+    <b>tcx</b>      case invariant form of <b>tix</b>.
+  Operator Precedence:
+    <b>^</b>  &gt;  <b>*/%</b>  &gt;  <b>+-</b>  &gt;  <b>?</b> &gt; <b>(),</b> &gt; <b>=</b>
+<p>
+  Examples:
+<b>    -op &#8217;? (5/ee(5)) + $A[-1]&#8217;</b>
+         RESULT=(5 divided by e^5) + contents of last element in array $A
+<b>    -op &#8217;? $A = log(3+$B[6])&#8217;</b>
+         RESULT=(expression), and is also stored in $A[1]
+<b>    -op &#8217;?$A[-1] = A[-2]&#8217;</b>
+         RESULT=(2nd to last token from A), also stored in the last cell of $A.
+         If that token could not be converted to a valid number the RESULT
+         and stored value are nan (not a number).
+<b>    -op &#8217;? dim($A[],5); ? idx($A[]); ? sum(log($A[]))&#8217;</b>
+         RESULT=sum of the logs of 1-&gt;5. log(1)-&gt;log(5) are stored in
+         $A elements 1-&gt;5.
+<b>    -op        &#8217;? $B=1;     ? $A=10&#8217;</b>
+<b>    -pm &#8217;?&gt;:A&#8217; &#8217;? $B=$B*$A; ? $A=$A-1; ^0;&#8217;</b>
+         RESULT=10 factorial.  Also stored in $B.  Note the conditional
+         single line loop, which jumps to itself (<b>^0</b>) while <b>$A</b>
+         is greater than zero.
+<b>    -op &#8217;log(max($A[1,4]*2.1,$B[3,6]))&#8217;</b>
+         RESULT=(not meaningful).  Multiply all elements in array $A[1,4]
+         by 2.1 and store in place.  Take the maximum with the corresponding
+         elements (1-&gt;3, 2-&gt;4..4-&gt;6) of $B and store back into $A,  Then take
+         the log of each element in the range and store that in place too.
+         Only elements 1-&gt;4 of $A are modified.
+<!-- .fi -->
+</p></pre>
+<p>
+</p><p>
+<!-- .SH EXAMPLES -->
+</p></blockquote>
+<a name="12">
+
+     <h3>EXAMPLES</h3>
+
+</a>
+<blockquote>
+<p>
+</p><p>
+<!-- .TP -->
+<table cellpadding="0" cellspacing="0">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .B % extract -h -->
+<b>% extract -h</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+List the command line options.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % cat file | extract -sr 1 -->
+<b>% cat file | extract -sr 1</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Echo all text from stdin to stdout.  (Specifying any one command
+line option with its default value will do the same.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -sc 50 <infile.txt >outfile.txt -->
+<b>% extract -sc 50 &lt;infile.txt &gt;outfile.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Extract characters 50 to end of row for every line in infile.txt and write them
+to outfile.txt.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -sr 4 -sc 5 -ec 10 <infile.txt >outfile.txt -->
+<b>% extract -sr 4 -sc 5 -ec 10 &lt;infile.txt &gt;outfile.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Extract characters 5-10 from rows 4 to end of infile.txt and write them to outfile.txt.
+<p>
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -sc 5 -nc 10 <infile.txt >outfile.txt -->
+<b>% extract -sc 5 -nc 10 &lt;infile.txt &gt;outfile.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Extract characters 5-14 from all rows in infile.txt and write them to outfile.txt.
+<p>
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -sc 2 -ec 3 -mt -dl ':,;' <infile.txt >outfile.txt -->
+<b>% extract -sc 2 -ec 3 -mt -dl &#8217;:,;&#8217; &lt;infile.txt &gt;outfile.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Extract the 2nd and 3rd tokens delimited by one or more
+<!-- .B :,; -->
+<b>:,;</b> characters
+from each row in infile.txt and write them to outfile.txt.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -sr 4 -er 40 -sc 2 -ec 3 -mt -dl ':,;' -s -all -rm <infile.txt >outfile.txt -->
+<b>% extract -sr 4 -er 40 -sc 2 -ec 3 -mt -dl &#8217;:,;&#8217; -s -all -rm &lt;infile.txt &gt;outfile.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Process infile.txt as follows:
+<!-- .br -->
+<!-- Need break --><br>
+1.  Emit verbatim rows 1 through 3.
+<!-- .br -->
+<!-- Need break --><br>
+2.  For rows 4 though 40 emit the 1st, and 4th through Nth tokens delimited by a single
+<!-- .B :,; -->
+<b>:,;</b> character.
+<!-- .br -->
+<!-- Need break --><br>
+3.  Emit verbatim rows 41 to the final row in the file.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B   % ( cd / ; du -k ) | extract -fmt '[jr:fw14:1] [2]' -mt   -->
+<b>% ( cd / ; du -k ) | extract -fmt &#8217;[jr:fw14:1] [2]&#8217; -mt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Lists the size of all directories on a Unix system with
+the size field right formatted so that the columns all line up.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B   % ls -al | extract -fmt '[mc:1,32][fw14:jr:5] [6] [fw2:7] [jr:fw5:8] [9]' -mt -dl ' '  -->
+<b>% ls -al | extract -fmt &#8217;[mc:1,32][fw14:jr:5] [6] [fw2:7] [jr:fw5:8] [9]&#8217; -mt -dl &#8217; &#8217;</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Straighten the columns in a directory listing on a Unix system with large files.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B   % extract -b -fmt '[,-2]' <infile.txt  -->
+<b>% extract -b -fmt &#8217;[,-2]&#8217; &lt;infile.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Converts a Windows CRLF text file to a Unix LF text file.  Will always work
+on a Unix system.  Will usually work on a Windows system but may fail if
+the build does not support the <b>-b</b> switch.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B   % extract -fmt 'foo[cu:jl:fw20:3,5]blah[-:mc:10,30]er[1]' -mt -fw 30 <infile.txt  -->
+<b>% extract -fmt &#8217;foo[cu:jl:fw20:3,5]blah[-:mc:10,30]er[1]&#8217; -mt -fw 30 &lt;infile.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Process each line of infile.txt as follows:
+<!-- .br -->
+<!-- Need break --><br>
+1. Emit "foo".
+<!-- .br -->
+<!-- Need break --><br>
+2. Emit tokens 3,4, and 5 upper cased in a 20 character field, left justified.
+<!-- .br -->
+<!-- Need break --><br>
+3. Emit "blah".
+<!-- .br -->
+<!-- Need break --><br>
+4. Emit characters 10 through 30.
+<!-- .br -->
+<!-- Need break --><br>
+5. Emit "er".
+<!-- .br -->
+<!-- Need break --><br>
+6. Emit column 1 in a field of width 30.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract <infile.txt >outfile.txt -if '^>' -fmt '>SPECIAL [1,]' -->
+<b>% extract &lt;infile.txt &gt;outfile.txt -if &#8217;^&gt;&#8217; -fmt &#8217;&gt;SPECIAL [1,]&#8217;</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Lines beginning with
+<!-- .B > -->
+<b>&gt;</b> are emitted with the modification shown.  All other lines
+are echoed unchanged.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -mt -dv '\et' -fmt '[1,5]\en[[WOW!]][6]' <infile.txt -->
+<b>% extract -mt -dv &#8217;\t&#8217; -fmt &#8217;[1,5]\n[[WOW!]][6]&#8217; &lt;infile.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Emit the first five tokens separated by tabs and then on the next line
+emit [WOW!] followed immediately by the sixth token.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -eol ',' -if Teacher -fmt '\en[1,]' -fileeol '\en' <infile.txt -->
+<b>% extract -eol &#8217;,&#8217; -if Teacher -fmt &#8217;\n[1,]&#8217; -fileeol &#8217;\n&#8217; &lt;infile.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+If the infile consists of "Teacher name" lines each followed
+by many lines of student names, the output will consist of
+one blank line (assuming the first input line has "Teacher"
+in it) followed by lines like:
+"Teacher name, student1,student2,...studentn,".
+<p>
+<!-- .PD 0 -->
+<!-- .PP -->
+</p></td></tr>
+<!-- Found tag TP -->
+<tr><td colspan="2">
+<!-- .B % extract -mt -if Teacher -ifterm Teacher -iftermbol \en -->
+<b>% extract -mt -if Teacher -ifterm Teacher -iftermbol \n</b> <!-- .TP -->
+</td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B "  -ifeol -fmt '[2],' <infile.txt" -->
+<b>  -ifeol -fmt &#8217;[2],&#8217; &lt;infile.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+If the infile consists of many instances of a "Teacher: Name" line
+followed by N "Student: Name" lines the output will consist of
+several lineslike: "Teacher name, student1,student2,...studentn,".
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -indl ',' -in file1,file2,-  -->
+<b>% extract -indl &#8217;,&#8217; -in file1,file2,-</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Merge the contents of file1, file2, and stdin, placing a comma
+between the part of the line from each file.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -mdl ',' -merge 4 -in file1,file2,-  -->
+<b>% extract -mdl &#8217;,&#8217; -merge 4 -in file1,file2,-</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+As above but also merge consecutive rows which begin with
+the same 4 character prefix.  If three such rows were
+"foo 1", "foo 2", and "foo 3" the single output row
+would be "foo 1, 2, 3".
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -rcds '\er\e12' -in file1  -->
+<b>% extract -rcds &#8217;\r\12&#8217; -in file1</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Remove carriage returns and linefeeds from the file and
+emit to stdout.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -rcds 'Tt' -rcss 'Uu' -in file1  -->
+<b>% extract -rcds &#8217;Tt&#8217; -rcss &#8217;Uu&#8217; -in file1</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Substitute characters
+<!-- .B T->U -->
+<b>T-&gt;U</b> and
+<!-- .B t->u -->
+<b>t-&gt;u</b> and emit to stdout.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -rtds 'Thomas' -rtss 'Tom' -in file1  -->
+<b>% extract -rtds &#8217;Thomas&#8217; -rtss &#8217;Tom&#8217; -in file1</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Substitute string
+<!-- .B Tom -->
+<b>Tom</b> for
+<!-- .B Thomas -->
+<b>Thomas</b> and emit to stdout.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -merge 5 -mdl ',' -in file1  -->
+<b>% extract -merge 5 -mdl &#8217;,&#8217; -in file1</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+If file1 contained the lines "abcd_ 1", "abcde 2", "abcde 3","abcdf 4"
+the output would be "abcd_ 1", "abcde 2,3" ,"abcdf 4"
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -unmerge 2 -in file1  -->
+<b>% extract -unmerge 2 -in file1</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+If file1 contained the line: "blah a b c d e" 
+the output would be: "blah ab", "blah cd", "blah e".
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract  -in template,file -indl ' MISS' -template 3 -out fout  -->
+<b>% extract -in template,file -indl &#8217; MISS&#8217; -template 3 -out fout</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+If template contains "120","121","122" and file
+contains "120 fred","122 mary" write
+"120 fred","121 MISS""122 mary" to fout.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % find . | extract -fmt 'extract -in [1,] -out foo.tmp -rtds /usr/bin/perl -rtss /usr/bin/perl5 ; mv foo.tmp [1,]\' | execinput -->
+<b>% find . | extract -fmt &#8217;extract -in [1,] -out foo.tmp -rtds /usr/bin/perl -rtss /usr/bin/perl5 ; mv foo.tmp [1,]' | execinput</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Use
+<!-- .B extract -->
+<b>extract</b> recursively as a stream editor. For each input file found by
+<!-- .B find -->
+<b>find</b> the first
+<!-- .B extract -->
+<b>extract</b> prepares a command line where a second instance of
+<!-- .B extract -->
+<b>extract</b> converts each instance of
+<!-- .B /usr/bin/perl -->
+<b>/usr/bin/perl</b> to
+<!-- .B /usr/bin/perl5. -->
+<b>/usr/bin/perl5.</b> The final
+<!-- .B execinput -->
+<b>execinput</b> executes these command lines
+one at a time.  (Note that the output first goes to a
+temporary file and is then copied
+back over the original input file.)
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -nr 1 -sc 3 -all -in unicode.txt -hnd -->
+<b>% extract -nr 1 -sc 3 -all -in unicode.txt -hnd</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Delete embedded null characters from 16 bit unicode text.
+If the
+<!-- .B -hnd -->
+<b>-hnd</b> was omitted there would be a fatal error when the
+first null character was encountered during the reading of this file.
+Also deletes the first two characters of the first line only, which
+comprise the unicode Byte Order Mark.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % extract -b2 -ecc ',' -in data.txt -out comma_delimited.txt -->
+<b>% extract -b2 -ecc &#8217;,&#8217; -in data.txt -out comma_delimited.txt</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Place a comma between every character in data.txt.
+The result may be read into a spreadsheet with one character
+per cell.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo 'z Y x 1 3e-1 -123.45' | extract  -mt -fmt '[sortac:1,3] [sortdn:4,]' -->
+<b>% echo &#8217;z Y x 1 3e-1 -123.45&#8217; | extract -mt -fmt &#8217;[sortac:1,3] [sortdn:4,]&#8217;</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Emits "x Y z 1 3e-1 -123.45"
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo 'z Y x 1 3e-1 -123.45' | extract  -mt -fmt '[sortac:1] [sortdn:6]' -->
+<b>% echo &#8217;z Y x 1 3e-1 -123.45&#8217; | extract -mt -fmt &#8217;[sortac:1] [sortdn:6]&#8217;</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Emits "z -123.45" because neither field contains
+more than one token, so no sort will occur.
+<p>
+</p><p>
+<!-- .SH SEE ALSO -->
+</p></td></tr>
+</tbody></table></p></blockquote>
+<a name="13">
+
+     <h3>SEE ALSO</h3>
+
+</a>
+<blockquote>
+<p>
+<a href="http://oldsaf.bio.caltech.edu/cgi-bin/caltech/manpages.pl/execinput.1">execinput(1)</a>,
+<a href="http://oldsaf.bio.caltech.edu/cgi-bin/caltech/manpages.pl/dmath.1">dmath(1)</a>
+</p><p>
+</p><p>
+<!-- .SH LICENSE -->
+</p></blockquote>
+<a name="14">
+
+     <h3>LICENSE</h3>
+
+</a>
+<blockquote>
+<p>
+GNU General Public License 2
+</p><p>
+<!-- .SH COPYRIGHT -->
+</p></blockquote>
+<a name="15">
+
+     <h3>COPYRIGHT</h3>
+
+</a>
+<blockquote>
+<p>
+Copyright (C) 2011 David Mathog and Caltech.
+</p><p>
+</p><p>
+<!-- .SH ACKNOWLEDGEMENTS -->
+</p></blockquote>
+<a name="16">
+
+     <h3>ACKNOWLEDGEMENTS</h3>
+
+</a>
+<blockquote>
+<p>
+This program was inspired by Pat Rankin&#8217;s
+<!-- .B EXTRACT  -->
+<b>EXTRACT</b> utility for VMS.
+</p><p>
+</p><p>
+<!-- .SH AUTHORS -->
+</p></blockquote>
+<a name="17">
+
+     <h3>AUTHORS</h3>
+
+</a>
+<blockquote>
+<p>
+David Mathog, Biology Division, Caltech &lt;<a href="mailto:mathog@caltech.edu">mathog@caltech.edu</a>&gt;
+</p></blockquote>
+<p></p><hr>
+<table width="100%"><tbody><tr> <td width="33%"><i>drm_tools</i></td> <td width="33%" align="center">extract (1)</td> <td width="33%" align="right"><i>1.1.9 Jun 13 2013</i></td> </tr></tbody></table><font size="-1">Generated by <a href="http://www.squarebox.co.uk/download/manServer.shtml">manServer 1.08</a> from /usr/common/man/man1/extract.1 using man macros.</font>
+
+</body></html>

@@ -1,0 +1,374 @@
+<html><head><title>Manual Page - mdump(1)</title></head><body alink="#ff0000" bgcolor="#f0f0f0" link="#0000ff" text="#000000" vlink="#c000c0"><a name="top"></a>
+<!-- .TH "mdump" "1" "1.0.5 OCT 23 2006" "drm_tools" "User Commands" -->
+<center>
+<h1><hr><i>Manual Reference Pages &nbsp;-&nbsp;</i><nobr>mdump (1)</nobr><hr></h1>
+</center>
+<!-- .SH NAME -->
+<a name="0">
+
+     <h3>NAME</h3>
+
+</a>
+<blockquote>
+<p>
+mdump - dump data from a binary file
+</p><p>
+<!-- .SH SYNOPSIS -->
+</p></blockquote>
+<a name="contents"></a><h3>CONTENTS</h3>
+<blockquote>
+<a href="#1">Synopsis</a><br>
+<a href="#2">Description</a><br>
+<a href="#3">Options</a><br>
+<a href="#4">Examples</a><br>
+<a href="#5">See Also</a><br>
+<a href="#6">License</a><br>
+<a href="#7">Copyright</a><br>
+<a href="#8">Authors</a><br>
+</blockquote>
+<a name="9">
+
+     <h3>SYNOPSIS</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .B mdump [options...] -->
+<b>mdump [options...]</b> </p><p>
+<!-- .SH DESCRIPTION -->
+</p></blockquote>
+<a name="2">
+
+     <h3>DESCRIPTION</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .B mdump -->
+<b>mdump</b> reads data from a specified input file or
+stdin and dumps data elements from it to a specified output file
+or stdout after formatting them as indicated.  mdump may be
+either used as a replacement for
+<!-- .B od -->
+<b>od</b> or to extract data from simple binary files
+without having to write a specialized program.
+</p><p>
+<!-- .B mdump -->
+<b>mdump</b> may be obtained as part of the
+<!-- .B drm_tools -->
+<b>drm_tools</b> package from:
+<!-- .B http://sourceforge.net/projects/drmtools/ -->
+<b><a href="http://sourceforge.net/projects/drmtools/">http://sourceforge.net/projects/drmtools/</a></b> </p><p>
+</p><p>
+<!-- .SH OPTIONS -->
+</p></blockquote>
+<a name="3">
+
+     <h3>OPTIONS</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .BI -blocks " <blocks>" -->
+<b>-blocks</b><i> &lt;blocks&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+The number of data blocks to emit. 0 = all = default.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -dtype " <data_type>" -->
+<b>-dtype</b><i> &lt;data_type&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Set the type of the data elements:
+<!-- .br -->
+<!-- .B c -->
+<!-- Need break --><br>
+<b>c</b> = char
+<!-- .br -->
+<!-- .B s -->
+<!-- Need break --><br>
+<b>s</b> = short int
+<!-- .br -->
+<!-- .B l -->
+<!-- Need break --><br>
+<b>l</b> = (long) int
+<!-- .B (default) -->
+<b>(default)</b> <!-- .br -->
+<!-- .B g -->
+<!-- Need break --><br>
+<b>g</b> = long long (not available on all platforms)
+<!-- .br -->
+<!-- .B f -->
+<!-- Need break --><br>
+<b>f</b> = float
+<!-- .br -->
+<!-- .B d -->
+<!-- Need break --><br>
+<b>d</b> = double
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -ds -->
+<b>-ds</b> </td><td valign="bottom">
+Emit data sizes and exit.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -flip -->
+<b>-flip</b> </td><td valign="bottom">
+Invert byte order.  Default is to leave byte order as is.
+<p>
+</p><p>
+</p><p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -format " <format_string>" -->
+<b>-format</b><i> &lt;format_string&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+<p>
+<!-- .B <format_string> -->
+<b>&lt;format_string&gt;</b> contains a C printf format string which controls the
+formatting of data elements.
+The syntax of this string is:
+<!-- .B %Width.PrecisionSpecifier. -->
+<b>%Width.PrecisionSpecifier.</b> The C format Specifiers are:
+<!-- .B c -->
+<b>c</b> (character);
+<!-- .B o -->
+<b>o</b> (octal),
+<!-- .B x -->
+<b>x</b> (hexadecimal);
+<!-- .B d -->
+<b>d</b> (decimal),
+<!-- .B ll[d,u,o,x] -->
+<b>ll[d,u,o,x]</b> long long variants;
+<!-- .B f -->
+<b>f</b> (floating point);
+<!-- .B e -->
+<b>e</b> (exponent).
+The valid format specifiers for each data type are:
+<!-- .nf -->
+</p><pre>dtype  Specifiers  Default
+c      c,d,o,x     %c
+s      d,o,x       %9d
+l      d,o,x       %9d
+g      ll[u,d,o,x] %18llu
+f      f,e         %9e
+d      f,e         %9e
+<!-- .fi -->
+</pre>
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -h -help --help -? --?? -->
+<b>-h -help --help -? --??</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Print the help message and exit.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td nowrap="nowrap" width="6%">
+<!-- .B -i -->
+<b>-i</b> </td><td valign="bottom">
+Emit version, copyright, license and contact information and exit.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -in " <input_file>" -->
+<b>-in</b><i> &lt;input_file&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Read input from the specified file.  (Default is to read from stdin.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -interval " <interval>" -->
+<b>-interval</b><i> &lt;interval&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Set the number of data elements in each repeat block.  Default is 1.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -multiple " <multiple>" -->
+<b>-multiple</b><i> &lt;multiple&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+The number of data elements to dump from each block (all to one line).
+Defaults to
+<!-- .B <interval>. -->
+<b>&lt;interval&gt;.</b> <p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -offset " <offset>" -->
+<b>-offset</b><i> &lt;offset&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Emit data elements starting at
+<!-- .B " <offset>" -->
+<b> &lt;offset&gt;</b> data elements from the
+beginning of the file.  Default is 0.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -out " <output_file>" -->
+<b>-out</b><i> &lt;output_file&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Write output to the specified file.  (Default is to write to stdout.)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .BI -show  " <show>" -->
+<b>-show</b><i> &lt;show&gt;</i> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Controls numbering of output lines.  Positions are offsets relative to
+<!-- .B <offset>. -->
+<b>&lt;offset&gt;.</b> That is, if
+<!-- .B <offset> -->
+<b>&lt;offset&gt;</b> is 5 then element 5 is shown with position 0.
+Options are:
+<!-- .br -->
+<!-- .B 0  -->
+<!-- Need break --><br>
+<b>0</b> do not number output lines (default)
+<!-- .br -->
+<!-- .B 1 -->
+<!-- Need break --><br>
+<b>1</b> number by bytes (hexadecimal)
+<!-- .br -->
+<!-- .B 2 -->
+<!-- Need break --><br>
+<b>2</b> number by data element (hexadecimal)
+<!-- .br -->
+<!-- .B 3 -->
+<!-- Need break --><br>
+<b>3</b> number by blocks (hexadecimal)
+<!-- .br -->
+<!-- .B 4 -->
+<!-- Need break --><br>
+<b>4</b> number by bytes (octal)
+<!-- .br -->
+<!-- .B 5 -->
+<!-- Need break --><br>
+<b>5</b> number by data element (octal)
+<!-- .br -->
+<!-- .B 6 -->
+<!-- Need break --><br>
+<b>6</b> number by blocks (octal)
+<!-- .br -->
+<!-- .B 7 -->
+<!-- Need break --><br>
+<b>7</b> number by bytes (decimal)
+<!-- .br -->
+<!-- .B 8 -->
+<!-- Need break --><br>
+<b>8</b> number by data element (decimal)
+<!-- .br -->
+<!-- .B 9 -->
+<!-- Need break --><br>
+<b>9</b> number by blocks (decimal)
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B -signed -->
+<b>-signed</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Default is for integer data elements to be unsigned.  This flag makes them signed.
+Ignored for
+<!-- .B f -->
+<b>f</b> ,
+<!-- .B d -->
+<b>d</b> , and
+<!-- .B g -->
+<b>g</b> data types.  To obtain signed output for
+<!-- .B g -->
+<b>g</b> type use
+a format string like
+<!-- .B %18lld. -->
+<b>%18lld.</b> <p>
+<!-- .SH EXAMPLES -->
+</p></td></tr>
+<tr></tr></tbody></table></p></blockquote>
+<a name="4">
+
+     <h3>EXAMPLES</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .TP -->
+<table cellpadding="3">
+<tbody><tr valign="top"><td colspan="2">
+<!-- .B % mdump -h -->
+<b>% mdump -h</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+List the the command line options.
+<p>
+</p><p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % mdump -dtype l -format ' %8.8x' -interval 4 -show 2 somefile -->
+<b>% mdump -dtype l -format &#8217; %8.8x&#8217; -interval 4 -show 2 somefile</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Dump in hex format integer elements in blocks of 4 per line
+and number the lines by data block.
+<p>
+<!-- .TP -->
+</p></td></tr>
+<tr valign="top"><td colspan="2">
+<!-- .B % echo ABCD | mdump -dtype c -format ' %3.3o' -interval 4 -blocks 1 -->
+<b>% echo ABCD | mdump -dtype c -format &#8217; %3.3o&#8217; -interval 4 -blocks 1</b> </td></tr><tr valign="top"><td width="6%">&nbsp;</td><td>
+Emits the octal values for the four ascii characters ABCD.
+<p>
+<!-- .SH SEE ALSO -->
+</p></td></tr>
+<tr></tr></tbody></table></p></blockquote>
+<a name="5">
+
+     <h3>SEE ALSO</h3>
+
+</a>
+<blockquote>
+<p>
+<!-- .B od(1) -->
+<b>od(1)</b> </p><p>
+<!-- .SH LICENSE -->
+</p></blockquote>
+<a name="6">
+
+     <h3>LICENSE</h3>
+
+</a>
+<blockquote>
+<p>
+GNU General Public License 2
+</p><p>
+<!-- .SH COPYRIGHT -->
+</p></blockquote>
+<a name="7">
+
+     <h3>COPYRIGHT</h3>
+
+</a>
+<blockquote>
+<p>
+Copyright (C) 2002, 2006 David Mathog and Caltech.
+</p><p>
+<!-- .SH AUTHORS -->
+</p></blockquote>
+<a name="8">
+
+     <h3>AUTHORS</h3>
+
+</a>
+<blockquote>
+<p>
+</p><p>
+David Mathog, Biology Division, Caltech &lt;<a href="mailto:mathog@caltech.edu">mathog@caltech.edu</a>&gt;
+</p><p>
+</p></blockquote>
+<p></p><hr>
+<table width="100%"><tbody><tr> <td width="33%"><i>drm_tools</i></td> <td align="center" width="33%">mdump (1)</td> <td align="right" width="33%"><i>1.0.5 OCT 23 2006</i></td> </tr></tbody></table><font size="-1">Generated by <a href="http://www.squarebox.co.uk/download/manServer.shtml">manServer 1.07</a> from /usr/common/man/man1/mdump.1 using man macros.</font>
+
+</body></html>
