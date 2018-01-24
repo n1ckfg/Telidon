@@ -1,7 +1,7 @@
 # https://stackoverflow.com/questions/1035340/reading-binary-file-and-looping-over-each-byte
 # https://stackoverflow.com/questions/7396849/convert-binary-to-ascii-and-vice-versa
 # https://www.devdungeon.com/content/working-binary-data-python
-
+# Begin: ESC 25 41 [27 25 41] ... End: ESC 25 40 [27 25 40]
 import binascii
 
 def text_to_bits(text, encoding='utf-8', errors='surrogatepass'):
@@ -47,16 +47,6 @@ def file_byte_iterator(path):
                 yield byte
 
 napStr = ""
-
-'''
-with open("boom.nap", "rb") as f:
-    data = f.read(1)
-    for byte in binascii.b2a_uu(data):
-    	b1 = text_to_bits(str(byte))
-        b2 = int(b1, 2)
-        b3 = b2
-    	napStr += str(b3) + ", "
-'''
 
 for byte in file_byte_iterator("boom.nap"):
     b = ord(byte)
