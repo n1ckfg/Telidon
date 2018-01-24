@@ -1,8 +1,12 @@
 # https://stackoverflow.com/questions/1035340/reading-binary-file-and-looping-over-each-byte
 # https://stackoverflow.com/questions/7396849/convert-binary-to-ascii-and-vice-versa
 # https://www.devdungeon.com/content/working-binary-data-python
+# https://docs.python.org/2/library/struct.html
+# https://www.rapidtables.com/code/text/ascii-table.html
+
 # Begin: ESC 25 41 [27 25 41] ... End: ESC 25 40 [27 25 40]
 import binascii
+import struct
 
 def text_to_bits(text, encoding='utf-8', errors='surrogatepass'):
     bits = bin(int(binascii.hexlify(text.encode(encoding, errors)), 16))[2:]
@@ -49,7 +53,10 @@ def file_byte_iterator(path):
 napStr = ""
 
 for byte in file_byte_iterator("boom.nap"):
-    b = ord(byte)
-    napStr += str(b) + ", "
+    b1 = struct.unpack("c",byte)
+    b2 = str(b1)
+    b3 = b2.split('\'')[1]
+    b4 = 
+    napStr += str(b4) + ", "
 
 print(napStr)
