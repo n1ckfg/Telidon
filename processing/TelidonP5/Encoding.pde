@@ -192,7 +192,7 @@ void printBytesFromStringArray(String[] input) {
   }
 }
 
-void printBytesFromByteArray(byte[] input) {
+void printBytesFromByteArray(byte[] input, int byteSize) {
   for (int i=0; i<input.length; i++) {
     byte b;
     if (byteSize == 7) {
@@ -201,6 +201,18 @@ void printBytesFromByteArray(byte[] input) {
       b = (byte) (input[i] & 0xFF);
     }
 
+    print(b);
+    if (i < input.length-1) {
+      print(", ");
+    } else {
+      print("\n");
+    }
+  }
+}
+
+void printIntsFromByteArray(byte[] input) {
+  for (int i=0; i<input.length; i++) {
+    int b = (int) input[i];
     print(b);
     if (i < input.length-1) {
       print(", ");
