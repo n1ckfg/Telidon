@@ -13,6 +13,25 @@ import java.util.Base64;
 // http://www.dcode.fr/ascii-code
 // https://forum.processing.org/one/topic/need-help-in-converting-data-types.html
 
+String[] stringsNumeric (byte[] bytes, int byteSize) {
+  return splitByChar(decodeNBits(readNBits(new String(bytes), byteSize), byteSize), "?!#");
+}
+
+String[] stringsAscii (byte[] bytes, int byteSize) {
+  return splitByNum(new String(bytes), byteSize);
+}
+  
+byte[] encodeTo7Bits(String str) {
+    byte[] bytes = new byte[str.length() * 7];
+    for (int i = 0; i < str.length(); i++) {
+        char ch = str.charAt(i);
+        assert ch < 128;
+        for (int j = 0; j < 7; j++) 
+            bytes[i * 7 + j] = (byte) ((ch >> (7 - j)) & 1);
+    }
+    return bytes;
+}
+
 byte[] readNBits(String str, int n) {
     byte[] bytes = new byte[str.length() * n];
     for (int i = 0; i < str.length(); i++) {
@@ -124,4 +143,69 @@ void floatsToBytes(float[] floats, String _fileName) {
   }
   
   saveBytes(_fileName, bytes);
+}
+
+// https://codescracker.com/java/program/java-program-convert-decimal-to-octal.htm
+// https://stackoverflow.com/questions/13147109/decimal-to-octal-conversion
+// http://www.neurophys.wisc.edu/comp/docs/ascii/
+int octalToDecimal(int octal) {    
+    int decimal = 0;    
+    int n = 0;    
+    while (true) {    
+      if (octal == 0) {    
+        break;    
+      } else {    
+          int temp = octal%10;    
+          decimal += temp*Math.pow(8, n);    
+          octal = octal/10;    
+          n++;    
+       }    
+    }    
+    return decimal;    
+}   
+
+int decimalToOctal(int decimal){
+   int counter = 0;
+   int octal = 0;
+   while(decimal !=0) {
+        int temp = (int) ((decimal%8) * Math.pow(10, counter));
+        counter++;
+        octal += temp;
+        decimal /= 8;
+    }
+    return octal;
+}
+
+void printBytesFromStringArray(String[] input) {
+  for (int i=0; i<input.length; i++) {
+    int len = input[i].length();
+    for (int j=0; j<len; j++) {
+      byte b = (byte) input[i].charAt(j);
+      
+      print(b);
+      if (j < len-1) {
+        print(", ");
+      } else {
+        print("\n");
+      }
+    }
+  }
+}
+
+void printBytesFromByteArray(byte[] input) {
+  for (int i=0; i<input.length; i++) {
+    byte b;
+    if (byteSize == 7) {
+      b = (byte) (input[i] & 0x7F);
+    } else {
+      b = (byte) (input[i] & 0xFF);
+    }
+
+    print(b);
+    if (i < input.length-1) {
+      print(", ");
+    } else {
+      print("\n");
+    }
+  }
 }

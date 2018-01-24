@@ -20,57 +20,18 @@ byte bytes[];
 String[] stringsRaw;
 String[] stringsNumeric;
 String[] stringsAscii;
+String string7;
 int byteSize = 7;
 
 void setup() {
   size(640, 480);
   bytes = loadBytes(filePath);
-  stringsRaw = loadStrings(filePath);
-  
-  stringsNumeric = splitByChar(decodeNBits(readNBits(new String(bytes), byteSize), byteSize), "?!#");
-  stringsAscii = splitByNum(new String(bytes), byteSize);
-  //println(stringsNumeric);
-  //println(stringsAscii);
+  stringsRaw = loadStrings(filePath);  
   
   printBytesFromByteArray(bytes);
-  
 }
 
 void draw() {
   background(0);
   // TODO shape methods here
-}
-
-void printBytesFromStringArray(String[] input) {
-  for (int i=0; i<input.length; i++) {
-    int len = input[i].length();
-    for (int j=0; j<len; j++) {
-      byte b = (byte) input[i].charAt(j);
-      
-      print(b);
-      if (j < len-1) {
-        print(", ");
-      } else {
-        print("\n");
-      }
-    }
-  }
-}
-
-void printBytesFromByteArray(byte[] input) {
-  for (int i=0; i<input.length; i++) {
-    byte b;
-    if (byteSize == 7) {
-      b = (byte) (input[i] & 0x7F);
-    } else {
-      b = (byte) (input[i] & 0xFF);
-    }
-    
-    print(b);
-    if (i < input.length-1) {
-      print(", ");
-    } else {
-      print("\n");
-    }
-  }
 }
