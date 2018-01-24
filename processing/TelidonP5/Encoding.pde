@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import java.util.Base64;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 // ~ ~ ~ ASCII ~ ~ ~
 // http://ascii.cl/control-characters.htm
@@ -105,15 +107,24 @@ String decodeStringFromBase64(String input) {
 }
 
 // https://stackoverflow.com/questions/4513498/java-bytes-to-floats-ints
-int asInt(byte[] bytes) {
-  return (bytes[0] & 0xFF) 
-         | ((bytes[1] & 0xFF) << 8) 
-         | ((bytes[2] & 0xFF) << 16) 
-         | ((bytes[3] & 0xFF) << 24);
+int asInt32(byte[] bytes) {
+  return (bytes[0] & 0xFF) | ((bytes[1] & 0xFF) << 8) | ((bytes[2] & 0xFF) << 16) | ((bytes[3] & 0xFF) << 24);
 }
 
-float asFloat(byte[] bytes) {
-  return Float.intBitsToFloat(asInt(bytes));
+float asFloat32(byte[] bytes) {
+  return Float.intBitsToFloat(asInt32(bytes));
+}
+
+int asInt24(byte[] bytes) {
+  return (bytes[0] & 0xFF) | ((bytes[1] & 0xFF) << 8) | ((bytes[2] & 0xFF) << 16);
+}
+
+int asInt16(byte[] bytes) {
+  return (bytes[0] & 0xFF) | ((bytes[1] & 0xFF) << 8);
+}
+
+int asInt8(byte b) {
+  return (int) b & 0xFF;
 }
 
 // https://forum.processing.org/two/discussion/23446/saving-multi-dimensional-arrays
