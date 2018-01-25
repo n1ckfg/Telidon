@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>VTWeb Frame Controller</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+/* Display interactive videotex on the web
+	Build simple interactive tree displays from 
+	mp4 conversions of old Telidon/NAPLPS frames
+	Written by John Durno, January 2018
+*/
+
+/*
+vtDict structure, like old-style videotex 'database'
+<number (filename) of slide>:
+	tree: <value sent>:<file name (number) of next slide>
+	auto: <zero if no auto-advance, otherwise seconds to wait before advancing>
+	default: <value to send if auto-advance, only needed if auto-advance is not zero>
+	hideinput:<0, don't hide user input; 1, hide user input>
+*/
+var vtDict = {
+	1:{'tree':{1:3,2:2},'auto':0,'hideinput':0}, 				// intro
+	2:{'tree':{1:1},'auto':4,'default':1,'hideinput':1}, 		// no - bad choice
+	3:{'tree':{1:4},'auto':7,'default':1,'hideinput':1}, 		// yes - good choice
+	4:{'tree':{1:5},'auto':10,'default':1,'hideinput':1}, 		// delays, chunks
+	5:{'tree':{1:7,2:6},'auto':9,'default':2, 'hideinput':0},	// save the demo!
+	6:{'tree':{1:8},'auto':10,'default':1,'hideinput':1},		// boom
+	7:{'tree':{1:8},'auto':6,'default':1,'hideinput':1},		// saved the demo
+	8:{'tree':{1:9,2:10,3:11},'auto':0,'hideinput':0},			// how did you like demo
+	9:{'tree':{1:8},'auto':8,'default':1,'hideinput':1},		// not that bad
+	10:{'tree':{1:12},'auto':8,'default':1,'hideinput':1},		// you do better?		
+	11:{'tree':{1:1,2:12},'auto':0,'hideinput':0},				// glad you enjoyed it
+	12:{'tree':{},'auto':0,'hideinput':1}						// the end
+}
+
+var prev = 1;
+
+var timeout;
+
+var inputdelay;
+
+//bind enter key to send button
+$(document).keypress(function(e){
+    if (e.which == 13){
+        $("#xmit").click();
+    }
+});
+
+$(document).ready(function(){
+	
+	//clear the input box
+	$( "#vtframe" ).val('');
+	//focus on the input box
+	$( "#vtframe" ).focus();
+	
+	//when input is 'sent'
+    $("#xmit").on ("click", function(){
+    	
+    		
+    	//only try to advance if the value submitted is in fact one of the options
+    	if ($( "#vtframe" ).val() in vtDict[prev]['tree']) {
+			//read the value of the next frame from the input box
+			var vt = vtDict[prev]['tree'][$( "#vtframe" ).val()];   				
+				
+			//hide the input area
+			$("#enterdata").hide();
+			
+			//get rid of any remaining time outs, otherwise input and timeouts could 'stack'
+			clearTimeout(timeout);
+			
+			
+			//determine whether to auto-advance to the next frame, based on the dict value
+			var auto = vtDict[vt]['auto'];
+			//determine whether we want to show or hide user input option for the next frame
+			var hideinput = vtDict[vt]['hideinput'];
+	 
+			//add a leading zero if input value less than 10
+			if (vt < 10) {
+				var fn = '0' + vt;	
+			} else {
+				var fn = vt;
+			}
+	
+			//set the video display area to src the next video based on input, then load it
+			$( "#mp4video" ).attr('src', 'vtclips/demo' + fn + '.mp4');
+			$( "#vtclip" )[0].load();
+			
+			//write some helpful text for debugging purposes
+			//$( "#debug1" ).html( "<b>VTFrame:</b> vtclips/demo" + vt + '.mp4' + ' : ' + auto); 
+			//$( "#debug2" ).html( "<b>Previous:</b> " + prev); 
+	 
+			if (hideinput == 0) {
+				
+				//delay the input widget display until after the video starts loading
+				inputdelay = setTimeout(function(){
+					//clear the input box
+					$( "#vtframe" ).val('');
+					//set up the input area for the next round
+					$( "#entertext" ).html("Enter your choice: ");
+					$( "#enterdata" ).show();
+					$( "#vtframe" ).focus();
+				}, 1000);
+
+			}
+	
+			
+			prev = vt;
+		  
+			//if slide is set to auto-advance, based on the dict
+			if (auto > 0) {
+				
+				//write some helpful text for debugging
+				//$( "#debug1" ).html( "<b>VTFrame:</b> " + vt + ' : Auto-advance to ' + vtDict[vt]['default'] + ' in ' + auto + ' seconds');
+		
+				//need to multiply the specified value by 1000 to make it seconds
+				var delay = auto * 1000;
+				
+				//set up the delay
+				timeout = setTimeout(function(){
+					//set the input box to the default value
+					$("#vtframe").val(vtDict[vt]['default']);
+					//click the input
+					$('#xmit').trigger('click');
+				}, delay);
+			}
+        
+        } else { //user input is not a recognized option
+    		
+    		$( "#entertext" ).html("Input &lt;" + $( "#vtframe" ).val() + "&gt; not valid. Re-try: ");
+    		//clear the input box
+			$( "#vtframe" ).val('');
+			$( "#vtframe" ).focus();
+			
+    	}
+       
+    });
+}); 
+
+
+</script>
+</head>
+<body style="background-color: black; color: white; font-family:Arial,Helvetica; font-size: 120%; margin:30px">
+
+<video id="vtclip" style="height:710px; width:960px;  border:1px white solid;" autoplay>
+  <source id="mp4video" src="vtclips/demo01.mp4" type="video/mp4"  />
+</video>
+
+<div id="enterdata"><span id="entertext">Enter your choice: </span>
+<input type="text" id="vtframe" size="3" maxlength="3" />
+<button id="xmit">Transmit</button></div>
+
+<div id="debug1">&nbsp;</div>
+<div id="debug2">&nbsp;</div>
+
+
+</body>
+</html>

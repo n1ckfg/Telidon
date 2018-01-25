@@ -31,7 +31,7 @@ If the two bytes immediately after 1F are between 40
 and 7F, then the cursor is repositioned. 
 
 (5). 0E
-Shift-Out
+Shift-Out: Switch to graphics mode
 Five of the normal ASCII control characters are used in
 code sequences that shift G-sets and C-sets in and out of
 the active state. They are ESC (1B), SI (0F), SO (0E), SS2
@@ -76,4 +76,4 @@ Text
 Point Set Abs
 
 (18). 0F, 42, 4F, 4F, 4D
-Shift-In
+Shift-In: Switch to text mode, text "BOOM"
