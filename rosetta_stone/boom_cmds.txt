@@ -1,0 +1,79 @@
+(1). 18
+Cancel
+This code is used to terminate the processing of all
+currently executing macros. Execution resumes at the next
+code following the terminated macro call. The CAN code is
+not queued, it has an immediate effect even if there are
+other NAPLPS codes in a buffer which have not yet been
+processed.
+
+(2). 1B
+Esc
+Five of the normal ASCII control characters are used in
+code sequences that shift G-sets and C-sets in and out of
+the active state. They are ESC (1B), SI (0F), SO (0E), SS2
+(19) and SS3 (1D) or ESCAPE, SHIFT-IN, SHIFT-OUT, SINGLE-
+SHIFT 2 and SINGLE SHIFT 3. The single shift codes are used
+to temporarily escape the immediately following character.
+
+(3). 22, 46
+<-- activate C1 set
+C0 is activated by ESC 21 4B and C1 is
+activated by ESC 22 46. 
+
+(4). 1B, 45
+Esc, ???
+
+(5). 1F, 40, 40
+Non-Selective Reset is used to reset most of the
+environment settings to their default state...
+If the two bytes immediately after 1F are between 40
+and 7F, then the cursor is repositioned. 
+
+(6). 0E
+Shift-Out
+Five of the normal ASCII control characters are used in
+code sequences that shift G-sets and C-sets in and out of
+the active state. They are ESC (1B), SI (0F), SO (0E), SS2
+(19) and SS3 (1D) or ESCAPE, SHIFT-IN, SHIFT-OUT, SINGLE-
+SHIFT 2 and SINGLE SHIFT 3. The single shift codes are used
+to temporarily escape the immediately following character.
+
+(7). 20, 7F, 4F
+Space, Delete, ???
+
+(8). 21, 4D, 40, 40, 49, 40
+Domain
+
+(9). 23, 40, 40, 52, 40, 40
+Texture
+
+(10). 3E, 70, 40, 40, 40
+Select Color
+
+(11). 37, 42, 63, 69, 59, 47, 56, 46, 76, 40, 43, 79, 4F, 47, 4D, 4D, 5B, 40, 62, 75, 78, 47, 54, 48, 4C, 40, 5B, 47, 4C, 47, 5B, 4E, 4F, 40, 59, 55, 50, 47, 4A, 41, 75, 47, 56, 65, 48, 7F, 6D, 41, 7A, 7F, 72, 48, 6E, 78, 5B, 65, 71, 7F, 5B, 71, 71, 78, 64, 74, 4A, 7F, 5C, 7A, 5C, 78, 74, 63, 77, 78, 60, 44, 4E, 40, 54, 70, 67, 78, 6B, 48, 4D, 40, 58, 61, 55
+Set & Poly Filled
+
+(12). 3E, 68, 40, 40, 40
+Select Color
+
+(13). 37, 4A, 4E, 71, 69, 47, 54, 45, 4D, 40, 63, 45, 70, 46, 4E, 7C, 5B, 41, 59, 70, 44, 46, 4F, 46, 72, 40, 6C, 54, 41, 7E, 67, 5E, 5E, 47, 5A, 56, 53, 78, 59, 45, 48, 7F, 72, 4F, 60, 78, 6E, 59, 69, 7F, 59, 41, 74, 79, 78, 71, 69, 7F, 41, 74, 5A, 40, 5D, 5F, 66, 78, 58, 54, 46, 40, 62, 44, 68, 78, 54, 5F, 6A, 47, 6F, 6C, 41
+Set & Poly Filled
+
+(14). 3E, 6C, 40, 40, 40
+Select Color
+
+(15). 37, 42, 7A, 71, 50, 47, 56, 69, 65, 40, 4E, 68, 78, 47, 51, 7C, 4E, 41, 50, 48, 53, 46, 4E, 7C, 54, 40, 65, 41, 56, 7F, 78, 65, 69, 47, 6C, 67, 79, 7F, 5E, 63, 6F, 7F, 72, 71, 49, 78, 67, 52, 4A, 7F, 78, 61, 40, 78, 66, 73, 7E, 7F, 5B, 70, 69, 78, 7F, 6D, 73, 78, 50, 7B, 79, 40, 5A, 40, 6D, 78, 66, 65, 53
+Set & Poly Filled
+
+(16). 3E, 70, 40, 40, 40
+Select Color
+
+(17). 22, 40, 40, 40, 4B, 68, 7A
+Text
+
+(18). 24, 49, 6A, 4C, 59
+Point Set Abs
+
+(19). 0F, 42, 4F, 4F, 4D
+Shift-In
