@@ -74,26 +74,36 @@ class NapCmd {
   
   String printCmd(String mode) {
     String returns = "(" + (index+1) + "). ";
-    if (mode.equals("char")) {
-      returns += opcode.c;
-    } else if (mode.equals("binary")) {
-      returns += opcode.binary;
-    } else if (mode.equals("ascii")) {
-      returns += opcode.ascii;
-    } else if (mode.equals("hex")) {
-      returns += opcode.hex;
+    switch(mode) {
+      case("char"):
+        returns += opcode.c;
+        break;
+      case("binary"):
+        returns += opcode.binary;
+        break;
+      case("ascii"):
+        returns += opcode.ascii;
+        break;
+      case("hex"):
+        returns += opcode.hex;
+        break;
     }
     if (data.size() > 0) {
       returns += ", ";
       for (int i=0; i<data.size(); i++) {
-        if (mode.equals("char")) {
-          returns += "" + data.get(i).c;
-        } else if (mode.equals("binary")) {
-          returns += "" + data.get(i).binary;
-        } else if (mode.equals("ascii")) {
-          returns += "" + data.get(i).ascii;
-        } else if (mode.equals("hex")) {
-          returns += "" + data.get(i).hex;
+        switch(mode) {
+          case("char"):
+            returns += "" + data.get(i).c;
+            break;
+          case("binary"):
+            returns += "" + data.get(i).binary;
+            break;
+          case("ascii"):
+            returns += "" + data.get(i).ascii;
+            break;
+          case("hex"):
+            returns += "" + data.get(i).hex;
+            break;
         }
         if (i < data.size() - 1) returns += ", ";
       }

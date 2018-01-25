@@ -4,7 +4,6 @@
 # https://docs.python.org/2/library/struct.html
 # https://www.rapidtables.com/code/text/ascii-table.html
 
-# Begin: ESC 25 41 [27 25 41] ... End: ESC 25 40 [27 25 40]
 import binascii
 import struct
 
