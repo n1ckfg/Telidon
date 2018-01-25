@@ -9,7 +9,6 @@ import java.util.Base64;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-// ~ ~ ~ ASCII ~ ~ ~
 // http://ascii.cl/control-characters.htm
 // https://stackoverflow.com/questions/36519977/how-to-convert-string-into-a-7-bit-binary
 // http://www.dcode.fr/ascii-code
@@ -80,7 +79,6 @@ String[] splitByChar(String[] s, String delim) {
     return splitTokens(join(s, ""), delim);
 }
 
-// ~ ~ ~ BASE64 ~ ~ ~
 // https://forum.processing.org/two/discussion/6958/pimage-base64-encode-and-decode
 // https://www.mkyong.com/java/how-to-convert-byte-to-bufferedimage-in-java/
 // https://stackoverflow.com/questions/2305966/why-do-i-get-the-unhandled-exception-type-ioexception
@@ -230,5 +228,19 @@ void printIntsFromByteArray(byte[] input) {
     } else {
       print("\n");
     }
+  }
+}
+
+// https://stackoverflow.com/questions/26930066/bytebuffer-switch-endianness
+// https://stackoverflow.com/questions/13553349/bytebuffer-little-endian-insert-not-workingv
+void printBytesFromBuffer(byte[] input) {
+  ByteBuffer buf = ByteBuffer.allocate(input.length);
+  buf.asCharBuffer();
+  for (int i=0; i<input.length; i++) {
+    buf.put(i,input[i]);
+  }
+  buf.order(ByteOrder.LITTLE_ENDIAN);
+  for (int i=0; i<buf.capacity()-1; i++) {
+    print(buf.get(i) + ", ");
   }
 }
