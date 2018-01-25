@@ -26,18 +26,18 @@ void setup() {
   
   for (int i=0; i<drawCmds.size(); i++) {
     drawCmds.get(i).getPoints16();
+    println(drawCmds.get(i).points.size());
   }
   
-  // should match 22, 20, 19 points, first point of first shape is (0.146, 0.4018) from SVG
-  // instead 43, 39, 37
-  println(drawCmds.get(1).points.size());
+  // first point of first shape is (0.146, 0.4018) from SVG
+  println(drawCmds.get(0).points.get(0));
 }
 
 void draw() {
   tex.beginDraw();
   tex.background(0);
   //for (int i=0; i<drawCmds.size(); i++) {
-  drawPoints(drawCmds.get(2).points, texWidth, texHeight);
+  drawPoints(drawCmds.get(0).points, texWidth, texHeight);
   //}
   tex.endDraw();
   
