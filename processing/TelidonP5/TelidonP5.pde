@@ -25,7 +25,7 @@ void setup() {
   println("Found " + drawCmds.size() + " polygons.");
   
   for (int i=0; i<drawCmds.size(); i++) {
-    drawCmds.get(i).getPoints16();
+    drawCmds.get(i).getPoints();
     println(drawCmds.get(i).points.size());
   }
   

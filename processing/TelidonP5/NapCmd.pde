@@ -66,18 +66,10 @@ class NapCmd {
     return returns;
   }
   
-  void getPoints8() {
-    for (int i=0; i<data.size()-2; i+=2) {
-      //float x = 1.0 - data.get(i).f;
-      //float y = 1.0 - data.get(i+1).f;
-      //points.add(new PVector(x, y));
-    }
-  }
-  
-  void getPoints16() {
+  void getPoints() {
     for (int i=0; i<data.size(); i+=4) {
-      NapCoord napCoord = new NapCoord(data.get(i).c, data.get(i+1).c, data.get(i+2).c, data.get(i+3).c);
-      points.add(new PVector(napCoord.x, napCoord.y));
+      NapVector napV = new NapVector(data.get(i).c, data.get(i+1).c, data.get(i+2).c, data.get(i+3).c);
+      points.add(new PVector(napV.x, napV.y));
     }
   }
   

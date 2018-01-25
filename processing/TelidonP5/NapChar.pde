@@ -58,55 +58,55 @@ class NapOpcode extends NapChar {
 
 class NapData extends NapChar {
   
-  //float f;
+  float f;
   
   NapData(char _c) {
     super(_c);
-    //f = getCoord(ascii);
+    f = getNormFloat(ascii);
   }
   
-  /*
-  float getCoord(int _i) {
+  float getNormFloat(int _i) {
     float returns = (float)_i / 127.0;
     return returns;
   }
-  */
   
 }
 
-class NapCoord {
+class NapVector {
   
-  byte[] xb = new byte[2];
-  byte[] yb = new byte[2];
-  int xRaw, yRaw;
+  NapChar x1, x2, y1, y2;
+  int xInt, yInt;
   float x, y;
   
-  NapCoord(char _x1, char _x2, char _y1, char _y2) {
-    xb[0] = byte(_x1);
-    xb[1] = byte(_x2);
-    yb[0] = byte(_y1);
-    yb[1] = byte(_y2);
-    xRaw = asInt16(xb); 
-    yRaw = asInt16(yb); 
-    x = 1.0 - ((float) xRaw / 65536.0);
-    y = ((float) yRaw / 65536.0) * 0.75;
-    println(x, y);
+  NapVector(char _x1, char _x2, char _y1, char _y2) {
+    x1 = new NapChar(_x1);
+    x2 = new NapChar(_x2);
+    y1 = new NapChar(_y1);
+    y2 = new NapChar(_y2);
+      
+    xInt = getDoubleX(x2, x1);
+    yInt = getDoubleY(y2, y1);
+    
+    x = (float) xInt / 63.0;
+    y = (float) yInt / 63.0;
   }
   
-  int asInt32(byte[] bytes) {
-    return (bytes[0] & 0xFF) | ((bytes[1] & 0xFF) << 8) | ((bytes[2] & 0xFF) << 16) | ((bytes[3] & 0xFF) << 24);
-  }
- 
-  int asInt24(byte[] bytes) {
-    return (bytes[0] & 0xFF) | ((bytes[1] & 0xFF) << 8) | ((bytes[2] & 0xFF) << 16);
+  String getSingleX(NapChar n) {
+    //return "" + n.binary.charAt(4) + n.binary.charAt(5) + n.binary.charAt(6);
+    return "" + n.binary.charAt(6) + n.binary.charAt(5) + n.binary.charAt(4);
   }
   
-  int asInt16(byte[] bytes) {
-    return (bytes[0] & 0xFF) | ((bytes[1] & 0xFF) << 8);
+  String getSingleY(NapChar n) {
+    //return "" + n.binary.charAt(1) + n.binary.charAt(2) + n.binary.charAt(3);
+    return "" + n.binary.charAt(3) + n.binary.charAt(2) + n.binary.charAt(1);
   }
   
-  int asInt8(byte b) {
-    return (int) b & 0xFF;
+  int getDoubleX(NapChar n1, NapChar n2) {
+    return unbinary(getSingleX(n1) + getSingleX(n2));
+  }
+  
+  int getDoubleY(NapChar n1, NapChar n2) {
+    return unbinary(getSingleY(n1) + getSingleY(n2));
   }
   
 }
