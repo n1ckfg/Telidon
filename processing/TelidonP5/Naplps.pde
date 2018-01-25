@@ -32,7 +32,7 @@ class Naplps {
     }
     
     for (int i=0; i<cmds.size(); i++) {
-      println(cmds.get(i).printCmd("hex"));
+      cmds.get(i).printCmd("hex");
     }
   }
   
@@ -55,11 +55,13 @@ class NapCmd {
   int index;
   NapOpcode opcode;
   ArrayList<NapData> data;
-  
+  ArrayList<PVector> points;
+
   NapCmd(String _cmd, int _index) {
     cmdRaw = _cmd;
     index = _index;
     data = new ArrayList<NapData>();
+    points = new ArrayList<PVector>();
     
     opcode = new NapOpcode(cmdRaw.charAt(0));
     if (cmdRaw.length() > 1) {
@@ -72,8 +74,12 @@ class NapCmd {
   void run() {
   }
   
-  String printCmd(String mode) {
-    String returns = "(" + (index+1) + "). ";
+  void printCmd(String mode) {
+    println(formatCmd(mode));
+  }
+  
+  String formatCmd(String mode) {
+    String returns = "(" + index + "). ";
     switch(mode) {
       case("char"):
         returns += opcode.c;
@@ -109,6 +115,14 @@ class NapCmd {
       }
     }
     return returns;
+  }
+  
+  void getPoints() {
+    for (int i=0; i<data.size()-2; i+=2) {
+      float x = 1.0 - data.get(i).f;
+      float y = 1.0 - data.get(i+1).f;
+      points.add(new PVector(x, y));
+    }
   }
   
 }
@@ -154,9 +168,19 @@ class NapOpcode extends NapChar {
 }
 
 class NapData extends NapChar {
+  
+  float f;
+  
   NapData(char _c) {
     super(_c);
+    f = getCoord(ascii);
   }
+  
+  float getCoord(int _i) {
+    float returns = (float)_i / 127.0;
+    return returns;
+  }
+  
 }
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -176,11 +200,7 @@ Assumes a 4:3 aspect ratio and everything above 0.75 Y is clipped.
 "NAPLPS defines line, box, circle, arc, polyline, polygon, spline, bitmaps, and fonts, both in 
 palette and 24-bit color...as a stream of 7-bit or 8-bit ASCII characters. The coordinate model 
 is right-handed Cartesian, meaning that X and Y coordinates increase toward the upper-right of 
-the screen. A NAPLPS code sequence begins with the characters ESC 25 41 [27 25 41] and ends with the 
-sequence ESC 25 40 [27 25 40]. NAPLPS code sequences are designed with an eye toward avoiding standard 
-terminal escape sequences such as those provided by VT100 and ANSI. NAPLPS files are basically 
-segments of the NAPLPS data stream redirected to a file. Properly formatted, NAPLPS data files 
-are not unlike uuencoded binary files."
+the screen.
 
 // John Durno:
 It may seem odd now, but back in the 70s encoding vector graphics using the 128
@@ -220,6 +240,5 @@ primitives. There are eight environment codes (RESET,
 DOMAIN, TEXT, TEXTURE, SET COLOR, WAIT, SELECT COLOR and
 BLINK) which set the graphics environment and 6 different
 object types (POINT, LINE, ARC, RECTANGLE, POLYGON,
-INCREMENTALS). 
-
+INCREMENTALS)...
 */
