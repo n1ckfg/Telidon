@@ -2,14 +2,14 @@ String filePath = "nap/boom.nap";
 
 PGraphics tex;
 int texWidth = 320;
-int texHeight = 240;
+int texHeight = 320;
 
 Naplps nap;
 ArrayList<NapCmd> drawCmds;
 
 void setup() {
   size(50, 50, P2D);
-  surface.setSize(texWidth * 2, texWidth * 2);
+  surface.setSize(texWidth * 2, texHeight * 2);
   noSmooth();
 
   tex = createGraphics(texWidth, texHeight, P2D);
@@ -22,11 +22,11 @@ void setup() {
     if (cmd.opcode.id.equals("SET & POLY FILLED")) drawCmds.add(cmd);
   }
   
-  println("Found " + drawCmds.size() + " polygons.");
+  //println("Found " + drawCmds.size() + " polygons.");
   
   for (int i=0; i<drawCmds.size(); i++) {
     drawCmds.get(i).getPoints();
-    println(drawCmds.get(i).points.size());
+    //println(drawCmds.get(i).points.size());
   }
   
   // first point of first shape is (0.146, 0.4018) from SVG

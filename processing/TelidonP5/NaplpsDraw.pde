@@ -7,7 +7,7 @@ void drawPoints(ArrayList<PVector> points, int w, int h) {
     PVector p = points.get(i);
     tex.vertex(p.x * w, p.y * h);
   }
-  tex.endShape();
+  tex.endShape(CLOSE);
   
   tex.stroke(255,0,0);
   tex.strokeWeight(4);

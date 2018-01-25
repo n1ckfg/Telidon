@@ -3,6 +3,7 @@ class Naplps {
   String napRaw;
   ArrayList<NapCmd> cmds;
   int counter = 0;
+  boolean debug = false;
   
   Naplps(String[] input) {
     napRaw = "";
@@ -31,8 +32,10 @@ class Naplps {
       }
     }
     
-    for (int i=0; i<cmds.size(); i++) {
-      cmds.get(i).printCmd("hex");
+    if (debug) {
+      for (int i=0; i<cmds.size(); i++) {
+        cmds.get(i).printCmd("hex");
+      }
     }
   }
   

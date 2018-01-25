@@ -74,39 +74,48 @@ class NapData extends NapChar {
 
 class NapVector {
   
-  NapChar x1, x2, y1, y2;
   int xInt, yInt;
   float x, y;
   
-  NapVector(char _x1, char _x2, char _y1, char _y2) {
-    x1 = new NapChar(_x1);
-    x2 = new NapChar(_x2);
-    y1 = new NapChar(_y1);
-    y2 = new NapChar(_y2);
-      
-    xInt = getDoubleX(x2, x1);
-    yInt = getDoubleY(y2, y1);
+  NapVector(NapData n1, NapData n2, NapData n3, NapData n4) {
+    xInt = getX(n4, n3, n2, n1);
+    yInt = getY(n4, n3, n2, n1);
     
-    x = (float) xInt / 63.0;
-    y = (float) yInt / 63.0;
+    x = (float) xInt / 4096.0;
+    y = (float) yInt / 4096.0;
   }
   
-  String getSingleX(NapChar n) {
-    //return "" + n.binary.charAt(4) + n.binary.charAt(5) + n.binary.charAt(6);
-    return "" + n.binary.charAt(6) + n.binary.charAt(5) + n.binary.charAt(4);
+  String getSingleX(NapData n) {
+    return "" + n.binary.charAt(4) + n.binary.charAt(5) + n.binary.charAt(6);
   }
   
-  String getSingleY(NapChar n) {
-    //return "" + n.binary.charAt(1) + n.binary.charAt(2) + n.binary.charAt(3);
-    return "" + n.binary.charAt(3) + n.binary.charAt(2) + n.binary.charAt(1);
+  String getSingleY(NapData n) {
+    return "" + n.binary.charAt(1) + n.binary.charAt(2) + n.binary.charAt(3);
   }
   
-  int getDoubleX(NapChar n1, NapChar n2) {
-    return unbinary(getSingleX(n1) + getSingleX(n2));
+  int getX(NapData n1, NapData n2, NapData n3, NapData n4) {
+    String b = getSingleX(n1) + getSingleX(n2) + getSingleX(n3) + getSingleX(n4);
+    return unbinary(b);
   }
   
-  int getDoubleY(NapChar n1, NapChar n2) {
-    return unbinary(getSingleY(n1) + getSingleY(n2));
+  int getY(NapData n1, NapData n2, NapData n3, NapData n4) {
+    String b = getSingleY(n1) + getSingleY(n2) + getSingleY(n3) + getSingleY(n4);
+    println(b);
+    return unbinary(b);
   }
   
 }
+
+/*
+           X     Y               X   Y   Z
+     8 7|6 5 4|3 2 1|       8 7|6 5|4 3|2 1|
+    -----------------      -----------------
+    |?|1|S| | |S| | |      |?|1|S| |S| |S| |
+    -----------------      -----------------
+    |?|1| | | | | | |      |?|1| | | | | | |
+    -----------------      -----------------
+        . . .                  . . .
+    -----------------      -----------------
+    |?|1| | | | | | |      |?|1| | | | | | |
+    -----------------      -----------------
+*/
