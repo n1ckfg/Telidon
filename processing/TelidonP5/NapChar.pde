@@ -1,3 +1,5 @@
+// A NapChar is the smallest component of a nap file. 
+// It just contains a few methods for converting one byte.
 class NapChar {
   
   char c;
@@ -42,6 +44,8 @@ class NapChar {
   
 }
 
+// Opcodes are drawing commands.
+// This is how we identify what the command does.
 class NapOpcode extends NapChar {
   
   String id = "";
@@ -101,6 +105,8 @@ class NapOpcode extends NapChar {
   
 }
 
+// The data objects will do different things depending
+// on what the opcode is.
 class NapData extends NapChar {
   
   float f;

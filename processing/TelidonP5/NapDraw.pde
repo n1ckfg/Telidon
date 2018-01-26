@@ -1,22 +1,20 @@
+// This is where it all comes together
 // Processing drawing code is separated here
 
-class NapDraw {
+class NapDraw extends Naplps {
   
   PGraphics tex;
   int texWidth = 320;
   int texHeight = 320;
-  
-  Naplps nap;
   ArrayList<NapCmd> drawCmds;
   
   NapDraw(String _filePath) {
+    super(loadStrings(_filePath));
     tex = createGraphics(texWidth, texHeight, P2D);
-    nap = new Naplps(loadStrings(_filePath));
     drawCmds = new ArrayList<NapCmd>();
     
-    for(int i=0; i<nap.cmds.size(); i++) {
-      NapCmd cmd = nap.cmds.get(i);
-      cmd.printCmd("hex");
+    for(int i=0; i<cmds.size(); i++) {
+      NapCmd cmd = cmds.get(i);
       if (cmd.opcode.id.equals("SET & POLY FILLED")) drawCmds.add(cmd);
     }
   }
@@ -34,7 +32,7 @@ class NapDraw {
   
   void drawPoints(ArrayList<PVector> points, int w, int h) {
     tex.noFill();
-    tex.stroke(0,255,0);
+    tex.stroke(255,255,0);
     tex.strokeWeight(1);
     tex.beginShape();
     for (int i=0; i<points.size(); i++) {
@@ -45,9 +43,11 @@ class NapDraw {
     
     tex.strokeWeight(4);
     for (int i=0; i<points.size(); i++) {
-      if (i==0) tex.stroke(255,0,0);
-      if (i==1) tex.stroke(0,0,255);
-      if (i>1) tex.stroke(127);
+      if (i==0) {
+        tex.stroke(0, 255, 255);
+      } else {
+        tex.stroke(127);
+      }
       PVector p = points.get(i);
       tex.point(p.x * w, p.y * h);
     }

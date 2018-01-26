@@ -1,43 +1,57 @@
+// Extract XY or XYZ coordinates from multiple NapData objects
 class NapVector {
   
   int xInt, yInt;
   float x, y;
   float numBits = 2048;
+  boolean reverse = true;
   
   NapVector(ArrayList<NapData> n) {
-    xInt = getCoordFromBytes(n, "x");
-    yInt = getCoordFromBytes(n, "y");
+    numBits = pow(2, (n.size() * 3) - 1);
+    xInt = getCoordFromBytes(n, "x", reverse);
+    yInt = getCoordFromBytes(n, "y", reverse);
     
     x = (float) xInt / numBits;
-    y = 1.0 - ((float) yInt / numBits);
+    y = (float) yInt / numBits;
+    println("x: " + x + ", y: " + y + " | " + "x*w: " + (x * 320) + ", y*h: " + (y * 240));
   }
   
-  String getSingleByteVal(NapData n, String axis, boolean isHead) {
-    if (isHead) {
-      if (axis.equals("x")) {
-        return "" + n.binary.charAt(5) + n.binary.charAt(4);
-      } else if (axis.equals("y")) {
-        return "" + n.binary.charAt(2) + n.binary.charAt(1);
-      } else { 
-        return "0";
-      }
+  String getSingleByteVal(NapData n, String axis) {
+    String returns = "";
+    if (axis.equals("x")) {
+      returns = "" + n.binary.charAt(3) + n.binary.charAt(4) + n.binary.charAt(5);
+    } else if (axis.equals("y")) {
+      returns = "" + n.binary.charAt(0) + n.binary.charAt(1) + n.binary.charAt(2);
+    }
+    return returns;
+  }
+  
+  int getSign(char c) {
+    if (c == '1') {
+      return 1;
     } else {
-      if (axis.equals("x")) {
-        return "" + n.binary.charAt(6) + n.binary.charAt(5) + n.binary.charAt(4);
-      } else if (axis.equals("y")) {
-        return "" + n.binary.charAt(3) + n.binary.charAt(2) + n.binary.charAt(1);
-      } else {
-        return "0";
-      }
+      return -1;
     }
   }
    
-  int getCoordFromBytes(ArrayList<NapData> n, String axis) {
+  int getCoordFromBytes(ArrayList<NapData> n, String axis, boolean reverse) {
     String returns = "";
-    for (int i=n.size()-1; i>=0; i--) {
-      returns += getSingleByteVal(n.get(i), axis, i==n.size()-1);
+    if (reverse) {
+      for (int i=n.size()-1; i>=0; i--) {
+        returns += getSingleByteVal(n.get(i), axis);
+      }
+    } else {
+      for (int i=0; i<n.size(); i++) {
+        returns += getSingleByteVal(n.get(i), axis);
+      }
     }
-    return unbinary(returns);
+    
+    int sign = getSign(returns.charAt(0));
+    String newReturns = "";
+    for (int i=1; i<returns.length(); i++) {
+      newReturns += returns.charAt(i);
+    }
+    return unbinary(newReturns);
   }
   
 }

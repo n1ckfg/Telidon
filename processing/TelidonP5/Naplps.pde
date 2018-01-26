@@ -1,3 +1,5 @@
+// Decoder only, drawing happens in NapDraw
+
 class Naplps {
   
   String napRaw;
