@@ -68,7 +68,8 @@ class NapCmd {
   
   void getPoints() {
     for (int i=0; i<data.size(); i+=4) {
-      NapVector napV = new NapVector(data.get(i), data.get(i+1), data.get(i+2), data.get(i+3));
+      NapData[] n = { data.get(i), data.get(i+1), data.get(i+2), data.get(i+3) };
+      NapVector napV = new NapVector(n);
       points.add(new PVector(napV.x, napV.y));
     }
   }
