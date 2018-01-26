@@ -12,17 +12,12 @@ class NapDraw {
   NapDraw(String _filePath) {
     tex = createGraphics(texWidth, texHeight, P2D);
     nap = new Naplps(loadStrings(_filePath));
-    
     drawCmds = new ArrayList<NapCmd>();
     
     for(int i=0; i<nap.cmds.size(); i++) {
       NapCmd cmd = nap.cmds.get(i);
+      cmd.printCmd("hex");
       if (cmd.opcode.id.equals("SET & POLY FILLED")) drawCmds.add(cmd);
-    }
-    
-    for (int i=0; i<drawCmds.size(); i++) {
-      drawCmds.get(i).getPoints();
-      println("Found a polygon with " + drawCmds.get(i).points.size() + " points.");
     }
   }
   

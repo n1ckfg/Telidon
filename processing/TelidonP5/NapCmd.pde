@@ -19,6 +19,14 @@ class NapCmd {
         data.add(new NapData(cmdRaw.charAt(i)));
       }
     }
+    
+    switch(opcode.id) {
+      case("SET & POLY FILLED"): 
+        getPoints();
+        break;
+      default:
+        break;
+    }
   }
    
   void printCmd(String mode) {
@@ -26,23 +34,28 @@ class NapCmd {
   }
   
   String formatCmd(String mode) {
-    String returns = "(" + index + "). ";
-    switch(mode) {
-      case("char"):
-        returns += opcode.c;
-        break;
-      case("binary"):
-        returns += opcode.binary;
-        break;
-      case("ascii"):
-        returns += opcode.ascii;
-        break;
-      case("hex"):
-        returns += opcode.hex;
-        break;
+    String returns = "(" + index + ") " + opcode.id;
+    if (data.size() > 0) returns += ": ";
+    if (opcode.id.equals("")) {
+      switch(mode) {
+        case("char"):
+          returns += opcode.c;
+          break;
+        case("binary"):
+          returns += opcode.binary;
+          break;
+        case("ascii"):
+          returns += opcode.ascii;
+          break;
+        case("hex"):
+          returns += opcode.hex;
+          break;
+        default:
+          break;
+      }
     }
     if (data.size() > 0) {
-      returns += ", ";
+      if (opcode.id.equals("")) returns += ", ";
       for (int i=0; i<data.size(); i++) {
         switch(mode) {
           case("char"):
@@ -56,6 +69,8 @@ class NapCmd {
             break;
           case("hex"):
             returns += "" + data.get(i).hex;
+            break;
+          default:
             break;
         }
         if (i < data.size() - 1) returns += ", ";
@@ -72,6 +87,12 @@ class NapCmd {
       }
       NapVector napV = new NapVector(n);
       points.add(new PVector(napV.x, napV.y));
+    }
+  }
+  
+  void getDomain() {
+    for (int i=0; i<data.size(); i++) {
+      //
     }
   }
   

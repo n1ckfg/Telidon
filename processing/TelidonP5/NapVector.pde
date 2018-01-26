@@ -2,23 +2,23 @@ class NapVector {
   
   int xInt, yInt;
   float x, y;
-  float numBits = 512;
+  float numBits = 2048;
   
   NapVector(ArrayList<NapData> n) {
     xInt = getCoordFromBytes(n, "x");
     yInt = getCoordFromBytes(n, "y");
     
     x = (float) xInt / numBits;
-    y = (float) yInt / numBits;
+    y = 1.0 - ((float) yInt / numBits);
   }
   
   String getSingleByteVal(NapData n, String axis, boolean isHead) {
     if (isHead) {
       if (axis.equals("x")) {
-        return "" + n.binary.charAt(4) + n.binary.charAt(5);
+        return "" + n.binary.charAt(5) + n.binary.charAt(6);
       } else if (axis.equals("y")) {
         return "" + n.binary.charAt(2) + n.binary.charAt(3);
-      } else {
+      } else { 
         return "" + 0;
       }
     } else {
@@ -34,8 +34,8 @@ class NapVector {
    
   int getCoordFromBytes(ArrayList<NapData> n, String axis) {
     String returns = "";
-    for (int i=n.size()-1; i>0; i--) {
-      returns += getSingleByteVal(n.get(i), axis, i==0);
+    for (int i=n.size()-1; i>=0; i--) {
+      returns += getSingleByteVal(n.get(i), axis, i==n.size()-1);
     }
     return unbinary(returns);
   }

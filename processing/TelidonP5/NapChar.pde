@@ -48,11 +48,46 @@ class NapOpcode extends NapChar {
   String getId() {
     String returns = "";
     switch(hex) {
+      case("0E"):
+        returns = "Shift-Out"; // graphics mode
+        break;
+      case("0F"):
+        returns = "Shift-In"; // text mode
+        break;
+      case("18"):
+        returns = "CANCEL";
+        break;
+      case("1B"):
+        returns = "ESC";
+        break;
+      case("1F"):
+        returns = "NSR"; // Non-Selective Reset
+        break;
+      case("20"):
+        returns = "RESET";
+        break;
+      case("21"):
+        returns = "DOMAIN";
+        break;
+      case("22"):
+        returns = "TEXT";
+        break;
+      case("23"):
+        returns = "TEXTURE";
+        break;
+      case("24"):
+        returns = "POINT SET ABS";
+        break;
+      case("25"):
+        returns = "POINT SET REL";
+        break;
       case("3E"):
-         returns = "SELECT COLOR";
+        returns = "SELECT COLOR";
         break;
       case("37"):
         returns = "SET & POLY FILLED";
+        break;
+      default:
         break;
     }
     return returns;
