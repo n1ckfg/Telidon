@@ -18,12 +18,23 @@ ArrayList<PVector> parseSvgShape(String s) {
 }
 
 void drawSvgShape(ArrayList<PVector> points) {
+  noStroke();
   beginShape();
   for (int i=0; i<points.size(); i++) {
     PVector p = points.get(i);
     vertex(p.x * width, p.y * height);
   }
-  endShape();
+  endShape(CLOSE);
+  strokeWeight(8);
+  for (int i=0; i<points.size(); i++) {
+    if (i==0) {
+      stroke(0,255,255);
+    } else {
+      stroke(127);
+    }
+    PVector p = points.get(i);
+    point(p.x * width, p.y * height);
+  }
 }
 
 ArrayList<PVector> shape1;
@@ -36,8 +47,7 @@ void setup() {
   shape2 = parseSvgShape(shape2s);
   shape3 = parseSvgShape(shape3s);
   
-  noStroke();
-  println(shape1.size() + " points, first point " + shape1.get(0));
+  println(shape1.size() + " points, second point " + shape1.get(2));
 }
 
 void draw() {

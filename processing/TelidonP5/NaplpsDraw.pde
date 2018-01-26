@@ -9,9 +9,11 @@ void drawPoints(ArrayList<PVector> points, int w, int h) {
   }
   tex.endShape(CLOSE);
   
-  tex.stroke(255,0,0);
   tex.strokeWeight(4);
   for (int i=0; i<points.size(); i++) {
+    if (i==0) tex.stroke(255,0,0);
+    if (i==1) tex.stroke(0,0,255);
+    if (i>1) tex.stroke(127);
     PVector p = points.get(i);
     tex.point(p.x * w, p.y * h);
   }

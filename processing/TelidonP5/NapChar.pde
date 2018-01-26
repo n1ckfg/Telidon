@@ -7,23 +7,27 @@ class NapChar {
   
   NapChar(char _c) {
     c = _c;
-    binary = getBinary(c);
-    ascii = int(c);
-    hex = getHex(_c);
+    ascii = getAscii();
+    binary = getBinary();
+    hex = getHex();
   }
   
-  String getBinary(char _c) {
+  int getAscii() {
+    return int(c);
+  }
+  
+  String getBinary() {
     String returns = "";
-    String b = binary(_c);
+    String b = binary(c);
     for (int i=b.length()-7; i<b.length(); i++) {
       returns += b.charAt(i);
     }
     return returns;
   }
   
-  String getHex(char _c) {
+  String getHex() {
     String returns = "";
-    String h = hex(_c);
+    String h = hex(c);
     for (int i=h.length()-2; i<h.length(); i++) {
       returns += h.charAt(i);
     }    
@@ -38,12 +42,12 @@ class NapOpcode extends NapChar {
   
   NapOpcode(char _c) {
     super(_c);
-    id = getId(hex);
+    id = getId();
   }
   
-  String getId(String s) {
+  String getId() {
     String returns = "";
-    switch(s) {
+    switch(hex) {
       case("3E"):
          returns = "SELECT COLOR";
         break;
@@ -62,60 +66,12 @@ class NapData extends NapChar {
   
   NapData(char _c) {
     super(_c);
-    f = getNormFloat(ascii);
+    f = getNormFloat();
   }
   
-  float getNormFloat(int _i) {
-    float returns = (float)_i / 127.0;
+  float getNormFloat() {
+    float returns = (float) ascii / 127.0;
     return returns;
   }
   
 }
-
-class NapVector {
-  
-  int xInt, yInt;
-  float x, y;
-  
-  NapVector(NapData n1, NapData n2, NapData n3, NapData n4) {
-    xInt = getX(n4, n3, n2, n1);
-    yInt = getY(n4, n3, n2, n1);
-    
-    x = (float) xInt / 4096.0;
-    y = (float) yInt / 4096.0;
-  }
-  
-  String getSingleX(NapData n) {
-    return "" + n.binary.charAt(4) + n.binary.charAt(5) + n.binary.charAt(6);
-  }
-  
-  String getSingleY(NapData n) {
-    return "" + n.binary.charAt(1) + n.binary.charAt(2) + n.binary.charAt(3);
-  }
-  
-  int getX(NapData n1, NapData n2, NapData n3, NapData n4) {
-    String b = getSingleX(n1) + getSingleX(n2) + getSingleX(n3) + getSingleX(n4);
-    return unbinary(b);
-  }
-  
-  int getY(NapData n1, NapData n2, NapData n3, NapData n4) {
-    String b = getSingleY(n1) + getSingleY(n2) + getSingleY(n3) + getSingleY(n4);
-    println(b);
-    return unbinary(b);
-  }
-  
-}
-
-/*
-           X     Y               X   Y   Z
-     8 7|6 5 4|3 2 1|       8 7|6 5|4 3|2 1|
-    -----------------      -----------------
-    |?|1|S| | |S| | |      |?|1|S| |S| |S| |
-    -----------------      -----------------
-    |?|1| | | | | | |      |?|1| | | | | | |
-    -----------------      -----------------
-        . . .                  . . .
-    -----------------      -----------------
-    |?|1| | | | | | |      |?|1| | | | | | |
-    -----------------      -----------------
-*/

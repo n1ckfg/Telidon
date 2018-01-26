@@ -22,22 +22,22 @@ void setup() {
     if (cmd.opcode.id.equals("SET & POLY FILLED")) drawCmds.add(cmd);
   }
   
-  //println("Found " + drawCmds.size() + " polygons.");
-  
   for (int i=0; i<drawCmds.size(); i++) {
     drawCmds.get(i).getPoints();
-    //println(drawCmds.get(i).points.size());
   }
   
   // first point of first shape is (0.146, 0.4018) from SVG
-  println(drawCmds.get(0).points.get(0));
+
+  for (int i=0; i<drawCmds.get(0).points.size(); i++) {
+    println(drawCmds.get(0).points.get(i));
+  }
 }
 
 void draw() {
   tex.beginDraw();
   tex.background(0);
   //for (int i=0; i<drawCmds.size(); i++) {
-  drawPoints(drawCmds.get(0).points, texWidth, texHeight);
+    drawPoints(drawCmds.get(0).points, texWidth, texHeight);
   //}
   tex.endDraw();
   
