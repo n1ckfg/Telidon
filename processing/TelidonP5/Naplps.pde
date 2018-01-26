@@ -39,12 +39,6 @@ class Naplps {
     }
   }
   
-  void run() {
-    for (int i=0; i<cmds.size(); i++) {
-      cmds.get(i).run();
-    }
-  }
-  
   boolean isOpcode(char c) {
     String b = binary(c);
     return b.charAt(b.length()-7) == '0';

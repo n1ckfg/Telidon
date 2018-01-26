@@ -4,7 +4,7 @@ class NapVector {
   float x, y;
   float numBits = 512;
   
-  NapVector(NapData[] n) {
+  NapVector(ArrayList<NapData> n) {
     xInt = getCoordFromBytes(n, "x");
     yInt = getCoordFromBytes(n, "y");
     
@@ -32,10 +32,10 @@ class NapVector {
     }
   }
    
-  int getCoordFromBytes(NapData[] n, String axis) {
+  int getCoordFromBytes(ArrayList<NapData> n, String axis) {
     String returns = "";
-    for (int i=n.length-1; i>0; i--) {
-      returns += getSingleByteVal(n[i], axis, i==0);
+    for (int i=n.size()-1; i>0; i--) {
+      returns += getSingleByteVal(n.get(i), axis, i==0);
     }
     return unbinary(returns);
   }
