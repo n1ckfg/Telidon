@@ -15,19 +15,19 @@ class NapVector {
   String getSingleByteVal(NapData n, String axis, boolean isHead) {
     if (isHead) {
       if (axis.equals("x")) {
-        return "" + n.binary.charAt(5) + n.binary.charAt(6);
+        return "" + n.binary.charAt(5) + n.binary.charAt(4);
       } else if (axis.equals("y")) {
-        return "" + n.binary.charAt(2) + n.binary.charAt(3);
+        return "" + n.binary.charAt(2) + n.binary.charAt(1);
       } else { 
-        return "" + 0;
+        return "0";
       }
     } else {
       if (axis.equals("x")) {
-        return "" + n.binary.charAt(4) + n.binary.charAt(5) + n.binary.charAt(6);
+        return "" + n.binary.charAt(6) + n.binary.charAt(5) + n.binary.charAt(4);
       } else if (axis.equals("y")) {
-        return "" + n.binary.charAt(1) + n.binary.charAt(2) + n.binary.charAt(3);
+        return "" + n.binary.charAt(3) + n.binary.charAt(2) + n.binary.charAt(1);
       } else {
-        return "" + 0;
+        return "0";
       }
     }
   }

@@ -2,6 +2,7 @@ class NapChar {
   
   char c;
   String binary;
+  String rbinary;
   int ascii;
   String hex;
   
@@ -9,6 +10,7 @@ class NapChar {
     c = _c;
     ascii = getAscii();
     binary = getBinary();
+    rbinary = getRBinary();
     hex = getHex();
   }
   
@@ -23,6 +25,10 @@ class NapChar {
       returns += b.charAt(i);
     }
     return returns;
+  }
+  
+  String getRBinary() {
+      return new StringBuffer(binary).reverse().toString();
   }
   
   String getHex() {
