@@ -2,18 +2,19 @@
 class NapVector {
   
   float x, y;
-  float numBits = 2048;
+  float bitVals = 512;
+  int bitsPerByte = 3;
   boolean firstBitSign = true;
   
   NapVector(ArrayList<NapData> n) {
-    numBits = pow(2, (n.size() * 3) - int(firstBitSign));
+    bitVals = pow(2, (n.size() * bitsPerByte) - int(firstBitSign));
     x = getCoordFromBytes(n, "x");
     y = getCoordFromBytes(n, "y");
   }
   
   String binaryConv(NapData n, int loc) {
     String returns = "";
-    for (int i=loc; i<loc+3; i++) {
+    for (int i=loc; i<loc+bitsPerByte; i++) {
       returns += n.binary.charAt(i);
     }
     return returns;
@@ -50,18 +51,18 @@ class NapVector {
       for (int i=1; i<returns.length(); i++) {
         newReturns += returns.charAt(i);
       }
-      returns = newReturns;
+      returns = ""+newReturns;
     }
     
     float finalReturns = 0.0;
     if (axis.equals("x")) {
-      finalReturns = (unbinary(returns) / numBits) * sign;
+      finalReturns = (unbinary(returns) / bitVals) * sign;
     } else if (axis.equals("y")) {
-      finalReturns = ((numBits - unbinary(returns)) / numBits) * sign;
+      finalReturns = ((bitVals - unbinary(returns)) / bitVals) * sign;
     }
 
     String debug="";
-    for (int i=n.size()-1; i>=0; i--) {
+    for (int i=0; i<n.size(); i++) {
       debug += n.get(i).binary + " ";
     }
     debug += "-> " + axis + ": " + returns + " " + finalReturns;

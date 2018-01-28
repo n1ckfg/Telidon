@@ -8,6 +8,7 @@ class NapCmd {
   ArrayList<NapData> data;
   ArrayList<PVector> points;
   int pointBytes = 4; // TODO set programatically from header info
+  boolean pointRelative = true;  // TODO set programatically from header info
 
   NapCmd(String _cmd, int _index) {
     cmdRaw = _cmd;
@@ -99,7 +100,17 @@ class NapCmd {
         n.add(data.get(i + j));
       }
       NapVector v = new NapVector(n);
-      points.add(new PVector(v.x,v.y));
+      
+      if (pointRelative) {
+        if (i==0) {
+          points.add(new PVector(v.x,v.y));
+        } else {
+          PVector lastPoint = points.get(points.size()-1);
+          points.add(new PVector(v.x - lastPoint.x, v.y - lastPoint.y));
+        }
+      } else {
+        points.add(new PVector(v.x,v.y));
+      }
     }
   }
   
