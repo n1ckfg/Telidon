@@ -4,24 +4,31 @@ class NapVector {
   int xInt, yInt;
   float x, y;
   float numBits = 2048;
-  boolean reverse = true;
+  boolean firstBitSign = true;
   
   NapVector(ArrayList<NapData> n) {
-    numBits = pow(2, (n.size() * 3) - 1);
-    xInt = getCoordFromBytes(n, "x", reverse);
-    yInt = getCoordFromBytes(n, "y", reverse);
+    numBits = pow(2, (n.size() * 3) - int(firstBitSign));
+    xInt = getCoordFromBytes(n, "x");
+    yInt = getCoordFromBytes(n, "y");
     
     x = (float) xInt / numBits;
-    y = (float) yInt / numBits;
-    println("x: " + x + ", y: " + y + " | " + "x*w: " + (x * 320) + ", y*h: " + (y * 240));
+    y = 1.0 - ((float) yInt / numBits);
+  }
+  
+  String binaryConv(NapData n, int loc) {
+    String returns = "";
+    for (int i=loc; i<loc+3; i++) {
+      returns += n.binary.charAt(i);
+    }
+    return returns;
   }
   
   String getSingleByteVal(NapData n, String axis) {
     String returns = "";
     if (axis.equals("x")) {
-      returns = "" + n.binary.charAt(3) + n.binary.charAt(4) + n.binary.charAt(5);
+        returns = "" + binaryConv(n, 1);
     } else if (axis.equals("y")) {
-      returns = "" + n.binary.charAt(0) + n.binary.charAt(1) + n.binary.charAt(2);
+        returns = "" + binaryConv(n, 4);
     }
     return returns;
   }
@@ -34,24 +41,27 @@ class NapVector {
     }
   }
    
-  int getCoordFromBytes(ArrayList<NapData> n, String axis, boolean reverse) {
+  int getCoordFromBytes(ArrayList<NapData> n, String axis) {
     String returns = "";
-    if (reverse) {
-      for (int i=n.size()-1; i>=0; i--) {
-        returns += getSingleByteVal(n.get(i), axis);
-      }
-    } else {
-      for (int i=0; i<n.size(); i++) {
-        returns += getSingleByteVal(n.get(i), axis);
-      }
+    for (int i=n.size()-1; i>=0; i--) {
+      returns += getSingleByteVal(n.get(i), axis);
     }
     
-    int sign = getSign(returns.charAt(0));
     String newReturns = "";
-    for (int i=1; i<returns.length(); i++) {
+    for (int i=0; i<returns.length()-1; i++) {
       newReturns += returns.charAt(i);
     }
-    return unbinary(newReturns);
+    
+    if (firstBitSign) returns = newReturns;
+    
+    String debug="";
+    for (int i=n.size()-1; i>=0; i--) {
+      debug += n.get(i).binary + " ";
+    }
+    debug += " -> " + axis + ": " + returns + " " + unbinary(returns);
+    println(debug);
+    
+    return unbinary(returns);
   }
   
 }
