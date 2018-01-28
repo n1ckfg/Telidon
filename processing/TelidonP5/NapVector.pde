@@ -1,18 +1,14 @@
 // Extract XY or XYZ coordinates from multiple NapData objects
 class NapVector {
   
-  int xInt, yInt;
   float x, y;
   float numBits = 2048;
   boolean firstBitSign = true;
   
   NapVector(ArrayList<NapData> n) {
     numBits = pow(2, (n.size() * 3) - int(firstBitSign));
-    xInt = getCoordFromBytes(n, "x");
-    yInt = getCoordFromBytes(n, "y");
-    
-    x = (float) xInt / numBits;
-    y = 1.0 - ((float) yInt / numBits);
+    x = getCoordFromBytes(n, "x");
+    y = getCoordFromBytes(n, "y");
   }
   
   String binaryConv(NapData n, int loc) {
@@ -41,27 +37,37 @@ class NapVector {
     }
   }
    
-  int getCoordFromBytes(ArrayList<NapData> n, String axis) {
+  float getCoordFromBytes(ArrayList<NapData> n, String axis) {
     String returns = "";
-    for (int i=n.size()-1; i>=0; i--) {
+    for (int i=0; i<n.size(); i++) {
       returns += getSingleByteVal(n.get(i), axis);
     }
     
-    String newReturns = "";
-    for (int i=0; i<returns.length()-1; i++) {
-      newReturns += returns.charAt(i);
+    int sign = 1;
+    if (firstBitSign) {
+      sign = getSign(returns.charAt(0));
+      String newReturns = "";
+      for (int i=1; i<returns.length(); i++) {
+        newReturns += returns.charAt(i);
+      }
+      returns = newReturns;
     }
     
-    if (firstBitSign) returns = newReturns;
-    
+    float finalReturns = 0.0;
+    if (axis.equals("x")) {
+      finalReturns = (unbinary(returns) / numBits) * sign;
+    } else if (axis.equals("y")) {
+      finalReturns = ((numBits - unbinary(returns)) / numBits) * sign;
+    }
+
     String debug="";
     for (int i=n.size()-1; i>=0; i--) {
       debug += n.get(i).binary + " ";
     }
-    debug += " -> " + axis + ": " + returns + " " + unbinary(returns);
+    debug += "-> " + axis + ": " + returns + " " + finalReturns;
     println(debug);
     
-    return unbinary(returns);
+    return finalReturns;
   }
   
 }
