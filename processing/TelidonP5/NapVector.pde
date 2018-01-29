@@ -3,8 +3,8 @@ class NapVector {
   
   float x, y;
   float bitVals = 512;
-  int bitsPerByte = 3;
-  boolean firstBitSign = true;
+  int bitsPerByte = 3; // TODO set programatically from header info based on XY / XYZ
+  boolean firstBitSign = true; // Should be true for all header options
   
   NapVector(ArrayList<NapData> n) {
     bitVals = pow(2, (n.size() * bitsPerByte) - int(firstBitSign));

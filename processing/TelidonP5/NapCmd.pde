@@ -94,7 +94,8 @@ class NapCmd {
   
   // ~ ~ ~ Parsing methods begin here ~ ~ ~
   void getPoints() {
-    for (int i=0; i<data.size(); i+=pointBytes) {
+    //for (int i=0; i<data.size(); i+=pointBytes) {
+    for (int i=0; i<data.size() - (pointBytes-1); i+=pointBytes) {
       ArrayList<NapData> n = new ArrayList<NapData>();
       for (int j=0; j<pointBytes; j++) {
         n.add(data.get(i + j));

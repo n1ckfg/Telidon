@@ -1,7 +1,7 @@
 // This is where it all comes together
 // Processing drawing code is separated here
 
-class NapDraw extends Naplps {
+class NapDraw extends NapDecoder {
   
   PGraphics tex;
   int texWidth = 320;

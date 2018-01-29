@@ -1,13 +1,13 @@
 // Decoder only, drawing happens in NapDraw
 
-class Naplps {
+class NapDecoder {
   
   String napRaw;
   ArrayList<NapCmd> cmds;
   int counter = 0;
   boolean debug = false;
   
-  Naplps(String[] input) {
+  NapDecoder(String[] input) {
     napRaw = "";
     cmds = new ArrayList<NapCmd>();
 
