@@ -9,7 +9,7 @@ class NapCmd {
   ArrayList<NapData> data;
   ArrayList<PVector> points;
   int pointBytes = 4; // TODO set programatically from header info
-  boolean pointRelative = false;  // TODO set programatically from header info
+  boolean pointRelative = true;  // TODO set programatically from header info
 
   NapCmd(String _cmd, int _index) {
     cmdRaw = _cmd;
@@ -27,7 +27,7 @@ class NapCmd {
     // This is where we find out what kind of command it is
     // Which tells us how we handle the data
     switch(opcode.id) {
-      case("SET & POLY FILLED"): 
+      case("SET & POLY FILLED"): // relative points after first 
         getPoints();
         break;
       default:
@@ -103,16 +103,18 @@ class NapCmd {
       }
       NapVector v = new NapVector(n);
       
+      // * * * * * 
       if (pointRelative) {
         if (i==0) {
           points.add(new PVector(v.x,v.y));
         } else {
-          PVector lastPoint = points.get(points.size()-1);
-          points.add(new PVector(v.x - lastPoint.x, v.y - lastPoint.y));
+          PVector lastPoint = points.get(0);
+          points.add(new PVector(abs(v.x + lastPoint.x), abs(v.y - lastPoint.y)));
         }
       } else {
         points.add(new PVector(v.x,v.y));
       }
+      // * * * * * 
     }
   }
   

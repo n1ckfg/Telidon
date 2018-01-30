@@ -5,7 +5,6 @@ class NapVector {
   float bitVals = 512;
   int bitsPerByte = 3; // TODO set programatically from header info based on XY / XYZ
   boolean firstBitSign = true; // Should be true for all header options
-  boolean signAlwaysPositive = true;
   
   NapVector(ArrayList<NapData> n) {
     bitVals = pow(2, (n.size() * bitsPerByte) - int(firstBitSign));
@@ -32,14 +31,10 @@ class NapVector {
   }
   
   int getSign(char c) {
-    if (c == '1') {
+    if (c == '0') {
       return 1;
     } else {
-      if (signAlwaysPositive) {
-        return 1;
-      } else {
-        return -1;
-      }
+      return -1;
     }
   }
    
