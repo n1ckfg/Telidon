@@ -5,6 +5,7 @@ class NapVector {
   float bitVals = 512;
   int bitsPerByte = 3; // TODO set programatically from header info based on XY / XYZ
   boolean firstBitSign = true; // Should be true for all header options
+  boolean signAlwaysPositive = true;
   
   NapVector(ArrayList<NapData> n) {
     bitVals = pow(2, (n.size() * bitsPerByte) - int(firstBitSign));
@@ -34,7 +35,11 @@ class NapVector {
     if (c == '1') {
       return 1;
     } else {
-      return -1;
+      if (signAlwaysPositive) {
+        return 1;
+      } else {
+        return -1;
+      }
     }
   }
    
@@ -60,13 +65,15 @@ class NapVector {
     } else if (axis.equals("y")) {
       finalReturns = ((bitVals - unbinary(returns)) / bitVals) * sign;
     }
-
+    
+    /*
     String debug="";
     for (int i=0; i<n.size(); i++) {
       debug += n.get(i).binary + " ";
     }
     debug += "-> " + axis + ": " + returns + " " + finalReturns;
     println(debug);
+    */
     
     return finalReturns;
   }

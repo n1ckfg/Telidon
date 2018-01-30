@@ -2,13 +2,14 @@
 
 class NapCmd {
   
+  // TODO draw each command to its own PGraphics buffer.
   String cmdRaw;
   int index;
   NapOpcode opcode;
   ArrayList<NapData> data;
   ArrayList<PVector> points;
   int pointBytes = 4; // TODO set programatically from header info
-  boolean pointRelative = true;  // TODO set programatically from header info
+  boolean pointRelative = false;  // TODO set programatically from header info
 
   NapCmd(String _cmd, int _index) {
     cmdRaw = _cmd;

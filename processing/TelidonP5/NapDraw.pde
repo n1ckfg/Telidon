@@ -3,14 +3,10 @@
 
 class NapDraw extends NapDecoder {
   
-  PGraphics tex;
-  int texWidth = 320;
-  int texHeight = 320;
   ArrayList<NapCmd> drawCmds;
   
   NapDraw(String _filePath) {
     super(loadStrings(_filePath));
-    tex = createGraphics(texWidth, texHeight, P2D);
     drawCmds = new ArrayList<NapCmd>();
     
     for(int i=0; i<cmds.size(); i++) {
@@ -20,36 +16,39 @@ class NapDraw extends NapDecoder {
   }
   
   void draw() {
-    tex.beginDraw();
-    tex.background(0);
-    //for (int i=0; i<drawCmds.size(); i++) {
-      drawPoints(drawCmds.get(0).points, texWidth, texHeight);
-    //}
-    tex.endDraw();
-    
-    image(tex, 0, 0, width, height);
+    background(0);
+    //for (int i=0; i<drawCmds.size(); i++) 
+      // ~ ~ ~ ~ ~ ~ ~ ~
+      int whichShape = 0;
+      int whichPoint = 1;
+      // ~ ~ ~ ~ ~ ~ ~ ~
+      println(drawCmds.get(whichShape).points.get(whichPoint));
+      drawPoints(drawCmds.get(whichShape).points, width, height);
+    //}    
   }
   
   void drawPoints(ArrayList<PVector> points, int w, int h) {
-    tex.noFill();
-    tex.stroke(255,255,0);
-    tex.strokeWeight(1);
-    tex.beginShape();
+    noFill();
+    stroke(255,255,0);
+    strokeWeight(2);
+    beginShape();
     for (int i=0; i<points.size(); i++) {
       PVector p = points.get(i);
-      tex.vertex(p.x * w, p.y * h);
+      vertex(p.x * w, p.y * h);
     }
-    tex.endShape(CLOSE);
+    endShape(CLOSE);
     
-    tex.strokeWeight(4);
+    strokeWeight(8);
     for (int i=0; i<points.size(); i++) {
       if (i==0) {
-        tex.stroke(0, 255, 255);
+        stroke(0, 255, 255);
+      } else if (i==1) {
+        stroke(255, 0, 0);
       } else {
-        tex.stroke(127);
+        stroke(127);
       }
       PVector p = points.get(i);
-      tex.point(p.x * w, p.y * h);
+      point(p.x * w, p.y * h);
     }
   }
 
