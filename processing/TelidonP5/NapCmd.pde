@@ -95,8 +95,7 @@ class NapCmd {
   
   // ~ ~ ~ Parsing methods begin here ~ ~ ~
   void getPoints() {
-    //for (int i=0; i<data.size(); i+=pointBytes) {
-    for (int i=0; i<data.size() - (pointBytes-1); i+=pointBytes) {
+    for (int i=0; i<data.size(); i+=pointBytes) {
       ArrayList<NapData> n = new ArrayList<NapData>();
       for (int j=0; j<pointBytes; j++) {
         n.add(data.get(i + j));
@@ -106,10 +105,10 @@ class NapCmd {
       // * * * * * 
       if (pointRelative) {
         if (i==0) {
-          points.add(new PVector(v.x,v.y));
+          points.add(new PVector(v.x, v.y));
         } else {
-          PVector lastPoint = points.get(0);
-          points.add(new PVector(abs(v.x + lastPoint.x), abs(v.y - lastPoint.y)));
+          PVector lastPoint = points.get(points.size()-1);
+          points.add(new PVector(lastPoint.x + v.x, lastPoint.y + v.y));
         }
       } else {
         points.add(new PVector(v.x,v.y));

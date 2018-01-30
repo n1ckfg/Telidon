@@ -20,9 +20,9 @@ class NapDraw extends NapDecoder {
     //for (int i=0; i<drawCmds.size(); i++) 
       // ~ ~ ~ ~ ~ ~ ~ ~
       int whichShape = 0;
-      int whichPoint = 2;
+      int whichPoint = 8;
       // ~ ~ ~ ~ ~ ~ ~ ~
-      println(drawCmds.get(whichShape).points.get(0) + " " + drawCmds.get(whichShape).points.get(1) + " " + drawCmds.get(whichShape).points.get(whichPoint));
+      println(drawCmds.get(whichShape).points.get(whichPoint));
       drawPoints(drawCmds.get(whichShape).points, width, height);
     //}    
   }
