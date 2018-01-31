@@ -95,23 +95,27 @@ class NapCmd {
   
   // ~ ~ ~ Parsing methods begin here ~ ~ ~
   void getPoints() {
+    ArrayList<NapVector> nvList = new ArrayList<NapVector>();
     for (int i=0; i<data.size(); i+=pointBytes) {
       ArrayList<NapData> n = new ArrayList<NapData>();
       for (int j=0; j<pointBytes; j++) {
         n.add(data.get(i + j));
       }
-      NapVector v = new NapVector(n);
-      
-      // * * * * * 
+      nvList.add(new NapVector(n));
+    }
+    
+    for (int i=0; i<nvList.size(); i++) {
+      NapVector nv = nvList.get(i);
+
       if (pointRelative) {
         if (i==0) {
-          points.add(new PVector(v.x, v.y));
+          points.add(new PVector(nv.x, nv.y));
         } else {
-          PVector lastPoint = points.get(points.size()-1);
-          points.add(new PVector(lastPoint.x + v.x, lastPoint.y + v.y));
+          NapVector lastNv = nvList.get(i-1);
+          points.add(new PVector(lastNv.x + nv.x, lastNv.y + nv.y));
         }
       } else {
-        points.add(new PVector(v.x,v.y));
+        points.add(new PVector(nv.x, nv.y));
       }
       // * * * * * 
     }

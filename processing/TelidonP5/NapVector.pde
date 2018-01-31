@@ -30,11 +30,11 @@ class NapVector {
     return returns;
   }
   
-  int getSign(char c) {
+  float getSign(char c) {
     if (c == '1') {
-      return -1;
+      return -1.0;
     } else {
-      return 1;
+      return 1.0;
     }
   }
    
@@ -44,35 +44,31 @@ class NapVector {
       returns += getSingleByteVal(n.get(i), axis);
     }
     
-    int sign = 1;
+    float sign = 1;
     if (firstBitSign) {
       sign = getSign(returns.charAt(0));
-      String newReturns = "";
-      for (int i=1; i<returns.length(); i++) {
-        newReturns += returns.charAt(i);
-      }
-      returns = ""+newReturns;
+      returns = removeCharAt(returns, 0);
     }
     
-    float finalReturns = 0.0;
+    float finalReturns = 0;
+    
     if (axis.equals("x")) {
       finalReturns = (unbinary(returns) / bitVals) * sign;
     } else if (axis.equals("y")) {
       finalReturns = ((bitVals - unbinary(returns)) / bitVals) * sign;
     }
-    
-    /*
-    String debug="";
-    for (int i=0; i<n.size(); i++) {
-      debug += n.get(i).binary + " ";
-    }
-    debug += "-> " + axis + ": " + returns + " " + finalReturns;
-    println(debug);
-    */
-    
+
     return finalReturns;
   }
   
+}
+
+String removeCharAt(String s, int index) {
+  String returns = "";
+  for (int i=0; i<s.length(); i++) {
+    if (i != index) returns += s.charAt(i);
+  }
+  return returns;
 }
 
 /*

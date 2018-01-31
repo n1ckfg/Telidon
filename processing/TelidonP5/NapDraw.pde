@@ -11,20 +11,21 @@ class NapDraw extends NapDecoder {
     
     for(int i=0; i<cmds.size(); i++) {
       NapCmd cmd = cmds.get(i);
-      if (cmd.opcode.id.equals("SET & POLY FILLED")) drawCmds.add(cmd);
+      if (cmd.opcode.id.equals("SET & POLY FILLED")) {
+        drawCmds.add(cmd);
+        for (int j=0; j<cmd.points.size(); j++) {
+          println(j + ". " + cmd.points.get(j));
+        }
+        break; // TODO remove after debug
+      }
     }
   }
   
   void draw() {
     background(0);
-    //for (int i=0; i<drawCmds.size(); i++) 
-      // ~ ~ ~ ~ ~ ~ ~ ~
-      int whichShape = 0;
-      int whichPoint = 8;
-      // ~ ~ ~ ~ ~ ~ ~ ~
-      println(drawCmds.get(whichShape).points.get(whichPoint));
-      drawPoints(drawCmds.get(whichShape).points, width, height);
-    //}    
+    for (int i=0; i<1; i++) { //drawCmds.size(); i++) { // TODO remove after debug
+      drawPoints(drawCmds.get(i).points, width, height);
+    }    
   }
   
   void drawPoints(ArrayList<PVector> points, int w, int h) {
