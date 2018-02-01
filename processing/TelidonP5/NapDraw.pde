@@ -49,6 +49,9 @@ class NapDraw extends NapDecoder {
       }
       PVector p = points.get(i);
       point(p.x * w, p.y * h);
+
+      fill(255);
+      text(i, p.x * w, p.y * h);
     }
   }
 
