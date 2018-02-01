@@ -1,5 +1,7 @@
-// A NapChar is the smallest component of a nap file. 
-// It just contains a few methods for converting one byte.
+// 1. Single-byte data classes
+// 
+// 1.1. The NapChar class is the smallest component of a NAPLPS file. 
+// It just contains a few methods for decoding one byte.
 class NapChar {
   
   char c;
@@ -29,7 +31,7 @@ class NapChar {
     return returns;
   }
   
-  String getRBinary() {
+  String getRBinary() { // reverse binary
       return new StringBuffer(binary).reverse().toString();
   }
   
@@ -44,8 +46,8 @@ class NapChar {
   
 }
 
-// Opcodes are drawing commands.
-// This is how we identify what the command does.
+// 1.2. Some NapChars contain opcodes, or drawing commands.
+// The NapOpcode class decodes the command.
 class NapOpcode extends NapChar {
   
   String id = "";
@@ -105,8 +107,8 @@ class NapOpcode extends NapChar {
   
 }
 
-// The data objects will do different things depending
-// on what the opcode is.
+// 1.3. The NapChars following an opcode contain the data that 
+// the command will use.
 class NapData extends NapChar {
   
   float f;

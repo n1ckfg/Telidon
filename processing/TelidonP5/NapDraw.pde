@@ -1,6 +1,5 @@
-// This is where it all comes together
-// Processing drawing code is separated here
-
+// 5. Drawing class--this is where it all comes together.
+// Processing-specific drawing code is separated here.
 class NapDraw extends NapDecoder {
   
   ArrayList<NapCmd> drawCmds;

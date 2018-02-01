@@ -1,4 +1,7 @@
-// Extract XY or XYZ coordinates from multiple NapData objects
+// 2. Multi-byte data classes
+//
+// 2.1. Some NapData objects need to be combined for decoding. 
+// XY and XYZ position are handled by the NapVector class.
 class NapVector {
   
   float x, y;

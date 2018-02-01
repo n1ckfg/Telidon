@@ -1,4 +1,6 @@
-// Decoder only, drawing happens in NapDraw
+// 4. Decoder class
+// Contains all the decoded drawing commands.
+// Decodes the format only; drawing happens in NapDraw
 
 class NapDecoder {
   

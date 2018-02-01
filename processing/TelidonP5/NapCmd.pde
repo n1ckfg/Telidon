@@ -1,4 +1,5 @@
-// Assembles a drawing command from opcode and data bytes
+// 3. Command class
+// Assembles one drawing command from its opcode and data bytes.
 
 class NapCmd {
   
@@ -111,8 +112,8 @@ class NapCmd {
         if (i==0) {
           points.add(new PVector(nv.x, nv.y));
         } else {
-          NapVector lastNv = nvList.get(i-1);
-          points.add(new PVector(lastNv.x + nv.x, lastNv.y + nv.y));
+          PVector p = points.get(points.size()-1);
+          points.add(new PVector(nv.x + p.x, abs(nv.y - p.y)));
         }
       } else {
         points.add(new PVector(nv.x, nv.y));
