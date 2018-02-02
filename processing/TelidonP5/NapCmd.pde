@@ -122,10 +122,10 @@ class NapCmd {
           }
           
           float y = 0;
-          if (nv.y > 0) {
-            y = abs(nv.y - p.y);
+          if (nv.y < 0) {
+            y = abs(nv.y) + p.y;
           } else {
-            y = nv.y + p.y;
+            y = (abs(nv.y) + abs(p.y)) - 1.0;
           }
           
           points.add(new PVector(x, y));
