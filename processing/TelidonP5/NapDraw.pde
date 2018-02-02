@@ -15,14 +15,13 @@ class NapDraw extends NapDecoder {
         for (int j=0; j<cmd.points.size(); j++) {
           println(j + ". " + cmd.points.get(j));
         }
-        break; // TODO remove after debug
       }
     }
   }
   
   void draw() {
     background(0);
-    for (int i=0; i<1; i++) { //drawCmds.size(); i++) { // TODO remove after debug
+    for (int i=0; i<drawCmds.size(); i++) {
       drawPoints(drawCmds.get(i).points, width, height);
     }    
   }
