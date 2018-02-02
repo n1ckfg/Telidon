@@ -113,7 +113,22 @@ class NapCmd {
           points.add(new PVector(nv.x, nv.y));
         } else {
           PVector p = points.get(points.size()-1);
-          points.add(new PVector(nv.x + p.x, abs(nv.y - p.y)));
+          
+          float x = 0;     
+          if (nv.x < 0) {
+            x = (abs(nv.x) + abs(p.x)) - 1.0;
+          } else {
+            x = nv.x + p.x;
+          }
+          
+          float y = 0;
+          if (nv.y > 0) {
+            y = abs(nv.y - p.y);
+          } else {
+            y = nv.y + p.y;
+          }
+          
+          points.add(new PVector(x, y));
         }
       } else {
         points.add(new PVector(nv.x, nv.y));
