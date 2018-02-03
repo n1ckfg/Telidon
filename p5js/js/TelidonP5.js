@@ -2,23 +2,39 @@
 
 // 5. Drawing class--this is where it all comes together.
 // p5.js-specific drawing code is separated here.
-class NapDraw extends NapDecoder {
+class NapDraw {
 	    
     constructor(_filePath) { // string
-        super(loadStrings(_filePath));
-        this.drawCmds = []; // NapCmd[]
-        
-        for(var i=0; i<this.cmds.length; i++) {
-            var cmd = this.cmds[i]; // NapCmd
-            if (cmd.opcode.id === "SET & POLY FILLED") {
-                this.drawCmds.push(cmd);
-                for (var j=0; j<cmd.points.length; j++) {
-                    console.log(j + ". " + cmd.points[j]);
+        this.loadText(_filePath, function(response) {
+            console.log(response);
+            this.file = new NapDecoder(response); 
+            this.drawCmds = []; // NapCmd[]
+            
+            for(var i=0; i<this.file.cmds.length; i++) {
+                var cmd = this.file.cmds[i]; // NapCmd
+                if (cmd.opcode.id === "SET & POLY FILLED") {
+                    this.drawCmds.push(cmd);
+                    for (var j=0; j<cmd.points.length; j++) {
+                        console.log(j + ". " + cmd.points[j]);
+                    }
                 }
             }
-        }
+        });
     }
     
+    loadText(filepath, callback) { 
+        // https://codepen.io/KryptoniteDove/post/load-json-file-locally-using-pure-javascript  
+        var xobj = new XMLHttpRequest();
+        //xobj.overrideMimeType("application/json");
+        xobj.open('GET', filepath, true);
+        xobj.onreadystatechange = function() {
+            if (xobj.readyState == 4 && xobj.status == "200") {
+                callback(xobj.responseText);
+            }
+        };
+        xobj.send(null);  
+    }
+
     draw() {
         background(0);
         for (var i=0; i<this.drawCmds.length; i++) {

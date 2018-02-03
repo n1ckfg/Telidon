@@ -340,20 +340,21 @@ class NapCmd {
 class NapDecoder {
     
     constructor(input) { // string[]
-        this.napRaw = ""; // string
+        this.napRaw = input;//""; // string
+        console.log("!!!" + napRaw.length);
         this.cmds = []; // NapCmd[]
         this.counter = 0; // int
         this.debug = true; // bool
 
-        for (var i=0; i<input.length; i++) {
-            this.napRaw += input[i];
-        }
+        //for (var i=0; i<input.length; i++) {
+            //this.napRaw += input[i];
+        //}
         
         var tempCmd = "";
         for (var i=0; i<this.napRaw.length; i++) {
             var c = this.napRaw.charAt(i); // char or string
             if (this.isOpcode(c)) {
-                if (tempCmd.equals("")) {
+                if (tempCmd === "") {
                     tempCmd += c;
                 } else {
                     if (tempCmd.length >= 1) {

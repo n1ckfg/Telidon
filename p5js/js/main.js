@@ -3,7 +3,7 @@
 var nap;
 
 function preload() {
-	nap = new NapDecoder(loadStrings("./files/nap/boom.nap"));
+	nap = new NapDraw("./files/nap/boom.nap");
 }
 
 function setup() {
