@@ -1,5 +1,8 @@
 "use strict";
 
+// NAPLPS JavaScript decoder
+// Nick Fox-Gieg http://fox-gieg.com
+
 // Uses no p5.js-specific code
 
 // 1. SINGLE-BYTE data classes
