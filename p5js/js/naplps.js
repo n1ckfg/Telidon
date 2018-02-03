@@ -17,6 +17,7 @@ class NapChar {
         this.binary = this.getBinary(); // string
         this.rbinary = this.getRBinary(); // string
         this.hex = this.getHex(); // string
+        console.log(this.c + " " + this.ascii + " " + this.hex + " " + this.binary);
     }
     
     getAscii() {
