@@ -346,13 +346,13 @@ class NapDecoder {
         this.debug = true; // bool
 
         for (var i=0; i<input.length; i++) {
-            napRaw += input[i];
+            this.napRaw += input[i];
         }
         
         var tempCmd = "";
         for (var i=0; i<this.napRaw.length; i++) {
             var c = this.napRaw.charAt(i); // char or string
-            if (isOpcode(c)) {
+            if (this.isOpcode(c)) {
                 if (tempCmd.equals("")) {
                     tempCmd += c;
                 } else {
