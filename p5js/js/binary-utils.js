@@ -70,7 +70,7 @@ function unbinary(binaryString) {
 
 function decimalToHex(d, padding) {
     //if there is no padding value added, default padding to 8 else go into while statement.
-    padding = (padding === undef || padding === null) ? padding = 8 : padding;
+    padding = (padding === undefined || padding === null) ? padding = 8 : padding;
     if (d < 0) {
         d = 0xFFFFFFFF + d + 1;
     }
@@ -144,7 +144,46 @@ function unhex(hex) {
     return unhexScalar(hex);
 }
 
+function parseInt(val, radix) {
+    if (val instanceof Array) {
+        var ret = [];
+        for (var i = 0; i < val.length; i++) {
+            if (typeof val[i] === 'string' && !/^\s*[+\-]?\d+\s*$/.test(val[i])) {
+                ret.push(0);
+            } else {
+                ret.push(intScalar(val[i], radix));
+            }
+        }
+        return ret;
+    }
+    return intScalar(val, radix);
+}
+
+function intScalar(val, radix) {
+    if (typeof val === 'number') {
+        return val & 0xFFFFFFFF;
+    }
+    if (typeof val === 'boolean') {
+        return val ? 1 : 0;
+    }
+    if (typeof val === 'string') {
+        var number = parseInt(val, radix || 10); // Default to decimal radix.
+        return number & 0xFFFFFFFF;
+    }
+    if (val instanceof Char) {
+        return val.code;
+    }
+}
+
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+function removeCharAt(s, index) { // string, int
+  var returns = "";
+  for (var i=0; i<s.length; i++) {
+    if (i != index) returns += s.charAt(i);
+  }
+  return returns;
+}
 
 class Char {
 
@@ -158,7 +197,7 @@ class Char {
         } else {
             this.code = NaN;
         }
-        return (charMap[this.code] === undef) ? charMap[this.code] = this : charMap[this.code];
+        return this.code;
     }
 
     toString() {
@@ -170,3 +209,34 @@ class Char {
     }
 
 }
+
+class Vector2 {
+
+    constructor(_x, _y) {
+        this.x = _x;
+        this.y = _y;
+    }
+
+}
+
+class Vector3 {
+
+    constructor(_x, _y, _z) {
+        this.x = _x;
+        this.y = _y;
+        this.z = _z;
+    }
+
+}
+
+class Vector4 {
+
+    constructor(_x, _y, _z, _w) {
+        this.x = _x;
+        this.y = _y;
+        this.z = _z;
+        this.w = _w;
+    }
+
+}
+
