@@ -1,11 +1,17 @@
 "use strict";
 
-var filePath = "nap/boom.nap";
 var nap;
 
-function main() {
-	nap = new NapChar("C");
-	console.log(nap.c + " " + nap.ascii + " " + nap.binary + " "  + nap.rbinary + " " + nap.hex);
+function preload() {
+	nap = new NapDraw("./files/nap/boom.nap");
 }
 
-window.onload = main;
+function setup() {
+	createCanvas(640, 640);
+	console.log(nap);
+}
+
+function draw() {
+	background(255,0,0);
+}
+

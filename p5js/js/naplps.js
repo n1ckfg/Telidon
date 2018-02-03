@@ -49,14 +49,77 @@ class NapChar {
 
 // 1.2. Some NapChars contain opcodes, or drawing commands.
 // The NapOpcode class decodes the command.
-class NapOpcode {
-	//
+class NapOpcode extends NapChar {
+	        
+    constructor(_c) { // char or string
+        super(_c);
+        this.id = this.getId();
+    }
+    
+    getId() {
+        var returns = "";
+        switch(this.hex) {
+            case("0E"):
+                returns = "Shift-Out"; // graphics mode
+                break;
+            case("0F"):
+                returns = "Shift-In"; // text mode
+                break;
+            case("18"):
+                returns = "CANCEL";
+                break;
+            case("1B"):
+                returns = "ESC";
+                break;
+            case("1F"):
+                returns = "NSR"; // Non-Selective Reset
+                break;
+            case("20"):
+                returns = "RESET";
+                break;
+            case("21"):
+                returns = "DOMAIN";
+                break;
+            case("22"):
+                returns = "TEXT";
+                break;
+            case("23"):
+                returns = "TEXTURE";
+                break;
+            case("24"):
+                returns = "POINT SET ABS";
+                break;
+            case("25"):
+                returns = "POINT SET REL";
+                break;
+            case("3E"):
+                returns = "SELECT COLOR";
+                break;
+            case("37"):
+                returns = "SET & POLY FILLED";
+                break;
+            default:
+                break;
+        }
+        return returns;
+    }
+    
 }
 
 // 1.3. The NapChars following an opcode contain the data that 
 // the command will use.
-class NapData {
-	//
+class NapData extends NapChar {
+    
+    constructor(_c) { // char or string
+        super(_c);
+        this.f = this.getNormFloat(); // float
+    }
+    
+    getNormFloat() {
+        var returns = parseFloat(this.ascii / 127.0);
+        return returns;
+    }
+
 }
 
 
@@ -66,7 +129,7 @@ class NapData {
 // XY and XYZ position are handled by the NapVector class.
 class NapVector {
     
-    NapVector(n) { // NapData[]
+    constructor(n) { // NapData[]
         this.bitsPerByte = 3; // int, TODO set programatically from header info based on XY / XYZ
         this.firstBitSign = true; // bool, should be true for all header options
         this.bitVals = pow(2, (n.size() * bitsPerByte) - int(firstBitSign)); // float
@@ -286,15 +349,15 @@ class NapDecoder {
         }
         
         var tempCmd = "";
-        for (var i=0; i<napRaw.length; i++) {
-            var c = napRaw.charAt(i); // char or string
+        for (var i=0; i<this.napRaw.length; i++) {
+            var c = this.napRaw.charAt(i); // char or string
             if (isOpcode(c)) {
                 if (tempCmd.equals("")) {
                     tempCmd += c;
                 } else {
                     if (tempCmd.length >= 1) {
-                        cmds.add(new NapCmd(tempCmd, counter));
-                        counter++;
+                        this.cmds.push(new NapCmd(tempCmd, this.counter));
+                        this.counter++;
                     }
                     tempCmd = "";
                     tempCmd += c;
@@ -304,9 +367,9 @@ class NapDecoder {
             }
         }
         
-        if (debug) {
-            for (var i=0; i<cmds.length; i++) {
-                cmds[i].printCmd("hex");
+        if (this.debug) {
+            for (var i=0; i<this.cmds.length; i++) {
+                this.cmds[i].printCmd("hex");
             }
         }
     }
