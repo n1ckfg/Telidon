@@ -5,8 +5,6 @@
 class NapDraw {
 	    
     constructor(_filePath, _w, _h) { // string
-        this.w = _w;
-        this.h = _h;
         this.decoder = new NapDecoder(_filePath); 
         this.drawCmds = []; // NapDrawCmd[]
         this.counter = 0;
@@ -14,10 +12,10 @@ class NapDraw {
         for (var i=0; i<this.decoder.cmds.length; i++) {
             var cmd = this.decoder.cmds[i]; // NapCmd
             if (cmd.opcode.id === "SET & POLY FILLED") {
-                this.drawCmds.push(new NapDrawCmd(cmd, this.w, this.h));
-                for (var j=0; j<cmd.points.length; j++) {
-                    console.log(j + ". " + cmd.points[j]);
-                }
+                this.drawCmds.push(new NapDrawCmd(cmd, _w, _h));
+                //for (var j=0; j<cmd.points.length; j++) {
+                    //console.log(j + ". " + cmd.points[j]);
+                //}
             }
         }
     }
@@ -38,12 +36,10 @@ class NapDraw {
 class NapDrawCmd {
    
     constructor(_cmd, _w, _h) { // NapCmd
-        this.w = _w;
-        this.h = _h;
         this.cmd = _cmd; // NapCmd
-        this.tex = createGraphics(this.w, this.h); // PGraphics
+        this.tex = createGraphics(_w, _h); // PGraphics
         this.tex.scale(1/pixelDensity());
-        this.scanPos = this.h; // float
+        this.scanPos = _h; // float
         this.scanDelta = 5; // float
         this.moveScanline = false;
     }
@@ -56,10 +52,11 @@ class NapDrawCmd {
     }
     
     draw() {
-        this.drawPoints(this.cmd.points, this.w, this.h);
+        this.drawPoints(this.cmd.points, this.tex.width, this.tex.height);
         
         // TODO faster pixel drawing https://p5js.org/reference/#/p5/pixels
         if (this.moveScanline) {
+            /*
             this.tex.loadPixels();
             for (var x=0; x < this.tex.width; x++) {
                 for (var y=0; y < this.tex.height; y++) {
@@ -73,9 +70,11 @@ class NapDrawCmd {
                 }
             }
             this.tex.updatePixels();
+            */
+            image(this.tex.get(0, this.scanPos, this.tex.width, this.tex.height), 0, this.scanPos);
+        } else {        
+            image(this.tex, 0, 0);
         }
-        
-        image(this.tex, 0, 0);
     }
     
     run() {
@@ -88,14 +87,14 @@ class NapDrawCmd {
         this.tex.stroke(255,255,0);
         this.tex.strokeWeight(2);
         this.tex.beginShape();
-        for (var i=0; i<this.cmd.points.length; i++) {
-            var p = this.cmd.points[i]; // PVector
+        for (var i=0; i<points.length; i++) {
+            var p = points[i]; // PVector
             this.tex.vertex(p.x * w, p.y * h);
         }
         this.tex.endShape(CLOSE);
         
         this.tex.strokeWeight(8);
-        for (var i=0; i<this.cmd.points.length; i++) {
+        for (var i=0; i<points.length; i++) {
             if (i===0) {
                 this.tex.stroke(0, 255, 255);
             } else if (i===1) {
@@ -103,7 +102,7 @@ class NapDrawCmd {
             } else {
                 this.tex.stroke(127);
             }
-            var p = this.cmd.points[i]; // PVector
+            var p = points[i]; // PVector
             this.tex.point(p.x * w, p.y * h);
 
             //tex.textFont(font, fontSize);

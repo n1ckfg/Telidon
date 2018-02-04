@@ -10,7 +10,7 @@ function preload() {
 
 function setup() {
 	createCanvas(640, 640);
-	console.log(nap);
+	//console.log(nap);
 }
 
 function draw() {
