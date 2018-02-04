@@ -60,6 +60,7 @@ class NapDrawCmd {
     drawPoints(cmd.points, width, height);
     tex.endDraw();
     
+    /*
     if (moveScanline) {
       tex.loadPixels();
       for (int x=0; x < tex.width; x++) {
@@ -70,7 +71,12 @@ class NapDrawCmd {
       }
       tex.updatePixels();
     }
-    image(tex, 0, 0);
+    */
+    if (moveScanline) {
+      image(tex.get(0, int(scanPos), tex.width, tex.height), 0, scanPos);
+    } else {
+      image(tex, 0, 0);
+    }
   }
   
   void run() {
