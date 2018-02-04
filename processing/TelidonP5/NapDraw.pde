@@ -56,23 +56,24 @@ class NapDrawCmd {
   }
   
   void draw() {
-    tex.beginDraw();
-    drawPoints(cmd.points, width, height);
-    tex.endDraw();
+    if (moveScanline) {
+      tex.beginDraw();
+      drawPoints(cmd.points, width, height);
+      tex.endDraw();
     
-    /*
-    if (moveScanline) {
-      tex.loadPixels();
-      for (int x=0; x < tex.width; x++) {
-        for (int y=0; y < tex.height; y++) {
-          int loc = x + y*tex.width;
-          if (y <= scanPos) tex.pixels[loc] = color(0,0);
+      /*
+      if (moveScanline) {
+        tex.loadPixels();
+        for (int x=0; x < tex.width; x++) {
+          for (int y=0; y < tex.height; y++) {
+            int loc = x + y*tex.width;
+            if (y <= scanPos) tex.pixels[loc] = color(0,0);
+          }
         }
+        tex.updatePixels();
       }
-      tex.updatePixels();
-    }
-    */
-    if (moveScanline) {
+      */
+    
       image(tex.get(0, int(scanPos), tex.width, tex.height), 0, scanPos);
     } else {
       image(tex, 0, 0);
