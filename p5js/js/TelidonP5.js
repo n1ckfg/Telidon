@@ -5,13 +5,13 @@
 class NapDraw {
 	    
     constructor(_filePath) { // string
-        this.loadText(_filePath, function(response) {
-            console.log(response);
-            this.file = new NapDecoder(response); 
+        //this.loadText(_filePath, function(response) {
+            //console.log(response);
+            this.decoder = new NapDecoder(_filePath); 
             this.drawCmds = []; // NapCmd[]
             
-            for(var i=0; i<this.file.cmds.length; i++) {
-                var cmd = this.file.cmds[i]; // NapCmd
+            for (var i=0; i<this.decoder.cmds.length; i++) {
+                var cmd = this.decoder.cmds[i]; // NapCmd
                 if (cmd.opcode.id === "SET & POLY FILLED") {
                     this.drawCmds.push(cmd);
                     for (var j=0; j<cmd.points.length; j++) {
@@ -19,7 +19,7 @@ class NapDraw {
                     }
                 }
             }
-        });
+        //});
     }
     
     loadText(filepath, callback) { 

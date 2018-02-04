@@ -3,7 +3,9 @@
 var nap;
 
 function preload() {
-	nap = new NapDraw("./files/nap/boom.nap");
+	loadStrings("./files/nap/boom.nap", function(response) {
+		nap = new NapDraw(response);
+	});
 }
 
 function setup() {
@@ -13,5 +15,6 @@ function setup() {
 
 function draw() {
 	background(255,0,0);
+	nap.draw();
 }
 
