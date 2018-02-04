@@ -3,7 +3,7 @@
 var nap;
 
 function preload() {
-	loadStrings("./files/nap/boom.nap", function(response) {
+	loadStrings("./images/boom.nap", function(response) {
 		nap = new NapDraw(response);
 	});
 }

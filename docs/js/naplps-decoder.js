@@ -17,7 +17,6 @@ class NapChar {
         this.binary = this.getBinary(); // string
         this.rbinary = this.getRBinary(); // string
         this.hex = this.getHex(); // string
-        console.log(this.c + " " + this.ascii + " " + this.hex + " " + this.binary);
     }
     
     getAscii() {
@@ -133,7 +132,7 @@ class NapVector {
     constructor(n) { // NapData[]
         this.bitsPerByte = 3; // int, TODO set programatically from header info based on XY / XYZ
         this.firstBitSign = true; // bool, should be true for all header options
-        this.bitVals = pow(2, (n.size() * bitsPerByte) - int(firstBitSign)); // float
+        this.bitVals = pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign)); // float
         this.x = this.getCoordFromBytes(n, "x"); // float
         this.y = this.getCoordFromBytes(n, "y"); // float
     }
@@ -166,7 +165,7 @@ class NapVector {
      
     getCoordFromBytes(n, axis) { // NapData[], string
         var returns = "";
-        for (var i=0; i<n.size(); i++) {
+        for (var i=0; i<n.length; i++) {
             returns += this.getSingleByteVal(n[i], axis);
         }
         
@@ -206,7 +205,7 @@ class NapCmd {
         this.opcode = new NapOpcode(this.cmdRaw.charAt(0)); // NapOpcode
         if (this.cmdRaw.length > 1) {
             for (var i=1; i<this.cmdRaw.length; i++) {
-                data.push(new NapData(this.cmdRaw.charAt(i)));
+                this.data.push(new NapData(this.cmdRaw.charAt(i)));
             }
         }
         
@@ -228,7 +227,7 @@ class NapCmd {
     // This prints out the command contents in various formats
     // Helpful for debugging
     formatCmd(mode) {
-        var returns = "(" + index + ") " + this.opcode.id;
+        var returns = "(" + this.index + ") " + this.opcode.id;
         if (this.data.length > 0) returns += ": ";
         if (this.opcode.id === "") {
             switch(mode) {
@@ -282,10 +281,10 @@ class NapCmd {
     // ~ ~ ~ Parsing methods begin here ~ ~ ~
     getPoints() {
         var nvList = []; // NapVector[];
-        for (var i=0; i<data.length; i+=pointBytes) {
+        for (var i=0; i<this.data.length; i+=this.pointBytes) {
             var n = []; // NapData[]
-            for (var j=0; j<pointBytes; j++) {
-                n.push(data[i + j]);
+            for (var j=0; j<this.pointBytes; j++) {
+                n.push(this.data[i + j]);
             }
             nvList.push(new NapVector(n));
         }
@@ -293,11 +292,11 @@ class NapCmd {
         for (var i=0; i<nvList.length; i++) {
             var nv = nvList[i];
 
-            if (pointRelative) {
+            if (this.pointRelative) {
                 if (i===0) {
-                    points.push(new PVector(nv.x, nv.y));
+                    this.points.push(createVector(nv.x, nv.y));
                 } else {
-                    var p = points[points.length-1];
+                    var p = this.points[this.points.length-1];
                     
                     var x = 0;         
                     if (nv.x < 0) {
@@ -313,17 +312,17 @@ class NapCmd {
                         y = (abs(nv.y) + abs(p.y)) - 1.0;
                     }
                     
-                    points.push(new PVector(x, y));
+                    this.points.push(createVector(x, y));
                 }
             } else {
-                points.push (new PVector(nv.x, nv.y));
+                this.points.push (createVector(nv.x, nv.y));
             }
             // * * * * * 
         }
     }
     
     getDomain() {
-        for (var i=0; i<data.length; i++) {
+        for (var i=0; i<this.data.length; i++) {
             // TODO parse header info, most importantly:
             // How many bytes per point
             // XY format (3 bits per axis per byte) or XYZ format (2 bits per axis per byte)
@@ -352,7 +351,7 @@ class NapDecoder {
         var tempCmd = "";
         for (var i=0; i<this.napRaw.length; i++) {
             var c = this.napRaw[i]; // char or string
-            if (this.isOpcode(c)) {
+            if (this.isOpcode(new Char(c))) {
                 if (tempCmd === "") {
                     tempCmd += c;
                 } else {
