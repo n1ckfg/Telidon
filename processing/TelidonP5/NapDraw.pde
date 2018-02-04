@@ -51,7 +51,7 @@ class NapDrawCmd {
   void update() {
     if (moveScanline) {
       scanPos -= scanDelta;
-      if (scanPos < 0) moveScanline = false;
+      if (scanPos <= 0) moveScanline = false;
     }
   }
   
@@ -60,14 +60,16 @@ class NapDrawCmd {
     drawPoints(cmd.points, width, height);
     tex.endDraw();
     
-    tex.loadPixels();
-    for (int x=0; x < tex.width; x++) {
-      for (int y=0; y < tex.height; y++) {
-        int loc = x + y*tex.width;
-        if (y < scanPos) tex.pixels[loc] = color(0,0);
+    if (moveScanline) {
+      tex.loadPixels();
+      for (int x=0; x < tex.width; x++) {
+        for (int y=0; y < tex.height; y++) {
+          int loc = x + y*tex.width;
+          if (y <= scanPos) tex.pixels[loc] = color(0,0);
+        }
       }
+      tex.updatePixels();
     }
-    tex.updatePixels();
     image(tex, 0, 0);
   }
   

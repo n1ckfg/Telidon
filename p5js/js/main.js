@@ -4,7 +4,7 @@ var nap;
 
 function preload() {
 	loadStrings("./images/boom.nap", function(response) {
-		nap = new NapDraw(response);
+		nap = new NapDraw(response, 640, 640);
 	});
 }
 
