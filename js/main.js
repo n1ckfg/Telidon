@@ -6,7 +6,7 @@ var sW = 640;
 var sH = 640;
 
 function preload() {
-	loadStrings("./images/boom.nap", function(response) {
+	loadStrings("./images/shark.nap", function(response) {
 		nap = new NapDraw(response, sW, sH);
 	});
 }

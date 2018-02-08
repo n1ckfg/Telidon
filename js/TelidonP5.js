@@ -42,6 +42,7 @@ class NapDrawCmd {
         this.scanPos = _h; // float
         this.scanDelta = 5; // float
         this.moveScanline = false;
+        this.labelPoints = true;
     }
     
     update() {
@@ -93,24 +94,26 @@ class NapDrawCmd {
         }
         this.tex.endShape(CLOSE);
         
-        this.tex.strokeWeight(8);
-        for (var i=0; i<points.length; i++) {
-            if (i===0) {
-                this.tex.stroke(0, 255, 255);
-            } else if (i===1) {
-                this.tex.stroke(255, 0, 0);
-            } else {
-                this.tex.stroke(127);
-            }
-            var p = points[i]; // PVector
-            this.tex.point(p.x * w, p.y * h);
+        if (this.labelPoints) {
+        	this.tex.strokeWeight(8);
+	        for (var i=0; i<points.length; i++) {
+	            if (i===0) {
+	                this.tex.stroke(0, 255, 255);
+	            } else if (i===1) {
+	                this.tex.stroke(255, 0, 0);
+	            } else {
+	                this.tex.stroke(127);
+	            }
+	            var p = points[i]; // PVector
+	            this.tex.point(p.x * w, p.y * h);
 
-            //tex.textFont(font, fontSize);
-            //tex.fill(0);
-            //tex.text(i, (p.x * w) + 2, (p.y * h) + 2);
-            //tex.fill(255);
-            //tex.text(i, p.x * w, p.y * h);
-        }
+	            //tex.textFont(font, fontSize);
+	            //tex.fill(0);
+	            //tex.text(i, (p.x * w) + 2, (p.y * h) + 2);
+	            //tex.fill(255);
+	            //tex.text(i, p.x * w, p.y * h);
+	        }
+    	}
     }
     
 }

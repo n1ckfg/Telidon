@@ -40,8 +40,9 @@ class NapDrawCmd {
   NapCmd cmd;
   PGraphics tex;
   float scanPos = height;
-  float scanDelta = 10;
+  float scanDelta = 40;
   boolean moveScanline = true;
+  boolean labelPoints = true;
   
   NapDrawCmd(NapCmd _cmd) {
     cmd = _cmd;
@@ -96,23 +97,25 @@ class NapDrawCmd {
     }
     tex.endShape(CLOSE);
     
-    tex.strokeWeight(8);
-    for (int i=0; i<points.size(); i++) {
-      if (i==0) {
-        tex.stroke(0, 255, 255);
-      } else if (i==1) {
-        tex.stroke(255, 0, 0);
-      } else {
-        tex.stroke(127);
+    if (labelPoints) {
+      tex.strokeWeight(8);
+      for (int i=0; i<points.size(); i++) {
+        if (i==0) {
+          tex.stroke(0, 255, 255);
+        } else if (i==1) {
+          tex.stroke(255, 0, 0);
+        } else {
+          tex.stroke(127);
+        }
+        PVector p = points.get(i);
+        tex.point(p.x * w, p.y * h);
+  
+        //tex.textFont(font, fontSize);
+        //tex.fill(0);
+        //tex.text(i, (p.x * w) + 2, (p.y * h) + 2);
+        //tex.fill(255);
+        //tex.text(i, p.x * w, p.y * h);
       }
-      PVector p = points.get(i);
-      tex.point(p.x * w, p.y * h);
-
-      //tex.textFont(font, fontSize);
-      //tex.fill(0);
-      //tex.text(i, (p.x * w) + 2, (p.y * h) + 2);
-      //tex.fill(255);
-      //tex.text(i, p.x * w, p.y * h);
     }
   }
   
