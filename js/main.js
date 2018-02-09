@@ -17,6 +17,8 @@ function setup() {
     dropZone.addEventListener('dragover', onDragOver);
     dropZone.addEventListener('drop', onDrop);
 	//console.log(nap);
+    background(0);
+    blendMode(ADD);
 }
 
 function draw() {
@@ -38,6 +40,9 @@ function onDrop(e) {
     for (var i=0, file; file=files[i]; i++) {
         var reader = new FileReader();
         reader.onload = function(e2) {
+        	blendMode(NORMAL);
+        	background(0);
+        	blendMode(ADD);
             nap = new NapDraw([e2.target.result], sW, sH);
         }
         reader.readAsText(file, 'UTF-8');

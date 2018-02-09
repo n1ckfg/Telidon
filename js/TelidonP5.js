@@ -85,7 +85,7 @@ class NapDrawCmd {
     
     drawPoints(points, w, h) { // PVector, w, h
         this.tex.noFill();
-        this.tex.stroke(255,255,0);
+        this.tex.stroke(0,255,50,5);
         this.tex.strokeWeight(2);
         this.tex.beginShape();
         for (var i=0; i<points.length; i++) {
@@ -95,15 +95,10 @@ class NapDrawCmd {
         this.tex.endShape(CLOSE);
         
         if (this.labelPoints) {
-        	this.tex.strokeWeight(8);
+        	this.tex.strokeWeight(4);
 	        for (var i=0; i<points.length; i++) {
-	            if (i===0) {
-	                this.tex.stroke(0, 255, 255);
-	            } else if (i===1) {
-	                this.tex.stroke(255, 0, 0);
-	            } else {
-	                this.tex.stroke(127);
-	            }
+                this.tex.stroke(50, 255, 50, 5);
+
 	            var p = points[i]; // PVector
 	            this.tex.point(p.x * w, p.y * h);
 

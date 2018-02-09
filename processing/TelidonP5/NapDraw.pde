@@ -40,7 +40,7 @@ class NapDrawCmd {
   NapCmd cmd;
   PGraphics tex;
   float scanPos = height;
-  float scanDelta = 40;
+  float scanDelta = 80;
   boolean moveScanline = true;
   boolean labelPoints = true;
   
@@ -88,7 +88,7 @@ class NapDrawCmd {
   
   void drawPoints(ArrayList<PVector> points, int w, int h) {
     tex.noFill();
-    tex.stroke(255,255,0);
+    tex.stroke(0,255,50,15);
     tex.strokeWeight(2);
     tex.beginShape();
     for (int i=0; i<points.size(); i++) {
@@ -98,15 +98,9 @@ class NapDrawCmd {
     tex.endShape(CLOSE);
     
     if (labelPoints) {
-      tex.strokeWeight(8);
+      tex.strokeWeight(4);
       for (int i=0; i<points.size(); i++) {
-        if (i==0) {
-          tex.stroke(0, 255, 255);
-        } else if (i==1) {
-          tex.stroke(255, 0, 0);
-        } else {
-          tex.stroke(127);
-        }
+        tex.stroke(50, 255, 50, 15);
         PVector p = points.get(i);
         tex.point(p.x * w, p.y * h);
   

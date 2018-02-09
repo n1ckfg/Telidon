@@ -8,6 +8,7 @@ void setup() {
   nap = new NapDraw(filePath);
   //font = loadFont("Telidon-48.vlw");
   background(0);
+  blendMode(ADD);
 }
 
 void draw() {
