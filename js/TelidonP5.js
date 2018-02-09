@@ -37,9 +37,11 @@ class NapDrawCmd {
    
     constructor(_cmd, _w, _h) { // NapCmd
         this.cmd = _cmd; // NapCmd
-        this.tex = createGraphics(_w, _h); // PGraphics
-        this.tex.scale(1/pixelDensity());
-        this.scanPos = _h; // float
+        this.w = _w;
+        this.h = _h;
+        //this.tex = createGraphics(w, h); // PGraphics
+        //this.tex.scale(1/pixelDensity());
+        this.scanPos = this.h; // float
         this.scanDelta = 5; // float
         this.moveScanline = false;
         this.labelPoints = true;
@@ -53,7 +55,7 @@ class NapDrawCmd {
     }
     
     draw() {
-        this.drawPoints(this.cmd.points, this.tex.width, this.tex.height);
+        this.drawPoints(this.cmd.points, this.w, this.h);//this.tex.width, this.tex.height);
         
         // TODO faster pixel drawing https://p5js.org/reference/#/p5/pixels
         if (this.moveScanline) {
@@ -72,9 +74,9 @@ class NapDrawCmd {
             }
             this.tex.updatePixels();
             */
-            image(this.tex.get(0, this.scanPos, this.tex.width, this.tex.height), 0, this.scanPos);
+            //image(this.tex.get(0, this.scanPos, this.tex.width, this.tex.height), 0, this.scanPos);
         } else {        
-            image(this.tex, 0, 0);
+            //image(this.tex, 0, 0);
         }
     }
     
@@ -84,23 +86,23 @@ class NapDrawCmd {
     }
     
     drawPoints(points, w, h) { // PVector, w, h
-        this.tex.noFill();
-        this.tex.stroke(0,255,50,5);
-        this.tex.strokeWeight(2);
-        this.tex.beginShape();
+        noFill();
+        stroke(0,255,50,5);
+        strokeWeight(2);
+        beginShape();
         for (var i=0; i<points.length; i++) {
             var p = points[i]; // PVector
-            this.tex.vertex(p.x * w, p.y * h);
+            vertex(p.x * w, p.y * h);
         }
-        this.tex.endShape(CLOSE);
+        endShape(CLOSE);
         
         if (this.labelPoints) {
-        	this.tex.strokeWeight(4);
+        	strokeWeight(4);
 	        for (var i=0; i<points.length; i++) {
-                this.tex.stroke(50, 255, 50, 5);
+                stroke(50, 255, 50, 5);
 
 	            var p = points[i]; // PVector
-	            this.tex.point(p.x * w, p.y * h);
+	            point(p.x * w, p.y * h);
 
 	            //tex.textFont(font, fontSize);
 	            //tex.fill(0);
