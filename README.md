@@ -1,4 +1,4 @@
-![NAPLPS](/screenshots/Screen_Shot_2018-02-08_at_11.27.00_PM.png)
+![NAPLPS](/screenshots/Comp-4_320.gif)
 
 1. Browser-based decoder using p5.js:
 https://n1ckfg.github.io/Telidon
