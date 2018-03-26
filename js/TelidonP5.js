@@ -2,7 +2,7 @@
 
 // 5. Drawing class--this is where it all comes together.
 // p5.js-specific drawing code is separated here.
-class NapDraw {
+class TelidonDraw {
 	    
     constructor(_filePath, _w, _h) { // string
         this.decoder = new NapDecoder(_filePath); 
@@ -11,12 +11,27 @@ class NapDraw {
         
         for (var i=0; i<this.decoder.cmds.length; i++) {
             var cmd = this.decoder.cmds[i]; // NapCmd
-            if (cmd.opcode.id === "SET & POLY FILLED") {
-                this.drawCmds.push(new NapDrawCmd(cmd, _w, _h));
-                //for (var j=0; j<cmd.points.length; j++) {
-                    //console.log(j + ". " + cmd.points[j]);
-                //}
-            }
+            // *** IMPORTANT STEP 3 of 3 ***
+            // This is where the decoded commands finally get drawn to the screen.
+            switch(cmd.opcode.id) {
+	            case("POLY OUTLINED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("POLY FILLED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("SET & POLY OUTLINED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("SET & POLY FILLED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                //for (var j=0; j<cmd.points.length; j++) {
+	                    //console.log(j + ". " + cmd.points[j]);
+	                //}
+	                break;
+	            default:
+	            	break;
+        	}
         }
     }
 
@@ -33,7 +48,7 @@ class NapDraw {
 
 }
 
-class NapDrawCmd {
+class TelidonDrawCmd {
    
     constructor(_cmd, _w, _h) { // NapCmd
         this.cmd = _cmd; // NapCmd
@@ -58,7 +73,7 @@ class NapDrawCmd {
         this.drawPoints(this.cmd.points, this.w, this.h);//this.tex.width, this.tex.height);
         
         // TODO faster pixel drawing https://p5js.org/reference/#/p5/pixels
-        if (this.moveScanline) {
+        //if (this.moveScanline) {
             /*
             this.tex.loadPixels();
             for (var x=0; x < this.tex.width; x++) {
@@ -75,9 +90,9 @@ class NapDrawCmd {
             this.tex.updatePixels();
             */
             //image(this.tex.get(0, this.scanPos, this.tex.width, this.tex.height), 0, this.scanPos);
-        } else {        
+        //} else {        
             //image(this.tex, 0, 0);
-        }
+        //}
     }
     
     run() {

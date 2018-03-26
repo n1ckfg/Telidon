@@ -1,13 +1,13 @@
 "use strict";
 
-var nap;
+var telidon;
 var dropZone;
 var sW = 640;
 var sH = 640;
 
 function preload() {
 	loadStrings("./images/shark.nap", function(response) {
-		nap = new NapDraw(response, sW, sH);
+		telidon = new TelidonDraw(response, sW, sH);
 	});
 }
 
@@ -16,14 +16,14 @@ function setup() {
 	dropZone = document.getElementsByTagName("body")[0];
     dropZone.addEventListener('dragover', onDragOver);
     dropZone.addEventListener('drop', onDrop);
-	//console.log(nap);
+	//console.log(telidon);
     background(0);
     blendMode(ADD);
 }
 
 function draw() {
 	background(0);
-	nap.draw();
+	telidon.draw();
 }
 
 // Show the copy icon when dragging over.  Seems to only work for chrome.
@@ -43,7 +43,7 @@ function onDrop(e) {
         	blendMode(NORMAL);
         	background(0);
         	blendMode(ADD);
-            nap = new NapDraw([e2.target.result], sW, sH);
+            telidon = new TelidonDraw([e2.target.result], sW, sH);
         }
         reader.readAsText(file, 'UTF-8');
     }      

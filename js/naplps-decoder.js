@@ -56,9 +56,13 @@ class NapOpcode extends NapChar {
         this.id = this.getId();
     }
     
-    getId() {
+    // *** IMPORTANT STEP 1 of 3 ***
+    // This is the first step, where we match the hex code to a command.
+    // The second step happens later on in this decoder.
+    getId() { 
         var returns = "";
         switch(this.hex) {
+        	//~ ~ ~ ~ ~ CONTROL CODES ~ ~ ~ ~ ~
             case("0E"):
                 returns = "Shift-Out"; // graphics mode
                 break;
@@ -74,11 +78,13 @@ class NapOpcode extends NapChar {
             case("1F"):
                 returns = "NSR"; // Non-Selective Reset
                 break;
+            //~ ~ ~ ~ ~ PDI (PICTURE DESCRIPTION INSTRUCTION) CODES ~ ~ ~ ~ ~
+            //~ ~ ~ ENVIRONMENT, part 1 ~ ~ ~
             case("20"):
                 returns = "RESET";
                 break;
             case("21"):
-                returns = "DOMAIN";
+                returns = "DOMAIN"; // header information
                 break;
             case("22"):
                 returns = "TEXT";
@@ -86,17 +92,96 @@ class NapOpcode extends NapChar {
             case("23"):
                 returns = "TEXTURE";
                 break;
+            //~ ~ ~ POINTS ~ ~ ~
             case("24"):
                 returns = "POINT SET ABS";
                 break;
             case("25"):
                 returns = "POINT SET REL";
                 break;
-            case("3E"):
-                returns = "SELECT COLOR";
+            case("26"):
+                returns = "POINT ABS";
+                break;
+            case("27"):
+                returns = "POINT REL";
+                break;
+            //~ ~ ~ LINES ~ ~ ~
+            case("28"):
+                returns = "LINE ABS";
+                break;
+            case("29"):
+                returns = "LINE REL";
+                break;
+            case("2A"):
+                returns = "SET & LINE ABS";
+                break;
+            case("2B"):
+            	returns = "SET & LINE REL";
+            	break;
+            //~ ~ ~ ARCS ~ ~ ~
+            case("2C"):
+                returns = "ARC OUTLINED";
+                break;
+            case("2D"):
+                returns = "ARC FILLED";
+                break;
+            case("2E"):
+                returns = "SET & ARC OUTLINED";
+                break;
+            case("2F"):
+            	returns = "SET & ARC FILLED";
+            	break;
+            //~ ~ ~ RECTANGLES ~ ~ ~
+            case("30"):
+                returns = "RECT OUTLINED";
+                break;
+            case("31"):
+                returns = "RECT FILLED";
+                break;
+            case("32"):
+                returns = "SET & RECT OUTLINED";
+                break;
+            case("33"):
+            	returns = "SET & RECT FILLED";
+            	break;
+            //~ ~ ~ POLYGONS ~ ~ ~
+            case("34"):
+                returns = "POLY OUTLINED";
+                break;
+            case("35"):
+                returns = "POLY FILLED";
+                break;
+            case("36"):
+                returns = "SET & POLY OUTLINED";
                 break;
             case("37"):
                 returns = "SET & POLY FILLED";
+                break;
+            //~ ~ ~ INCREMENTALS ~ ~ ~
+            case("38"):
+                returns = "FIELD";
+                break;
+            case("39"):
+                returns = "INCREMENTAL POINT";
+                break;
+            case("3A"):
+                returns = "INCREMENTAL LINE";
+                break;
+            case("3B"):
+                returns = "INCREMENTAL POLY FILLED";
+                break;
+            //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
+            case("3C"):
+                returns = "SET COLOR"; // this picks a color
+                break;
+            case("3D"):
+                returns = "WAIT";
+                break;
+            case("3E"):
+                returns = "SELECT COLOR"; // this sets the color mode
+                break
+            case("3F"):
+                returns = "BLINK";
                 break;
             default:
                 break;
@@ -193,7 +278,6 @@ class NapVector {
 // Assembled from the opcode and data bytes.
 class NapCmd {
     
-    // TODO draw each command to its own PGraphics buffer.
     constructor(_cmd, _index) { // string, int
         this.pointBytes = 4; // int, TODO set programatically from header info
         this.pointRelative = true;    // bool, TODO set programatically from header info
@@ -209,9 +293,20 @@ class NapCmd {
             }
         }
         
-        // This is where we find out what kind of command it is
-        // Which tells us how we handle the data
+        // *** IMPORTANT STEP 2 of 3 ***
+        // The second step is where we find out what kind of command it is,
+        // which tells us how we handle the data.
+        // The third and final step is done separately, in the drawing code.
         switch(this.opcode.id) {
+        	case ("POLY OUTLINED"):
+        		this.getPoints();
+        		break;
+        	case ("POLY FILLED"):
+        		this.getPoints();
+        		break;
+            case("SET & POLY OUTLINED"): // relative points after first 
+                this.getPoints();
+                break;
             case("SET & POLY FILLED"): // relative points after first 
                 this.getPoints();
                 break;
@@ -335,7 +430,7 @@ class NapCmd {
 
 
 // 4. DECODER: Contains all the decoded drawing commands.
-// Decodes the format only; drawing happens in NapDraw
+// Decodes the format only; drawing happens in TelidonDraw
 class NapDecoder {
     
     constructor(input) { // string[]
