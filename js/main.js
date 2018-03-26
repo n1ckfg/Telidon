@@ -65,10 +65,10 @@ function onDrop(e) {
 
 
 function loadNewTelidon(fileName) {
-    blendMode(NORMAL);
-    background(0);
-    blendMode(ADD);
     loadStrings(fileName, function(response) {
+    	blendMode(NORMAL);
+    	background(0);
+    	blendMode(ADD);
         telidon = new TelidonDraw(response, sW, sH);
     });
 }
