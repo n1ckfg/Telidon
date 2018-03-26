@@ -5,6 +5,9 @@ var dropZone;
 var sW = 640;
 var sH = 640;
 
+var shark;
+var skull;
+
 function preload() {
 	loadStrings("./images/shark.nap", function(response) {
 		telidon = new TelidonDraw(response, sW, sH);
@@ -16,6 +19,17 @@ function setup() {
 	dropZone = document.getElementsByTagName("body")[0];
     dropZone.addEventListener('dragover', onDragOver);
     dropZone.addEventListener('drop', onDrop);
+
+    shark = document.getElementById("shark");
+    shark.addEventListener("click", function() {
+        loadNewTelidon("./images/shark.nap");
+    });
+
+    skull = document.getElementById("skull");
+    skull.addEventListener("click", function() {
+        loadNewTelidon("./images/wast.nap");
+    });
+
 	//console.log(telidon);
     background(0);
     blendMode(ADD);
@@ -47,4 +61,14 @@ function onDrop(e) {
         }
         reader.readAsText(file, 'UTF-8');
     }      
+}
+
+
+function loadNewTelidon(fileName) {
+    blendMode(NORMAL);
+    background(0);
+    blendMode(ADD);
+    loadStrings(fileName, function(response) {
+        telidon = new TelidonDraw(response, sW, sH);
+    });
 }
