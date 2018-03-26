@@ -1,19 +1,19 @@
 // 5. Drawing class--this is where it all comes together.
 // Processing-specific drawing code is separated here.
-class NapDraw {
+class TelidonDraw {
   
   NapDecoder decoder;
-  ArrayList<NapDrawCmd> drawCmds;
+  ArrayList<TelidonDrawCmd> drawCmds;
   int counter = 0;
   
-  NapDraw(String _filePath) {
+  TelidonDraw(String _filePath) {
     decoder = new NapDecoder(loadStrings(_filePath));
-    drawCmds = new ArrayList<NapDrawCmd>();
+    drawCmds = new ArrayList<TelidonDrawCmd>();
     
     for(int i=0; i<decoder.cmds.size(); i++) {
       NapCmd cmd = decoder.cmds.get(i);
       if (cmd.opcode.id.equals("SET & POLY FILLED")) {
-        drawCmds.add(new NapDrawCmd(cmd));
+        drawCmds.add(new TelidonDrawCmd(cmd));
         for (int j=0; j<cmd.points.size(); j++) {
           println(j + ". " + cmd.points.get(j));
         }
@@ -25,7 +25,7 @@ class NapDraw {
     background(0);
     counter = 0;
     for (int i=0; i<drawCmds.size(); i++) {
-      NapDrawCmd drawCmd = drawCmds.get(i);
+      TelidonDrawCmd drawCmd = drawCmds.get(i);
       if (!drawCmd.moveScanline) counter++;
       if (i == counter || !drawCmd.moveScanline) {
         drawCmd.run();
@@ -35,7 +35,7 @@ class NapDraw {
 
 }
 
-class NapDrawCmd {
+class TelidonDrawCmd {
 
   NapCmd cmd;
   PGraphics tex;
@@ -44,7 +44,7 @@ class NapDrawCmd {
   boolean moveScanline = true;
   boolean labelPoints = true;
   
-  NapDrawCmd(NapCmd _cmd) {
+  TelidonDrawCmd(NapCmd _cmd) {
     cmd = _cmd;
     tex = createGraphics(width, height, P2D);
   }
