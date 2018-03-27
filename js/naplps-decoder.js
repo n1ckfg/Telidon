@@ -298,20 +298,129 @@ class NapCmd {
         // which tells us how we handle the data.
         // The third and final step is done separately, in the drawing code.
         switch(this.opcode.id) {
-        	case ("POLY OUTLINED"):
-        		this.getPoints();
-        		break;
-        	case ("POLY FILLED"):
-        		this.getPoints();
-        		break;
+        	//~ ~ ~ ~ ~ CONTROL CODES ~ ~ ~ ~ ~
+            case("Shift-Out"): // graphics mode
+               	// TODO
+                break;
+            case("Shift-In"): // text mode
+               	// TODO
+                break;
+            case("CANCEL"):
+               	// TODO
+                break;
+            case("ESC"):
+               	// TODO
+                break;
+            case("NSR"): // Non-Selective Reset
+               	// TODO
+                break;
+            //~ ~ ~ ~ ~ PDI (PICTURE DESCRIPTION INSTRUCTION) CODES ~ ~ ~ ~ ~
+            //~ ~ ~ ENVIRONMENT, part 1 ~ ~ ~
+            case("RESET"):
+               	// TODO
+                break;
+            case("DOMAIN"): // header information
+               	// TODO
+                break;
+            case("TEXT"):
+               	// TODO
+                break;
+            case("TEXTURE"):
+               	// TODO
+                break;
+            //~ ~ ~ POINTS ~ ~ ~
+            case("POINT SET ABS"):
+                this.getPoints();
+                break;
+            case("POINT SET REL"):
+                this.getPoints();
+                break;
+            case("POINT ABS"):
+                this.getPoints();
+                break;
+            case("POINT REL"):
+                this.getPoints();
+                break;
+            //~ ~ ~ LINES ~ ~ ~
+            case("LINE ABS"):
+                this.getPoints();
+                break;
+            case("LINE REL"):
+                this.getPoints();
+                break;
+            case("SET & LINE ABS"):
+                this.getPoints();
+                break;
+            case("SET & LINE REL"):
+                this.getPoints();
+            	break;
+            //~ ~ ~ ARCS ~ ~ ~
+            case("ARC OUTLINED"):
+                this.getPoints();
+                break;
+            case("ARC FILLED"):
+                this.getPoints();
+                break;
+            case("SET & ARC OUTLINED"):
+                this.getPoints();
+                break;
+            case("SET & ARC FILLED"):
+                this.getPoints();
+            	break;
+            //~ ~ ~ RECTANGLES ~ ~ ~
+            case("RECT OUTLINED"):
+                this.getPoints();
+                break;
+            case("RECT FILLED"):
+                this.getPoints();
+                break;
+            case("SET & RECT OUTLINED"):
+                this.getPoints();
+                break;
+            case("SET & RECT FILLED"):
+                this.getPoints();
+            	break;
+            //~ ~ ~ POLYGONS ~ ~ ~
+            case("POLY OUTLINED"):
+                this.getPoints();
+                break;
+            case("POLY FILLED"):
+                this.getPoints();
+                break;
             case("SET & POLY OUTLINED"): // relative points after first 
                 this.getPoints();
                 break;
             case("SET & POLY FILLED"): // relative points after first 
                 this.getPoints();
                 break;
-            default:
+            //~ ~ ~ INCREMENTALS ~ ~ ~
+            case("FIELD"):
+               	// TODO
                 break;
+            case("INCREMENTAL POINT"):
+               	// TODO
+                break;
+            case("INCREMENTAL LINE"):
+               	// TODO
+                break;
+            case("INCREMENTAL POLY FILLED"):
+               	// TODO
+                break;
+            //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
+            case("SET COLOR"): // this picks a color
+               	// TODO
+                break;
+            case("WAIT"):
+               	// TODO
+                break;
+            case("SELECT COLOR"): // this sets the color mode
+               	// TODO
+                break
+            case("BLINK"):
+            	// TODO
+                break;
+            default:
+                break;        	
         }
     }
      
@@ -418,7 +527,7 @@ class NapCmd {
     
     getDomain() {
         for (var i=0; i<this.data.length; i++) {
-            // TODO parse header info, most importantly:
+            // TODO header info, most importantly:
             // How many bytes per point
             // XY format (3 bits per axis per byte) or XYZ format (2 bits per axis per byte)
             // How many bytes per color

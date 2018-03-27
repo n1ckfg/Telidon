@@ -14,23 +14,132 @@ class TelidonDraw {
             // *** IMPORTANT STEP 3 of 3 ***
             // This is where the decoded commands finally get drawn to the screen.
             switch(cmd.opcode.id) {
+	        	//~ ~ ~ ~ ~ CONTROL CODES ~ ~ ~ ~ ~
+	            case("Shift-Out"): // graphics mode
+               		// no effect?
+	                break;
+	            case("Shift-In"): // text mode
+               		// no effect?
+	                break;
+	            case("CANCEL"):
+               		// no effect?
+	                break;
+	            case("ESC"):
+               		// no effect?
+	                break;
+	            case("NSR"): // Non-Selective Reset
+               		// no effect?
+	                break;
+	            //~ ~ ~ ~ ~ PDI (PICTURE DESCRIPTION INSTRUCTION) CODES ~ ~ ~ ~ ~
+	            //~ ~ ~ ENVIRONMENT, part 1 ~ ~ ~
+	            case("RESET"):
+               		// no effect?
+	                break;
+	            case("DOMAIN"): // header information
+	            	// TODO
+	                break;
+	            case("TEXT"):
+					// TODO	            
+	                break;
+	            case("TEXTURE"):
+					// TODO	            
+	                break;
+	            //~ ~ ~ POINTS ~ ~ ~
+	            case("POINT SET ABS"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("POINT SET REL"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("POINT ABS"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("POINT REL"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            //~ ~ ~ LINES ~ ~ ~
+	            case("LINE ABS"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("LINE REL"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("SET & LINE ABS"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("SET & LINE REL"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	            	break;
+	            //~ ~ ~ ARCS ~ ~ ~
+	            case("ARC OUTLINED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("ARC FILLED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("SET & ARC OUTLINED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("SET & ARC FILLED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	            	break;
+	            //~ ~ ~ RECTANGLES ~ ~ ~
+	            case("RECT OUTLINED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("RECT FILLED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("SET & RECT OUTLINED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	                break;
+	            case("SET & RECT FILLED"):
+	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
+	            	break;
+	            //~ ~ ~ POLYGONS ~ ~ ~
 	            case("POLY OUTLINED"):
 	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
 	                break;
 	            case("POLY FILLED"):
 	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
 	                break;
-	            case("SET & POLY OUTLINED"):
+	            case("SET & POLY OUTLINED"): // relative points after first 
 	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
 	                break;
-	            case("SET & POLY FILLED"):
+	            case("SET & POLY FILLED"): // relative points after first 
 	                this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
 	                //for (var j=0; j<cmd.points.length; j++) {
 	                    //console.log(j + ". " + cmd.points[j]);
 	                //}
 	                break;
+	            //~ ~ ~ INCREMENTALS ~ ~ ~
+	            case("FIELD"):
+					// TODO	            
+	                break;
+	            case("INCREMENTAL POINT"):
+					// TODO	            
+	                break;
+	            case("INCREMENTAL LINE"):
+					// TODO	            
+	                break;
+	            case("INCREMENTAL POLY FILLED"):
+					// TODO	            
+	                break;
+	            //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
+	            case("SET COLOR"): // this picks a color
+					// TODO	            
+	                break;
+	            case("WAIT"):
+					// TODO	            
+	                break;
+	            case("SELECT COLOR"): // this sets the color mode
+					// TODO	            
+	                break
+	            case("BLINK"):
+					// TODO	            
+	                break;
 	            default:
-	            	break;
+	                break;    
         	}
         }
     }
