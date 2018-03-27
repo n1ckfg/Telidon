@@ -235,7 +235,7 @@ class NapVector {
         if (axis === "x") {
                 returns = "" + this.binaryConv(n, 1);
         } else if (axis === "y") {
-                returns = "" + this.binaryConv(n, 4);
+                returns = "" + this.binaryConv(n, this.bitsPerByte + 1);//4);
         }
         return returns;
     }
