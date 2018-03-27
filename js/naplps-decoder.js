@@ -300,30 +300,30 @@ class NapCmd {
         switch(this.opcode.id) {
         	//~ ~ ~ ~ ~ CONTROL CODES ~ ~ ~ ~ ~
             case("Shift-Out"): // graphics mode
-               	// TODO
+               	// no effect?
                 break;
             case("Shift-In"): // text mode
-               	// TODO
+               	// no effect?
                 break;
             case("CANCEL"):
-               	// TODO
+               	// no effect?
                 break;
             case("ESC"):
-               	// TODO
+               	// no effect?
                 break;
             case("NSR"): // Non-Selective Reset
-               	// TODO
+               	// no effect?
                 break;
             //~ ~ ~ ~ ~ PDI (PICTURE DESCRIPTION INSTRUCTION) CODES ~ ~ ~ ~ ~
             //~ ~ ~ ENVIRONMENT, part 1 ~ ~ ~
             case("RESET"):
-               	// TODO
+               	// no effect?
                 break;
             case("DOMAIN"): // header information
                	// TODO
                 break;
             case("TEXT"):
-               	// TODO
+                this.getPoints();
                 break;
             case("TEXTURE"):
                	// TODO
@@ -398,13 +398,13 @@ class NapCmd {
                	// TODO
                 break;
             case("INCREMENTAL POINT"):
-               	// TODO
+                this.getPoints();
                 break;
             case("INCREMENTAL LINE"):
-               	// TODO
+                this.getPoints();
                 break;
             case("INCREMENTAL POLY FILLED"):
-               	// TODO
+                this.getPoints();
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("SET COLOR"): // this picks a color
