@@ -323,7 +323,7 @@ class NapCmd {
                	// TODO
                 break;
             case("TEXT"):
-                this.getPoints();
+                // TODO
                 break;
             case("TEXTURE"):
                	// TODO
@@ -484,44 +484,48 @@ class NapCmd {
     
     // ~ ~ ~ Parsing methods begin here ~ ~ ~
     getPoints() {
-        var nvList = []; // NapVector[];
-        for (var i=0; i<this.data.length; i+=this.pointBytes) {
-            var n = []; // NapData[]
-            for (var j=0; j<this.pointBytes; j++) {
-                n.push(this.data[i + j]);
-            }
-            nvList.push(new NapVector(n));
-        }
-        
-        for (var i=0; i<nvList.length; i++) {
-            var nv = nvList[i];
-
-            if (this.pointRelative) {
-                if (i===0) {
-                    this.points.push(createVector(nv.x, nv.y));
-                } else {
-                    var p = this.points[this.points.length-1];
-                    
-                    var x = 0;         
-                    if (nv.x < 0) {
-                        x = (abs(nv.x) + abs(p.x)) - 1.0;
-                    } else {
-                        x = nv.x + p.x;
-                    }
-                    
-                    var y = 0;
-                    if (nv.y < 0) {
-                        y = abs(nv.y) + p.y;
-                    } else {
-                        y = (abs(nv.y) + abs(p.y)) - 1.0;
-                    }
-                    
-                    this.points.push(createVector(x, y));
+        try {
+            var nvList = []; // NapVector[];
+            for (var i=0; i<this.data.length; i+=this.pointBytes) {
+                var n = []; // NapData[]
+                for (var j=0; j<this.pointBytes; j++) {
+                    n.push(this.data[i + j]);
                 }
-            } else {
-                this.points.push (createVector(nv.x, nv.y));
+                nvList.push(new NapVector(n));
             }
-            // * * * * * 
+            
+            for (var i=0; i<nvList.length; i++) {
+                var nv = nvList[i];
+
+                if (this.pointRelative) {
+                    if (i===0) {
+                        this.points.push(createVector(nv.x, nv.y));
+                    } else {
+                        var p = this.points[this.points.length-1];
+                        
+                        var x = 0;         
+                        if (nv.x < 0) {
+                            x = (abs(nv.x) + abs(p.x)) - 1.0;
+                        } else {
+                            x = nv.x + p.x;
+                        }
+                        
+                        var y = 0;
+                        if (nv.y < 0) {
+                            y = abs(nv.y) + p.y;
+                        } else {
+                            y = (abs(nv.y) + abs(p.y)) - 1.0;
+                        }
+                        
+                        this.points.push(createVector(x, y));
+                    }
+                } else {
+                    this.points.push (createVector(nv.x, nv.y));
+                }
+                // * * * * * 
+            }
+        } catch (e) { 
+            console.log("*** Error: " + this.opcode.id + " contains no coordinates. ***")
         }
     }
     

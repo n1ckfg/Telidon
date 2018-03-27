@@ -5,8 +5,7 @@ var dropZone;
 var sW = 640;
 var sH = 640;
 
-var shark;
-var skull;
+var shark, skull, santa, beer, haunt, email;
 
 function preload() {
 	loadStrings("./images/shark.nap", function(response) {
@@ -20,14 +19,28 @@ function setup() {
     dropZone.addEventListener('dragover', onDragOver);
     dropZone.addEventListener('drop', onDrop);
 
-    shark = document.getElementById("shark");
-    shark.addEventListener("click", function() {
+    shark = document.getElementById("shark").addEventListener("click", function() {
         loadNewTelidon("./images/shark.nap");
     });
 
-    skull = document.getElementById("skull");
-    skull.addEventListener("click", function() {
+    skull = document.getElementById("skull").addEventListener("click", function() {
         loadNewTelidon("./images/wast.nap");
+    });
+
+    santa = document.getElementById("santa").addEventListener("click", function() {
+        loadNewTelidon("./images/santa.nap");
+    });
+
+    beer = document.getElementById("beer").addEventListener("click", function() {
+        loadNewTelidon("./images/beer.nap");
+    });
+
+    haunt = document.getElementById("haunt").addEventListener("click", function() {
+        loadNewTelidon("./images/haunt.nap");
+    });
+
+    email = document.getElementById("email").addEventListener("click", function() {
+        loadNewTelidon("./images/email2.nap");
     });
 
 	//console.log(telidon);
