@@ -1,22 +1,13 @@
 ![TelidonP5](/images/screenshots/Comp-4_320.gif)
 
-2018 is the 40th anniversary of the NAPLPS vector graphics format. It was<br>
-originally created for display on Telidon hardware systems. The first use of the<br>
-system by artists was at <a href="http://interaccess.org/">InterAccess</a> in Toronto. The format was popular during<br>
-the BBS era&mdash;tiny file sizes and limited animation features made it a sort of<br>
-precursor to the animated GIF.<br>
+**TelidonP5.js** allows NAPLPS vector graphics files to be displayed in a browser using p5.js, and its decoder library **naplps-decoder.js** can also be used independently with any other JavaScript library.
 
-Spring 2018 events at InterAccess:<br>
+2018 is the 40th anniversary of the NAPLPS format, created in 1978 for use on Telidon computer systems. The Telidon hardware was discontinued in 1985, but the graphics format remained in wide use throughout the BBS era, until the early 1990s. Thanks to its exceptionally small file size, and limited animation features, it can be seen as a technological ancestor of the animated GIF and the Flash SWF&mdash;one of the first media both produced and consumed on a computer. 
+
+From 1982&ndash;1985, members of the Toronto arts org <a href="http://interaccess.org/">InterAccess</a> used Telidon systems to produce an ambitious series of interactive video pieces in the format, and three anniversary events are being held there in spring 2018:<br>
 http://interaccess.org/event/2018/naplps-adventure-new-media-art-history<br>
 http://interaccess.org/event/2018/digital-archaeology-excavating-telidon<br>
 http://interaccess.org/exhibition/telidon<br>
-
-In the repo:<br>
-1. **TelidonP5.js**: browser-based decoder using p5.js. Main focus of development.<br>
-https://n1ckfg.github.io/Telidon
-
-2. **TelidonP5**: Java decoder using Processing.<br>
-https://github.com/n1ckfg/Telidon/tree/master/processing/TelidonP5
 
 Nick Fox-Gieg<br>
 180326
