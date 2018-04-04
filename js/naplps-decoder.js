@@ -210,16 +210,13 @@ class NapData extends NapChar {
 
 // 2. MULTI-BYTE data classes
 //
-// 2.1. Some NapData objects need to be combined for decoding. 
-// XY and XYZ position are handled by the NapVector class.
-class NapVector {
+// 2.1. NapDataArray objects need to combine multiple NapData pieces for decoding. 
+class NapDataArray {
     
     constructor(n) { // NapData[]
         this.bitsPerByte = 3; // int, TODO set programatically from header info based on XY / XYZ
         this.firstBitSign = true; // bool, should be true for all header options
         this.bitVals = pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign)); // float
-        this.x = this.getCoordFromBytes(n, "x"); // float
-        this.y = this.getCoordFromBytes(n, "y"); // float
     }
     
     binaryConv(n, loc) { // NapData, int
@@ -236,6 +233,8 @@ class NapVector {
                 returns = "" + this.binaryConv(n, 1);
         } else if (axis === "y") {
                 returns = "" + this.binaryConv(n, this.bitsPerByte + 1);//4);
+        } else if (axis === "z") {
+                returns = "" + this.binaryConv(n, (2 * this.bitsPerByte) + 1);//4); // ? untested
         }
         return returns;
     }
@@ -266,10 +265,36 @@ class NapVector {
             finalReturns = (unbinary(returns) / this.bitVals) * sign;
         } else if (axis === "y") {
             finalReturns = ((this.bitVals - unbinary(returns)) / this.bitVals) * sign;
+        } else if (axis === "z") {
+            // ? untested
         }
 
         return finalReturns;
     }
+
+}
+
+// 2.2. XY and XYZ position are handled by the NapVector class.
+class NapVector extends NapDataArray {
+
+    constructor(n) { // NapData[]
+		super(n);
+        this.x = this.getCoordFromBytes(n, "x"); // float
+        this.y = this.getCoordFromBytes(n, "y"); // float
+    }
+
+}
+
+// 2.3. RGB color
+class NapColor extends NapDataArray {
+
+	constructor(n) { // NapData[]
+		super(n);
+		// TODO find out if this needs a new method
+		this.r = this.getCoordFromBytes(n, "x"); // float
+        this.g = this.getCoordFromBytes(n, "y"); // float
+        this.b = this.getCoordFromBytes(n, "z"); // float
+	}
 
 }
 
