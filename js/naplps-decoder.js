@@ -266,7 +266,7 @@ class NapDataArray {
         } else if (axis === "y") {
             finalReturns = ((this.bitVals - unbinary(returns)) / this.bitVals) * sign;
         } else if (axis === "z") {
-            // ? untested
+            finalReturns = (unbinary(returns) / this.bitVals) * sign; // ? untested
         }
 
         return finalReturns;
@@ -310,7 +310,8 @@ class NapCmd {
         this.index = _index; // int
         this.data = []; // NapData[]
         this.points = []; // PVector[]
-        
+        this.col = new Vector3(0.0,0.01,0.01);
+
         this.opcode = new NapOpcode(this.cmdRaw.charAt(0)); // NapOpcode
         if (this.cmdRaw.length > 1) {
             for (var i=1; i<this.cmdRaw.length; i++) {
@@ -433,13 +434,13 @@ class NapCmd {
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("SET COLOR"): // this picks a color
-               	// TODO
+               	this.getColors();
                 break;
             case("WAIT"):
                	// TODO
                 break;
             case("SELECT COLOR"): // this sets the color mode
-               	// TODO
+               	this.getColors();
                 break
             case("BLINK"):
             	// TODO
@@ -524,7 +525,7 @@ class NapCmd {
 
                 if (this.pointRelative) {
                     if (i===0) {
-                        this.points.push(createVector(nv.x, nv.y));
+                        this.points.push(new Vector2(nv.x, nv.y));
                     } else {
                         var p = this.points[this.points.length-1];
                         
@@ -542,10 +543,10 @@ class NapCmd {
                             y = (abs(nv.y) + abs(p.y)) - 1.0;
                         }
                         
-                        this.points.push(createVector(x, y));
+                        this.points.push(new Vector2(x, y));
                     }
                 } else {
-                    this.points.push (createVector(nv.x, nv.y));
+                    this.points.push (new Vector2(nv.x, nv.y));
                 }
                 // * * * * * 
             }
@@ -553,7 +554,55 @@ class NapCmd {
             console.log("*** Error: " + this.opcode.id + " contains no coordinates. ***")
         }
     }
-    
+
+    getColors() {
+    	/*
+        try {
+            var nvList = []; // NapVector[];
+            for (var i=0; i<this.data.length; i+=this.pointBytes) {
+                var n = []; // NapData[]
+                for (var j=0; j<this.pointBytes; j++) {
+                    n.push(this.data[i + j]);
+                }
+                nvList.push(new NapVector(n));
+            }
+            
+            for (var i=0; i<nvList.length; i++) {
+                var nv = nvList[i];
+
+                if (this.pointRelative) {
+                    if (i===0) {
+                        this.points.push(new Vector2(nv.x, nv.y));
+                    } else {
+                        var p = this.points[this.points.length-1];
+                        
+                        var x = 0;         
+                        if (nv.x < 0) {
+                            x = (abs(nv.x) + abs(p.x)) - 1.0;
+                        } else {
+                            x = nv.x + p.x;
+                        }
+                        
+                        var y = 0;
+                        if (nv.y < 0) {
+                            y = abs(nv.y) + p.y;
+                        } else {
+                            y = (abs(nv.y) + abs(p.y)) - 1.0;
+                        }
+                        
+                        this.points.push(new Vector2(x, y));
+                    }
+                } else {
+                    this.points.push (new Vector2(nv.x, nv.y));
+                }
+                // * * * * * 
+            }
+        } catch (e) { 
+            console.log("*** Error: " + this.opcode.id + " contains no coordinates. ***")
+        }
+        */
+    }
+
     getDomain() {
         for (var i=0; i<this.data.length; i++) {
             // TODO header info, most importantly:
