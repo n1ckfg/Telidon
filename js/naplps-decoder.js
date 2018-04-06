@@ -230,11 +230,11 @@ class NapDataArray {
     getSingleByteVal(n, axis) { // NapData, string
         var returns = "";
         if (axis === "x") {
-                returns = "" + this.binaryConv(n, 1);
+            returns = "" + this.binaryConv(n, 1);
         } else if (axis === "y") {
-                returns = "" + this.binaryConv(n, this.bitsPerByte + 1);//4);
+            returns = "" + this.binaryConv(n, this.bitsPerByte + 1);//4);
         } else if (axis === "z") {
-                returns = "" + this.binaryConv(n, (2 * this.bitsPerByte) + 1);//4); // ? untested
+            returns = "" + this.binaryConv(n, (2 * this.bitsPerByte) + 1); // ? untested
         }
         return returns;
     }
@@ -266,10 +266,30 @@ class NapDataArray {
         } else if (axis === "y") {
             finalReturns = ((this.bitVals - unbinary(returns)) / this.bitVals) * sign;
         } else if (axis === "z") {
-            finalReturns = (unbinary(returns) / this.bitVals) * sign; // ? untested
+            //finalReturns = (unbinary(returns) / this.bitVals) * sign; // ? untested
         }
 
         return finalReturns;
+    }
+
+    getColorFromBytes(n, channel) {  // NapData[], string
+    	var returns = "";
+    	for (var i=0; i<n.length; i++) {
+    		if (channel === "r") {
+            	returns += "" + this.binaryConv(n[i], 3);
+            	returns += "" + this.binaryConv(n[i], 6);
+    		} else if (channel === "g") {
+            	returns += "" + this.binaryConv(n[i], 2);
+            	returns += "" + this.binaryConv(n[i], 5);
+    		} else if (channel === "b") {
+            	returns += "" + this.binaryConv(n[i], 4);
+            	returns += "" + this.binaryConv(n[i], 7);
+    		}
+    	}
+
+    	var finalReturns = unbinary(returns) / (2 * n.length);
+    	//console.log("color: " + finalReturns);
+    	return finalReturns;
     }
 
 }
@@ -281,6 +301,7 @@ class NapVector extends NapDataArray {
 		super(n);
         this.x = this.getCoordFromBytes(n, "x"); // float
         this.y = this.getCoordFromBytes(n, "y"); // float
+        //this.z = this.getCoordFromBytes(n, "z"); // float
     }
 
 }
@@ -291,9 +312,9 @@ class NapColor extends NapDataArray {
 	constructor(n) { // NapData[]
 		super(n);
 		// TODO find out if this needs a new method
-		this.r = this.getCoordFromBytes(n, "x"); // float
-        this.g = this.getCoordFromBytes(n, "y"); // float
-        this.b = this.getCoordFromBytes(n, "z"); // float
+		this.r = this.getColorFromBytes(n, "r"); // float
+        this.g = this.getColorFromBytes(n, "g"); // float
+        this.b = this.getColorFromBytes(n, "b"); // float
 	}
 
 }
@@ -310,7 +331,7 @@ class NapCmd {
         this.index = _index; // int
         this.data = []; // NapData[]
         this.points = []; // PVector[]
-        this.col = new Vector3(0.0,0.01,0.01);
+        this.col = new Vector3(0.5,0.5,0.5);
 
         this.opcode = new NapOpcode(this.cmdRaw.charAt(0)); // NapOpcode
         if (this.cmdRaw.length > 1) {
@@ -434,13 +455,13 @@ class NapCmd {
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("SET COLOR"): // this picks a color
-               	this.getColors();
+               	this.getColor();
                 break;
             case("WAIT"):
                	// TODO
                 break;
             case("SELECT COLOR"): // this sets the color mode
-               	this.getColors();
+               	this.getColor();
                 break
             case("BLINK"):
             	// TODO
@@ -555,52 +576,9 @@ class NapCmd {
         }
     }
 
-    getColors() {
-    	/*
-        try {
-            var nvList = []; // NapVector[];
-            for (var i=0; i<this.data.length; i+=this.pointBytes) {
-                var n = []; // NapData[]
-                for (var j=0; j<this.pointBytes; j++) {
-                    n.push(this.data[i + j]);
-                }
-                nvList.push(new NapVector(n));
-            }
-            
-            for (var i=0; i<nvList.length; i++) {
-                var nv = nvList[i];
-
-                if (this.pointRelative) {
-                    if (i===0) {
-                        this.points.push(new Vector2(nv.x, nv.y));
-                    } else {
-                        var p = this.points[this.points.length-1];
-                        
-                        var x = 0;         
-                        if (nv.x < 0) {
-                            x = (abs(nv.x) + abs(p.x)) - 1.0;
-                        } else {
-                            x = nv.x + p.x;
-                        }
-                        
-                        var y = 0;
-                        if (nv.y < 0) {
-                            y = abs(nv.y) + p.y;
-                        } else {
-                            y = (abs(nv.y) + abs(p.y)) - 1.0;
-                        }
-                        
-                        this.points.push(new Vector2(x, y));
-                    }
-                } else {
-                    this.points.push (new Vector2(nv.x, nv.y));
-                }
-                // * * * * * 
-            }
-        } catch (e) { 
-            console.log("*** Error: " + this.opcode.id + " contains no coordinates. ***")
-        }
-        */
+    getColor() {
+    	var nc = new NapColor(this.data);
+    	this.col = new Vector3(nc.r, nc.g, nc.b);
     }
 
     getDomain() {

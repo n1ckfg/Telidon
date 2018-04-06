@@ -215,7 +215,7 @@ class TelidonDrawCmd {
     	var r = v.x * 255.0;
     	var g = v.y * 255.0;
     	var b = v.z * 255.0;
-    	return color(r, g, b, 50);
+    	return color(r, g, b, 1);
     }
 
     drawRect(points, w, h, isFill) { // PVector, w, h
