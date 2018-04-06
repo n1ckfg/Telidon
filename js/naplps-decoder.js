@@ -276,19 +276,18 @@ class NapDataArray {
     	var returns = "";
     	for (var i=0; i<n.length; i++) {
     		if (channel === "r") {
-            	returns += "" + this.binaryConv(n[i], 3);
-            	returns += "" + this.binaryConv(n[i], 6);
+            	returns += "" + n[i].binary.charAt(6);
+            	returns += "" + n[i].binary.charAt(3);
     		} else if (channel === "g") {
-            	returns += "" + this.binaryConv(n[i], 2);
-            	returns += "" + this.binaryConv(n[i], 5);
+            	returns += "" + n[i].binary.charAt(5);
+            	returns += "" + n[i].binary.charAt(2);
     		} else if (channel === "b") {
-            	returns += "" + this.binaryConv(n[i], 4);
-            	returns += "" + this.binaryConv(n[i], 7);
+            	returns += "" + n[i].binary.charAt(7);
+            	returns += "" + n[i].binary.charAt(4);
     		}
     	}
 
-    	var finalReturns = unbinary(returns) / (2 * n.length);
-    	//console.log("color: " + finalReturns);
+    	var finalReturns = 255.0 * (unbinary(returns) / (2.0 * n.length));
     	return finalReturns;
     }
 
@@ -315,6 +314,15 @@ class NapColor extends NapDataArray {
 		this.r = this.getColorFromBytes(n, "r"); // float
         this.g = this.getColorFromBytes(n, "g"); // float
         this.b = this.getColorFromBytes(n, "b"); // float
+
+       	if (this.r < 0 || this.r > 255 || this.g < 0 || this.g > 255 || this.b < 0 || this.b > 255) {
+    		this.r = 0;
+    		this.g = 0;
+    		this.b = 0;
+        	//console.log("color: not RGB data? (" + this.r + ", " + this.g + ", " + this.b + ")");
+    	} else {
+	        //console.log("color: " + this.r + ", " + this.g + ", " + this.b);
+    	}
 	}
 
 }
@@ -578,6 +586,7 @@ class NapCmd {
 
     getColor() {
     	var nc = new NapColor(this.data);
+
     	this.col = new Vector3(nc.r, nc.g, nc.b);
     }
 

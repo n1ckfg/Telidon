@@ -44,8 +44,8 @@ function setup() {
     });
 
 	//console.log(telidon);
-    background(0);
-    blendMode(ADD);
+    //background(0);
+    //blendMode(ADD);
 }
 
 function draw() {
@@ -67,9 +67,9 @@ function onDrop(e) {
     for (var i=0, file; file=files[i]; i++) {
         var reader = new FileReader();
         reader.onload = function(e2) {
-        	blendMode(NORMAL);
-        	background(0);
-        	blendMode(ADD);
+        	//blendMode(NORMAL);
+        	//background(0);
+        	//blendMode(ADD);
             telidon = new TelidonDraw([e2.target.result], sW, sH);
         }
         reader.readAsText(file, 'UTF-8');
@@ -79,9 +79,9 @@ function onDrop(e) {
 
 function loadNewTelidon(fileName) {
     loadStrings(fileName, function(response) {
-    	blendMode(NORMAL);
-    	background(0);
-    	blendMode(ADD);
+    	//blendMode(NORMAL);
+    	//background(0);
+    	//blendMode(ADD);
         telidon = new TelidonDraw(response, sW, sH);
     });
 }

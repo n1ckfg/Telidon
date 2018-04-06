@@ -40,15 +40,15 @@ class TelidonDrawCmd {
         this.scanDelta = 5; // float
         this.moveScanline = false;
         this.labelPoints = true;
-        this.col = this.setColor(_cmd.col);
-        this.thickness = 2;
+        this.col = color(0);
+        this.thickness = 1;
     }
     
     update() {
-        if (this.moveScanline) {
-            this.scanPos -= this.scanDelta;
-            if (this.scanPos <= 0) this.moveScanline = false;
-        }
+        //if (this.moveScanline) {
+            //this.scanPos -= this.scanDelta;
+            //if (this.scanPos <= 0) this.moveScanline = false;
+        //}
     }
     
     draw() {
@@ -113,39 +113,39 @@ class TelidonDrawCmd {
             	break;
             //~ ~ ~ ARCS ~ ~ ~
             case("ARC OUTLINED"):
-        		this.drawArc(this.cmd.points, this.w, this.h);
+        		this.drawArc(this.cmd.points, this.w, this.h, false);
                 break;
             case("ARC FILLED"):
         		this.drawArc(this.cmd.points, this.w, this.h, true);
                 break;
             case("SET & ARC OUTLINED"):
-        		this.drawArc(this.cmd.points, this.w, this.h);
+        		this.drawArc(this.cmd.points, this.w, this.h, false);
                 break;
             case("SET & ARC FILLED"):
         		this.drawArc(this.cmd.points, this.w, this.h, true);
             	break;
             //~ ~ ~ RECTANGLES ~ ~ ~
             case("RECT OUTLINED"):
-        		this.drawRect(this.cmd.points, this.w, this.h);
+        		this.drawRect(this.cmd.points, this.w, this.h, false);
                 break;
             case("RECT FILLED"):
         		this.drawRect(this.cmd.points, this.w, this.h, true);
                 break;
             case("SET & RECT OUTLINED"):
-        		this.drawRect(this.cmd.points, this.w, this.h);
+        		this.drawRect(this.cmd.points, this.w, this.h, false);
                 break;
             case("SET & RECT FILLED"):
         		this.drawRect(this.cmd.points, this.w, this.h, true);
             	break;
             //~ ~ ~ POLYGONS ~ ~ ~
             case("POLY OUTLINED"):
-        		this.drawPoints(this.cmd.points, this.w, this.h);
+        		this.drawPoints(this.cmd.points, this.w, this.h, false);
                 break;
             case("POLY FILLED"):
         		this.drawPoints(this.cmd.points, this.w, this.h, true);
                 break;
             case("SET & POLY OUTLINED"): // relative points after first 
-        		this.drawPoints(this.cmd.points, this.w, this.h);
+        		this.drawPoints(this.cmd.points, this.w, this.h, false);
                 break;
             case("SET & POLY FILLED"): // relative points after first 
         		this.drawPoints(this.cmd.points, this.w, this.h, true);//this.tex.width, this.tex.height);
@@ -168,13 +168,13 @@ class TelidonDrawCmd {
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("SET COLOR"): // this picks a color
-				// set in this.col	            
+				this.setColor(this.cmd.col);  
                 break;
             case("WAIT"):
 				// TODO	            
                 break;
             case("SELECT COLOR"): // this sets the color mode
-				// set in this.col	            
+				this.setColor(this.cmd.col);           
                 break
             case("BLINK"):
 				// TODO	            
@@ -212,20 +212,22 @@ class TelidonDrawCmd {
     }
  
     setColor(v) {
-    	var r = v.x * 255.0;
-    	var g = v.y * 255.0;
-    	var b = v.z * 255.0;
-    	return color(r, g, b, 1);
+    	var r = v.x;// * 255.0;
+    	var g = v.y;// * 255.0;
+    	var b = v.z;// * 255.0;
+
+    	this.col = color(r, g, b);
+       	fill(this.col);
+       	stroke(255);//this.col);
+      	strokeWeight(this.thickness); // TODO should this go somewhere else?
+        console.log("color: " + this.col);
     }
 
     drawRect(points, w, h, isFill) { // PVector, w, h
         if (isFill) {
-        	noStroke();
-        	fill(this.col);
+        	//noStroke();
         } else {
         	noFill();
-        	stroke(this.col);
-        	strokeWeight(this.thickness);
         }
         if (points.length == 2) {
             var x1 = points[0].x * w;
@@ -241,21 +243,18 @@ class TelidonDrawCmd {
 
     drawArc(points, w, h, isFill) { // PVector, w, h
         if (isFill) {
-        	noStroke();
-        	fill(this.col);
+        	//noStroke();
         } else {
         	noFill();
-        	stroke(this.col);
-        	strokeWeight(this.thickness);
         }
 	    if (points.length == 2) {
 	    	var x1 = points[0].x * w;
 	    	var y1 = points[0].y * h;
 	   		var x2 = points[1].x * w;
 	    	var y2 = points[1].y * h;
-		    var d = dist(x1, y1, x2, y2);
+		    //var d = dist(x1, y1, x2, y2);
 		    ellipseMode(CORNER);
-		    ellipse(x1, y1, d, d);
+		    ellipse(x1, y1, x2-x1, y2-y1);
 		} else {
             for (var i=0; i<points.length-1; i++) {
                 var x1 = points[i].x * w;
@@ -269,12 +268,9 @@ class TelidonDrawCmd {
 
     drawPoints(points, w, h, isFill) { // PVector, w, h
         if (isFill) {
-        	noStroke();
-        	fill(this.col);
+        	//noStroke();
         } else {
         	noFill();
-        	stroke(this.col);
-        	strokeWeight(this.thickness);
         }
         beginShape();
         for (var i=0; i<points.length; i++) {
@@ -285,9 +281,8 @@ class TelidonDrawCmd {
         
         if (this.labelPoints) {
         	strokeWeight(4);
+            stroke(255);
 	        for (var i=0; i<points.length; i++) {
-                stroke(50, 255, 50, 5);
-
 	            var p = points[i]; // PVector
 	            point(p.x * w, p.y * h);
 
