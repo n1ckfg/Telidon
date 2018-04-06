@@ -246,6 +246,20 @@ class NapDataArray {
             return 1.0;
         }
     }
+
+/*
+           X     Y               X   Y   Z
+     8 7|6 5 4|3 2 1|       8 7|6 5|4 3|2 1|
+    -----------------      -----------------
+    |?|1|S| | |S| | |      |?|1|S| |S| |S| |
+    -----------------      -----------------
+    |?|1| | | | | | |      |?|1| | | | | | |
+    -----------------      -----------------
+        . . .                  . . .
+    -----------------      -----------------
+    |?|1| | | | | | |      |?|1| | | | | | |
+    -----------------      -----------------
+*/
      
     getCoordFromBytes(n, axis) { // NapData[], string
         var returns = "";
@@ -272,22 +286,39 @@ class NapDataArray {
         return finalReturns;
     }
 
+/*
+         G R B G R B
+     8 7|6 5 4|3 2 1|
+    -----------------
+    |?|1| | | | | | |
+    -----------------
+    |?|1| | | | | | |
+    -----------------
+        . . .
+    -----------------
+    |?|1| | | | | | |
+    -----------------
+*/
     getColorFromBytes(n, channel) {  // NapData[], string
     	var returns = "";
     	for (var i=0; i<n.length; i++) {
     		if (channel === "r") {
-            	returns += "" + n[i].binary.charAt(6);
-            	returns += "" + n[i].binary.charAt(3);
-    		} else if (channel === "g") {
-            	returns += "" + n[i].binary.charAt(5);
             	returns += "" + n[i].binary.charAt(2);
+            	returns += "" + n[i].binary.charAt(5);
+    		} else if (channel === "g") {
+               	returns += "" + n[i].binary.charAt(3);
+            	returns += "" + n[i].binary.charAt(6);
     		} else if (channel === "b") {
-            	returns += "" + n[i].binary.charAt(7);
             	returns += "" + n[i].binary.charAt(4);
+            	returns += "" + n[i].binary.charAt(7);
     		}
     	}
 
-    	var finalReturns = 255.0 * (unbinary(returns) / (2.0 * n.length));
+    	returns = returns.split("");
+    	returns = returns.reverse();
+    	returns = returns.join("");
+
+    	var finalReturns = Math.abs(255.0 - (255.0 * (unbinary(returns) / (2.0 * n.length))));
     	return finalReturns;
     }
 
