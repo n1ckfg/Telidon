@@ -254,7 +254,7 @@ class TelidonDrawCmd {
 	    	var y2 = points[1].y * h;
 		    //var d = dist(x1, y1, x2, y2);
 		    ellipseMode(CORNER);
-		    ellipse(x1, y1, x2-x1, y2-y1);
+		    ellipse(x1, y1, x2-x1, x2-x1);
 		} else {
             for (var i=0; i<points.length-1; i++) {
                 var x1 = points[i].x * w;
