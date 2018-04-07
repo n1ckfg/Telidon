@@ -67,10 +67,10 @@ class TelidonDrawCmd {
         // This is where the decoded commands finally get drawn to the screen.
         switch(this.cmd.opcode.id) {
         	//~ ~ ~ ~ ~ CONTROL CODES ~ ~ ~ ~ ~
-            case("Shift-Out"): // graphics mode
+            case("Shift-Out"): // graphics mode, we're here by default
            		// no effect?
                 break;
-            case("Shift-In"): // text mode
+            case("Shift-In"): // text mode, data that follows is text
                 this.drawText(this.cmd.text);               
                 break;
             case("CANCEL"):
@@ -91,7 +91,7 @@ class TelidonDrawCmd {
             	// TODO
                 break;
             case("TEXT"):
-                this.drawText(this.cmd.text);               
+                // TODO               
                 break;
             case("TEXTURE"):
 				// TODO	            
@@ -233,7 +233,7 @@ class TelidonDrawCmd {
     drawText(_text) {
         fill(255);
         stroke(0);
-        text(_text, width * 0.0625, height * 1.25);
+        text(_text, width * 0.0625, height * 1.25); // TODO position
     }
 
     drawRect(points, w, h, isFill) { // PVector, w, h

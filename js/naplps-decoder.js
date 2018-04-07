@@ -64,10 +64,10 @@ class NapOpcode extends NapChar {
         switch(this.hex) {
         	//~ ~ ~ ~ ~ CONTROL CODES ~ ~ ~ ~ ~
             case("0E"):
-                returns = "Shift-Out"; // graphics mode
+                returns = "Shift-Out"; // graphics mode, we're here by default. Handled in step 2.
                 break;
             case("0F"):
-                returns = "Shift-In"; // text mode
+                returns = "Shift-In"; // text mode, data that follows is text. Hendled in step 2.
                 break;
             case("18"):
                 returns = "CANCEL";
@@ -87,7 +87,7 @@ class NapOpcode extends NapChar {
                 returns = "DOMAIN"; // header information
                 break;
             case("22"):
-                returns = "TEXT";
+                returns = "TEXT"; // formats text, doesn't contain text itself
                 break;
             case("23"):
                 returns = "TEXTURE";
@@ -365,7 +365,7 @@ class NapColor extends NapDataArray {
         var finalReturnsInv = Math.abs(maxVal - finalReturns);
         var finalReturnsScaled = (finalReturnsInv / maxVal) * 255.0;
 
-        console.log(finalReturnsScaled);
+        //console.log(finalReturnsScaled);
         return finalReturnsScaled;
     }
 
@@ -373,6 +373,7 @@ class NapColor extends NapDataArray {
 
 // 2.4. Text
 class NapText extends NapDataArray {
+    // TODO figure out text formatting
 
     constructor(n) { // NapData[]
         super(n);
@@ -418,10 +419,10 @@ class NapCmd {
         switch(this.opcode.id) {
         	//~ ~ ~ ~ ~ CONTROL CODES ~ ~ ~ ~ ~
             case("Shift-Out"): // graphics mode, we're here by default
-               	// no effect?
+                // no effect?
                 break;
             case("Shift-In"): // text mode, data that follows is text
-               	this.getText();
+                this.getText();
                 break;
             case("CANCEL"):
                	// no effect?
@@ -440,8 +441,8 @@ class NapCmd {
             case("DOMAIN"): // header information
                	// TODO
                 break;
-            case("TEXT"):
-                this.getText();
+            case("TEXT"): // formats text, doesn't contain text itself
+                // TODO
                 break;
             case("TEXTURE"):
                	// TODO
@@ -654,7 +655,7 @@ class NapCmd {
 
     getText() {
         var nt = new NapText(this.data);
-        this.text = nt.text;
+        this.text += nt.text;
     }
 
     getDomain() {
@@ -692,7 +693,8 @@ class NapDecoder {
                     tempCmd += c;
                 } else {
                     if (tempCmd.length >= 1) {
-                        this.cmds.push(new NapCmd(tempCmd, this.counter));
+                        var nextNapCmd = new NapCmd(tempCmd, this.counter);
+                        this.cmds.push(nextNapCmd);
                         this.counter++;
                     }
                     tempCmd = "";
