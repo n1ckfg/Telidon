@@ -212,20 +212,16 @@ class TelidonDrawCmd {
     }
  
     setColor(v) {
-    	var r = v.x;// * 255.0;
-    	var g = v.y;// * 255.0;
-    	var b = v.z;// * 255.0;
-
-    	this.col = color(r, g, b);
+    	this.col = color(v.x, v.y, v.z);
        	fill(this.col);
-       	stroke(255);//this.col);
+       	stroke(0);
       	strokeWeight(this.thickness); // TODO should this go somewhere else?
-        console.log("color: " + this.col);
+        //console.log("color: " + this.col);
     }
 
     drawRect(points, w, h, isFill) { // PVector, w, h
         if (isFill) {
-        	//noStroke();
+        	noStroke();
         } else {
         	noFill();
         }
@@ -280,8 +276,8 @@ class TelidonDrawCmd {
         endShape(CLOSE);
         
         if (this.labelPoints) {
-        	strokeWeight(4);
             stroke(255);
+        	strokeWeight(this.thickness * 2);
 	        for (var i=0; i<points.length; i++) {
 	            var p = points[i]; // PVector
 	            point(p.x * w, p.y * h);

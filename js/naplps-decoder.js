@@ -302,15 +302,15 @@ class NapDataArray {
     getColorFromBytes(n, channel) {  // NapData[], string
     	var returns = "";
     	for (var i=0; i<n.length; i++) {
-    		if (channel === "r") {
-            	returns += "" + n[i].binary.charAt(2);
-            	returns += "" + n[i].binary.charAt(5);
-    		} else if (channel === "g") {
-               	returns += "" + n[i].binary.charAt(3);
-            	returns += "" + n[i].binary.charAt(6);
+    		if (channel === "g") {
+                returns += "" + n[i].binary.charAt(2);
+                returns += "" + n[i].binary.charAt(5);
+    		} else if (channel === "r") {
+                returns += "" + n[i].binary.charAt(3);
+                returns += "" + n[i].binary.charAt(6);
     		} else if (channel === "b") {
-            	returns += "" + n[i].binary.charAt(4);
-            	returns += "" + n[i].binary.charAt(7);
+                returns += "" + n[i].binary.charAt(4);
+                returns += "" + n[i].binary.charAt(7);
     		}
     	}
 
@@ -318,8 +318,13 @@ class NapDataArray {
     	returns = returns.reverse();
     	returns = returns.join("");
 
-    	var finalReturns = Math.abs(255.0 - (255.0 * (unbinary(returns) / (2.0 * n.length))));
-    	return finalReturns;
+        var maxVal = 255.0
+        var finalReturns = maxVal * (unbinary(returns)/(2 * n.length));
+        var finalReturnsInv = Math.abs(maxVal - finalReturns);
+        var finalReturnsScaled = (finalReturnsInv / maxVal) * 255.0;
+
+        console.log(finalReturnsScaled);
+    	return finalReturnsScaled;
     }
 
 }
