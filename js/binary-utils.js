@@ -112,7 +112,7 @@ function hex(value, len) {
 }
 
 function unhexScalar(hex) {
-    var value = parseInt("0x" + hex, 16);
+    var value = parseIntAlt("0x" + hex, 16);
 
     // correct for int overflow java expectation
     if (value > 2147483647) {
@@ -143,7 +143,7 @@ function unhex(hex) {
     return unhexScalar(hex);
 }
 
-function parseInt(val, radix) {
+function parseIntAlt(val, radix) {
     if (val instanceof Array) {
         var ret = [];
         for (var i = 0; i < val.length; i++) {
@@ -166,7 +166,7 @@ function intScalar(val, radix) {
         return val ? 1 : 0;
     }
     if (typeof val === 'string') {
-        var number = parseInt(val, radix || 10); // Default to decimal radix.
+        var number = parseIntAlt(val, radix || 10); // Default to decimal radix.
         return number & 0xFFFFFFFF;
     }
     if (val instanceof Char) {

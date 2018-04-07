@@ -38,7 +38,7 @@ class NapChar {
     
     getHex() {
         var returns = "";
-        var h = hex(parseInt(this.ascii));
+        var h = hex(parseIntAlt(this.ascii));
         for (var i=h.length-2; i<h.length; i++) {
             returns += h.charAt(i);
         }        
@@ -214,11 +214,28 @@ class NapData extends NapChar {
 class NapDataArray {
     
     constructor(n) { // NapData[]
+        // defaults for coordinate type.
         this.bitsPerByte = 3; // int, TODO set programatically from header info based on XY / XYZ
-        this.firstBitSign = true; // bool, should be true for all header options
-        this.bitVals = pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign)); // float
+        this.firstBitSign = true; // bool, should be true for all header options?
+        this.bitVals = this.getBitValsSigned(n);//pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign)); // float
     }
     
+    getBitValsUnsigned(n) {
+        return pow(2, (n.length * this.bitsPerByte));// - int(this.firstBitSign));
+    }
+
+    getBitValsSigned(n) {
+        return pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign))
+    }
+
+    getSign(c) { // char or string
+        if (c === '1') {
+            return -1.0;
+        } else {
+            return 1.0;
+        }
+    }
+
     binaryConv(n, loc) { // NapData, int
         var returns = "";
         for (var i=loc; i<loc+this.bitsPerByte; i++) {
@@ -238,13 +255,17 @@ class NapDataArray {
         }
         return returns;
     }
-    
-    getSign(c) { // char or string
-        if (c === '1') {
-            return -1.0;
-        } else {
-            return 1.0;
-        }
+
+}
+
+// 2.2. XY and XYZ position are handled by the NapVector class.
+class NapVector extends NapDataArray {
+
+    constructor(n) { // NapData[]
+		super(n);
+        this.x = this.getCoordFromBytes(n, "x"); // float
+        this.y = this.getCoordFromBytes(n, "y"); // float
+        //this.z = this.getCoordFromBytes(n, "z"); // float
     }
 
 /*
@@ -259,8 +280,7 @@ class NapDataArray {
     -----------------      -----------------
     |?|1| | | | | | |      |?|1| | | | | | |
     -----------------      -----------------
-*/
-     
+*/  
     getCoordFromBytes(n, axis) { // NapData[], string
         var returns = "";
         for (var i=0; i<n.length; i++) {
@@ -280,63 +300,10 @@ class NapDataArray {
         } else if (axis === "y") {
             finalReturns = ((this.bitVals - unbinary(returns)) / this.bitVals) * sign;
         } else if (axis === "z") {
-            //finalReturns = (unbinary(returns) / this.bitVals) * sign; // ? untested
+            finalReturns = (unbinary(returns) / this.bitVals) * sign; // ? untested
         }
 
         return finalReturns;
-    }
-
-/*
-         G R B G R B
-     8 7|6 5 4|3 2 1|
-    -----------------
-    |?|1| | | | | | |
-    -----------------
-    |?|1| | | | | | |
-    -----------------
-        . . .
-    -----------------
-    |?|1| | | | | | |
-    -----------------
-*/
-    getColorFromBytes(n, channel) {  // NapData[], string
-    	var returns = "";
-    	for (var i=0; i<n.length; i++) {
-    		if (channel === "g") {
-                returns += "" + n[i].binary.charAt(2);
-                returns += "" + n[i].binary.charAt(5);
-    		} else if (channel === "r") {
-                returns += "" + n[i].binary.charAt(3);
-                returns += "" + n[i].binary.charAt(6);
-    		} else if (channel === "b") {
-                returns += "" + n[i].binary.charAt(4);
-                returns += "" + n[i].binary.charAt(7);
-    		}
-    	}
-
-    	returns = returns.split("");
-    	returns = returns.reverse();
-    	returns = returns.join("");
-
-        var maxVal = 255.0
-        var finalReturns = maxVal * (unbinary(returns)/(2 * n.length));
-        var finalReturnsInv = Math.abs(maxVal - finalReturns);
-        var finalReturnsScaled = (finalReturnsInv / maxVal) * 255.0;
-
-        console.log(finalReturnsScaled);
-    	return finalReturnsScaled;
-    }
-
-}
-
-// 2.2. XY and XYZ position are handled by the NapVector class.
-class NapVector extends NapDataArray {
-
-    constructor(n) { // NapData[]
-		super(n);
-        this.x = this.getCoordFromBytes(n, "x"); // float
-        this.y = this.getCoordFromBytes(n, "y"); // float
-        //this.z = this.getCoordFromBytes(n, "z"); // float
     }
 
 }
@@ -361,6 +328,65 @@ class NapColor extends NapDataArray {
     	}
 	}
 
+/*
+         G R B G R B
+     8 7|6 5 4|3 2 1|
+    -----------------
+    |?|1| | | | | | |
+    -----------------
+    |?|1| | | | | | |
+    -----------------
+        . . .
+    -----------------
+    |?|1| | | | | | |
+    -----------------
+*/
+    getColorFromBytes(n, channel) {  // NapData[], string
+        var returns = "";
+        for (var i=0; i<n.length; i++) {
+            if (channel === "g") {
+                returns += "" + n[i].binary.charAt(2);
+                returns += "" + n[i].binary.charAt(5);
+            } else if (channel === "r") {
+                returns += "" + n[i].binary.charAt(3);
+                returns += "" + n[i].binary.charAt(6);
+            } else if (channel === "b") {
+                returns += "" + n[i].binary.charAt(4);
+                returns += "" + n[i].binary.charAt(7);
+            }
+        }
+
+        returns = returns.split("");
+        returns = returns.reverse();
+        returns = returns.join("");
+
+        var maxVal = 255.0
+        var finalReturns = maxVal * (unbinary(returns)/(2 * n.length));
+        var finalReturnsInv = Math.abs(maxVal - finalReturns);
+        var finalReturnsScaled = (finalReturnsInv / maxVal) * 255.0;
+
+        console.log(finalReturnsScaled);
+        return finalReturnsScaled;
+    }
+
+}
+
+// 2.4. Text
+class NapText extends NapDataArray {
+
+    constructor(n) { // NapData[]
+        super(n);
+        this.text = this.getTextFromBytes(n);
+    }
+
+    getTextFromBytes(n) {
+        var returns = "";
+        for (var i=0; i<n.length; i++) {
+            returns += "" + n[i].c;
+        }
+        return returns;
+    }
+
 }
 
 
@@ -376,6 +402,7 @@ class NapCmd {
         this.data = []; // NapData[]
         this.points = []; // PVector[]
         this.col = new Vector3(0.5,0.5,0.5);
+        this.text = "";
 
         this.opcode = new NapOpcode(this.cmdRaw.charAt(0)); // NapOpcode
         if (this.cmdRaw.length > 1) {
@@ -390,11 +417,11 @@ class NapCmd {
         // The third and final step is done separately, in the drawing code.
         switch(this.opcode.id) {
         	//~ ~ ~ ~ ~ CONTROL CODES ~ ~ ~ ~ ~
-            case("Shift-Out"): // graphics mode
+            case("Shift-Out"): // graphics mode, we're here by default
                	// no effect?
                 break;
-            case("Shift-In"): // text mode
-               	// no effect?
+            case("Shift-In"): // text mode, data that follows is text
+               	this.getText();
                 break;
             case("CANCEL"):
                	// no effect?
@@ -414,7 +441,7 @@ class NapCmd {
                	// TODO
                 break;
             case("TEXT"):
-                // TODO
+                this.getText();
                 break;
             case("TEXTURE"):
                	// TODO
@@ -622,8 +649,12 @@ class NapCmd {
 
     getColor() {
     	var nc = new NapColor(this.data);
-
     	this.col = new Vector3(nc.r, nc.g, nc.b);
+    }
+
+    getText() {
+        var nt = new NapText(this.data);
+        this.text = nt.text;
     }
 
     getDomain() {

@@ -3,15 +3,15 @@
 var telidon;
 var dropZone;
 var sW = 640;
-var sH = 640;
+var sH = 480;
+
+var defaultFont;
 
 var preview;
 var shark, skull, santa, beer, haunt, email, mouse;
 
 function preload() {
-	loadStrings("./images/shark.nap", function(response) {
-		telidon = new TelidonDraw(response, sW, sH);
-	});
+    loadNewTelidon("./images/shark.nap");
 }
 
 function setup() {
@@ -20,6 +20,11 @@ function setup() {
     dropZone.addEventListener('dragover', onDragOver);
     dropZone.addEventListener('drop', onDrop);
     
+    defaultFont = loadFont("./archives/fonts/Telidon-Bold/Telidon-Bold.ttf", function(font) {
+        textFont(font);
+        textSize(36);        
+    });
+
     preview = document.getElementById("preview");
     setPreview("shark");
 
@@ -65,6 +70,7 @@ function setup() {
 
 function draw() {
 	background(0);
+    translate(0,sH-sW);
 	telidon.draw();
 }
 
@@ -85,7 +91,7 @@ function onDrop(e) {
         	//blendMode(NORMAL);
         	//background(0);
         	//blendMode(ADD);
-            telidon = new TelidonDraw([e2.target.result], sW, sH);
+            telidon = new TelidonDraw([e2.target.result], sW, sW);
             preview.style.backgroundImage = null;
         }
         reader.readAsText(file, 'UTF-8');
@@ -93,12 +99,12 @@ function onDrop(e) {
 }
 
 
-function loadNewTelidon(fileName) {
+function loadNewTelidon(fileName) { 
     loadStrings(fileName, function(response) {
     	//blendMode(NORMAL);
     	//background(0);
     	//blendMode(ADD);
-        telidon = new TelidonDraw(response, sW, sH);
+        telidon = new TelidonDraw(response, sW, sW);
     });
 }
 

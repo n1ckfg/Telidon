@@ -1,4 +1,4 @@
-![TelidonP5](/images/screenshots/Comp-4_320.gif)
+![TelidonP5](/rosetta_stone/cover/screenshots/shark.gif)
 
 **<a href="https://github.com/n1ckfg/Telidon/blob/master/js/TelidonP5.js">TelidonP5.js</a>** allows NAPLPS vector graphics files to be displayed in a browser using p5.js.<br>
 Its companion decoder library **<a href="https://github.com/n1ckfg/Telidon/blob/master/js/naplps-decoder.js">naplps-decoder.js</a>** can also be used independently.<br>

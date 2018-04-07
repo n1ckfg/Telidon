@@ -1,7 +1,8 @@
 #preview {
-	width: 642px;
-	height: 513px;
+	width: 640px;
+	height: 511px;
 	position:absolute;
 	left: 650px;
-	border: 1px solid blue;
+	top: -2px;
+	border: 2px dashed blue;
 }

@@ -8,7 +8,7 @@ class TelidonDraw {
         this.decoder = new NapDecoder(_filePath); 
         this.drawCmds = []; // NapDrawCmd[]
         this.counter = 0;
-        
+
         for (var i=0; i<this.decoder.cmds.length; i++) {
             var cmd = this.decoder.cmds[i]; // NapCmd
             this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
@@ -39,9 +39,15 @@ class TelidonDrawCmd {
         this.scanPos = this.h; // float
         this.scanDelta = 5; // float
         this.moveScanline = false;
+        this.progressiveDraw = true;
         this.labelPoints = true;
         this.col = color(0);
         this.thickness = 1;
+        this.text = "";
+
+        this.points = [];
+        this.pointsIndex = 0;
+        if (!this.progressiveDraw) this.points = this.cmd.points;
     }
     
     update() {
@@ -49,6 +55,11 @@ class TelidonDrawCmd {
             //this.scanPos -= this.scanDelta;
             //if (this.scanPos <= 0) this.moveScanline = false;
         //}
+
+        if (this.progressiveDraw && this.points.length < this.cmd.points.length && this.pointsIndex < this.cmd.points.length) {
+        	this.points.push(this.cmd.points[this.pointsIndex]);
+        	this.pointsIndex++;
+        }
     }
     
     draw() {
@@ -60,7 +71,7 @@ class TelidonDrawCmd {
            		// no effect?
                 break;
             case("Shift-In"): // text mode
-           		// no effect?
+                this.drawText(this.cmd.text);               
                 break;
             case("CANCEL"):
            		// no effect?
@@ -80,36 +91,36 @@ class TelidonDrawCmd {
             	// TODO
                 break;
             case("TEXT"):
-				// TODO	            
+                this.drawText(this.cmd.text);               
                 break;
             case("TEXTURE"):
 				// TODO	            
                 break;
             //~ ~ ~ POINTS ~ ~ ~
             case("POINT SET ABS"):
-        		this.drawPoints(this.cmd.points, this.w, this.h);
+        		this.drawPoints(this.points, this.w, this.h);
                 break;
             case("POINT SET REL"):
-        		this.drawPoints(this.cmd.points, this.w, this.h);
+        		this.drawPoints(this.points, this.w, this.h);
                 break;
             case("POINT ABS"):
-        		this.drawPoints(this.cmd.points, this.w, this.h);
+        		this.drawPoints(this.points, this.w, this.h);
                 break;
             case("POINT REL"):
-        		this.drawPoints(this.cmd.points, this.w, this.h);
+        		this.drawPoints(this.points, this.w, this.h);
                 break;
             //~ ~ ~ LINES ~ ~ ~
             case("LINE ABS"):
-        		this.drawPoints(this.cmd.points, this.w, this.h);
+        		this.drawPoints(this.points, this.w, this.h);
                 break;
             case("LINE REL"):
-        		this.drawPoints(this.cmd.points, this.w, this.h);
+        		this.drawPoints(this.points, this.w, this.h);
                 break;
             case("SET & LINE ABS"):
-        		this.drawPoints(this.cmd.points, this.w, this.h);
+        		this.drawPoints(this.points, this.w, this.h);
                 break;
             case("SET & LINE REL"):
-        		this.drawPoints(this.cmd.points, this.w, this.h);
+        		this.drawPoints(this.points, this.w, this.h);
             	break;
             //~ ~ ~ ARCS ~ ~ ~
             case("ARC OUTLINED"):
@@ -139,16 +150,16 @@ class TelidonDrawCmd {
             	break;
             //~ ~ ~ POLYGONS ~ ~ ~
             case("POLY OUTLINED"):
-        		this.drawPoints(this.cmd.points, this.w, this.h, false);
+        		this.drawPoints(this.points, this.w, this.h, false);
                 break;
             case("POLY FILLED"):
-        		this.drawPoints(this.cmd.points, this.w, this.h, true);
+        		this.drawPoints(this.points, this.w, this.h, true);
                 break;
             case("SET & POLY OUTLINED"): // relative points after first 
-        		this.drawPoints(this.cmd.points, this.w, this.h, false);
+        		this.drawPoints(this.points, this.w, this.h, false);
                 break;
             case("SET & POLY FILLED"): // relative points after first 
-        		this.drawPoints(this.cmd.points, this.w, this.h, true);//this.tex.width, this.tex.height);
+        		this.drawPoints(this.points, this.w, this.h, true);//this.tex.width, this.tex.height);
                 //for (var j=0; j<cmd.points.length; j++) {
                     //console.log(j + ". " + cmd.points[j]);
                 //}
@@ -217,6 +228,12 @@ class TelidonDrawCmd {
        	stroke(0);
       	strokeWeight(this.thickness); // TODO should this go somewhere else?
         //console.log("color: " + this.col);
+    }
+
+    drawText(_text) {
+        fill(255);
+        stroke(0);
+        text(_text, width * 0.0625, height * 1.25);
     }
 
     drawRect(points, w, h, isFill) { // PVector, w, h
