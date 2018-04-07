@@ -5,7 +5,7 @@ var dropZone;
 var sW = 640;
 var sH = 640;
 
-var shark, skull, santa, beer, haunt, email;
+var shark, skull, santa, beer, haunt, email, mouse;
 
 function preload() {
 	loadStrings("./images/shark.nap", function(response) {
@@ -41,6 +41,10 @@ function setup() {
 
     email = document.getElementById("email").addEventListener("click", function() {
         loadNewTelidon("./images/email2.nap");
+    });
+
+    mouse = document.getElementById("mouse").addEventListener("click", function() {
+        loadNewTelidon("./images/tb1.nap");
     });
 
 	//console.log(telidon);
