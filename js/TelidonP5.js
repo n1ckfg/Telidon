@@ -8,6 +8,7 @@ class TelidonDraw {
         this.decoder = new NapDecoder(_filePath); 
         this.drawCmds = []; // NapDrawCmd[]
         this.counter = 0;
+        this.finished = false;
 
         for (var i=0; i<this.decoder.cmds.length; i++) {
             var cmd = this.decoder.cmds[i]; // NapCmd
@@ -17,12 +18,15 @@ class TelidonDraw {
 
     draw() {
         background(0);
+        this.finished = true;
         for (var i=0; i<this.drawCmds.length; i++) {
             var drawCmd = this.drawCmds[i];
             if (!drawCmd.moveScanline) this.counter++;
             if (i === this.counter || !drawCmd.moveScanline) {
                 drawCmd.run();
             }
+
+            if (!drawCmd.finished) this.finished = false;
         }        
     }
 
@@ -48,6 +52,7 @@ class TelidonDrawCmd {
         this.points = [];
         this.pointsIndex = 0;
         if (!this.progressiveDraw) this.points = this.cmd.points;
+        this.finished = false;
     }
     
     update() {
@@ -60,6 +65,8 @@ class TelidonDrawCmd {
         	this.points.push(this.cmd.points[this.pointsIndex]);
         	this.pointsIndex++;
         }
+
+        if (this.points.length === this.cmd.points.length) this.finished = true;
     }
     
     draw() {
