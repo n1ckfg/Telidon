@@ -1,8 +1,48 @@
-#preview {
+body {
+	background: #aaaaaa;
+	font-size: 18px;
+}
+
+a {
+	text-decoration: underline;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+.preview-base {
 	width: 640px;
 	height: 511px;
 	position:absolute;
 	left: 650px;
 	top: -2px;
-	border: 2px dashed blue;
+}
+
+#preview {
+	/* */
+}
+
+#explanation {
+	margin: 0.2em;
+	font-size: 0.975em;
+	text-shadow: 2px 2px 2px #000000;
+	color: #ffffff;	
+}
+
+#explanation-bg {
+	background: #000077;
+	opacity: 0.5;
+}
+
+.explanation-base {
+	width: 600px;
+	height: 511px;
+	position:absolute;
+	left: 650px;
+	top: 0.75em;
+}
+
+.explanation-base a {
+	color: #ffffff;
 }
