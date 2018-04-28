@@ -7,6 +7,8 @@ var posCounterX = 0;
 var posCounterY = 0;
 
 var telidon = [];
+var maxLength = 3;
+
 var dropZone;
 var sW = 640;
 var sH = 480;
@@ -16,6 +18,9 @@ var defaultFont;
 var preview;
 var shark, skull, santa, beer, haunt, email, mouse;
 
+var isMobile = false;
+
+
 function preload() {
     loadNewTelidon("./images/shark.nap");
 }
@@ -23,7 +28,10 @@ function preload() {
 function setup() {
 	c = createCanvas(sW, sH);
 	c.position(0, 29);
-    setupGif();
+
+    isMobile = detectMobile();
+
+    if (!isMobile) setupGif();
 
 	dropZone = document.getElementsByTagName("body")[0];
     dropZone.addEventListener('dragover', onDragOver);
@@ -80,15 +88,16 @@ function setup() {
 function draw() {
 	background(0);
     translate(0,sH-sW);
-	for (var i=0; i<telidon.length; i++) {
+	
+    for (var i=0; i<telidon.length; i++) {
 		telidon[i].draw();
 	}
 
-    if (recording && frameCount % 2 == 0) {
+    if (!isMobile && recording && frameCount % 2 == 0) {
         gif.addFrame(c.elt, {delay: 1, copy: true});
     }
 
-    if (recording && telidon[telidon.length-1].finished) {
+    if (!isMobile && recording && telidon[telidon.length-1].finished) {
         recording = false;
         gif.render();
     }
@@ -111,6 +120,7 @@ function onDrop(e) {
         	//blendMode(NORMAL);
         	//background(0);
         	//blendMode(ADD);
+            if (telidon.length >= maxLength) telidon.splice(0,1);
             telidon.push(new TelidonDraw([e2.target.result], sW, sW));
             recording = true;
             preview.style.backgroundImage = null;
@@ -156,4 +166,12 @@ function setupGif() {
 
         setupGif();
     });
+}
+
+function detectMobile() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+        return true;
+    } else {
+        return false;
+    }
 }
