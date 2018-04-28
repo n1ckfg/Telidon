@@ -17,7 +17,6 @@ class TelidonDraw {
     }
 
     draw() {
-        background(0);
         this.finished = true;
         for (var i=0; i<this.drawCmds.length; i++) {
             var drawCmd = this.drawCmds[i];

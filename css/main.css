@@ -1,6 +1,7 @@
 body {
 	background: #aaaaaa;
-	font-size: 18px;
+	font-size: 17px;
+	font-family: "Arial", "Helvetica", "sans-serif";
 }
 
 a {
@@ -10,6 +11,15 @@ a {
 a:hover {
 	text-decoration: none;
 }
+
+canvas {
+	/* */
+}
+
+.sketch {
+	/* */
+}
+
 
 .preview-base {
 	width: 640px;
@@ -31,8 +41,8 @@ a:hover {
 }
 
 #explanation-bg {
-	background: #000077;
-	opacity: 0.5;
+	background: #002244;
+	opacity: 0.75;
 }
 
 .explanation-base {

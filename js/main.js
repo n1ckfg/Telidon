@@ -6,7 +6,7 @@ var gif;
 var posCounterX = 0;
 var posCounterY = 0;
 
-var telidon;
+var telidon = [];
 var dropZone;
 var sW = 640;
 var sH = 480;
@@ -22,6 +22,7 @@ function preload() {
 
 function setup() {
 	c = createCanvas(sW, sH);
+	c.position(9, 29);
     setupGif();
 
 	dropZone = document.getElementsByTagName("body")[0];
@@ -79,13 +80,15 @@ function setup() {
 function draw() {
 	background(0);
     translate(0,sH-sW);
-	telidon.draw();
+	for (var i=0; i<telidon.length; i++) {
+		telidon[i].draw();
+	}
 
     if (recording && frameCount % 2 == 0) {
         gif.addFrame(c.elt, {delay: 1, copy: true});
     }
 
-    if (recording && telidon.finished) {
+    if (recording && telidon[telidon.length-1].finished) {
         recording = false;
         gif.render();
     }
@@ -108,7 +111,7 @@ function onDrop(e) {
         	//blendMode(NORMAL);
         	//background(0);
         	//blendMode(ADD);
-            telidon = new TelidonDraw([e2.target.result], sW, sW);
+            telidon.push(new TelidonDraw([e2.target.result], sW, sW));
             recording = true;
             preview.style.backgroundImage = null;
         }
@@ -122,7 +125,8 @@ function loadNewTelidon(fileName) {
     	//blendMode(NORMAL);
     	//background(0);
     	//blendMode(ADD);
-        telidon = new TelidonDraw(response, sW, sW);
+        telidon = []
+        telidon.push(new TelidonDraw(response, sW, sW));
         recording = true;
     });
 }
