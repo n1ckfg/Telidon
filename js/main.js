@@ -22,7 +22,7 @@ function preload() {
 
 function setup() {
 	c = createCanvas(sW, sH);
-	c.position(9, 29);
+	c.position(0, 29);
     setupGif();
 
 	dropZone = document.getElementsByTagName("body")[0];
@@ -146,7 +146,7 @@ function setupGif() {
         // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
         var img = document.createElement('img');
         img.src = URL.createObjectURL(blob);
-        img.style = "width: " + sW/2 + "px; height: " + sH/2 + "px; position: absolute; left: " + (posCounterX + 9) + "px; top: " + (posCounterY + sH + 30) + "px;";
+        img.style = "width: " + sW/2 + "px; height: " + sH/2 + "px; position: absolute; left: " + posCounterX + "px; top: " + (posCounterY + sH + 29) + "px;";
         posCounterX += sW/2;
         if (posCounterX > 1.5 * sW) {
             posCounterX = 0;
