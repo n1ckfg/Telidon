@@ -400,7 +400,7 @@ class NapCmd {
     constructor(_cmd, _index) { // string, int
         this.pointBytes = 4; // int
         this.singleBytes = 1; // int
-        this.pointRelative = true;    // bool, TODO set programatically from header info...if this is in header?
+        this.pointRelative = true; // bool, TODO set programatically from header info...if this is in header?
         this.cmdRaw = _cmd; // string
         this.index = _index; // int
         this.data = []; // NapData[]
