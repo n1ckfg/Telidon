@@ -215,8 +215,10 @@ class NapDataArray {
     
     constructor(n) { // NapData[]
         // defaults for coordinate type.
-        this.bitsPerByte = 3; // int, TODO set programatically from header info based on XY / XYZ
-        this.firstBitSign = true; // bool, should be true for all header options?
+        // TODO set programatically from domain info based on XY (3 bits) or XYZ (2 bits). 
+        // However in almost all cases we can assume XY.
+        this.bitsPerByte = 3; // int
+        this.firstBitSign = true; // bool, should be true for all domain options?
         this.bitVals = this.getBitValsSigned(n);//pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign)); // float
     }
     
@@ -396,8 +398,9 @@ class NapText extends NapDataArray {
 class NapCmd {
     
     constructor(_cmd, _index) { // string, int
-        this.pointBytes = 4; // int, TODO set programatically from header info
-        this.pointRelative = true;    // bool, TODO set programatically from header info
+        this.pointBytes = 4; // int
+        this.singleBytes = 1; // int
+        this.pointRelative = true;    // bool, TODO set programatically from header info...if this is in header?
         this.cmdRaw = _cmd; // string
         this.index = _index; // int
         this.data = []; // NapData[]
@@ -439,7 +442,7 @@ class NapCmd {
                	// no effect?
                 break;
             case("DOMAIN"): // header information
-               	// TODO
+               	this.getDomain();
                 break;
             case("TEXT"): // formats text, doesn't contain text itself
                 // TODO
@@ -659,13 +662,84 @@ class NapCmd {
     }
 
     getDomain() {
-        for (var i=0; i<this.data.length; i++) {
-            // TODO header info, most importantly:
-            // How many bytes per point
-            // XY format (3 bits per axis per byte) or XYZ format (2 bits per axis per byte)
-            // How many bytes per color
-            // Color format?
-        }
+    	/*
+    	Only the first byte after the domain opcode (21) is relevant to us.
+    	The rest of the bytes control “logical pel size”, which was a feature of vector monitors.
+
+		In the domain byte, bits 6,5,4,3,2,1 contain the following information:
+		* Bit 6 controls 2D vs. 3D coordinates:
+		         0  XY (the default)
+		         1  XYZ
+
+		 * Bits 5, 4, 3 control the length of a multi-value operand:
+		         0 0 0   1 byte
+		         0 0 1   2 bytes
+		         0 1 0   3 bytes (the default)
+		         0 1 1   4 bytes
+		         1 0 0   5 bytes
+		         1 0 1   6 bytes
+		         1 1 0   7 bytes
+		         1 1 1   8 bytes
+
+		* Bits 2, 1 control the length of a single value operand:
+		         0 0    1 byte (the default)
+		         0 1    2 bytes
+		         1 0    3 bytes
+		         1 1    4 bytes
+		*/
+    	if (this.data.length < 1) return;
+    	var domainByte = this.data[0].getBinary();
+    	var domainPointBytes = domainByte[2] + domainByte[3] + domainByte[4];
+    	var domainSingleBytes = domainByte[5] + domainByte[6];
+    	switch (domainPointBytes) {
+   			case("000"):
+   				this.pointBytes = 1;
+   				break;   
+		    case("001"):
+		    	this.pointBytes = 2;
+		    	break;
+		    case("010"):
+		    	this.pointBytes = 3;
+		    	break;
+		    case("011"):
+		    	this.pointBytes = 4;
+		    	break;
+		    case("100"):
+		    	this.pointBytes = 5;
+		    	break;
+		    case("101"):
+		    	this.pointBytes = 6;
+		    	break;
+		    case("110"):
+		    	this.pointBytes = 7;
+		    	break;
+		    case("111"):
+		    	this.pointBytes = 8;
+		    	break;
+	    	default:
+	    		this.pointBytes = 3;
+	    		break;
+    	}
+    	switch (domainSingleBytes) {
+		    case("00"):
+		        this.singleBytes = 1;
+		        break;
+		    case("01"):
+		        this.singleBytes = 2;
+		        break;
+		    case("10"):
+		        this.singleBytes = 3;
+		        break;
+		    case("11"):
+		        this.singleBytes = 4;
+		        break;
+		    default:
+		    	this.singleBytes = 1;
+		    	break;
+    	}
+    	console.log("DOMAIN SETTINGS: " + this.pointBytes + " bytes per coordinate.");
+
+
     }
     
 }

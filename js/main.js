@@ -22,14 +22,14 @@ var isMobile = false;
 
 
 function preload() {
-    loadNewTelidon("./images/shark.nap");
+    isMobile = detectMobile();
+
+    if (isMobile) loadNewTelidon("./images/shark.nap");
 }
 
 function setup() {
 	c = createCanvas(sW, sH);
 	c.position(0, 29);
-
-    isMobile = detectMobile();
 
     if (!isMobile) setupGif();
 
@@ -85,8 +85,10 @@ function setup() {
     //blendMode(ADD);
 }
 
-function draw() {
+function draw() {    
 	background(0);
+    if (telidon.length < 1) return;
+
     translate(0,sH-sW);
 	
     for (var i=0; i<telidon.length; i++) {
