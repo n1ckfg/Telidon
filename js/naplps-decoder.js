@@ -5,6 +5,8 @@
 
 // Uses no p5.js-specific code
 
+var napDrawingCursor = new Vector2(0.0, 0.0);
+
 // 1. SINGLE-BYTE data classes
 // 
 // 1.1. The NapChar class is the smallest component of a NAPLPS file. 
@@ -400,7 +402,7 @@ class NapCmd {
     constructor(_cmd, _index) { // string, int
         this.pointBytes = 4; // int
         this.singleBytes = 1; // int
-        this.pointRelative = true; // bool, TODO set programatically from header info...if this is in header?
+        //this.pointRelative = true; // bool, TODO set programatically from header info...if this is in header?
         this.cmdRaw = _cmd; // string
         this.index = _index; // int
         this.data = []; // NapData[]
@@ -452,81 +454,81 @@ class NapCmd {
                 break;
             //~ ~ ~ POINTS ~ ~ ~
             case("POINT SET ABS"):
-                this.getPoints();
+                this.getPoints(false, true); // relative, set cursor
                 break;
             case("POINT SET REL"):
-                this.getPoints();
+                this.getPoints(true, true);
                 break;
             case("POINT ABS"):
-                this.getPoints();
+                this.getPoints(false, false);
                 break;
             case("POINT REL"):
-                this.getPoints();
+                this.getPoints(true, false);
                 break;
             //~ ~ ~ LINES ~ ~ ~
             case("LINE ABS"):
-                this.getPoints();
+                this.getPoints(false, false);
                 break;
             case("LINE REL"):
-                this.getPoints();
+                this.getPoints(true, false);
                 break;
             case("SET & LINE ABS"):
-                this.getPoints();
+                this.getPoints(false, true);
                 break;
             case("SET & LINE REL"):
-                this.getPoints();
+                this.getPoints(true, true);
             	break;
             //~ ~ ~ ARCS ~ ~ ~
             case("ARC OUTLINED"):
-                this.getPoints();
+                this.getPoints(true, false);
                 break;
             case("ARC FILLED"):
-                this.getPoints();
+                this.getPoints(true, false);
                 break;
             case("SET & ARC OUTLINED"):
-                this.getPoints();
+                this.getPoints(false, true);
                 break;
             case("SET & ARC FILLED"):
-                this.getPoints();
+                this.getPoints(false, true);
             	break;
             //~ ~ ~ RECTANGLES ~ ~ ~
             case("RECT OUTLINED"):
-                this.getPoints();
+                this.getPoints(true, false);
                 break;
             case("RECT FILLED"):
-                this.getPoints();
+                this.getPoints(true, false);
                 break;
             case("SET & RECT OUTLINED"):
-                this.getPoints();
+                this.getPoints(false, true);
                 break;
             case("SET & RECT FILLED"):
-                this.getPoints();
+                this.getPoints(false, true);
             	break;
             //~ ~ ~ POLYGONS ~ ~ ~
             case("POLY OUTLINED"):
-                this.getPoints();
+                this.getPoints(true, false);
                 break;
             case("POLY FILLED"):
-                this.getPoints();
+                this.getPoints(true, false);
                 break;
             case("SET & POLY OUTLINED"): // relative points after first 
-                this.getPoints();
+                this.getPoints(false, true);
                 break;
             case("SET & POLY FILLED"): // relative points after first 
-                this.getPoints();
+                this.getPoints(false, true);
                 break;
             //~ ~ ~ INCREMENTALS ~ ~ ~
             case("FIELD"):
                	// TODO
                 break;
             case("INCREMENTAL POINT"):
-                this.getPoints();
+                this.getPoints(true, true);
                 break;
             case("INCREMENTAL LINE"):
-                this.getPoints();
+                this.getPoints(true, true);
                 break;
             case("INCREMENTAL POLY FILLED"):
-                this.getPoints();
+                this.getPoints(true, true);
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("SET COLOR"): // this picks a color
@@ -603,9 +605,9 @@ class NapCmd {
         }
         return returns;
     }
-    
+
     // ~ ~ ~ Parsing methods begin here ~ ~ ~
-    getPoints() {
+    getPoints(_allPointsRelative, _set) {
         try {
             var nvList = []; // NapVector[];
             for (var i=0; i<this.data.length; i+=this.pointBytes) {
@@ -619,10 +621,11 @@ class NapCmd {
             for (var i=0; i<nvList.length; i++) {
                 var nv = nvList[i];
 
-                if (this.pointRelative) {
-                    if (i===0) {
+                    if (!_allPointsRelative && i===0) {
                         this.points.push(new Vector2(nv.x, nv.y));
-                    } else {
+                    } else if (_allPointsRelative && i===0) {
+						this.points.push(napDrawingCursor)
+					} else {
                         var p = this.points[this.points.length-1];
                         
                         var x = 0;         
@@ -641,13 +644,18 @@ class NapCmd {
                         
                         this.points.push(new Vector2(x, y));
                     }
-                } else {
-                    this.points.push (new Vector2(nv.x, nv.y));
                 }
-                // * * * * * 
-            }
         } catch (e) { 
             console.log("*** Error: " + this.opcode.id + " contains no coordinates. ***")
+        }
+
+        if (_set) {
+        	try {
+        		var lastPoint = this.points[this.point.length-1];
+        		napDrawingCursor = new Vector2(lastPoint.x, lastPoint.y);
+        	} catch (e) { 
+            	console.log("*** Error: " + this.opcode.id + " tried to set cursor position but failed. ***")
+        	}
         }
     }
 
