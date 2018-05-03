@@ -1,6 +1,5 @@
-<p>
-	![TelidonP5](/rosetta_stone/cover/screenshots/shark.gif)
-</p>
+![TelidonP5](/rosetta_stone/cover/screenshots/shark.gif)
+
 <p>
 	<b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/TelidonP5.js">TelidonP5.js</a></b> allows NAPLPS vector graphics files to be displayed in a browser using <a href="https://p5js.org/">p5.js</a>. Its companion decoder library <b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/naplps-decoder.js">naplps-decoder.js</a></b> can also be used independently.<br/>
 	[ <a href="https://n1ckfg.github.io/Telidon/"><i>See an example</i></a> ]
@@ -18,6 +17,6 @@
 	<a href="http://interaccess.org/exhibition/telidon">http://interaccess.org/exhibition/telidon</a>
 </p>			
 <p>
-	&nbsp;&nbsp;Nick Fox-Gieg<br/>
-	&nbsp;&nbsp;180326
+	Nick Fox-Gieg<br/>
+	180326
 </p>
