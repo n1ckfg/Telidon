@@ -144,9 +144,13 @@ function loadNewTelidon(fileName) {
     	//blendMode(NORMAL);
     	//background(0);
     	//blendMode(ADD);
-        telidon = []
-        telidon.push(new TelidonDraw(response, sW, sW));
-        recording = true;
+        telidon = [];
+        var reader = new FileReader();
+        reader.onload = function(e2) {
+            telidon.push(new TelidonDraw([e2.target.result], sW, sW));
+            recording = true;
+        }
+        reader.readAsText(new Blob(response), 'UTF-8');
     });
 }
 
