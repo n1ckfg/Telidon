@@ -34,7 +34,6 @@ canvas {
 }
 
 #explanation {
-	margin: 0.2em;
 	font-size: 0.975em;
 	text-shadow: 2px 2px 2px #000000;
 	color: #ffffff;	
@@ -51,6 +50,7 @@ canvas {
 	position:absolute;
 	left: 640px;
 	top: 0.75em;
+	padding:0.75em;
 }
 
 .explanation-base a {

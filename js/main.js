@@ -39,7 +39,8 @@ function setup() {
     
     defaultFont = loadFont("./archives/fonts/Telidon-Bold/Telidon-Bold.ttf", function(font) {
         textFont(font);
-        textSize(36);        
+        textSize(36);
+        textAlign(LEFT);        
     });
 
     preview = document.getElementById("preview");
@@ -87,7 +88,13 @@ function setup() {
 
 function draw() {    
 	background(0);
-    if (telidon.length < 1) return;
+    if (telidon.length < 1) {
+        fill(255);
+        textAlign(CENTER);
+        text("\\\\ DRAG ' n ' DROP //", width/2, height/2);
+        textAlign(LEFT);
+        return;
+    }
 
     translate(0,sH-sW);
 	
