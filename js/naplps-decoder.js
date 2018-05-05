@@ -745,6 +745,9 @@ class NapCmd {
 		    	this.singleBytes = 1;
 		    	break;
     	}
+
+    	//this.pointBytes = 1 + ((domainByte & '\x1C') >> 2);
+    	//this.singleBytes = 1 + (domainByte & '\x3c');
     	console.log("DOMAIN SETTINGS: " + this.pointBytes + " bytes per coordinate.");
 
 
