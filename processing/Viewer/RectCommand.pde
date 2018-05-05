@@ -3,13 +3,13 @@
 * Copyright (C) 1997, 1999 by Alastair JW Mayer,
 * All rights reserved.
 * May be copied, modified and/or distributed according to
-* the terms of the GNU Public License (GPL) version 2.
+* the terms of the GNU License (GPL) version 2.
 * It is requested (but not required) that changes be posted
 * back to me at al11@delphi.com,
 * see also http://members.xoom.com/amayer/software/
 */
 
-package naplps;
+
 
 import java.awt.*;
 
@@ -34,7 +34,7 @@ class RectCommand extends GeometricCommand
 		}
 	}
 	
-	public void execute(Graphics gr)
+	void execute(Graphics gr)
 	{
 	System.out.println("RectCommand.execute() - "+p1+p2);
 	  	if (set) {

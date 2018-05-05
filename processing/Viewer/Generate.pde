@@ -3,13 +3,13 @@
 * Copyright (C) 1997, 1999 by Alastair JW Mayer,
 * All rights reserved.
 * May be copied, modified and/or distributed according to
-* the terms of the GNU Public License (GPL) version 2.
+* the terms of the GNU License (GPL) version 2.
 * It is requested (but not required) that changes be posted
 * back to me at al11@delphi.com,
 * see also http://members.xoom.com/amayer/software/
 */
 
-package naplps;
+
 
 import java.io.*;
 
@@ -17,24 +17,22 @@ import java.io.*;
 * Ouput NAPLPS codes as requested.
 */
 
-public class Generate
-{
+class Generate {
+  
 	Context ctx;
 	DataOutputStream outp;
 		
 	// constructor takes a data input
-	private Generate()
-	{
+	private Generate() {
 		ctx = new Context();
 	}
 	
-	public Generate(DataOutputStream out) 
-	{
+	Generate(DataOutputStream out) {
 		this();
 		init(out);
 	}
-	public void init(DataOutputStream out)
-	{
+
+	void init(DataOutputStream out) {
 		outp = out;
 		ctx.init();
 	}
@@ -43,38 +41,32 @@ public class Generate
 * screen to an int less than 512.
 */
 
-static public int coord(float x)
-{
+int coord(float x) {
 	if (x < 1.0 && x > -1.0) {
 		return (int) (511 * x);
-	}
-	else {
+	} else {
 		return 511;
 	}
 }
 
-void putByte(byte ch) throws IOException
-{
+void putByte(byte ch) throws IOException {
 	if (outp != null) {
 		outp.writeByte(ch);
-	}
-	else {
+	} else {
 		throw new IOException("Output stream is null");
 	}
 }
 
-void putAPoint(int x, int y) throws IOException  /* put abs point */
-{
-System.out.println("putAPoint( "+x+", "+y+")");
-   y = 256-y;		// naplps coordinate system is inverted
-   putRAPoint(x, y);
+void putAPoint(int x, int y) throws IOException { /* put abs point */
+  System.out.println("putAPoint( "+x+", "+y+")");
+  y = 256-y;		// naplps coordinate system is inverted
+  putRAPoint(x, y);
 }
    
-void putRAPoint(int x, int y) throws IOException
-{
-   int c;
-   byte ch;
-System.out.println("putRAPoint( "+x+", "+y+")");
+void putRAPoint(int x, int y) throws IOException {
+  int c;
+  byte ch;
+  System.out.println("putRAPoint( "+x+", "+y+")");
    c = (y & 0700) ; c >>= 3;
    c |= (x & 0700) ; c >>= 3;
    ch = (byte) (c | 0100);
@@ -89,76 +81,70 @@ System.out.println("putRAPoint( "+x+", "+y+")");
    putByte(ch);
 }
 
-void putRPoint(int x, int y) throws IOException  /* put rel point */
-{
-System.out.println("putRPoint( "+x+", "+y+")");
-   if (x < 0) x += 512;
-   if (y < 0) y += 512;
-   putRAPoint(x,y);
+void putRPoint(int x, int y) throws IOException { /* put rel point */
+  System.out.println("putRPoint( "+x+", "+y+")");
+  if (x < 0) x += 512;
+  if (y < 0) y += 512;
+  putRAPoint(x,y);
 }
 
-public void setGraph() throws IOException   /* start graphics mode */
-{
+void setGraph() throws IOException { /* start graphics mode */
    putByte(Show.SO);
 }
 
-void endGraph() throws IOException   /* end graphics mode */
-{
+void endGraph() throws IOException { /* end graphics mode */
    putByte(Show.SI);
 }
 
-void point(boolean abs, boolean vis, int x, int y) throws IOException  /* set or mark point */
-{
+void point(boolean abs, boolean vis, int x, int y) throws IOException { /* set or mark point */
    if (abs) {
-      if (vis)
+      if (vis) {
          putByte(Show.POINTA);
-      else
+      } else {
          putByte(Show.PSET_A);
+      }
       putAPoint(x,y);
-      }
-   else {
-      if (vis)
+   } else {
+      if (vis) {
          putByte(Show.POINTR);
-      else
+      } else {
          putByte(Show.PSET_R);
-      putRPoint(x,y);
       }
+      putRPoint(x,y);
+   }
 }
 
-void line(boolean abs, int x, int y) throws IOException  /* draw a line */
-{
+void line(boolean abs, int x, int y) throws IOException { /* draw a line */
    if (abs) {
       putByte(Show.LINE_A);
       putAPoint(x,y);
-      }
-   else {
+   } else {
       putByte(Show.LINE_R);
       putRPoint(x,y);
-      }
+   }
 }
 
-public void setLine(boolean abs, int x1, int y1, int x2, int y2) throws IOException  /* set and line */
-{
-   if (abs)
+void setLine(boolean abs, int x1, int y1, int x2, int y2) throws IOException { /* set and line */
+   if (abs) {
      putByte(Show.SETLNA);
-   else
+   } else {
      putByte(Show.SETLNR);
+   }
    putAPoint(x1,y1);
-   if (abs)
+   if (abs) {
      putAPoint(x2,y2);
-   else
+   } else {
      putRPoint(x2,y2);
+   }
 }
 
-public void rectangle(boolean fill, int x1, int y1, int x2, int  y2) throws IOException
-{
+void rectangle(boolean fill, int x1, int y1, int x2, int  y2) throws IOException {
 	putByte((fill) ? Show.RECSTF : Show.RECSTL);
 	putAPoint(x1,y1);
 	putRPoint(x2-x1, y1-y2);
 }
 
-public void circleCenter(boolean fill, int xc, int yc, int x2, int y2) throws IOException
-{
+void circleCenter(boolean fill, int xc, int yc, int x2, int y2) throws IOException {
 	int x1, y1;
 	x1 = xc - (x2 - xc);
 	y1 = yc - (y2 - yc);
@@ -167,8 +153,7 @@ public void circleCenter(boolean fill, int xc, int yc, int x2, int y2) throws IO
 	putRPoint(x2-x1, y1-y2);
 }
 
-public void setColor(java.awt.Color c) throws IOException
-{
+void setColor(java.awt.Color c) throws IOException {
 	int r, g, b;
 	byte ch = 0;
 	r = c.getRed();
@@ -188,6 +173,5 @@ public void setColor(java.awt.Color c) throws IOException
 	ch |= ((g & 004) | ((r>>1) & 002) | ((b>>2) & 001));
 	putByte(ch);
 }
-	
 	
 }

@@ -3,55 +3,53 @@
 * Copyright (C) 1997, 1999 by Alastair JW Mayer,
 * All rights reserved.
 * May be copied, modified and/or distributed according to
-* the terms of the GNU Public License (GPL) version 2.
+* the terms of the GNU License (GPL) version 2.
 * It is requested (but not required) that changes be posted
 * back to me at al11@delphi.com,
 * see also http://members.xoom.com/amayer/software/
 */
 
-package naplps;
+
 
 import java.awt.*;
 
-class LineCommand extends GeometricCommand
-{
+class LineCommand extends GeometricCommand {
+  
 	Point p2;
 	boolean p2IsRelative;
 	
-   LineCommand(Context ct, byte op, Point p, boolean rel, boolean doSet)
-   {
+   LineCommand(Context ct, byte op, Point p, boolean rel, boolean doSet) {
    	super(ct, op, p, rel, doSet);
    	p2 = p1;
    	if (doSet) p1IsRelative = false;
    	p2IsRelative = rel;
    }
    
-    void addPoint(Point p, boolean rel)
-	{
+    void addPoint(Point p, boolean rel) {
 		if (!p1IsRelative) {
 			p2 = new Point(p.x, p.y);
 			p2IsRelative = rel;
 		}
 	}
 	
-public void execute(Graphics gr)
-	{
+void execute(Graphics gr) {
 	  	if (set) {
         ctx.setCurrentPt(p1);
       }
       
   		if (!p2IsRelative) {
-      	if (ctx.bigPel)
-      		doThickLine(gr, p2, true);
-      	else
+      	if (ctx.bigPel) {
+      		  doThickLine(gr, p2, true);
+      	} else {
         		gr.drawLine(ctx.cX, ctx.cY, p2.x, ctx.screen-p2.y);
-         ctx.setCurrentPt(p2);
-      }
-      else {
-     		if (ctx.bigPel)
+        }
+        ctx.setCurrentPt(p2);
+      } else {
+     		if (ctx.bigPel) {
       	   doThickLine(gr, p2, false);
-      	else
+      	} else {
        	 	gr.drawLine(ctx.cX, ctx.cY, ctx.cX+p2.x, ctx.cY-p2.y);
+        }
       	ctx.moveCurrentPt(p2);
       }
   }

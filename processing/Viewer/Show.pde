@@ -3,13 +3,13 @@
 * Copyright (C) 1997, 1999 by Alastair JW Mayer,
 * All rights reserved.
 * May be copied, modified and/or distributed according to
-* the terms of the GNU Public License (GPL) version 2.
+* the terms of the GNU License (GPL) version 2.
 * It is requested (but not required) that changes be posted
 * back to me at al11@delphi.com,
 * see also http://members.xoom.com/amayer/software/
 */
 
-package naplps;
+
 
 import java.io.*;
 import java.awt.*;
@@ -20,48 +20,49 @@ import java.awt.*;
 * geometry etc. primitives as needed.
 */
 
-public class Show {
 final static byte SI = 017;
-final static byte SO = 016;
+class Show {
+ byte SI = 017;
+ byte SO = 016;
 
-final static byte RESET  = 040;
-final static byte DOMAIN = 041;
-final static byte TEXT   = 042;
-final static byte TEXTURE = 043;
-final static byte PSET_A = 044;
-final static byte PSET_R = 045;
-final static byte POINTA = 046;
-final static byte POINTR = 047;
-final static byte LINE_A = 050;
-final static byte LINE_R = 051;
-final static byte SETLNA = 052;
-final static byte SETLNR = 053;
-final static byte ARC_LN = 054;
-final static byte ARC_FL = 055;
-final static byte ARCSTL = 056;
-final static byte ARCSTF = 057;
-final static byte RECT_L = 060;
-final static byte RECT_F = 061;
-final static byte RECSTL = 062;
-final static byte RECSTF = 063;
-final static byte POLY_L = 064;
-final static byte POLY_F = 065;
-final static byte PLYSTL = 066;
-final static byte PLYSTF = 067;
-final static byte FIELD  = 070;
-final static byte INCRPT = 071;
-final static byte INCRLN = 072;
-final static byte INCRPY = 073;
-final static byte SETCLR = 074;
-final static byte WAIT   = 075;
-final static byte SELCLR = 076;
-final static byte BLINK  = 077;
+ byte RESET  = 040;
+ byte DOMAIN = 041;
+ byte TEXT   = 042;
+ byte TEXTURE = 043;
+ byte PSET_A = 044;
+ byte PSET_R = 045;
+ byte POINTA = 046;
+ byte POINTR = 047;
+ byte LINE_A = 050;
+ byte LINE_R = 051;
+ byte SETLNA = 052;
+ byte SETLNR = 053;
+ byte ARC_LN = 054;
+ byte ARC_FL = 055;
+ byte ARCSTL = 056;
+ byte ARCSTF = 057;
+ byte RECT_L = 060;
+ byte RECT_F = 061;
+ byte RECSTL = 062;
+ byte RECSTF = 063;
+ byte POLY_L = 064;
+ byte POLY_F = 065;
+ byte PLYSTL = 066;
+ byte PLYSTF = 067;
+ byte FIELD  = 070;
+ byte INCRPT = 071;
+ byte INCRLN = 072;
+ byte INCRPY = 073;
+ byte SETCLR = 074;
+ byte WAIT   = 075;
+ byte SELCLR = 076;
+ byte BLINK  = 077;
 
-	final static boolean isPdi(byte c) {
+	 boolean isPdi(byte c) {
 		return ((RESET <= c && c <= BLINK));
 	}
 	
-	final static boolean isCntrl(byte c) {
+	 boolean isCntrl(byte c) {
 		return (c < RESET);
 	}
 	
@@ -78,17 +79,17 @@ final static byte BLINK  = 077;
 	boolean escape8 = false;
 	
 	// constructor takes a data input
-	public Show()
+	Show()
 	{
 		ctx = new Context();
 	}
 	
-	public Show(DataInputStream in) 
+	Show(DataInputStream in) 
 	{
 		this();
 		init(in);
 	}
-	public void init(DataInputStream in)
+	void init(DataInputStream in)
 	{
 		inp = in;
 		nextPt = new Point(0, 0);
@@ -363,7 +364,7 @@ boolean getColor()
    }
   }
  
- public void doTexture()
+ void doTexture()
  {
  	byte c;
   	try {
@@ -385,7 +386,7 @@ boolean getColor()
  }
 
 
-public void doArc(boolean set, Graphics gr, boolean fill)
+void doArc(boolean set, Graphics gr, boolean fill)
 {
 	Point pt1, pt2, pt3;
 	pt1 = new Point(ctx.cX,ctx.cY);
@@ -425,7 +426,7 @@ public void doArc(boolean set, Graphics gr, boolean fill)
 }
 		
 		
-public void doCircle(Graphics gr, Point a, Point b, boolean fill)
+void doCircle(Graphics gr, Point a, Point b, boolean fill)
 {
 	//Points a & b define a diameter, center is midway
 	int x, y, diam, cx, cy;
@@ -464,7 +465,7 @@ public void doCircle(Graphics gr, Point a, Point b, boolean fill)
 
 }
 
-public void doArc3pt(Graphics gr, Point a, Point b, Point c, boolean fill) 
+void doArc3pt(Graphics gr, Point a, Point b, Point c, boolean fill) 
 {
 Point p = new Point(0,0);
 double A, B, C, D, E, F, G;
@@ -566,13 +567,13 @@ int r;
 	}
 }
   
-  public void setStep(boolean b)
+  void setStep(boolean b)
   {
   	stepMode = b;
   	System.out.println("stepMode = "+stepMode);
   }
    
-  public void step(Graphics gr)
+  void step(Graphics gr)
   {
   	stepMode = true;
   	System.out.println("stepping..");
@@ -637,7 +638,7 @@ int r;
   	
   byte c;
   boolean textMode = true;
-  public void disassemble(Graphics gr)
+  void disassemble(Graphics gr)
  {
    GeometricCommand cmd;
    try {
@@ -793,7 +794,7 @@ int r;
    
    // mainline for testing
    
-   public static void main(String args[])
+   static void main(String args[])
    {
       java.awt.Frame frame = new java.awt.Frame("PDI");
       frame.resize(512, 512); 

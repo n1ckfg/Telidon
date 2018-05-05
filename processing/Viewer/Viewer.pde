@@ -3,13 +3,13 @@
 * Copyright (C) 1997, 1999 by Alastair JW Mayer,
 * All rights reserved.
 * May be copied, modified and/or distributed according to
-* the terms of the GNU Public License (GPL) version 2.
+* the terms of the GNU License (GPL) version 2.
 * It is requested (but not required) that changes be posted
 * back to me at al11@delphi.com,
 * see also http://members.xoom.com/amayer/software/
 */
 
-package naplps;
+
 
 import java.io.*;
 import java.awt.*;
@@ -25,8 +25,7 @@ import java.net.*;
 * Description Instruction) file (extension .nap or .pdi) to
 * view.   Most of the other stuff doesn't work yet.
 */
-class Viewer extends java.awt.Frame
-{
+
 	 Show pdi;
 	 MenuBar menubar;
     Menu fileMenu, optMenu;
@@ -36,19 +35,8 @@ class Viewer extends java.awt.Frame
     Panel pan;
     Graphics gr;
 	boolean stepmode = false;
-   
-   Viewer()
-   {
-   	super("NAPLPS Viewer");
-   }
-      
-   public static void main(String args[])
-   {
-   	me = new Viewer();
-   	me.init();
-   }
    	
-   public void init() 
+   void init() 
    {  /* try this */
       setMenuBar(menubar = new MenuBar());
       menubar.add(fileMenu = new Menu("File"));
@@ -78,7 +66,7 @@ class Viewer extends java.awt.Frame
       pdi = new Show();
    }
   
-	public boolean action(Event e, Object arg)
+	boolean action(Event e, Object arg)
 	{
 	
    if (e.target instanceof MenuItem) {
