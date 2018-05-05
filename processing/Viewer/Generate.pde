@@ -58,7 +58,7 @@ void putByte(byte ch) throws IOException {
 }
 
 void putAPoint(int x, int y) throws IOException { /* put abs point */
-  System.out.println("putAPoint( "+x+", "+y+")");
+  println("putAPoint( "+x+", "+y+")");
   y = 256-y;		// naplps coordinate system is inverted
   putRAPoint(x, y);
 }
@@ -66,7 +66,7 @@ void putAPoint(int x, int y) throws IOException { /* put abs point */
 void putRAPoint(int x, int y) throws IOException {
   int c;
   byte ch;
-  System.out.println("putRAPoint( "+x+", "+y+")");
+  println("putRAPoint( "+x+", "+y+")");
    c = (y & 0700) ; c >>= 3;
    c |= (x & 0700) ; c >>= 3;
    ch = (byte) (c | 0100);
@@ -82,7 +82,7 @@ void putRAPoint(int x, int y) throws IOException {
 }
 
 void putRPoint(int x, int y) throws IOException { /* put rel point */
-  System.out.println("putRPoint( "+x+", "+y+")");
+  println("putRPoint( "+x+", "+y+")");
   if (x < 0) x += 512;
   if (y < 0) y += 512;
   putRAPoint(x,y);

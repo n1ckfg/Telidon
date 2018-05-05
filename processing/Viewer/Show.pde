@@ -21,47 +21,48 @@ import java.awt.*;
 */
 
 class Show {
- byte SI = 017;
- byte SO = 016;
+  
+  final byte SI = 017;
+  final byte SO = 016;
 
- byte RESET  = 040;
- byte DOMAIN = 041;
- byte TEXT   = 042;
- byte TEXTURE = 043;
- byte PSET_A = 044;
- byte PSET_R = 045;
- byte POINTA = 046;
- byte POINTR = 047;
- byte LINE_A = 050;
- byte LINE_R = 051;
- byte SETLNA = 052;
- byte SETLNR = 053;
- byte ARC_LN = 054;
- byte ARC_FL = 055;
- byte ARCSTL = 056;
- byte ARCSTF = 057;
- byte RECT_L = 060;
- byte RECT_F = 061;
- byte RECSTL = 062;
- byte RECSTF = 063;
- byte POLY_L = 064;
- byte POLY_F = 065;
- byte PLYSTL = 066;
- byte PLYSTF = 067;
- byte FIELD  = 070;
- byte INCRPT = 071;
- byte INCRLN = 072;
- byte INCRPY = 073;
- byte SETCLR = 074;
- byte WAIT   = 075;
- byte SELCLR = 076;
- byte BLINK  = 077;
+  final byte RESET  = 040;
+  final byte DOMAIN = 041;
+  final byte TEXT   = 042;
+  final byte TEXTURE = 043;
+  final byte PSET_A = 044;
+  final byte PSET_R = 045;
+  final byte POINTA = 046;
+  final byte POINTR = 047;
+  final byte LINE_A = 050;
+  final byte LINE_R = 051;
+  final byte SETLNA = 052;
+  final byte SETLNR = 053;
+  final byte ARC_LN = 054;
+  final byte ARC_FL = 055;
+  final byte ARCSTL = 056;
+  final byte ARCSTF = 057;
+  final byte RECT_L = 060;
+  final byte RECT_F = 061;
+  final byte RECSTL = 062;
+  final byte RECSTF = 063;
+  final byte POLY_L = 064;
+  final byte POLY_F = 065;
+  final byte PLYSTL = 066;
+  final byte PLYSTF = 067;
+  final byte FIELD  = 070;
+  final byte INCRPT = 071;
+  final byte INCRLN = 072;
+  final byte INCRPY = 073;
+  final byte SETCLR = 074;
+  final byte WAIT   = 075;
+  final byte SELCLR = 076;
+  final byte BLINK  = 077;
 
-	 boolean isPdi(byte c) {
+	final boolean isPdi(byte c) {
 		return ((RESET <= c && c <= BLINK));
 	}
 	
-	 boolean isCntrl(byte c) {
+	final boolean isCntrl(byte c) {
 		return (c < RESET);
 	}
 	
@@ -145,7 +146,7 @@ class Show {
 		   ctx.pelSize.x = nextPt.x;
 		   ctx.pelSize.y = nextPt.y;
 		   ctx.bigPel = (ctx.pelSize.x > 1 || ctx.pelSize.y > 1);
-  System.out.println("pelSize = "+ctx.pelSize);
+  println("pelSize = "+ctx.pelSize);
 		   return true;
 		}
 		catch (IOException e) {
@@ -184,9 +185,9 @@ class Show {
    // check sign bit
    if (x > (max/2)) x = x-(max+1);
    if (y > (max/2)) y = y-(max+1);
-   System.out.println("Got point: ("+x+","+y+")");
+   println("Got point: ("+x+","+y+")");
    nextPt.x = ctx.screen*x/(max/2); nextPt.y = ctx.screen*y/(max/2);
-   System.out.println("Converted nextpt: "+nextPt);
+   println("Converted nextpt: "+nextPt);
    return true;
    }
    catch (IOException e) {
@@ -250,7 +251,7 @@ boolean getColor()
     		ctx.colorMode = 0;
     		return;
    	}
-   System.out.println("wanted cmap index: "+ (c & 077) + "(shifted: "+ ((c & 074)>>2) + ")");
+   println("wanted cmap index: "+ (c & 077) + "(shifted: "+ ((c & 074)>>2) + ")");
    	ctx.colorMapIndex = (c & 074) >> 2;
    	ctx.colorMode = 1;
    	nextClr = ctx.colorMap[ctx.colorMapIndex];
@@ -470,7 +471,7 @@ Point p = new Point(0,0);
 double A, B, C, D, E, F, G;
 int r;
 
-//System.out.println("doArc3pt: "+a+b+c);
+//println("doArc3pt: "+a+b+c);
 	A = b.x - a.x;
         B = b.y - a.y;
         C = c.x - a.x;
@@ -562,20 +563,20 @@ int r;
 		px[2] = c.x; py[2] = c.y;
 		gr.fillPolygon(px, py, 3);
 	}
-//System.out.println("drawArc parms: ("+box+", "+width+", "+height+", "+sa+", "+ea);
+//println("drawArc parms: ("+box+", "+width+", "+height+", "+sa+", "+ea);
 	}
 }
   
   void setStep(boolean b)
   {
   	stepMode = b;
-  	System.out.println("stepMode = "+stepMode);
+  	println("stepMode = "+stepMode);
   }
    
   void step(Graphics gr)
   {
   	stepMode = true;
-  	System.out.println("stepping..");
+  	println("stepping..");
   	disassemble(gr);
   }
   
@@ -646,15 +647,15 @@ int r;
     c=getByte();
     if (isCntrl(c)) {
       if (c == 016) /* SO */ {
-         System.out.println("<SO>");
+         println("<SO>");
          textMode = false;
          }
       else if (c == 017) /* SI */ {
-         System.out.println("<SI>");
+         println("<SI>");
          textMode = true;
          }
       else
-         System.out.println("  ??: "+c);
+         println("  ??: "+c);
       }
     else 
       if (textMode) {
@@ -665,125 +666,125 @@ int r;
       else
       if (isPdi(c)) 
          switch (c) {
-        case RESET: System.out.println("RESET");
+        case RESET: println("RESET");
         		doReset(gr);
             break;
-        case DOMAIN: System.out.println("DOMAIN");
+        case DOMAIN: println("DOMAIN");
         		setDomain();
             break;
-        case TEXT : System.out.println("TEXT");
+        case TEXT : println("TEXT");
             break;
-        case TEXTURE: System.out.println("TEXTURE");
+        case TEXTURE: println("TEXTURE");
         		doTexture();
             break;
-        case PSET_A: System.out.println("PSET_A");
+        case PSET_A: println("PSET_A");
             while (getPoint()) {
             	cmd = new PointCommand(ctx,c, nextPt, false, true, false);
             	cmd.execute(gr);
             }
             break;
-        case PSET_R: System.out.println("PSET_R");
+        case PSET_R: println("PSET_R");
             while (getPoint()) {
             	cmd = new PointCommand(ctx,c, nextPt, true, true, false);
             	cmd.execute(gr);
             }
             break;
-        case POINTA: System.out.println("POINTA");
+        case POINTA: println("POINTA");
             while (getPoint()) {
             	cmd = new PointCommand(ctx,c, nextPt, false, true, true);
             	cmd.execute(gr);
             }
             break;
-        case POINTR: System.out.println("POINTR");
+        case POINTR: println("POINTR");
             while (getPoint()) {
             	cmd = new PointCommand(ctx,c, nextPt, true, true, true);
             	cmd.execute(gr);
             }
             break;
-        case LINE_A: System.out.println("LINE_A");
+        case LINE_A: println("LINE_A");
 				doLine(c, false, gr, false);
             break;
-        case LINE_R: System.out.println("LINE_R");
+        case LINE_R: println("LINE_R");
 				doLine(c, true, gr, false);
             break;
-        case SETLNA: System.out.println("SETLNA");
+        case SETLNA: println("SETLNA");
 				doLine(c, false, gr, true);
             break;
-        case SETLNR: System.out.println("SETLNR");
+        case SETLNR: println("SETLNR");
 				doLine(c, true, gr, true);
             break;
             
         // arcs 
-        case ARC_LN: System.out.println("ARC_LN");
+        case ARC_LN: println("ARC_LN");
         		doArc(false, gr, false);
             break;
-        case ARC_FL: System.out.println("ARC_FL");
+        case ARC_FL: println("ARC_FL");
         		doArc(false, gr, true);
             break;
-        case ARCSTL: System.out.println("ARCSTL");
+        case ARCSTL: println("ARCSTL");
         		doArc(true, gr, false);
 	          break;
-        case ARCSTF: System.out.println("ARCSTF");
+        case ARCSTF: println("ARCSTF");
         		doArc(true, gr, true);
             break;
-        case RECT_L: System.out.println("RECT_L");
+        case RECT_L: println("RECT_L");
         		doRectangle(c, false, gr, false);
             break;
-        case RECT_F: System.out.println("RECT_F");
+        case RECT_F: println("RECT_F");
         		doRectangle(c, false, gr, true);
             break;
-        case RECSTL: System.out.println("RECSTL");
+        case RECSTL: println("RECSTL");
         		doRectangle(c, true, gr, false);
             break;
-        case RECSTF: System.out.println("RECSTF");
+        case RECSTF: println("RECSTF");
         		doRectangle(c, true, gr, true);
             break;
-        case POLY_L: System.out.println("POLY_L");
+        case POLY_L: println("POLY_L");
 				doPolygon(c, false, gr, false);
             break;
-        case POLY_F: System.out.println("POLY_F");
+        case POLY_F: println("POLY_F");
 				doPolygon(c, false, gr, true);
             break;
-        case PLYSTL: System.out.println("PLYSTL");
+        case PLYSTL: println("PLYSTL");
 				doPolygon(c, true, gr, false);
             break;
-        case PLYSTF: System.out.println("PLYSTF");
+        case PLYSTF: println("PLYSTF");
 				doPolygon(c, true, gr, true);
             break;
-        case FIELD: System.out.println("FIELD");
+        case FIELD: println("FIELD");
             break;
-        case INCRPT: System.out.println("INCRPT");
+        case INCRPT: println("INCRPT");
             break;
-        case INCRLN: System.out.println("INCRLN");
+        case INCRLN: println("INCRLN");
             break;
-        case INCRPY: System.out.println("INCRPY");
+        case INCRPY: println("INCRPY");
             break;
-        case SETCLR: System.out.println("SETCLR");
+        case SETCLR: println("SETCLR");
             getColor();
            	gr.setColor(nextClr);
            ctx.fgColor = nextClr;
             if (ctx.colorMode != 0) {
             	ctx.colorMap[ctx.colorMapIndex] = nextClr;
-           System.out.println("set colormap["+ctx.colorMapIndex+"] to "+nextClr);
+           println("set colormap["+ctx.colorMapIndex+"] to "+nextClr);
             }            	
             break;
-        case WAIT : System.out.println("WAIT");
+        case WAIT : println("WAIT");
         		 doWait();
             break;
-        case SELCLR: System.out.println("SELCLR");
+        case SELCLR: println("SELCLR");
         		selectColor();
         		gr.setColor(nextClr);
         		ctx.fgColor = nextClr;
             break;
-        case BLINK: System.out.println("BLINK");
+        case BLINK: println("BLINK");
             break;
         default:
             System.err.println("Can't happen!");
         }
      else {
-        System.out.println(" ??: "+c);
+        println(" ??: "+c);
      }
-     if (stepMode) { System.out.println("break"); break out;}
+     if (stepMode) { println("break"); break out;}
      }//end while
 
     }
@@ -811,8 +812,8 @@ int r;
    	gr.setColor(Color.white);// for now
    	pdi.disassemble(gr);
    	}
-   	catch (IOException e) {
-   		System.err.println("IO exception");
+   	catch (Exception e) {
+   		println("IO exception");
    	}
    }
    

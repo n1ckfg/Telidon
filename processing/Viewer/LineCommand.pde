@@ -62,7 +62,7 @@ void execute(Graphics gr) {
   		if (dx < 1) dx = 0;
   		int dy = ctx.pelSize.y - 1;
   		if (dy < 1) dy = 0;
- // System.out.println("thickline: Pelsize: "+pelSize+" dx, dy"+dx+","+dy);
+ // println("thickline: Pelsize: "+pelSize+" dx, dy"+dx+","+dy);
  		if (dy == 1 && dx == 1) {
  		if (abs) {
  			gr.drawLine(nx, ny, pt.x, ctx.screen-pt.y);

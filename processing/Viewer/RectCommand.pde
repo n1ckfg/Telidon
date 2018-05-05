@@ -36,7 +36,7 @@ class RectCommand extends GeometricCommand
 	
 	void execute(Graphics gr)
 	{
-	System.out.println("RectCommand.execute() - "+p1+p2);
+	println("RectCommand.execute() - "+p1+p2);
 	  	if (set) {
         ctx.setCurrentPt(p1);
       }

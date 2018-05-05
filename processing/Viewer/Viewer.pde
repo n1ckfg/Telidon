@@ -26,68 +26,64 @@ import java.net.*;
 * view.   Most of the other stuff doesn't work yet.
 */
 
-	 Show pdi;
-	 MenuBar menubar;
-    Menu fileMenu, optMenu;
-    static Viewer me;
-    Button step;
-    Canvas canv;
-    Panel pan;
-    Graphics gr;
-	boolean stepmode = false;
+Show pdi;
+MenuBar menubar;
+Menu fileMenu, optMenu;
+static Viewer me;
+Button step;
+Canvas canv;
+Panel pan;
+Graphics gr;
+boolean stepmode = false;
    	
-   void init() 
-   {  /* try this */
-      setMenuBar(menubar = new MenuBar());
-      menubar.add(fileMenu = new Menu("File"));
-      //fileMenu.add("New");
-      fileMenu.add("Open...");
-      fileMenu.add("Server");
-      //fileMenu.add("Save");
-      //fileMenu.add("Close");
-      fileMenu.addSeparator();
-      //fileMenu.add("Print...");
-      //fileMenu.addSeparator();
-      fileMenu.add("Exit");
-   	menubar.add(optMenu = new Menu("Options"));
-   	optMenu.add("Step");
-   	optMenu.addSeparator();
-      optMenu.add("Step...");
-      optMenu.add("Bgnd Color...");
-     // add("Center", canv = new Canvas());
-      //add("North", pan = new Panel());
-     // pan.setBackground(Color.lightGray);
-     // pan.add(step = new Button("Step"));
-      
-      resize(516, 550); 
-      setBackground(Color.gray); // was black
-      setFont(new Font("Courier",Font.PLAIN,14));
-      show();
-      pdi = new Show();
-   }
+void setup() {  /* try this */
+  size(516, 550); 
+
+  setMenuBar(menubar = new MenuBar());
+  menubar.add(fileMenu = new Menu("File"));
+  //fileMenu.add("New");
+  fileMenu.add("Open...");
+  fileMenu.add("Server");
+  //fileMenu.add("Save");
+  //fileMenu.add("Close");
+  fileMenu.addSeparator();
+  //fileMenu.add("Print...");
+  //fileMenu.addSeparator();
+  fileMenu.add("Exit");
+  menubar.add(optMenu = new Menu("Options"));
+  optMenu.add("Step");
+  optMenu.addSeparator();
+  optMenu.add("Step...");
+  optMenu.add("Bgnd Color...");
+  // add("Center", canv = new Canvas());
+  //add("North", pan = new Panel());
+  // pan.setBackground(Color.lightGray);
+  // pan.add(step = new Button("Step"));
   
-	boolean action(Event e, Object arg)
-	{
+  setBackground(Color.gray); // was black
+  setFont(new Font("Courier",Font.PLAIN,14));
+  show();
+  pdi = new Show();
+}
+  
+void draw() {
 	
    if (e.target instanceof MenuItem) {
      if (((String)e.arg).equals("Exit")) {
        System.exit(0);
-     }
-     else if (((String)e.arg).equals("Step...")) {
-     System.out.println("setting step mode");
+     } else if (((String)e.arg).equals("Step...")) {
+       println("setting step mode");
      	 stepmode = true;
-     }
-     else if (((String)e.arg).equals("Step")) {
-     System.out.println("steped");
-     	pdi.step(gr);
-     	return true;
-     }
-	  else if (((String)e.arg).equals("Open...")) {	// offline read
-      gr = /*canv.*/getGraphics();
-     gr.translate(0,-5);
-      FileDialog fd;
-      try {
-   	 fd = new FileDialog(this, "NAPLPS");
+     } else if (((String)e.arg).equals("Step")) {
+       println("steped");
+     	 pdi.step(gr);
+     	 return true;
+     } else if (((String)e.arg).equals("Open...")) {	// offline read
+       gr = /*canv.*/getGraphics();
+       gr.translate(0,-5);
+       FileDialog fd;
+       try {
+   	     fd = new FileDialog(this, "NAPLPS");
    	 fd.show();
    	 String fname = fd.getFile();
    	 String fdir = fd.getDirectory();
@@ -95,13 +91,12 @@ import java.net.*;
    	pdi.init(dis);
    	pdi.setStep(stepmode);
   	
-  	System.out.println("size is: "+size());
+  	println("size is: "+size());
   //	pdi.screen = (size().width > size().height) ? size().width : size().height;
    	pdi.ctx.screen = 512;
    	gr.setColor(Color.white);// for now
    	pdi.disassemble(gr);
-   	}
-   	catch (IOException ex) {
+   	} catch (Exception e) {
    		System.err.println("IO exception");
    	}
 	  	}
@@ -111,22 +106,17 @@ import java.net.*;
 	    Socket sock;
 	    try {
 	    ServerSocket ss = new ServerSocket(1234);
-	    System.out.println("got server socket, # "+ss.getLocalPort());
+	    println("got server socket, # "+ss.getLocalPort());
 	     sock = ss.accept();
-	     System.out.println("got socket");
+	     println("got socket");
 	     DataInputStream dis = new DataInputStream(sock.getInputStream());
 	     pdi.init(dis);
 	     pdi.setStep(stepmode);
-	     System.out.println("got client connection");
+	     println("got client connection");
 	     pdi.ctx.screen = 512;
 	     gr.setColor(Color.white);
 	     pdi.disassemble(gr);
-	    }
-	    catch (IOException exx) {
-	    	System.err.println("IO exception -"+exx);
-	    }
-	   }
+	    } catch (Exception e) { }
+}
    }
-	return true;
-	}
-	}
+}
