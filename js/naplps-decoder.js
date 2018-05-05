@@ -765,6 +765,7 @@ class NapDecoder {
         this.cmds = []; // NapCmd[]
         this.counter = 0; // int
         this.debug = true; // bool
+        this.colorMap = [];
 
         //for (var i=0; i<input.length; i++) {
             //this.napRaw += input[i];
@@ -800,6 +801,22 @@ class NapDecoder {
     isOpcode(c) { // char or string
         var b = binary(c);
         return b[b.length-7] === '0';
+    }
+
+    defaultColorMap() {
+		for (var i = 0; i <= 7; i++) {		// 1-8. grayscale
+			this.colorMap.push(createColor(i*32, i*32, i*32));
+    	}
+
+		// following aren't all exact (some are), but close
+		this.colorMap.push(createColor(0, 0, 255)); // 9. blue
+		this.colorMap.push(createColor(5*36, 0, 7*36)); // 10. blue magenta
+		this.colorMap.push(createColor(7*36, 0, 4*36)); // 11. pinkish red
+		this.colorMap.push(createColor(7*36, 2*36, 0)); // 12. orange red
+		this.colorMap.push(createColor(255, 255, 0)) // 13. yellow
+		this.colorMap.push(createColor(2*36, 7*36, 0)); // 14. yellow green
+		this.colorMap.push(createColor(0, 7*36, 4*36)); // 15. greenish
+		this.colorMap.push(createColor(0, 5*36, 7*36)); // 16. bluegreen  	
     }
     
 }
