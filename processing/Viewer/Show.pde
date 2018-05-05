@@ -20,7 +20,6 @@ import java.awt.*;
 * geometry etc. primitives as needed.
 */
 
-final static byte SI = 017;
 class Show {
  byte SI = 017;
  byte SO = 016;
