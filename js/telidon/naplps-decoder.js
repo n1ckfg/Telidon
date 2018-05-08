@@ -467,13 +467,13 @@ class NapCmd {
                 break;
             //~ ~ ~ LINES ~ ~ ~
             case("LINE ABS"):
-                this.getPoints(false, false);
+                this.getPoints(true, false); // TODO why is this broken?
                 break;
             case("LINE REL"):
                 this.getPoints(true, false);
                 break;
             case("SET & LINE ABS"):
-                this.getPoints(false, true);
+                this.getPoints(true, true); // TODO why is this broken?
                 break;
             case("SET & LINE REL"):
                 this.getPoints(true, true);
@@ -661,6 +661,7 @@ class NapCmd {
 
     getColor() {
     	var nc = new NapColor(this.data);
+    	// TODO distinguish between rgb and color map
     	this.col = new Vector3(nc.r, nc.g, nc.b);
     }
 
