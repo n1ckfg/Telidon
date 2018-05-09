@@ -6,20 +6,20 @@ Tested with Firefox, Chrome, Safari.
 Ajwm Decoder (Alastair Mayer, 1999)
 ./archives/ajwm-naplps
 View only. Source included, GPL license.
-Works in WinXP, Win10. 
+Tested in Win10. 
 Does not work in OS X.
 
 TurShow (Shawn Rhoads, 1993)
 ./archives/simtel/TURSHOW6/
 View only, with animation support. No source.
-Works with DosBox emulator.
+Tested with DosBox emulator.
 Does not work in Win10.
 
 Microstar Graphics Editor (Microstar Software, 1991)
 ./archives/simtel/MGE201A/
 View, edit, save. No source.
-Works in WinXP.
+Tested with WinXP emulator.
 Does not work with DosBox emulator.
 
 Nick Fox-Gieg
-180507
+180509
