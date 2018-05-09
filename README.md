@@ -12,9 +12,9 @@
 </p>
 <p>
 	<i>Three anniversary events are being held at InterAccess in spring 2018:<br/>
-	<a href="http://interaccess.org/event/2018/naplps-adventure-new-media-art-history">http://interaccess.org/event/2018/naplps-adventure-new-media-art-history</a><br/>
-	<a href="http://interaccess.org/event/2018/digital-archaeology-excavating-telidon">http://interaccess.org/event/2018/digital-archaeology-excavating-telidon</a><br/>
-	<a href="http://interaccess.org/exhibition/telidon">http://interaccess.org/exhibition/telidon</a></i>
+	<a href="http://interaccess.org/event/2018/basement-tapes-media-arts-reunion">The Basement Tapes: Media Arts Reunion</a><br>
+	<a href="http://interaccess.org/event/2018/naplps-adventure-new-media-art-history">NAPLPS: An Adventure in New Media Art History</a> (9 May 2018)<br/>
+	<a href="http://interaccess.org/event/2018/digital-archaeology-excavating-telidon">Digital Archaeology: Excavating the Telidon</a> (11 May 2018)</i>
 </p>			
 <p>
 	Nick Fox-Gieg<br/>
