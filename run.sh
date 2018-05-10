@@ -9,5 +9,4 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 cd $DIR
-cd ..
 http-server

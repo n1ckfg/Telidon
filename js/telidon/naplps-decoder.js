@@ -317,19 +317,13 @@ class NapColor extends NapDataArray {
 
 	constructor(n) { // NapData[]
 		super(n);
-		// TODO find out if this needs a new method
+		
+        // TODO find out if this needs a new method
 		this.r = this.getColorFromBytes(n, "r"); // float
         this.g = this.getColorFromBytes(n, "g"); // float
         this.b = this.getColorFromBytes(n, "b"); // float
 
-       	if (this.r < 0 || this.r > 255 || this.g < 0 || this.g > 255 || this.b < 0 || this.b > 255) {
-    		this.r = 0;
-    		this.g = 0;
-    		this.b = 0;
-        	//console.log("color: not RGB data? (" + this.r + ", " + this.g + ", " + this.b + ")");
-    	} else {
-	        //console.log("color: " + this.r + ", " + this.g + ", " + this.b);
-    	}
+        console.log("color: " + this.r + "," + this.g + "," + this.b);
 	}
 
 /*
@@ -349,28 +343,17 @@ class NapColor extends NapDataArray {
         var returns = "";
         for (var i=0; i<n.length; i++) {
             if (channel === "g") {
-                returns += "" + n[i].binary.charAt(2);
-                returns += "" + n[i].binary.charAt(5);
+                returns += n[i].binary.charAt(1).toString();
+                returns += n[i].binary.charAt(4).toString();
             } else if (channel === "r") {
-                returns += "" + n[i].binary.charAt(3);
-                returns += "" + n[i].binary.charAt(6);
+                returns += n[i].binary.charAt(2).toString();
+                returns += n[i].binary.charAt(5).toString();
             } else if (channel === "b") {
-                returns += "" + n[i].binary.charAt(4);
-                returns += "" + n[i].binary.charAt(7);
+                returns += n[i].binary.charAt(3).toString();
+                returns += n[i].binary.charAt(6).toString();
             }
         }
-
-        returns = returns.split("");
-        returns = returns.reverse();
-        returns = returns.join("");
-
-        var maxVal = 255.0
-        var finalReturns = maxVal * (unbinary(returns)/(2 * n.length));
-        var finalReturnsInv = Math.abs(maxVal - finalReturns);
-        var finalReturnsScaled = (finalReturnsInv / maxVal) * 255.0;
-
-        //console.log(finalReturnsScaled);
-        return finalReturnsScaled;
+        return parseInt(255 * (1.0 - (unbinary(returns) / this.bitVals)));
     }
 
 }
@@ -672,29 +655,31 @@ class NapCmd {
 
     getDomain() {
     	/*
-    	Only the first byte after the domain opcode (21) is relevant to us.
-    	The rest of the bytes control “logical pel size”, which was a feature of vector monitors.
+    	Only the first byte after the domain opcode (21) is used here.
+    	The rest of the bytes control "logical pel size" (the ability to render images at a 
+        different resolution than the display, in this case the browser canvas).
+        Logical pel size is not implemented.
 
 		In the domain byte, bits 6,5,4,3,2,1 contain the following information:
 		* Bit 6 controls 2D vs. 3D coordinates:
-		         0  XY (the default)
-		         1  XYZ
+		        0  XY (the default)
+		        1  XYZ
 
-		 * Bits 5, 4, 3 control the length of a multi-value operand:
-		         0 0 0   1 byte
-		         0 0 1   2 bytes
-		         0 1 0   3 bytes (the default)
-		         0 1 1   4 bytes
-		         1 0 0   5 bytes
-		         1 0 1   6 bytes
-		         1 1 0   7 bytes
-		         1 1 1   8 bytes
+		* Bits 5, 4, 3 control the length of a multi-value operand:
+		        0 0 0   1 byte
+		        0 0 1   2 bytes
+		        0 1 0   3 bytes (the default)
+		        0 1 1   4 bytes
+		        1 0 0   5 bytes
+		        1 0 1   6 bytes
+		        1 1 0   7 bytes
+		        1 1 1   8 bytes
 
 		* Bits 2, 1 control the length of a single value operand:
-		         0 0    1 byte (the default)
-		         0 1    2 bytes
-		         1 0    3 bytes
-		         1 1    4 bytes
+		        0 0    1 byte (the default)
+		        0 1    2 bytes
+		        1 0    3 bytes
+		        1 1    4 bytes
 		*/
     	if (this.data.length < 1) return;
     	var domainByte = this.data[0].getBinary();
