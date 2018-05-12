@@ -322,7 +322,12 @@ class NapColor extends NapDataArray {
         this.g = this.getColorFromBytes(n, "g"); // float
         this.b = this.getColorFromBytes(n, "b"); // float
 
-       	if (this.r < 0 || this.r > 255 || this.g < 0 || this.g > 255 || this.b < 0 || this.b > 255) {
+
+if(this.r>255){this.r=this.r%255}
+    if(this.g>255){this.g=this.g%255}
+        if(this.b>255){this.b=this.b%255}
+       	/*
+        if (this.r < 0 || this.r > 255 || this.g < 0 || this.g > 255 || this.b < 0 || this.b > 255) {
     		this.r = 0;
     		this.g = 0;
     		this.b = 0;
@@ -330,6 +335,7 @@ class NapColor extends NapDataArray {
     	} else {
 	        //console.log("color: " + this.r + ", " + this.g + ", " + this.b);
     	}
+        */
 	}
 
 /*
@@ -349,28 +355,28 @@ class NapColor extends NapDataArray {
         var returns = "";
         for (var i=0; i<n.length; i++) {
             if (channel === "g") {
-                returns += "" + n[i].binary.charAt(2);
-                returns += "" + n[i].binary.charAt(5);
+                returns += n[i].binary.charAt(1).toString();
+                returns += n[i].binary.charAt(4).toString();
             } else if (channel === "r") {
-                returns += "" + n[i].binary.charAt(3);
-                returns += "" + n[i].binary.charAt(6);
+                returns += n[i].binary.charAt(2).toString();
+                returns += n[i].binary.charAt(5).toString();
             } else if (channel === "b") {
-                returns += "" + n[i].binary.charAt(4);
-                returns += "" + n[i].binary.charAt(7);
+                returns += n[i].binary.charAt(3).toString();
+                returns += n[i].binary.charAt(6).toString();
             }
         }
 
-        returns = returns.split("");
-        returns = returns.reverse();
-        returns = returns.join("");
+        //returns = returns.split("");
+        //returns = returns.reverse();
+        //returns = returns.join("");
 
         var maxVal = 255.0
         var finalReturns = maxVal * (unbinary(returns)/(2 * n.length));
-        var finalReturnsInv = Math.abs(maxVal - finalReturns);
-        var finalReturnsScaled = (finalReturnsInv / maxVal) * 255.0;
+        //var finalReturnsInv = Math.abs(maxVal - finalReturns);
+        //var finalReturnsScaled = (finalReturnsInv / maxVal) * 255.0;
 
-        //console.log(finalReturnsScaled);
-        return finalReturnsScaled;
+        console.log("color " + finalReturns);//Scaled);
+        return finalReturns;//finalReturnsScaled;
     }
 
 }
