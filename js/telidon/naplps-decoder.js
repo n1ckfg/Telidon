@@ -174,13 +174,13 @@ class NapOpcode extends NapChar {
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("3C"):
-                returns = "SET COLOR"; // this picks a color
+                returns = "SET COLOR";
                 break;
             case("3D"):
                 returns = "WAIT";
                 break;
             case("3E"):
-                returns = "SELECT COLOR"; // this sets the color mode
+                returns = "SELECT COLOR"; 
                 break
             case("3F"):
                 returns = "BLINK";
@@ -312,18 +312,27 @@ class NapVector extends NapDataArray {
 
 }
 
-// 2.3. RGB color
-class NapColor extends NapDataArray {
+// 2.3.1 RGB color
+class NapPaletteColor extends NapDataArray {
+
+	constructor(n) { // NapData[]
+		super(n);
+	}
+
+}
+
+// 2.3.2 RGB color
+class NapRgbColor extends NapDataArray {
 
 	constructor(n) { // NapData[]
 		super(n);
 		
         // TODO find out if this needs a new method
-		this.r = this.getColorFromBytes(n, "r"); // float
-        this.g = this.getColorFromBytes(n, "g"); // float
-        this.b = this.getColorFromBytes(n, "b"); // float
+		this.r = this.getRgbColorFromBytes(n, "r"); // float
+        this.g = this.getRgbColorFromBytes(n, "g"); // float
+        this.b = this.getRgbColorFromBytes(n, "b"); // float
 
-        console.log("color: " + this.r + "," + this.g + "," + this.b);
+        console.log("input: " + n[0].binary + " " + n[1].binary + " bytes | color: " + this.r + "," + this.g + "," + this.b);
 	}
 
 /*
@@ -339,17 +348,17 @@ class NapColor extends NapDataArray {
     |?|1| | | | | | |
     -----------------
 */
-    getColorFromBytes(n, channel) {  // NapData[], string
+    getRgbColorFromBytes(n, channel) {  // NapData[], string
         var returns = "";
         for (var i=0; i<n.length; i++) {
             if (channel === "g") {
                 returns += n[i].binary.charAt(1).toString();
-                returns += n[i].binary.charAt(4).toString();
-            } else if (channel === "r") {
                 returns += n[i].binary.charAt(2).toString();
-                returns += n[i].binary.charAt(5).toString();
-            } else if (channel === "b") {
+            } else if (channel === "r") {
                 returns += n[i].binary.charAt(3).toString();
+                returns += n[i].binary.charAt(4).toString();
+            } else if (channel === "b") {
+                returns += n[i].binary.charAt(5).toString();
                 returns += n[i].binary.charAt(6).toString();
             }
         }
@@ -514,14 +523,14 @@ class NapCmd {
                 this.getPoints(true, true);
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
-            case("SET COLOR"): // this picks a color
-               	this.getColor();
+            case("SET COLOR"): 
+               	this.getPaletteColor();
                 break;
             case("WAIT"):
                	// TODO
                 break;
-            case("SELECT COLOR"): // this sets the color mode
-               	this.getColor();
+            case("SELECT COLOR"): 
+               	this.getRgbColor();
                 break
             case("BLINK"):
             	// TODO
@@ -642,8 +651,12 @@ class NapCmd {
         }
     }
 
-    getColor() {
-    	var nc = new NapColor(this.data);
+    getPaletteColor() {
+    	//
+    }
+
+    getRgbColor() {
+    	var nc = new NapRgbColor(this.data);
     	// TODO distinguish between rgb and color map
     	this.col = new Vector3(nc.r, nc.g, nc.b);
     }
