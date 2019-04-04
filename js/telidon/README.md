@@ -1,9 +1,6 @@
-TELIDONP5
+TELIDONP5 PROJECT
 
 Contents:<br>
-* binary-utils.js<br>
-Methods for reading the raw NAPLPS file data.
-
 * naplps-decoder.js<br>
 The heart of the project; parses the NAPLPS drawing instructions.
 
