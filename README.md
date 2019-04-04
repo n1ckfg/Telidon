@@ -4,25 +4,27 @@
 	<b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/TelidonP5.js">TelidonP5.js</a></b> allows NAPLPS vector graphics files to be displayed in a browser using <a href="https://p5js.org/">p5.js</a>. Its companion decoder library <b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/naplps-decoder.js">naplps-decoder.js</a></b> can also be used independently.<br/>
 	[ <a href="https://n1ckfg.github.io/Telidon/"><i>See an example</i></a> ]
 </p>
+
+### Contents:
 <pre>
+archives <-- contemporary utility apps, most without source
+css <-- support files
+docs <-- original spec documentation and commentary
+images <-- testbed of NAPLPS images
+js <-- TelidonP5.js lives here
+tools <-- misc. new tests and prototypes, with source
+</pre>
+
+### Reference Viewers (source included):
+<pre>
+TelidonP5.js (Nick Fox-Gieg, 2018)
 ./js/telidon/
 License: MIT.
 Language: JavaScript.
 View NAPLPS, save as GIF.
 Tested with Firefox, Chrome, Safari.
 position: yes / color: no / text: no / animation: no
-</pre>
 
-### Contents:
-<pre>
-archives <-- contemporary utility apps, mostly no source
-docs <-- original spec documentation and commentary
-images <-- testbed of NAPLPS images
-tools <-- new tests and prototypes, all with source
-</pre>
-
-### Reference Viewers (source included):
-<pre>
 Ajwm Decoder (Alastair Mayer, 1999)
 ./archives/ajwm-naplps/
 License: GPL.
