@@ -155,7 +155,7 @@ function loadNewTelidon(fileName) {
 }
 
 function setPreview(name) {
-    preview.style.backgroundImage = "url(./rosetta_stone/cover/png/" + name + ".png)";
+    preview.style.backgroundImage = "url(./tools/rosetta_stone/cover/png/" + name + ".png)";
 }
 
 function setupGif() {

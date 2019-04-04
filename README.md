@@ -1,4 +1,4 @@
-![TelidonP5](/rosetta_stone/cover/screenshots/shark.gif)
+![TelidonP5](/tools/rosetta_stone/cover/screenshots/shark.gif)
 # TelidonP5 Project
 <pre>
 ./js/telidon/
