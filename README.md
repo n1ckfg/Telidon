@@ -7,12 +7,18 @@
 
 ### Contents:
 <pre>
-archives <-- contemporary utility apps, most without source.
-css <-- for web example.
-docs <-- original spec documentation and commentary.
-images <-- testbed of NAPLPS images.
-js <-- TelidonP5.js lives here.
-tools <-- misc. new tests and prototypes, with source.
+./archives/ <-- contemporary utility apps, most without source.
+./css/ <-- for web demo.
+./docs/ <-- original spec documentation and commentary.
+./images/ <-- testbed of NAPLPS images.
+./js/ <-- TelidonP5.js lives here.
+./tools/ <-- misc. new tests and prototypes, with source.
+</pre>
+
+### Tutorial:
+<pre>
+./tools/rosetta_stone/boom
+A simple NAPLPS image explained instruction by instruction. Start here.
 </pre>
 
 ### Reference Viewers (source included):
@@ -24,6 +30,14 @@ Language: JavaScript.
 View NAPLPS, save as GIF.
 Tested with Firefox, Chrome, Safari.
 position: yes / color: no / text: no / animation: no
+
+TelidonP5 (Nick Fox-Gieg, 2018)
+./tools/processing/TelidonP5/
+License: MIT.
+Language: Java.
+View NAPLPS only.
+Tested in Win10, OS X High Sierra.
+position: yes / color: no / text: no / animation: yes
 
 ***ONLY KNOWN OPEN-SOURCE COLOR DECODER***
 Ajwm Decoder (Alastair Mayer, 1999)
@@ -59,9 +73,11 @@ License: unknown.
 Language: unknown.
 View NAPLPS only.
 Untested; doesn't work with DosBox emulator.
+
+Note: ./archives/ also contains more untested utilities.
 </pre>
 
-### More info:
+### Background info:
 <p>
 	August 15th, 2018 marked the 40th anniversary of the <a href="https://en.wikipedia.org/wiki/Telidon">Telidon</a> graphics format, created in 1978. The Telidon hardware was discontinued in 1985, but a variant of the format, <a href="https://en.wikipedia.org/wiki/NAPLPS">NAPLPS</a>, thrived and remained in wide use throughout the <a href="https://en.wikipedia.org/wiki/Bulletin_board_system">BBS</a> era, until the early 1990s. Thanks to its exceptionally small file size and limited animation features, it can be seen as a technological ancestor of the <a href="https://en.wikipedia.org/wiki/GIF#Animated_GIF">animated GIF</a> and the <a href="https://en.wikipedia.org/wiki/SWF">Flash SWF</a>&mdash;a medium that allowed new types of work to be both produced and consumed on the same machine.
 </p>
@@ -70,5 +86,5 @@ Untested; doesn't work with DosBox emulator.
 </p>		
 <p>
 	Nick Fox-Gieg<br/>
-	180509
+	190406
 </p>
