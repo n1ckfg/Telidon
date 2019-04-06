@@ -25,6 +25,7 @@ View NAPLPS, save as GIF.
 Tested with Firefox, Chrome, Safari.
 position: yes / color: no / text: no / animation: no
 
+***ONLY KNOWN OPEN-SOURCE COLOR DECODER***
 Ajwm Decoder (Alastair Mayer, 1999)
 ./archives/ajwm-naplps/
 License: GPL.
