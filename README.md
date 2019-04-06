@@ -7,12 +7,12 @@
 
 ### Contents:
 <pre>
-archives <-- contemporary utility apps, most without source
-css <-- for web example
-docs <-- original spec documentation and commentary
-images <-- testbed of NAPLPS images
-js <-- TelidonP5.js lives here
-tools <-- misc. new tests and prototypes, with source
+archives <-- contemporary utility apps, most without source.
+css <-- for web example.
+docs <-- original spec documentation and commentary.
+images <-- testbed of NAPLPS images.
+js <-- TelidonP5.js lives here.
+tools <-- misc. new tests and prototypes, with source.
 </pre>
 
 ### Reference Viewers (source included):
