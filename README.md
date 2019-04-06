@@ -8,7 +8,7 @@
 ### Contents:
 <pre>
 archives <-- contemporary utility apps, most without source
-css <-- support files
+css <-- for web example
 docs <-- original spec documentation and commentary
 images <-- testbed of NAPLPS images
 js <-- TelidonP5.js lives here
