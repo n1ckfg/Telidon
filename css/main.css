@@ -71,18 +71,18 @@
 		position: absolute;
 		left: 0px;
 		top: 0px;
-		margin-top: 180px;
-		margin-left: 160px;
+		margin-top: 140px;
+		margin-left: 170px;
 		transform: scale(1.5);
 	}
 
 	.sketch {
 		position: absolute;
-		width: 640px;
+		width: 960px;
 		height: 511px;
 		top: 4px;
 		left: 0px;
-		font-size: 2.0em;
+		font-size: 1.75em;
 	}
 }
 /* END CONDITIONALS */
