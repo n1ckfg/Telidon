@@ -1,3 +1,46 @@
+/* BEGIN CONDITIONALS */
+@media only screen and (orientation:landscape) {
+	.preview-base {
+		width: 640px;
+		height: 511px;
+		position:absolute;
+		left: 640px;
+		top: -2px;
+	}
+
+	.explanation-base {
+		width: 600px;
+		height: 511px;
+		position:absolute;
+		left: 640px;
+		top: 0.75em;
+		padding:0.75em;
+	}
+}
+
+@media only screen and (orientation:portrait) {
+	.preview-base {
+		display: none;
+		width: 0px;
+		height: 0px;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		margin: 0px;
+	}
+
+	.explanation-base {
+		display: none;
+		width: 0px;
+		height: 0px;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		margin: 0px;
+	}
+}
+/* END CONDITIONALS */
+
 body {
 	background: #aaaaaa;
 	font-size: 17px;
@@ -20,15 +63,6 @@ canvas {
 	/* */
 }
 
-
-.preview-base {
-	width: 640px;
-	height: 511px;
-	position:absolute;
-	left: 640px;
-	top: -2px;
-}
-
 #preview {
 	/* */
 }
@@ -42,15 +76,6 @@ canvas {
 #explanation-bg {
 	background: #002244;
 	opacity: 0.75;
-}
-
-.explanation-base {
-	width: 600px;
-	height: 511px;
-	position:absolute;
-	left: 640px;
-	top: 0.75em;
-	padding:0.75em;
 }
 
 .explanation-base a {
