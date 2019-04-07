@@ -19,7 +19,7 @@
 
 	#container {
 		width: 1280px;
-		height: 600px;
+		height: 511px;
 		position: relative;
 		margin-top: 16px;
 		margin-left: auto;
@@ -51,13 +51,12 @@
 
 	#container {
 		width: 640px;
-		height: 600px;
+		height: 511px;
 		position: relative;
-		margin-top: 168px;
+		margin-top: 16px;
 		margin-left: auto;
 		margin-right: auto;
 		margin-bottom: auto;
-		transform: scale(1.5);
 	}
 }
 /* END CONDITIONALS */
