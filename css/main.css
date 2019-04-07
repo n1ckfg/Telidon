@@ -16,6 +16,10 @@
 		top: 0.75em;
 		padding:0.75em;
 	}
+
+	.sketch {
+		/* */
+	}
 }
 
 @media only screen and (orientation:portrait) {
@@ -38,6 +42,14 @@
 		top: 0px;
 		margin: 0px;
 	}
+
+	.sketch {
+		margin-top: 168px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: auto;
+		transform: scale(1.5);
+	}
 }
 /* END CONDITIONALS */
 
@@ -56,10 +68,6 @@ a:hover {
 }
 
 canvas {
-	/* */
-}
-
-.sketch {
 	/* */
 }
 
