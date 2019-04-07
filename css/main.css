@@ -69,10 +69,10 @@
 
 	canvas {
 		position: absolute;
-		left:0px;
+		left: 0px;
 		top: 0px;
 		margin-top: 135px;
-		margin-left: 160px;
+		margin-left: 165px;
 		transform: scale(1.5);
 	}
 
