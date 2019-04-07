@@ -20,11 +20,21 @@
 	#container {
 		width: 1280px;
 		height: 511px;
-		position: relative;
-		margin-top: 16px;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: auto;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+	}
+
+	#canvas {
+		/* */
+	}
+
+	.sketch {
+		position: absolute;
+		width: 640px;
+		height: 511px;
+		top: 4px;
+		left: 0px;
 	}
 }
 
@@ -52,11 +62,27 @@
 	#container {
 		width: 640px;
 		height: 511px;
-		position: relative;
-		margin-top: 16px;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: auto;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+	}
+
+	canvas {
+		position: absolute;
+		left:0px;
+		top: 0px;
+		margin-top: 135px;
+		margin-left: 160px;
+		transform: scale(1.5);
+	}
+
+	.sketch {
+		position: absolute;
+		width: 960px;
+		height: 511px;
+		top: 4px;
+		left: 0px;
+		font-size: 1.5em;
 	}
 }
 /* END CONDITIONALS */
@@ -73,10 +99,6 @@ a {
 
 a:hover {
 	text-decoration: none;
-}
-
-canvas {
-	/* */
 }
 
 #preview {
