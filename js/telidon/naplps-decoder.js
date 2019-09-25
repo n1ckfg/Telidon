@@ -599,12 +599,14 @@ class NapPaletteColor extends NapDataArray {
     getPaletteIndexFromBytes(n) {
         var returns = "";
 
+        returns += n[0].binary.charAt(1).toString();
         returns += n[0].binary.charAt(2).toString();
         returns += n[0].binary.charAt(3).toString();
         returns += n[0].binary.charAt(4).toString();
         returns += n[0].binary.charAt(5).toString();
+        returns += n[0].binary.charAt(6).toString();
 
-        return parseInt(unbinary(returns));
+        return parseInt((returns & parseInt('074', 8))>>2);
     }
 
 }
@@ -766,13 +768,13 @@ class NapCmd {
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("SET COLOR"): 
-               	this.getPaletteColor();
+               	this.getRgbColor();
                 break;
             case("WAIT"):
                	// TODO
                 break;
             case("SELECT COLOR"): 
-               	this.getPaletteColor();
+               	this.getRgbColor();
                 break
             case("BLINK"):
             	// TODO
