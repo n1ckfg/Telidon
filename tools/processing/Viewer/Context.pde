@@ -22,28 +22,28 @@ import java.awt.Color;
 class Context extends Object {
 	// instance vars
 		
-	protected int cX = 0;
-	protected int cY = 0;
-	protected boolean is3D = false;
-	protected int singleValLength = 1;
-	protected int multiValLength = 3;
-	protected int screen = 512;
-	protected int colorMode = 0;
-	protected int colorMapIndex = 0;
-	protected Color colorMap[];
-	protected Point pelSize;
-	protected boolean bigPel = false;  // true if pel bigger than 1x1
-	protected Color fgColor = Color.white;
-	protected Color bgColor = Color.black;
-	protected boolean highlight = false;
-	protected int lineTexture = 0;
-	protected int texturePattern = 0;
-	protected Point maskSize;
-	
-	Context() {
-		super();
-	}
-	
+	int cX = 0;
+	int cY = 0;
+	boolean is3D = false;
+	int singleValLength = 1;
+	int multiValLength = 3;
+	int screen = 512;
+	int colorMode = 0;
+	int colorMapIndex = 0;
+	Color colorMap[];
+	Point pelSize;
+	boolean bigPel = false;  // true if pel bigger than 1x1
+	Color fgColor = Color.white;
+	Color bgColor = Color.black;
+	boolean highlight = false;
+	int lineTexture = 0;
+	int texturePattern = 0;
+	Point maskSize;
+		
+  Context() {
+    super();
+  }
+  
 	void init() { //DataInputStream in)
 		// inp = in;
 		pelSize = new Point(0, 0);

@@ -22,47 +22,47 @@ import java.awt.*;
 
 class Show {
   
-  final byte SI = 017;
-  final byte SO = 016;
+  byte SI = 017;
+  byte SO = 016;
 
-  final byte RESET  = 040;
-  final byte DOMAIN = 041;
-  final byte TEXT   = 042;
-  final byte TEXTURE = 043;
-  final byte PSET_A = 044;
-  final byte PSET_R = 045;
-  final byte POINTA = 046;
-  final byte POINTR = 047;
-  final byte LINE_A = 050;
-  final byte LINE_R = 051;
-  final byte SETLNA = 052;
-  final byte SETLNR = 053;
-  final byte ARC_LN = 054;
-  final byte ARC_FL = 055;
-  final byte ARCSTL = 056;
-  final byte ARCSTF = 057;
-  final byte RECT_L = 060;
-  final byte RECT_F = 061;
-  final byte RECSTL = 062;
-  final byte RECSTF = 063;
-  final byte POLY_L = 064;
-  final byte POLY_F = 065;
-  final byte PLYSTL = 066;
-  final byte PLYSTF = 067;
-  final byte FIELD  = 070;
-  final byte INCRPT = 071;
-  final byte INCRLN = 072;
-  final byte INCRPY = 073;
-  final byte SETCLR = 074;
-  final byte WAIT   = 075;
-  final byte SELCLR = 076;
-  final byte BLINK  = 077;
-
-	final boolean isPdi(byte c) {
+  byte RESET = 040;
+  byte DOMAIN = 041;
+  byte TEXT = 042;
+  byte TEXTURE = 043;
+  byte PSET_A = 044;
+  byte PSET_R = 045;
+  byte POINTA = 046;
+  byte POINTR = 047;
+  byte LINE_A = 050;
+  byte LINE_R = 051;
+  byte SETLNA = 052;
+  byte SETLNR = 053;
+  byte ARC_LN = 054;
+  byte ARC_FL = 055;
+  byte ARCSTL = 056;
+  byte ARCSTF = 057;
+  byte RECT_L = 060;
+  byte RECT_F = 061;
+  byte RECSTL = 062;
+  byte RECSTF = 063;
+  byte POLY_L = 064;
+  byte POLY_F = 065;
+  byte PLYSTL = 066;
+  byte PLYSTF = 067;
+  byte FIELD  = 070;
+  byte INCRPT = 071;
+  byte INCRLN = 072;
+  byte INCRPY = 073;
+  byte SETCLR = 074;
+  byte WAIT = 075;
+  byte SELCLR = 076;
+  byte BLINK  = 077;
+ 
+	boolean isPdi(byte c) {
 		return ((RESET <= c && c <= BLINK));
 	}
 	
-	final boolean isCntrl(byte c) {
+	boolean isCntrl(byte c) {
 		return (c < RESET);
 	}
 	
@@ -290,7 +290,7 @@ boolean getColor()
    }
   }
    
-	void doReset(Graphics gr)
+	void doReset(PGraphics gr)
 	{
   		byte c;
   		try {
@@ -386,7 +386,7 @@ boolean getColor()
  }
 
 
-void doArc(boolean set, Graphics gr, boolean fill)
+void doArc(boolean set, PGraphics gr, boolean fill)
 {
 	Point pt1, pt2, pt3;
 	pt1 = new Point(ctx.cX,ctx.cY);
@@ -426,7 +426,7 @@ void doArc(boolean set, Graphics gr, boolean fill)
 }
 		
 		
-void doCircle(Graphics gr, Point a, Point b, boolean fill)
+void doCircle(PGraphics gr, Point a, Point b, boolean fill)
 {
 	//Points a & b define a diameter, center is midway
 	int x, y, diam, cx, cy;
@@ -465,7 +465,7 @@ void doCircle(Graphics gr, Point a, Point b, boolean fill)
 
 }
 
-void doArc3pt(Graphics gr, Point a, Point b, Point c, boolean fill) 
+void doArc3pt(PGraphics gr, Point a, Point b, Point c, boolean fill) 
 {
 Point p = new Point(0,0);
 double A, B, C, D, E, F, G;
@@ -580,7 +580,7 @@ int r;
   	disassemble(gr);
   }
   
-  void doPoint(byte c, Graphics gr, boolean isRel, boolean doSet, boolean draw)
+  void doPoint(byte c, PGraphics gr, boolean isRel, boolean doSet, boolean draw)
   {
   		PointCommand cmd;
   		
@@ -591,7 +591,7 @@ int r;
   }
   		
   
-  void doLine(byte c, boolean rel, Graphics gr, boolean set)
+  void doLine(byte c, boolean rel, PGraphics gr, boolean set)
   {
       LineCommand cmd;
       
@@ -605,7 +605,7 @@ int r;
       }
   }
   
-  void doRectangle(byte c, boolean set, Graphics gr, boolean fill)
+  void doRectangle(byte c, boolean set, PGraphics gr, boolean fill)
 	{	
 		RectCommand cmd;
 
@@ -620,7 +620,7 @@ int r;
 		}
 	}
 	
-  	void doPolygon(byte c, boolean set, Graphics gr, boolean fill)
+  	void doPolygon(byte c, boolean set, PGraphics gr, boolean fill)
   	{
      int sx = 0; int sy = 0;
      
@@ -801,7 +801,7 @@ int r;
       frame.resize(512, 512); 
       frame.setBackground(Color.black);
       frame.show();
-      Graphics gr = frame.getGraphics();
+      PGraphics gr = frame.getGraphics();
       FileDialog fd;
       try {
    	 fd = new FileDialog(frame, "NAPLPS");

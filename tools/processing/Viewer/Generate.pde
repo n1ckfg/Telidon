@@ -21,6 +21,7 @@ class Generate {
   
 	Context ctx;
 	DataOutputStream outp;
+  Show show; // https://www.processing.org/discourse/beta/num_1232266369.html
 		
 	// constructor takes a data input
 	Generate() {
@@ -89,26 +90,26 @@ void putRPoint(int x, int y) throws IOException { /* put rel point */
 }
 
 void setGraph() throws IOException { /* start graphics mode */
-   putByte(Show.SO);
+   putByte(show.SO);
 }
 
 void endGraph() throws IOException { /* end graphics mode */
-   putByte(Show.SI);
+   putByte(show.SI);
 }
 
 void point(boolean abs, boolean vis, int x, int y) throws IOException { /* set or mark point */
    if (abs) {
       if (vis) {
-         putByte(Show.POINTA);
+         putByte(show.POINTA);
       } else {
-         putByte(Show.PSET_A);
+         putByte(show.PSET_A);
       }
       putAPoint(x,y);
    } else {
       if (vis) {
-         putByte(Show.POINTR);
+         putByte(show.POINTR);
       } else {
-         putByte(Show.PSET_R);
+         putByte(show.PSET_R);
       }
       putRPoint(x,y);
    }
@@ -116,19 +117,19 @@ void point(boolean abs, boolean vis, int x, int y) throws IOException { /* set o
 
 void line(boolean abs, int x, int y) throws IOException { /* draw a line */
    if (abs) {
-      putByte(Show.LINE_A);
+      putByte(show.LINE_A);
       putAPoint(x,y);
    } else {
-      putByte(Show.LINE_R);
+      putByte(show.LINE_R);
       putRPoint(x,y);
    }
 }
 
 void setLine(boolean abs, int x1, int y1, int x2, int y2) throws IOException { /* set and line */
    if (abs) {
-     putByte(Show.SETLNA);
+     putByte(show.SETLNA);
    } else {
-     putByte(Show.SETLNR);
+     putByte(show.SETLNR);
    }
    putAPoint(x1,y1);
    if (abs) {
@@ -139,7 +140,7 @@ void setLine(boolean abs, int x1, int y1, int x2, int y2) throws IOException { /
 }
 
 void rectangle(boolean fill, int x1, int y1, int x2, int  y2) throws IOException {
-	putByte((fill) ? Show.RECSTF : Show.RECSTL);
+	putByte((fill) ? show.RECSTF : show.RECSTL);
 	putAPoint(x1,y1);
 	putRPoint(x2-x1, y1-y2);
 }
@@ -148,7 +149,7 @@ void circleCenter(boolean fill, int xc, int yc, int x2, int y2) throws IOExcepti
 	int x1, y1;
 	x1 = xc - (x2 - xc);
 	y1 = yc - (y2 - yc);
-	putByte((fill) ? Show.ARCSTF : Show.ARCSTL);
+	putByte((fill) ? show.ARCSTF : show.ARCSTL);
 	putAPoint(x1,y1);
 	putRPoint(x2-x1, y1-y2);
 }
@@ -159,7 +160,7 @@ void setColor(java.awt.Color c) throws IOException {
 	r = c.getRed();
 	g = c.getGreen();
 	b = c.getBlue();
-	putByte(Show.SETCLR);
+	putByte(show.SETCLR);
 	ch = 0100;
 	ch |= (((g>>2) & 040) | ((r>>3) & 020) | ((b>>4) & 010));
 	ch |= (((g>>4) & 004) | ((r>>5) & 002) | ((b>>6) & 001));
