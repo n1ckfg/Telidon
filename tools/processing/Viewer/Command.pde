@@ -12,7 +12,7 @@ class Command extends Object {
 		opcode = op;
 	}
 	
-	void execute(Graphics gr) {
+	void execute(PGraphics gr) {
 	  //
   }
 	
