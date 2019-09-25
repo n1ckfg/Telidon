@@ -29,16 +29,27 @@ import java.net.*;
 Show pdi;
 boolean stepmode = false;
 String filepath = "";
-     	
+FileInputStream file;     
+PGraphics canvas;	
+     
 void setup() { 
-  size(516, 550); 
+  size(516, 550, P2D);
+  canvas = createGraphics(width, height, P2D);
   pdi = new Show();
-  DataInputStream dis = new DataInputStream(new FileInputStream(filepath));
+  
+  try {
+    file = new FileInputStream(filepath);
+  } catch (Exception e) {
+    println("IO exception");
+    exit();
+  }
+  
+  DataInputStream dis = new DataInputStream(file);
   pdi.init(dis);
   pdi.setStep(stepmode);
   pdi.ctx.screen = 512;
 }
   
 void draw() {
-  pdi.step(PGraphics g);
+  pdi.step(canvas);
 }

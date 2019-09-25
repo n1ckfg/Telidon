@@ -573,7 +573,7 @@ int r;
   	println("stepMode = "+stepMode);
   }
    
-  void step(Graphics gr)
+  void step(PGraphics gr)
   {
   	stepMode = true;
   	println("stepping..");
@@ -638,7 +638,7 @@ int r;
   	
   byte c;
   boolean textMode = true;
-  void disassemble(Graphics gr)
+  void disassemble(PGraphics gr)
  {
    GeometricCommand cmd;
    try {
@@ -794,6 +794,7 @@ int r;
    
    // mainline for testing
    
+   /*
    static void main(String args[])
    {
       java.awt.Frame frame = new java.awt.Frame("PDI");
@@ -816,5 +817,6 @@ int r;
    		println("IO exception");
    	}
    }
+   */
    
 }

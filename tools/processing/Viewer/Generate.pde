@@ -23,7 +23,7 @@ class Generate {
 	DataOutputStream outp;
 		
 	// constructor takes a data input
-	private Generate() {
+	Generate() {
 		ctx = new Context();
 	}
 	
