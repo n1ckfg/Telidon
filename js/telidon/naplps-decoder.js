@@ -2,7 +2,7 @@
 
 /* 
 NAPLPS JavaScript decoder (part of the TelidonP5 Project)
-Nick Fox-Gieg http://fox-gieg.com
+Nick Fox-Gieg https://fox-gieg.com
 
 Note: Uses no p5.js-specific code
 
@@ -294,7 +294,7 @@ class NapOpcode extends NapChar {
                 returns = "Shift-Out"; // graphics mode, we're here by default. Handled in step 2.
                 break;
             case("0F"):
-                returns = "Shift-In"; // text mode, data that follows is text. Hendled in step 2.
+                returns = "Shift-In"; // text mode, data that follows is text. Handled in step 2.
                 break;
             case("18"):
                 returns = "CANCEL";
@@ -985,27 +985,32 @@ class NapCmd {
 class NapDecoder {
     
     constructor(input) { // string[]
-        this.napRaw = input[0];//""; // string
-        this.cmds = []; // NapCmd[]
-        this.counter = 0; // int
-        this.debug = true; // bool
-        this.colorMap = [];
+        this.napRaw = input[0]; // string
+        this.cmds = this.parseCommands(this.napRaw); // NapCmd[]
+        this.colorMap = this.defaultColorMap(); 
+    }
+    
+    isOpcode(c) { // char or string
+        var b = binary(c);
+        return b[b.length-7] === '0';
+    }
 
-        //for (var i=0; i<input.length; i++) {
-            //this.napRaw += input[i];
-        //}
+    parseCommands(input) {
+    	var returns = [];
 
+	    var counter = 0; // int
         var tempCmd = "";
-        for (var i=0; i<this.napRaw.length; i++) {
-            var c = this.napRaw[i]; // char or string
+
+        for (var i=0; i<input.length; i++) {
+            var c = input[i]; // char or string
             if (this.isOpcode(new Char(c))) {
                 if (tempCmd === "") {
                     tempCmd += c;
                 } else {
                     if (tempCmd.length >= 1) {
-                        var nextNapCmd = new NapCmd(tempCmd, this.counter);
-                        this.cmds.push(nextNapCmd);
-                        this.counter++;
+                        var nextNapCmd = new NapCmd(tempCmd, counter);
+                        returns.push(nextNapCmd);
+                        counter++;
                     }
                     tempCmd = "";
                     tempCmd += c;
@@ -1014,33 +1019,32 @@ class NapDecoder {
                 tempCmd += c;
             }
         }
-        
-        if (this.debug) {
-            for (var i=0; i<this.cmds.length; i++) {
-                this.cmds[i].printCmd("hex");
-            }
-        }
-    }
-    
-    isOpcode(c) { // char or string
-        var b = binary(c);
-        return b[b.length-7] === '0';
+
+        for (var i=0; i<returns.length; i++) {
+            returns[i].printCmd("hex");
+        }    
+
+        return returns;
     }
 
     defaultColorMap() {
+    	var returns = [];
+
 		for (var i = 0; i <= 7; i++) {		// 1-8. grayscale
-			this.colorMap.push(createColor(i*32, i*32, i*32));
+			returns.push(new Vector3(i*32, i*32, i*32));
     	}
 
 		// following aren't all exact (some are), but close
-		this.colorMap.push(createColor(0, 0, 255)); // 9. blue
-		this.colorMap.push(createColor(5*36, 0, 7*36)); // 10. blue magenta
-		this.colorMap.push(createColor(7*36, 0, 4*36)); // 11. pinkish red
-		this.colorMap.push(createColor(7*36, 2*36, 0)); // 12. orange red
-		this.colorMap.push(createColor(255, 255, 0)) // 13. yellow
-		this.colorMap.push(createColor(2*36, 7*36, 0)); // 14. yellow green
-		this.colorMap.push(createColor(0, 7*36, 4*36)); // 15. greenish
-		this.colorMap.push(createColor(0, 5*36, 7*36)); // 16. bluegreen  	
+		returns.push(new Vector3(0, 0, 255)); // 9. blue
+		returns.push(new Vector3(5*36, 0, 7*36)); // 10. blue magenta
+		returns.push(new Vector3(7*36, 0, 4*36)); // 11. pinkish red
+		returns.push(new Vector3(7*36, 2*36, 0)); // 12. orange red
+		returns.push(new Vector3(255, 255, 0)) // 13. yellow
+		returns.push(new Vector3(2*36, 7*36, 0)); // 14. yellow green
+		returns.push(new Vector3(0, 7*36, 4*36)); // 15. greenish
+		returns.push(new Vector3(0, 5*36, 7*36)); // 16. bluegreen  	
+    
+		return returns;
     }
     
 }
