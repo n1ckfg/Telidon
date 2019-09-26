@@ -243,7 +243,7 @@ class NapChar {
         this.ascii = this.getAscii(); // int
         this.binary = this.getBinary(); // string
         this.rbinary = this.getRBinary(); // string
-        this.hex = this.getHex(); // string
+        this.hex = this.getHex(); // string       
     }
     
     getAscii() {
@@ -538,15 +538,17 @@ class NapVector extends NapDataArray {
 }
 
 // 2.3.1 RGB Color
+// The bytes of RGB colors store three color values
 class NapRgbColor extends NapDataArray {
 
 	constructor(n) { // NapData[]
 		super(n);
 
         // TODO find out if this needs a new method
-		this.r = this.getColorFromBytes(n, "r"); // float
-        this.g = this.getColorFromBytes(n, "g"); // float
-        this.b = this.getColorFromBytes(n, "b"); // float
+		this.r = this.getColorFromBytes(n, "r");
+        this.g = this.getColorFromBytes(n, "g");
+        this.b = this.getColorFromBytes(n, "b");
+        this.col = new Vector3(this.r, this.g, this.b);
 
         console.log("input: " + n[0].binary + " " + n[1].binary + " bytes | color: " + this.r + "," + this.g + "," + this.b);
 	}
@@ -582,10 +584,11 @@ class NapRgbColor extends NapDataArray {
 
         return parseInt(255 * (1.0 - (unbinary(returns) / this.bitVals)));
     }
-
 }
 
 // 2.3.2. Palette Color
+// The bytes of palette colors store an index to the palette
+// Here we assume it's always the default palette, but the standard allows for user-specified ones too.
 class NapPaletteColor extends NapDataArray {
 
     constructor(n) {
@@ -768,13 +771,13 @@ class NapCmd {
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("SET COLOR"): 
-               	this.getRgbColor();
+               	this.getColor();
                 break;
             case("WAIT"):
                	// TODO
                 break;
             case("SELECT COLOR"): 
-               	this.getRgbColor();
+               	this.getColor();
                 break
             case("BLINK"):
             	// TODO
@@ -895,69 +898,70 @@ class NapCmd {
         }
     }
 
-    getPaletteColor() {
-        var nc = new NapPaletteColor(this.data).index;
+    getColor() {
+    	var isRgb = true; // TODO distinguish between rgb and color map
 
-        // following aren't all exact (some are), but close
-        switch (nc) {
-            case(0): // 1-8. grayscale
-                this.col = new Vector3(nc*32, nc*32, nc*32);
-                break;
-            case(1):
-                this.col = new Vector3(nc*32, nc*32, nc*32);
-                break;
-            case(2):
-                this.col = new Vector3(nc*32, nc*32, nc*32);
-                break;
-            case(3):
-                this.col = new Vector3(nc*32, nc*32, nc*32);
-                break;
-            case(4):
-                this.col = new Vector3(nc*32, nc*32, nc*32);
-                break;
-            case(5):
-                this.col = new Vector3(nc*32, nc*32, nc*32);
-                break;
-            case(6):
-                this.col = new Vector3(nc*32, nc*32, nc*32);
-                break;
-            case(7):
-                this.col = new Vector3(nc*32, nc*32, nc*32);
-                break;
-            case(8):
-                this.col = new Vector3(0, 0, 255); // 9. blue
-                break;
-            case(9):
-                this.col = new Vector3(5*36, 0, 7*36); // 10. blue magenta
-                break;
-            case(10):
-                this.col = new Vector3(7*36, 0, 4*36); // 11. pinkish red
-                break;
-            case(11):
-                this.col = new Vector3(7*36, 2*36, 0); // 12. orange red
-                break;
-            case(12):
-                this.col = new Vector3(255, 255, 0); // 13. yellow
-                break;
-            case(13):
-                this.col = new Vector3(2*36, 7*36, 0); // 14. yellow green
-                break;
-            case(14):
-                this.col = new Vector3(0, 7*36, 4*36); // 15. greenish
-                break;
-            case(15):
-                this.col = new Vector3(0, 5*36, 7*36); // 16. bluegreen      
-                break;
-            default:
-                this.col = new Vector3(255, 255, 255);
-                break;
-        }   
-    }
+    	if (isRgb) {
+	    	var nc = new NapRgbColor(this.data);
+	    	this.col = new Vector3(nc.r, nc.g, nc.b);
+    	} else {
+	        var nc = new NapPaletteColor(this.data).index;
 
-    getRgbColor() {
-    	var nc = new NapRgbColor(this.data);
-    	// TODO distinguish between rgb and color map
-    	this.col = new Vector3(nc.r, nc.g, nc.b);
+	        // following aren't all exact (some are), but close
+	        switch (nc) {
+	            case(0): // 1-8. grayscale
+	                this.col = new Vector3(nc*32, nc*32, nc*32);
+	                break;
+	            case(1):
+	                this.col = new Vector3(nc*32, nc*32, nc*32);
+	                break;
+	            case(2):
+	                this.col = new Vector3(nc*32, nc*32, nc*32);
+	                break;
+	            case(3):
+	                this.col = new Vector3(nc*32, nc*32, nc*32);
+	                break;
+	            case(4):
+	                this.col = new Vector3(nc*32, nc*32, nc*32);
+	                break;
+	            case(5):
+	                this.col = new Vector3(nc*32, nc*32, nc*32);
+	                break;
+	            case(6):
+	                this.col = new Vector3(nc*32, nc*32, nc*32);
+	                break;
+	            case(7):
+	                this.col = new Vector3(nc*32, nc*32, nc*32);
+	                break;
+	            case(8):
+	                this.col = new Vector3(0, 0, 255); // 9. blue
+	                break;
+	            case(9):
+	                this.col = new Vector3(5*36, 0, 7*36); // 10. blue magenta
+	                break;
+	            case(10):
+	                this.col = new Vector3(7*36, 0, 4*36); // 11. pinkish red
+	                break;
+	            case(11):
+	                this.col = new Vector3(7*36, 2*36, 0); // 12. orange red
+	                break;
+	            case(12):
+	                this.col = new Vector3(255, 255, 0); // 13. yellow
+	                break;
+	            case(13):
+	                this.col = new Vector3(2*36, 7*36, 0); // 14. yellow green
+	                break;
+	            case(14):
+	                this.col = new Vector3(0, 7*36, 4*36); // 15. greenish
+	                break;
+	            case(15):
+	                this.col = new Vector3(0, 5*36, 7*36); // 16. bluegreen      
+	                break;
+	            default:
+	                this.col = new Vector3(255, 255, 255);
+	                break;
+	        }   
+    	}
     }
 
     getText() {
