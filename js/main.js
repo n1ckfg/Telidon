@@ -15,7 +15,7 @@ var sH = 480;
 
 var defaultFont;
 
-var preview;
+var preview, explanation, explanationbg;
 var shark, skull, santa, beer, haunt, email, mouse;
 
 var isMobile = false;
@@ -45,6 +45,13 @@ function setup() {
 
     preview = document.getElementById("preview");
     setPreview("shark");
+    
+    explanation = document.getElementById("explanation");
+    explanationbg = document.getElementById("explanation-bg");
+    explanation.addEventListener("click", function() {
+        explanation.style = "opacity: 0";
+        explanationbg.style = "opacity: 0";
+    });
 
     shark = document.getElementById("shark").addEventListener("click", function() {
         loadNewTelidon("./images/shark.nap");
