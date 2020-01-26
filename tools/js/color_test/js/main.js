@@ -10,7 +10,8 @@ var sH = 480;
 var defaultFont;
 
 var preview;
-var img;
+var telidon = [];
+var maxLength = 1;
 
 function preload() {
 	loadNewTelidon("../../../images/boom.nap");
@@ -29,14 +30,21 @@ function draw() {
 
     translate(0,sH-sW);
 	
-	img.draw();
+    for (var i=0; i<telidon.length; i++) {
+		telidon[i].draw();
+	}
 }
 
 function loadNewTelidon(fileName) { 
     loadStrings(fileName, function(response) {
+    	//blendMode(NORMAL);
+    	//background(0);
+    	//blendMode(ADD);
+        telidon = [];
         var reader = new FileReader();
         reader.onload = function(e2) {
-            img = new TelidonDraw([e2.target.result], sW, sW);
+            telidon.push(new TelidonDraw([e2.target.result], sW, sW));
+            //recording = true;
         }
         reader.readAsText(new Blob(response), 'UTF-8');
     });
