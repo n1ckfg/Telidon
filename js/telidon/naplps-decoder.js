@@ -232,6 +232,33 @@ class Vector4 {
 
 var napDrawingCursor = new Vector2(0.0, 0.0);
 
+var black = new Vector3(0, 0, 0);
+var gray1 = new Vector3(32, 32, 32);
+var gray2 = new Vector3(64, 64, 64);
+var gray3 = new Vector3(96, 96, 96);
+var gray4 = new Vector3(128, 128, 128);
+var gray5 = new Vector3(160, 160, 160);
+var gray6 = new Vector3(192, 192, 192);
+var gray7 = new Vector3(224, 224, 224);
+var blue = new Vector3(0, 0, 255);
+var blue_magenta = new Vector3(5*36, 0, 7*36);
+var pinkish_red = new Vector3(7*36, 0, 4*36);
+var orange_red = new Vector3(7*36, 2*36, 0);
+var yellow = new Vector3(255, 255, 0);
+var yellow_green = new Vector3(2*36, 7*36, 0);
+var greenish = new Vector3(0, 7*36, 4*36);
+var bluegreen = new Vector3(0, 5*36, 7*36);  
+
+var color_map = [ black, gray1, gray2, gray3, gray4, gray5, gray6, gray7, blue, blue_magenta, pinkish_red, orange_red, yellow, yellow_green, greenish, bluegreen ]; 
+var color_mode = 0;
+
+// white is handled as an error, not part of the palette
+var white = new Vector3(255, 255, 255);
+
+// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+
 // 1. SINGLE-BYTE data classes
 // 
 // 1.1. The NapChar class is the smallest component of a NAPLPS file. 
