@@ -564,21 +564,45 @@ class NapVector extends NapDataArray {
 
 }
 
-// 2.3.1 RGB Color
+// 2.3 Color
 // The bytes of RGB colors store three color values
-class NapRgbColor extends NapDataArray {
+// The bytes of palette colors store an index to the palette
+// Here we assume it's always the default palette, but the standard allows for user-specified ones too.
+class NapColor extends NapDataArray {
 
 	constructor(n) { // NapData[]
 		super(n);
 
-        // TODO find out if this needs a new method
-		this.r = this.getColorFromBytes(n, "r");
-        this.g = this.getColorFromBytes(n, "g");
-        this.b = this.getColorFromBytes(n, "b");
-        this.col = new Vector3(this.r, this.g, this.b);
+        this.index = -1;
+        this.col;
 
-        console.log("input: " + n[0].binary + " " + n[1].binary + " bytes | color: " + this.r + "," + this.g + "," + this.b);
+        if (this.detectPalette(n)) {
+            this.index = this.getPaletteIndexFromBytes(n); // int
+            this.col = color_map[this.index];
+        } else {
+    		var r = this.getColorFromBytes(n, "r");
+            var g = this.getColorFromBytes(n, "g");
+            var b = this.getColorFromBytes(n, "b");
+            this.col = new Vector3(r, g, b);
+        }
+
+        var byteString = "";
+        for (var i=0; i<n.length; i++) {
+            byteString += n[i].ascii;
+            if (i < n.length-1) byteString += ", ";
+        }
+        console.log("input: " + this.index + " | bytes: " + byteString + " | color: " + this.col.x + ", " + this.col.y + ", " + this.col.z);
 	}
+
+    detectPalette(n) {
+        for (var i=1; i<n.length; i++) {
+            if (n[i].ascii != 64) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 /*
          G R B G R B
@@ -610,20 +634,6 @@ class NapRgbColor extends NapDataArray {
         }
 
         return parseInt(255 * (1.0 - (unbinary(returns) / this.bitVals)));
-    }
-}
-
-// 2.3.2. Palette Color
-// The bytes of palette colors store an index to the palette
-// Here we assume it's always the default palette, but the standard allows for user-specified ones too.
-class NapPaletteColor extends NapDataArray {
-
-    constructor(n) {
-        super(n);
-
-        this.index = this.getPaletteIndexFromBytes(n); // int
-
-        console.log("input: " + n[0].binary + " " + n[1].binary + " bytes | index: " + this.index);
     }
 
     getPaletteIndexFromBytes(n) {
@@ -804,7 +814,7 @@ class NapCmd {
                	// TODO
                 break;
             case("SELECT COLOR"): 
-               	this.getColor();
+               	this.selectColor();
                 break
             case("BLINK"):
             	// TODO
@@ -926,88 +936,72 @@ class NapCmd {
     }
 
     getColor() {
-    	var isRgb = false; // TODO distinguish between rgb and color map
-
-    	if (isRgb) {
-	    	var nc = new NapRgbColor(this.data);
-	    	this.col = new Vector3(nc.r, nc.g, nc.b);
-    	} else {
-	        var nc = new NapPaletteColor(this.data).index;
-
-            var black = new Vector3(0, 0, 0);
-            var gray1 = new Vector3(32, 32, 32);
-            var gray2 = new Vector3(64, 64, 64);
-            var gray3 = new Vector3(96, 96, 96);
-            var gray4 = new Vector3(128, 128, 128);
-            var gray5 = new Vector3(160, 160, 160);
-            var gray6 = new Vector3(192, 192, 192);
-            var gray7 = new Vector3(224, 224, 224);
-            var white = new Vector3(255, 255, 255);
-            var blue = new Vector3(0, 0, 255);
-            var blue_magenta = new Vector3(5*36, 0, 7*36);
-            var pinkish_red = new Vector3(7*36, 0, 4*36);
-            var orange_red = new Vector3(7*36, 2*36, 0);
-            var yellow = new Vector3(255, 255, 0);
-            var yellow_green = new Vector3(2*36, 7*36, 0);
-            var greenish = new Vector3(0, 7*36, 4*36);
-            var bluegreen = new Vector3(0, 5*36, 7*36);    
+        this.col =  new NapColor(this.data).col;
 
 
-	        // following aren't all exact (some are), but close
-	        switch (nc) {
-	            case(0):
-	                this.col = black;
-	                break;
-	            case(1):
-	                this.col = gray1;
-	                break;
-	            case(2):
-	                this.col = gray2;
-	                break;
-	            case(3):
-	                this.col = gray3;
-	                break;
-	            case(4):
-	                this.col = gray4;
-	                break;
-	            case(5):
-	                this.col = gray5;
-	                break;
-	            case(6):
-	                this.col = gray6;
-	                break;
-	            case(7):
-	                this.col = gray7;
-	                break;
-	            case(8):
-	                this.col = blue;
-	                break;
-	            case(9):
-	                this.col = blue_magenta;
-	                break;
-	            case(10):
-	                this.col = pinkish_red;
-	                break;
-	            case(11):
-	                this.col = orange_red;
-	                break;
-	            case(12):
-	                this.col = yellow;
-	                break;
-	            case(13):
-	                this.col = yellow_green;
-	                break;
-	            case(14):
-	                this.col = greenish;
-	                break;
-	            case(15):
-	                this.col = bluegreen;     
-	                break;
-	            default:
-	                this.col = white;
-	                break;
-	        }   
-    	}
+        /*
+            {
+    byte c;
+    int r = 0, g = 0, b = 0;
+    int r2 = 0, g2 = 0, b2 = 0;
+   int shift = 8 - (2*ctx.multiValLength);
+   nextClr = Color.yellow; // default
+    try {
+    c = getByte();
+    if (c < 64) {
+            unGetByte(c);
+            return false;
+    }
+    g = c & 040; r = c & 020; b = c & 010;
+    c <<= 2;
+    g |= c & 020; r |= c & 010; b |= c & 004;
+    g >>=4; r >>=3; b >>=2;
+    for (int i = 1; i < ctx.multiValLength; i++ ) {
+        c = getByte();
+        if (c < 64) {
+                unGetByte(c);
+                return false;
+        }
+        g2 = c & 040; r2 = c & 020; b2 = c & 010;
+        c <<= 2;
+        g2 |= c & 020; r2 |= c & 010; b2 |= c & 004;
+        g2 >>= 4; r2 >>= 3; b2 >>= 2;
+        g <<= 2; r <<= 2; b <<= 2;
+        g |= g2; r |= r2; b |= b2;
+    }
+   int fill = 0;//(2 << shift) - 1;
+   r <<= shift; g <<= shift; b <<= shift;
+   nextClr = new Color(r+fill, g+fill, b+fill);
+   return true;
+   }
+   catch (IOException e) {
+      return false;
+   }
+   */
+    }
+
+    selectColor() {
+        this.col =  new NapColor(this.data).col;
+                /*
+            byte c;
+    try {
+    c = getByte();
+    if (c < 64) {
+            unGetByte(c);
+            ctx.colorMode = 0;
+            return;
+    }
+   println("wanted cmap index: "+ (c & 077) + "(shifted: "+ ((c & 074)>>2) + ")");
+    ctx.colorMapIndex = (c & 074) >> 2;
+    ctx.colorMode = 1;
+    nextClr = ctx.colorMap[ctx.colorMapIndex];
+    //ignore mode 2 for now
+   }
+   catch (IOException e) {
+    ctx.colorMode = 0;
+    return;
+   }
+   */
     }
 
     getText() {
