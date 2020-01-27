@@ -217,7 +217,7 @@ class Vector3 {
 }
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~w
 
 var napDrawingCursor = new Vector2(0.0, 0.0);
 
@@ -241,9 +241,11 @@ var bluegreen = new Vector3(0, 5*36, 7*36);
 // white is not part of the default palette
 var white = new Vector3(255, 255, 255);
 
+var defaultColorMap = [ black, gray1, gray2, gray3, gray4, gray5, gray6, gray7, blue, blue_magenta, pinkish_red, orange_red, yellow, yellow_green, greenish, bluegreen ]; 
 var colorMap = [ black, gray1, gray2, gray3, gray4, gray5, gray6, gray7, blue, blue_magenta, pinkish_red, orange_red, yellow, yellow_green, greenish, bluegreen ]; 
 var colorMode = 0;
-var currentColor = white;
+var lastColor = white;
+var lastIndex = 0;
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -587,7 +589,7 @@ class NapCmd {
         this.index = _index; // int
         this.data = []; // NapData[]
         this.points = []; // PVector[]
-        this.col = currentColor;
+        this.col = lastColor;
         this.text = "";
 
         this.opcode = new NapOpcode(this.cmdRaw.charAt(0)); // NapOpcode
@@ -826,7 +828,7 @@ class NapCmd {
                     }
                 }
         } catch (e) { 
-            console.log("*** Error: " + this.opcode.id + " contains no coordinates. ***")
+            console.log("*Error* " + this.opcode.id + " contains no coordinates.")
         }
 
         if (_set) {
@@ -834,7 +836,7 @@ class NapCmd {
         		var lastPoint = this.points[this.point.length-1];
         		napDrawingCursor = new Vector2(lastPoint.x, lastPoint.y);
         	} catch (e) { 
-            	console.log("*** Error: " + this.opcode.id + " tried to set cursor position but failed. ***")
+            	console.log("*Error* " + this.opcode.id + " tried to set cursor position but failed.")
         	}
         }
     }
@@ -877,7 +879,10 @@ class NapCmd {
 
     sendNsr() {
         colorMode = 0;
-        currentColor = new Vector3(255, 255, 255);
+        for (var i=0; i<colorMap.length; i++) {
+            colorMap[i] = defaultColorMap[i];
+        }
+        lastColor = new Vector3(255, 255, 255);
     }
 
     getPaletteIndexFromBytes(n) {
@@ -890,30 +895,31 @@ class NapCmd {
         returns += n[0].binary.charAt(5).toString();
         returns += n[0].binary.charAt(6).toString();
 
-        return parseInt((returns & parseInt('074', 8))>>2);
+        lastIndex = parseInt((returns & parseInt('074', 8))>>2);
+        return lastIndex;
     }
 
     setColor() {
         var r = this.getColorFromBytes(this.data, "r");
         var g = this.getColorFromBytes(this.data, "g");
         var b = this.getColorFromBytes(this.data, "b");
-        currentColor = new Vector3(r, g, b);
-        this.col = currentColor;
-        console.log("Select color: " + currentColor.x + " " + currentColor.y + " " + currentColor.z);
+
+        if (isNaN(r) && isNaN(g) && isNaN(b)) {
+            // ????
+        } else {
+            lastColor = new Vector3(r, g, b);
+        }         
+
+        colorMap[lastIndex] = lastColor;            
+        this.col = lastColor;
+        console.log("<palette write> | Select color: index " + lastIndex + ", " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
     }
 
     selectColor() {
-        var last = this.data.length - 1;
-        var index = -1;
-        if (this.data[last].ascii < 40) {
-            colorMode = 0;
-        } else {
-            colorMode = 1;
-            index = this.getPaletteIndexFromBytes(this.data); // int
-            currentColor = colorMap[index];
-        }
-        this.col = currentColor;
-        console.log("Select color: index " + index + ", " + currentColor.x + " " + currentColor.y + " " + currentColor.z);
+        lastIndex = this.getPaletteIndexFromBytes(this.data); // int
+        lastColor = colorMap[lastIndex];  
+        this.col = lastColor;
+        console.log("<palette read> | Select color: index " + lastIndex + ", " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
     }
 
     setText() {
