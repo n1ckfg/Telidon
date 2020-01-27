@@ -216,17 +216,6 @@ class Vector3 {
 
 }
 
-class Vector4 {
-
-    constructor(_x, _y, _z, _w) {
-        this.x = _x;
-        this.y = _y;
-        this.z = _z;
-        this.w = _w;
-    }
-
-}
-
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -249,11 +238,12 @@ var yellow_green = new Vector3(2*36, 7*36, 0);
 var greenish = new Vector3(0, 7*36, 4*36);
 var bluegreen = new Vector3(0, 5*36, 7*36);  
 
-var color_map = [ black, gray1, gray2, gray3, gray4, gray5, gray6, gray7, blue, blue_magenta, pinkish_red, orange_red, yellow, yellow_green, greenish, bluegreen ]; 
-var color_mode = 0;
-
-// white is handled as an error, not part of the palette
+// white is not part of the default palette
 var white = new Vector3(255, 255, 255);
+
+var colorMap = [ black, gray1, gray2, gray3, gray4, gray5, gray6, gray7, blue, blue_magenta, pinkish_red, orange_red, yellow, yellow_green, greenish, bluegreen ]; 
+var colorMode = 0;
+var currentColor = white;
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -564,92 +554,6 @@ class NapVector extends NapDataArray {
 
 }
 
-// 2.3 Color
-// The bytes of RGB colors store three color values
-// The bytes of palette colors store an index to the palette
-// Here we assume it's always the default palette, but the standard allows for user-specified ones too.
-class NapColor extends NapDataArray {
-
-	constructor(n) { // NapData[]
-		super(n);
-
-        this.index = -1;
-        this.col;
-
-        if (this.detectPalette(n)) {
-            this.index = this.getPaletteIndexFromBytes(n); // int
-            this.col = color_map[this.index];
-        } else {
-    		var r = this.getColorFromBytes(n, "r");
-            var g = this.getColorFromBytes(n, "g");
-            var b = this.getColorFromBytes(n, "b");
-            this.col = new Vector3(r, g, b);
-        }
-
-        var byteString = "";
-        for (var i=0; i<n.length; i++) {
-            byteString += n[i].ascii;
-            if (i < n.length-1) byteString += ", ";
-        }
-        console.log("input: " + this.index + " | bytes: " + byteString + " | color: " + this.col.x + ", " + this.col.y + ", " + this.col.z);
-	}
-
-    detectPalette(n) {
-        for (var i=1; i<n.length; i++) {
-            if (n[i].ascii != 64) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-/*
-         G R B G R B
-     8 7|6 5 4|3 2 1|
-    -----------------
-    |?|1| | | | | | |
-    -----------------
-    |?|1| | | | | | |
-    -----------------
-        . . .
-    -----------------
-    |?|1| | | | | | |
-    -----------------
-*/
-    getColorFromBytes(n, channel) {  // NapData[], string
-        var returns = "";
-
-        for (var i=0; i<n.length; i++) {
-            if (channel === "g") {
-                returns += n[i].binary.charAt(1).toString();
-                returns += n[i].binary.charAt(2).toString();
-            } else if (channel === "r") {
-                returns += n[i].binary.charAt(3).toString();
-                returns += n[i].binary.charAt(4).toString();
-            } else if (channel === "b") {
-                returns += n[i].binary.charAt(5).toString();
-                returns += n[i].binary.charAt(6).toString();
-            }
-        }
-
-        return parseInt(255 * (1.0 - (unbinary(returns) / this.bitVals)));
-    }
-
-    getPaletteIndexFromBytes(n) {
-        var returns = "";
-
-        returns += n[0].binary.charAt(1).toString();
-        returns += n[0].binary.charAt(2).toString();
-        returns += n[0].binary.charAt(3).toString();
-        returns += n[0].binary.charAt(4).toString();
-        returns += n[0].binary.charAt(5).toString();
-        returns += n[0].binary.charAt(6).toString();
-
-        return parseInt((returns & parseInt('074', 8))>>2);
-    }
-
-}
 
 // 2.4. Text
 class NapText extends NapDataArray {
@@ -657,10 +561,10 @@ class NapText extends NapDataArray {
 
     constructor(n) { // NapData[]
         super(n);
-        this.text = this.getTextFromBytes(n);
+        this.text = this.setTextFromBytes(n);
     }
 
-    getTextFromBytes(n) {
+    setTextFromBytes(n) {
         var returns = "";
         for (var i=0; i<n.length; i++) {
             returns += "" + n[i].c;
@@ -683,7 +587,7 @@ class NapCmd {
         this.index = _index; // int
         this.data = []; // NapData[]
         this.points = []; // PVector[]
-        this.col = new Vector3(0.5,0.5,0.5);
+        this.col = currentColor;
         this.text = "";
 
         this.opcode = new NapOpcode(this.cmdRaw.charAt(0)); // NapOpcode
@@ -703,7 +607,7 @@ class NapCmd {
                 // no effect?
                 break;
             case("Shift-In"): // text mode, data that follows is text
-                this.getText();
+                this.setText();
                 break;
             case("CANCEL"):
                	// no effect?
@@ -712,15 +616,15 @@ class NapCmd {
                	// no effect?
                 break;
             case("NSR"): // Non-Selective Reset
-               	// no effect?
+               	this.sendNsr();
                 break;
             //~ ~ ~ ~ ~ PDI (PICTURE DESCRIPTION INSTRUCTION) CODES ~ ~ ~ ~ ~
             //~ ~ ~ ENVIRONMENT, part 1 ~ ~ ~
             case("RESET"):
-               	// no effect?
+               	this.sendReset();
                 break;
             case("DOMAIN"): // header information
-               	this.getDomain();
+               	this.setDomain();
                 break;
             case("TEXT"): // formats text, doesn't contain text itself
                 // TODO
@@ -730,91 +634,91 @@ class NapCmd {
                 break;
             //~ ~ ~ POINTS ~ ~ ~
             case("POINT SET ABS"):
-                this.getPoints(false, true); // relative, set cursor
+                this.setPoints(false, true); // relative, set cursor
                 break;
             case("POINT SET REL"):
-                this.getPoints(true, true);
+                this.setPoints(true, true);
                 break;
             case("POINT ABS"):
-                this.getPoints(false, false);
+                this.setPoints(false, false);
                 break;
             case("POINT REL"):
-                this.getPoints(true, false);
+                this.setPoints(true, false);
                 break;
             //~ ~ ~ LINES ~ ~ ~
             case("LINE ABS"):
-                this.getPoints(true, false); // TODO why is this broken?
+                this.setPoints(true, false); // TODO why is this broken?
                 break;
             case("LINE REL"):
-                this.getPoints(true, false);
+                this.setPoints(true, false);
                 break;
             case("SET & LINE ABS"):
-                this.getPoints(true, true); // TODO why is this broken?
+                this.setPoints(true, true); // TODO why is this broken?
                 break;
             case("SET & LINE REL"):
-                this.getPoints(true, true);
+                this.setPoints(true, true);
             	break;
             //~ ~ ~ ARCS ~ ~ ~
             case("ARC OUTLINED"):
-                this.getPoints(true, false);
+                this.setPoints(true, false);
                 break;
             case("ARC FILLED"):
-                this.getPoints(true, false);
+                this.setPoints(true, false);
                 break;
             case("SET & ARC OUTLINED"):
-                this.getPoints(false, true);
+                this.setPoints(false, true);
                 break;
             case("SET & ARC FILLED"):
-                this.getPoints(false, true);
+                this.setPoints(false, true);
             	break;
             //~ ~ ~ RECTANGLES ~ ~ ~
             case("RECT OUTLINED"):
-                this.getPoints(true, false);
+                this.setPoints(true, false);
                 break;
             case("RECT FILLED"):
-                this.getPoints(true, false);
+                this.setPoints(true, false);
                 break;
             case("SET & RECT OUTLINED"):
-                this.getPoints(false, true);
+                this.setPoints(false, true);
                 break;
             case("SET & RECT FILLED"):
-                this.getPoints(false, true);
+                this.setPoints(false, true);
             	break;
             //~ ~ ~ POLYGONS ~ ~ ~
             case("POLY OUTLINED"):
-                this.getPoints(true, false);
+                this.setPoints(true, false);
                 break;
             case("POLY FILLED"):
-                this.getPoints(true, false);
+                this.setPoints(true, false);
                 break;
             case("SET & POLY OUTLINED"): // relative points after first 
-                this.getPoints(false, true);
+                this.setPoints(false, true);
                 break;
             case("SET & POLY FILLED"): // relative points after first 
-                this.getPoints(false, true);
+                this.setPoints(false, true);
                 break;
             //~ ~ ~ INCREMENTALS ~ ~ ~
             case("FIELD"):
                	// TODO
                 break;
             case("INCREMENTAL POINT"):
-                this.getPoints(true, true);
+                this.setPoints(true, true);
                 break;
             case("INCREMENTAL LINE"):
-                this.getPoints(true, true);
+                this.setPoints(true, true);
                 break;
             case("INCREMENTAL POLY FILLED"):
-                this.getPoints(true, true);
+                this.setPoints(true, true);
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("SET COLOR"): 
-               	this.getColor();
+               	this.setColor(); // rgb color
                 break;
             case("WAIT"):
                	// TODO
                 break;
             case("SELECT COLOR"): 
-               	this.selectColor();
+               	this.selectColor(); // palette color
                 break
             case("BLINK"):
             	// TODO
@@ -883,7 +787,7 @@ class NapCmd {
     }
 
     // ~ ~ ~ Parsing methods begin here ~ ~ ~
-    getPoints(_allPointsRelative, _set) {
+    setPoints(_allPointsRelative, _set) {
         try {
             var nvList = []; // NapVector[];
             for (var i=0; i<this.data.length; i+=this.pointBytes) {
@@ -935,81 +839,89 @@ class NapCmd {
         }
     }
 
-    getColor() {
-        this.col =  new NapColor(this.data).col;
+    /*
+             G R B G R B
+         8 7|6 5 4|3 2 1|
+        -----------------
+        |?|1| | | | | | |
+        -----------------
+        |?|1| | | | | | |
+        -----------------
+            . . .
+        -----------------
+        |?|1| | | | | | |
+        -----------------
+    */
+    getColorFromBytes(n, channel) {  // NapData[], string
+        var returns = "";
 
-
-        /*
-            {
-    byte c;
-    int r = 0, g = 0, b = 0;
-    int r2 = 0, g2 = 0, b2 = 0;
-   int shift = 8 - (2*ctx.multiValLength);
-   nextClr = Color.yellow; // default
-    try {
-    c = getByte();
-    if (c < 64) {
-            unGetByte(c);
-            return false;
-    }
-    g = c & 040; r = c & 020; b = c & 010;
-    c <<= 2;
-    g |= c & 020; r |= c & 010; b |= c & 004;
-    g >>=4; r >>=3; b >>=2;
-    for (int i = 1; i < ctx.multiValLength; i++ ) {
-        c = getByte();
-        if (c < 64) {
-                unGetByte(c);
-                return false;
+        for (var i=0; i<n.length; i++) {
+            if (channel === "g") {
+                returns += n[i].binary.charAt(1).toString();
+                returns += n[i].binary.charAt(2).toString();
+            } else if (channel === "r") {
+                returns += n[i].binary.charAt(3).toString();
+                returns += n[i].binary.charAt(4).toString();
+            } else if (channel === "b") {
+                returns += n[i].binary.charAt(5).toString();
+                returns += n[i].binary.charAt(6).toString();
+            }
         }
-        g2 = c & 040; r2 = c & 020; b2 = c & 010;
-        c <<= 2;
-        g2 |= c & 020; r2 |= c & 010; b2 |= c & 004;
-        g2 >>= 4; r2 >>= 3; b2 >>= 2;
-        g <<= 2; r <<= 2; b <<= 2;
-        g |= g2; r |= r2; b |= b2;
+
+        return parseInt(255 * (1.0 - (unbinary(returns) / this.bitVals)));
     }
-   int fill = 0;//(2 << shift) - 1;
-   r <<= shift; g <<= shift; b <<= shift;
-   nextClr = new Color(r+fill, g+fill, b+fill);
-   return true;
-   }
-   catch (IOException e) {
-      return false;
-   }
-   */
+
+    sendReset() {
+        // TODO
+    }
+
+    sendNsr() {
+        colorMode = 0;
+        currentColor = new Vector3(255, 255, 255);
+    }
+
+    getPaletteIndexFromBytes(n) {
+        var returns = "";
+
+        returns += n[0].binary.charAt(1).toString();
+        returns += n[0].binary.charAt(2).toString();
+        returns += n[0].binary.charAt(3).toString();
+        returns += n[0].binary.charAt(4).toString();
+        returns += n[0].binary.charAt(5).toString();
+        returns += n[0].binary.charAt(6).toString();
+
+        return parseInt((returns & parseInt('074', 8))>>2);
+    }
+
+    setColor() {
+        var r = this.getColorFromBytes(this.data, "r");
+        var g = this.getColorFromBytes(this.data, "g");
+        var b = this.getColorFromBytes(this.data, "b");
+        currentColor = new Vector3(r, g, b);
+        this.col = currentColor;
+        console.log("Select color: " + currentColor.x + " " + currentColor.y + " " + currentColor.z);
     }
 
     selectColor() {
-        this.col =  new NapColor(this.data).col;
-                /*
-            byte c;
-    try {
-    c = getByte();
-    if (c < 64) {
-            unGetByte(c);
-            ctx.colorMode = 0;
-            return;
-    }
-   println("wanted cmap index: "+ (c & 077) + "(shifted: "+ ((c & 074)>>2) + ")");
-    ctx.colorMapIndex = (c & 074) >> 2;
-    ctx.colorMode = 1;
-    nextClr = ctx.colorMap[ctx.colorMapIndex];
-    //ignore mode 2 for now
-   }
-   catch (IOException e) {
-    ctx.colorMode = 0;
-    return;
-   }
-   */
+        var last = this.data.length - 1;
+        var index = -1;
+        if (this.data[last].ascii < 40) {
+            colorMode = 0;
+        } else {
+            colorMode = 1;
+            index = this.getPaletteIndexFromBytes(this.data); // int
+            currentColor = colorMap[index];
+        }
+        this.col = currentColor;
+        console.log("Select color: index " + index + ", " + currentColor.x + " " + currentColor.y + " " + currentColor.z);
     }
 
-    getText() {
+    setText() {
         var nt = new NapText(this.data);
         this.text += nt.text;
     }
 
-    getDomain() {
+    setDomain() {
     	/*
     	Only the first byte after the domain opcode (21) is used here.
     	The rest of the bytes control "logical pel size" (the ability to render images at a 
