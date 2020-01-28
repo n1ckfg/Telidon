@@ -247,6 +247,12 @@ var colorMode = 0;
 var lastColor = white;
 var lastIndex = 0;
 
+var backgroundColor = black;
+var drawBackground = true;
+var singleValLength = 1;
+var multiValLength = 3;
+var is3D = false;
+
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -557,7 +563,7 @@ class NapVector extends NapDataArray {
 }
 
 
-// 2.4. Text
+// 2.3. Text
 class NapText extends NapDataArray {
     // TODO figure out text formatting
 
@@ -715,26 +721,12 @@ class NapCmd {
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("SET COLOR"): 
                	this.setColor(); 
-                /*
-                setColor();
-                gr.setColor(nextClr);
-                ctx.fgColor = nextClr;
-                if (ctx.colorMode != 0) {
-                    ctx.colorMap[ctx.colorMapIndex] = nextClr;
-                    println("set colormap["+ctx.colorMapIndex+"] to "+nextClr);
-                }   
-                */
                 break;
             case("WAIT"):
                	// TODO
                 break;
             case("SELECT COLOR"): 
                	this.selectColor(); // palette color
-                /*
-                selectColor();
-                gr.setColor(nextClr);
-                ctx.fgColor = nextClr;
-                */
                 break
             case("BLINK"):
             	// TODO
@@ -744,6 +736,65 @@ class NapCmd {
         }
     }
 
+    printCmd(mode) {
+        console.log(this.formatCmd(mode));
+    }
+    
+    // This prints out the command contents in various formats
+    // Helpful for debugging
+    formatCmd(mode) {
+        var returns = "(" + this.index + ") " + this.opcode.id;
+        if (this.data.length > 0) returns += ": ";
+        if (this.opcode.id === "") {
+            switch(mode) {
+                case("char"):
+                    returns += this.opcode.c;
+                    break;
+                case("binary"):
+                    returns += this.opcode.binary;
+                    break;
+                 case("rbinary"):
+                    returns += this.opcode.rbinary;
+                    break;    
+                case("ascii"):
+                    returns += this.opcode.ascii;
+                    break;
+                case("hex"):
+                    returns += this.opcode.hex;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (this.data.length > 0) {
+            if (this.opcode.id === "") returns += ", ";
+            for (var i=0; i<this.data.length; i++) {
+                switch(mode) {
+                    case("char"):
+                        returns += "" + this.data[i].c;
+                        break;
+                    case("binary"):
+                        returns += "" + this.data[i].binary;
+                        break;
+                    case("rbinary"):
+                        returns += "" + this.data[i].rbinary;
+                        break;
+                    case("ascii"):
+                        returns += "" + this.data[i].ascii;
+                        break;
+                    case("hex"):
+                        returns += "" + this.data[i].hex;
+                        break;
+                    default:
+                        break;
+                }
+                if (i < this.data.length - 1) returns += ", ";
+            }
+        }
+        return returns;
+    }
+
+    // ~ ~ ~ Parsing methods begin here ~ ~ ~
     setColor() {
         var r = 0, g = 0, b = 0;
         var r2 = 0, g2 = 0, b2 = 0;
@@ -811,65 +862,6 @@ class NapCmd {
             this.col = lastColor;
             return false;
         }
-       
-        //console.log("<palette write> | Select color: index " + lastIndex + ", " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
-
-        /*
-        byte c;
-        int r = 0, g = 0, b = 0;
-        int r2 = 0, g2 = 0, b2 = 0;
-        int shift = 8 - (2*ctx.multiValLength);
-        nextClr = Color.yellow; // default
-        
-        try {
-            c = getByte();
-            if (c < 64) {
-                unGetByte(c);
-                return false;
-            }
-            g = c & 040;
-            r = c & 020;
-            b = c & 010;
-            c <<= 2;
-            g |= c & 020;
-            r |= c & 010;
-            b |= c & 004;
-            g >>= 4;
-            r >>= 3;
-            b >>= 2;
-            for (int i = 1; i < ctx.multiValLength; i++ ) {
-                c = getByte();
-                if (c < 64) {
-                    unGetByte(c);
-                    return false;
-                }
-                g2 = c & 040;
-                r2 = c & 020;
-                b2 = c & 010;
-                c <<= 2;
-                g2 |= c & 020;
-                r2 |= c & 010;
-                b2 |= c & 004;
-                g2 >>= 4;
-                r2 >>= 3;
-                b2 >>= 2;
-                g <<= 2;
-                r <<= 2;
-                b <<= 2;
-                g |= g2;
-                r |= r2;
-                b |= b2;
-            }
-            int fill = 0; //(2 << shift) - 1;
-            r <<= shift;
-            g <<= shift;
-            b <<= shift;
-            nextClr = new Color(r+fill, g+fill, b+fill);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-        */
     }
 
     selectColor() {
@@ -880,7 +872,7 @@ class NapCmd {
                 colorMode = 0;
                 return;
             }
-            //console.log("wanted cmap index: "+ (c & parseInt('077', 8)) + "(shifted: "+ ((c & parseInt('074', 8))>>2) + ")");
+
             lastIndex = (c & parseInt('074', 8)) >> 2;
             colorMode = 1;
             lastColor = colorMap[lastIndex];
@@ -895,136 +887,8 @@ class NapCmd {
             this.col = lastColor;
             return false;
         }
-        //console.log("<palette read> | Select color: index " + lastIndex + ", " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
-
-        /*
-        byte c;
-        try {
-            c = getByte();
-            if (c < 64) {
-                unGetByte(c);
-                ctx.colorMode = 0;
-                return;
-            }
-            println("wanted cmap index: "+ (c & 077) + "(shifted: "+ ((c & 074)>>2) + ")");
-            ctx.colorMapIndex = (c & 074) >> 2;
-            ctx.colorMode = 1;
-            nextClr = ctx.colorMap[ctx.colorMapIndex];
-            //ignore mode 2 for now
-        } catch (IOException e) {
-            ctx.colorMode = 0;
-            return;
-        }
-        */
     }
 
-    /*
-             G R B G R B
-         8 7|6 5 4|3 2 1|
-        -----------------
-        |?|1| | | | | | |
-        -----------------
-        |?|1| | | | | | |
-        -----------------
-            . . .
-        -----------------
-        |?|1| | | | | | |
-        -----------------
-    */
-    /*
-    getColorFromBytes(n, channel) {  // NapData[], string
-        var returns = "";
-
-        for (var i=0; i<n.length; i++) {
-            if (channel === "g") {
-                returns += n[i].binary.charAt(1).toString();
-                returns += n[i].binary.charAt(2).toString();
-            } else if (channel === "r") {
-                returns += n[i].binary.charAt(3).toString();
-                returns += n[i].binary.charAt(4).toString();
-            } else if (channel === "b") {
-                returns += n[i].binary.charAt(5).toString();
-                returns += n[i].binary.charAt(6).toString();
-            }
-        }
-
-        return parseInt(255 * (1.0 - (unbinary(returns) / this.bitVals)));
-    }
-
-    getPaletteIndexFromBytes(n) {
-        var returns = "";
-
-        returns += n[0].binary.charAt(1).toString();
-        returns += n[0].binary.charAt(2).toString();
-        returns += n[0].binary.charAt(3).toString();
-        returns += n[0].binary.charAt(4).toString();
-        returns += n[0].binary.charAt(5).toString();
-        returns += n[0].binary.charAt(6).toString();
-
-        lastIndex = parseInt((returns & parseInt('074', 8))>>2);
-        return lastIndex;
-    }
-    */
-
-    printCmd(mode) {
-        console.log(this.formatCmd(mode));
-    }
-    
-    // This prints out the command contents in various formats
-    // Helpful for debugging
-    formatCmd(mode) {
-        var returns = "(" + this.index + ") " + this.opcode.id;
-        if (this.data.length > 0) returns += ": ";
-        if (this.opcode.id === "") {
-            switch(mode) {
-                case("char"):
-                    returns += this.opcode.c;
-                    break;
-                case("binary"):
-                    returns += this.opcode.binary;
-                    break;
-                 case("rbinary"):
-                    returns += this.opcode.rbinary;
-                    break;    
-                case("ascii"):
-                    returns += this.opcode.ascii;
-                    break;
-                case("hex"):
-                    returns += this.opcode.hex;
-                    break;
-                default:
-                    break;
-            }
-        }
-        if (this.data.length > 0) {
-            if (this.opcode.id === "") returns += ", ";
-            for (var i=0; i<this.data.length; i++) {
-                switch(mode) {
-                    case("char"):
-                        returns += "" + this.data[i].c;
-                        break;
-                    case("binary"):
-                        returns += "" + this.data[i].binary;
-                        break;
-                    case("rbinary"):
-                        returns += "" + this.data[i].rbinary;
-                        break;
-                    case("ascii"):
-                        returns += "" + this.data[i].ascii;
-                        break;
-                    case("hex"):
-                        returns += "" + this.data[i].hex;
-                        break;
-                    default:
-                        break;
-                }
-                if (i < this.data.length - 1) returns += ", ";
-            }
-        }
-        return returns;
-    }
-
-    // ~ ~ ~ Parsing methods begin here ~ ~ ~
     setPoints(_allPointsRelative, _set) {
         try {
             var nvList = []; // NapVector[];
@@ -1078,7 +942,70 @@ class NapCmd {
     }
 
     sendReset() {
-        // TODO
+        var minVal = 40;
+        try {
+            var c = this.data[0].ascii;
+            if (c < minVal) {
+                return;
+            }
+            if ((c & parseInt('001', 8)) != 0) { // reset domain
+                singleValLength = 1;
+                multiValLength = 3;
+                is3D = false;
+            }
+            var colormodeVal = ((c & parseInt('005', 8)) >> 1);
+            switch (colormodeVal) {
+                case 0:
+                    break;
+                case 1:
+                    colorMode = 0;
+                    break;
+                case 2:
+                    colorMode = 1;
+                    break;
+                case 3:
+                    colorMode = 1;
+                    lastColor = white;
+                    break;
+            }
+            var screenVal = ((c & parseInt('070', 8)) >> 3);
+            //var saveColor = lastColor;
+            switch (screenVal) {
+                case 0:
+                    break;
+                case 1:
+                case 7:
+                    //gr.clearRect(0, 0, ctx.screen, ctx.screen);
+                    break;
+                case 2:
+                case 5:
+                case 6:
+                    //gr.fillRect(0, 0, ctx.screen, ctx.screen);
+                    if (screenstuff != 6)
+                        break;      // case 6 drops through to 3
+                case 3:
+                    //gr.setColor(Color.black);
+                    //gr.drawRect(0, 0, ctx.screen, ctx.screen);
+                    //lastColor = saveColor;
+                    break;
+                case 4:
+                    //gr.drawRect(0, 0, ctx.screen, ctx.screen);
+                    break;
+                }
+            c = this.data[1].ascii;
+            if (c < minVal) {
+                return;
+            }
+            if ((c & parseInt('001', 8)) != 0) {       // reset text
+                napDrawingCursor = new Vector2(0.0, 0.0);
+            }
+            if ((c & parseInt('010', 8)) != 0) {       // reset texture
+                //ctx.highlight = false;
+                //ctx.lineTexture = 0;
+                //ctx.texturePattern = 0;
+            }
+            // for now ignore the rest
+        } catch (e) { }
     }
 
     sendNsr() {

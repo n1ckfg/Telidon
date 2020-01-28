@@ -91,7 +91,7 @@ class TelidonDrawCmd {
             //~ ~ ~ ~ ~ PDI (PICTURE DESCRIPTION INSTRUCTION) CODES ~ ~ ~ ~ ~
             //~ ~ ~ ENVIRONMENT, part 1 ~ ~ ~
             case("RESET"):
-           		// no effect?
+                // TODO
                 break;
             case("DOMAIN"): // header information
             	// TODO
@@ -228,6 +228,13 @@ class TelidonDrawCmd {
         this.draw();
     }
  
+    setBackground(v) {
+        if (drawBackground) {
+            background(color(v.x, v.y, v.z));
+            drawBackground = false;
+        }
+    }
+
     setColor(v) {
     	this.col = color(v.x, v.y, v.z);
        	fill(this.col);
