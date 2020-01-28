@@ -749,11 +749,11 @@ class NapCmd {
         var r2 = 0, g2 = 0, b2 = 0;
         var multiValLength = this.data.length;
         var shift = 8 - (2 * multiValLength);
-        var minVal = 40;
+        var minVal = 40; // 64
         lastColor = yellow; // default
         
         try {
-            c = this.data[0].ascii;
+            var c = this.data[0].ascii;
             if (c < minVal) {
                 this.col = lastColor;
                 return false;
@@ -795,6 +795,7 @@ class NapCmd {
             r <<= shift;
             g <<= shift;
             b <<= shift;
+
             lastColor = new Vector3(r+fill, g+fill, b+fill);
 
             if (colorMode !== 0) {
@@ -803,7 +804,7 @@ class NapCmd {
             } else {
                 console.log("<palette read>\nindex: " + lastIndex + ", color: " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
             }
-            
+
             this.col = lastColor;
             return true;
         } catch (e) {
@@ -872,7 +873,7 @@ class NapCmd {
     }
 
     selectColor() {
-        var minVal = 40;
+        var minVal = 40; // 64
         try {
             var c = this.data[0].ascii;
             if (c < minVal) {
