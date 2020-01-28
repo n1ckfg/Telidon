@@ -714,7 +714,7 @@ class NapCmd {
                 break;
             //~ ~ ~ ENVIRONMENT, part 2 ~ ~ ~ 
             case("SET COLOR"): 
-               	this.setColor(); // rgb color
+               	this.setColor(); 
                 /*
                 setColor();
                 gr.setColor(nextClr);
@@ -743,7 +743,228 @@ class NapCmd {
                 break;        	
         }
     }
-     
+
+    setColor() {
+        var r = 0, g = 0, b = 0;
+        var r2 = 0, g2 = 0, b2 = 0;
+        var multiValLength = this.data.length;
+        var shift = 8 - (2 * multiValLength);
+        var minVal = 40;
+        lastColor = yellow; // default
+        
+        try {
+            c = this.data[0].ascii;
+            if (c < minVal) {
+                this.col = lastColor;
+                return false;
+            }
+            g = c & parseInt('040', 8);
+            r = c & parseInt('020', 8);
+            b = c & parseInt('010', 8);
+            c <<= 2;
+            g |= c & parseInt('020', 8);
+            r |= c & parseInt('010', 8);
+            b |= c & parseInt('004', 8);
+            g >>= 4;
+            r >>= 3;
+            b >>= 2;
+            for (var i = 1; i < multiValLength; i++ ) {
+                c = this.data[i].ascii;
+                if (c < minVal) {
+                    this.col = lastColor;
+                    return false;
+                }
+                g2 = c & parseInt('040', 8);
+                r2 = c & parseInt('020', 8);
+                b2 = c & parseInt('010', 8);
+                c <<= 2;
+                g2 |= c & parseInt('020', 8);
+                r2 |= c & parseInt('010', 8);
+                b2 |= c & parseInt('004', 8);
+                g2 >>= 4;
+                r2 >>= 3;
+                b2 >>= 2;
+                g <<= 2;
+                r <<= 2;
+                b <<= 2;
+                g |= g2;
+                r |= r2;
+                b |= b2;
+            }
+            var fill = 0; //(2 << shift) - 1;
+            r <<= shift;
+            g <<= shift;
+            b <<= shift;
+            lastColor = new Vector3(r+fill, g+fill, b+fill);
+
+            if (colorMode !== 0) {
+                colorMap[lastIndex] = lastColor;
+                console.log("<palette write>\nindex: " + lastIndex + ", color: " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
+            } else {
+                console.log("<palette read>\nindex: " + lastIndex + ", color: " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
+            }
+            
+            this.col = lastColor;
+            return true;
+        } catch (e) {
+            this.col = lastColor;
+            return false;
+        }
+       
+        //console.log("<palette write> | Select color: index " + lastIndex + ", " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
+
+        /*
+        byte c;
+        int r = 0, g = 0, b = 0;
+        int r2 = 0, g2 = 0, b2 = 0;
+        int shift = 8 - (2*ctx.multiValLength);
+        nextClr = Color.yellow; // default
+        
+        try {
+            c = getByte();
+            if (c < 64) {
+                unGetByte(c);
+                return false;
+            }
+            g = c & 040;
+            r = c & 020;
+            b = c & 010;
+            c <<= 2;
+            g |= c & 020;
+            r |= c & 010;
+            b |= c & 004;
+            g >>= 4;
+            r >>= 3;
+            b >>= 2;
+            for (int i = 1; i < ctx.multiValLength; i++ ) {
+                c = getByte();
+                if (c < 64) {
+                    unGetByte(c);
+                    return false;
+                }
+                g2 = c & 040;
+                r2 = c & 020;
+                b2 = c & 010;
+                c <<= 2;
+                g2 |= c & 020;
+                r2 |= c & 010;
+                b2 |= c & 004;
+                g2 >>= 4;
+                r2 >>= 3;
+                b2 >>= 2;
+                g <<= 2;
+                r <<= 2;
+                b <<= 2;
+                g |= g2;
+                r |= r2;
+                b |= b2;
+            }
+            int fill = 0; //(2 << shift) - 1;
+            r <<= shift;
+            g <<= shift;
+            b <<= shift;
+            nextClr = new Color(r+fill, g+fill, b+fill);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+        */
+    }
+
+    selectColor() {
+        var minVal = 40;
+        try {
+            var c = this.data[0].ascii;
+            if (c < minVal) {
+                colorMode = 0;
+                return;
+            }
+            //console.log("wanted cmap index: "+ (c & parseInt('077', 8)) + "(shifted: "+ ((c & parseInt('074', 8))>>2) + ")");
+            lastIndex = (c & parseInt('074', 8)) >> 2;
+            colorMode = 1;
+            lastColor = colorMap[lastIndex];
+            console.log("<palette read>\nindex: " + lastIndex + ", color: " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
+            //ignore mode 2 for now
+        
+            this.col = lastColor;
+            return true;
+        } catch (e) {
+            colorMode = 0;
+
+            this.col = lastColor;
+            return false;
+        }
+        //console.log("<palette read> | Select color: index " + lastIndex + ", " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
+
+        /*
+        byte c;
+        try {
+            c = getByte();
+            if (c < 64) {
+                unGetByte(c);
+                ctx.colorMode = 0;
+                return;
+            }
+            println("wanted cmap index: "+ (c & 077) + "(shifted: "+ ((c & 074)>>2) + ")");
+            ctx.colorMapIndex = (c & 074) >> 2;
+            ctx.colorMode = 1;
+            nextClr = ctx.colorMap[ctx.colorMapIndex];
+            //ignore mode 2 for now
+        } catch (IOException e) {
+            ctx.colorMode = 0;
+            return;
+        }
+        */
+    }
+
+    /*
+             G R B G R B
+         8 7|6 5 4|3 2 1|
+        -----------------
+        |?|1| | | | | | |
+        -----------------
+        |?|1| | | | | | |
+        -----------------
+            . . .
+        -----------------
+        |?|1| | | | | | |
+        -----------------
+    */
+    /*
+    getColorFromBytes(n, channel) {  // NapData[], string
+        var returns = "";
+
+        for (var i=0; i<n.length; i++) {
+            if (channel === "g") {
+                returns += n[i].binary.charAt(1).toString();
+                returns += n[i].binary.charAt(2).toString();
+            } else if (channel === "r") {
+                returns += n[i].binary.charAt(3).toString();
+                returns += n[i].binary.charAt(4).toString();
+            } else if (channel === "b") {
+                returns += n[i].binary.charAt(5).toString();
+                returns += n[i].binary.charAt(6).toString();
+            }
+        }
+
+        return parseInt(255 * (1.0 - (unbinary(returns) / this.bitVals)));
+    }
+
+    getPaletteIndexFromBytes(n) {
+        var returns = "";
+
+        returns += n[0].binary.charAt(1).toString();
+        returns += n[0].binary.charAt(2).toString();
+        returns += n[0].binary.charAt(3).toString();
+        returns += n[0].binary.charAt(4).toString();
+        returns += n[0].binary.charAt(5).toString();
+        returns += n[0].binary.charAt(6).toString();
+
+        lastIndex = parseInt((returns & parseInt('074', 8))>>2);
+        return lastIndex;
+    }
+    */
+
     printCmd(mode) {
         console.log(this.formatCmd(mode));
     }
@@ -855,38 +1076,6 @@ class NapCmd {
         }
     }
 
-    /*
-             G R B G R B
-         8 7|6 5 4|3 2 1|
-        -----------------
-        |?|1| | | | | | |
-        -----------------
-        |?|1| | | | | | |
-        -----------------
-            . . .
-        -----------------
-        |?|1| | | | | | |
-        -----------------
-    */
-    getColorFromBytes(n, channel) {  // NapData[], string
-        var returns = "";
-
-        for (var i=0; i<n.length; i++) {
-            if (channel === "g") {
-                returns += n[i].binary.charAt(1).toString();
-                returns += n[i].binary.charAt(2).toString();
-            } else if (channel === "r") {
-                returns += n[i].binary.charAt(3).toString();
-                returns += n[i].binary.charAt(4).toString();
-            } else if (channel === "b") {
-                returns += n[i].binary.charAt(5).toString();
-                returns += n[i].binary.charAt(6).toString();
-            }
-        }
-
-        return parseInt(255 * (1.0 - (unbinary(returns) / this.bitVals)));
-    }
-
     sendReset() {
         // TODO
     }
@@ -897,120 +1086,6 @@ class NapCmd {
             colorMap[i] = defaultColorMap[i];
         }
         lastColor = new Vector3(255, 255, 255);
-    }
-
-    getPaletteIndexFromBytes(n) {
-        var returns = "";
-
-        returns += n[0].binary.charAt(1).toString();
-        returns += n[0].binary.charAt(2).toString();
-        returns += n[0].binary.charAt(3).toString();
-        returns += n[0].binary.charAt(4).toString();
-        returns += n[0].binary.charAt(5).toString();
-        returns += n[0].binary.charAt(6).toString();
-
-        lastIndex = parseInt((returns & parseInt('074', 8))>>2);
-        return lastIndex;
-    }
-
-    setColor() {
-        var r = this.getColorFromBytes(this.data, "r");
-        var g = this.getColorFromBytes(this.data, "g");
-        var b = this.getColorFromBytes(this.data, "b");
-
-        if (isNaN(r) && isNaN(g) && isNaN(b)) {
-            // ????
-        } else {
-            lastColor = new Vector3(r, g, b);
-        }         
-
-        colorMap[lastIndex] = lastColor;            
-        this.col = lastColor;
-        console.log("<palette write> | Select color: index " + lastIndex + ", " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
-
-        /*
-        byte c;
-        int r = 0, g = 0, b = 0;
-        int r2 = 0, g2 = 0, b2 = 0;
-        int shift = 8 - (2*ctx.multiValLength);
-        nextClr = Color.yellow; // default
-        
-        try {
-            c = getByte();
-            if (c < 64) {
-                unGetByte(c);
-                return false;
-            }
-            g = c & 040;
-            r = c & 020;
-            b = c & 010;
-            c <<= 2;
-            g |= c & 020;
-            r |= c & 010;
-            b |= c & 004;
-            g >>= 4;
-            r >>= 3;
-            b >>= 2;
-            for (int i = 1; i < ctx.multiValLength; i++ ) {
-                c = getByte();
-                if (c < 64) {
-                    unGetByte(c);
-                    return false;
-                }
-                g2 = c & 040;
-                r2 = c & 020;
-                b2 = c & 010;
-                c <<= 2;
-                g2 |= c & 020;
-                r2 |= c & 010;
-                b2 |= c & 004;
-                g2 >>= 4;
-                r2 >>= 3;
-                b2 >>= 2;
-                g <<= 2;
-                r <<= 2;
-                b <<= 2;
-                g |= g2;
-                r |= r2;
-                b |= b2;
-            }
-            int fill = 0; //(2 << shift) - 1;
-            r <<= shift;
-            g <<= shift;
-            b <<= shift;
-            nextClr = new Color(r+fill, g+fill, b+fill);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-        */
-    }
-
-    selectColor() {
-        lastIndex = this.getPaletteIndexFromBytes(this.data); // int
-        lastColor = colorMap[lastIndex];  
-        this.col = lastColor;
-        console.log("<palette read> | Select color: index " + lastIndex + ", " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
-
-        /*
-        byte c;
-        try {
-            c = getByte();
-            if (c < 64) {
-                unGetByte(c);
-                ctx.colorMode = 0;
-                return;
-            }
-            println("wanted cmap index: "+ (c & 077) + "(shifted: "+ ((c & 074)>>2) + ")");
-            ctx.colorMapIndex = (c & 074) >> 2;
-            ctx.colorMode = 1;
-            nextClr = ctx.colorMap[ctx.colorMapIndex];
-            //ignore mode 2 for now
-        } catch (IOException e) {
-            ctx.colorMode = 0;
-            return;
-        }
-        */
     }
 
     setText() {
