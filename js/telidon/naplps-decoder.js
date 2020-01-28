@@ -219,39 +219,43 @@ class Vector3 {
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~w
 
-var napDrawingCursor = new Vector2(0.0, 0.0);
+// The original NAPLPS decoders assumed a global state for reading colors.
+// In our decoder, we don't have to use a limited palette, so 
+// once read, each RGB color is just stored in its drawing command.
 
-var black = new Vector3(0, 0, 0);
-var gray1 = new Vector3(32, 32, 32);
-var gray2 = new Vector3(64, 64, 64);
-var gray3 = new Vector3(96, 96, 96);
-var gray4 = new Vector3(128, 128, 128);
-var gray5 = new Vector3(160, 160, 160);
-var gray6 = new Vector3(192, 192, 192);
-var gray7 = new Vector3(224, 224, 224);
-var blue = new Vector3(0, 0, 255);
-var blue_magenta = new Vector3(5*36, 0, 7*36);
-var pinkish_red = new Vector3(7*36, 0, 4*36);
-var orange_red = new Vector3(7*36, 2*36, 0);
-var yellow = new Vector3(255, 255, 0);
-var yellow_green = new Vector3(2*36, 7*36, 0);
-var greenish = new Vector3(0, 7*36, 4*36);
-var bluegreen = new Vector3(0, 5*36, 7*36);  
+var naplps_drawingCursor = new Vector2(0.0, 0.0);
 
-// white is not part of the default palette
-var white = new Vector3(255, 255, 255);
+var naplps_black = new Vector3(0, 0, 0);
+var naplps_gray1 = new Vector3(32, 32, 32);
+var naplps_gray2 = new Vector3(64, 64, 64);
+var naplps_gray3 = new Vector3(96, 96, 96);
+var naplps_gray4 = new Vector3(128, 128, 128);
+var naplps_gray5 = new Vector3(160, 160, 160);
+var naplps_gray6 = new Vector3(192, 192, 192);
+var naplps_gray7 = new Vector3(224, 224, 224);
+var naplps_blue = new Vector3(0, 0, 255);
+var naplps_blue_magenta = new Vector3(5*36, 0, 7*36);
+var naplps_pinkish_red = new Vector3(7*36, 0, 4*36);
+var naplps_orange_red = new Vector3(7*36, 2*36, 0);
+var naplps_yellow = new Vector3(255, 255, 0);
+var naplps_yellow_green = new Vector3(2*36, 7*36, 0);
+var naplps_greenish = new Vector3(0, 7*36, 4*36);
+var naplps_bluegreen = new Vector3(0, 5*36, 7*36);  
 
-var defaultColorMap = [ black, gray1, gray2, gray3, gray4, gray5, gray6, gray7, blue, blue_magenta, pinkish_red, orange_red, yellow, yellow_green, greenish, bluegreen ]; 
-var colorMap = [ black, gray1, gray2, gray3, gray4, gray5, gray6, gray7, blue, blue_magenta, pinkish_red, orange_red, yellow, yellow_green, greenish, bluegreen ]; 
-var colorMode = 0;
-var lastColor = white;
-var lastIndex = 0;
+// naplps_white is not part of the default palette
+var naplps_white = new Vector3(255, 255, 255);
 
-var backgroundColor = black;
-var drawBackground = true;
-var singleValLength = 1;
-var multiValLength = 3;
-var is3D = false;
+var naplps_defaultColorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
+var naplps_colorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
+var naplps_colorMode = 0;
+var naplps_lastColor = naplps_white;
+var naplps_lastIndex = 0;
+
+var naplps_backgroundColor = naplps_black;
+var naplps_drawBackground = true;
+var naplps_singleValLength = 1;
+var naplps_multiValLength = 3;
+var naplps_is3D = false;
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -595,7 +599,7 @@ class NapCmd {
         this.index = _index; // int
         this.data = []; // NapData[]
         this.points = []; // PVector[]
-        this.col = lastColor;
+        this.col = naplps_lastColor;
         this.text = "";
 
         this.opcode = new NapOpcode(this.cmdRaw.charAt(0)); // NapOpcode
@@ -798,15 +802,15 @@ class NapCmd {
     setColor() {
         var r = 0, g = 0, b = 0;
         var r2 = 0, g2 = 0, b2 = 0;
-        var multiValLength = this.data.length;
-        var shift = 8 - (2 * multiValLength);
+        var naplps_multiValLength = this.data.length;
+        var shift = 8 - (2 * naplps_multiValLength);
         var minVal = 40; // 64
-        lastColor = yellow; // default
+        naplps_lastColor = naplps_yellow; // default
         
         try {
             var c = this.data[0].ascii;
             if (c < minVal) {
-                this.col = lastColor;
+                this.col = naplps_lastColor;
                 return false;
             }
             g = c & parseInt('040', 8);
@@ -819,10 +823,10 @@ class NapCmd {
             g >>= 4;
             r >>= 3;
             b >>= 2;
-            for (var i = 1; i < multiValLength; i++ ) {
+            for (var i = 1; i < naplps_multiValLength; i++ ) {
                 c = this.data[i].ascii;
                 if (c < minVal) {
-                    this.col = lastColor;
+                    this.col = naplps_lastColor;
                     return false;
                 }
                 g2 = c & parseInt('040', 8);
@@ -847,19 +851,19 @@ class NapCmd {
             g <<= shift;
             b <<= shift;
 
-            lastColor = new Vector3(r+fill, g+fill, b+fill);
+            naplps_lastColor = new Vector3(r+fill, g+fill, b+fill);
 
-            if (colorMode !== 0) {
-                colorMap[lastIndex] = lastColor;
-                console.log("<palette write>\nindex: " + lastIndex + ", color: " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
+            if (naplps_colorMode !== 0) {
+                naplps_colorMap[naplps_lastIndex] = naplps_lastColor;
+                console.log("<palette write>\nindex: " + naplps_lastIndex + ", color: " + naplps_lastColor.x + " " + naplps_lastColor.y + " " + naplps_lastColor.z);
             } else {
-                console.log("<palette read>\nindex: " + lastIndex + ", color: " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
+                console.log("<palette read>\nindex: " + naplps_lastIndex + ", color: " + naplps_lastColor.x + " " + naplps_lastColor.y + " " + naplps_lastColor.z);
             }
 
-            this.col = lastColor;
+            this.col = naplps_lastColor;
             return true;
         } catch (e) {
-            this.col = lastColor;
+            this.col = naplps_lastColor;
             return false;
         }
     }
@@ -869,22 +873,22 @@ class NapCmd {
         try {
             var c = this.data[0].ascii;
             if (c < minVal) {
-                colorMode = 0;
+                naplps_colorMode = 0;
                 return;
             }
 
-            lastIndex = (c & parseInt('074', 8)) >> 2;
-            colorMode = 1;
-            lastColor = colorMap[lastIndex];
-            console.log("<palette read>\nindex: " + lastIndex + ", color: " + lastColor.x + " " + lastColor.y + " " + lastColor.z);
+            naplps_lastIndex = (c & parseInt('074', 8)) >> 2;
+            naplps_colorMode = 1;
+            naplps_lastColor = naplps_colorMap[naplps_lastIndex];
+            console.log("<palette read>\nindex: " + naplps_lastIndex + ", color: " + naplps_lastColor.x + " " + naplps_lastColor.y + " " + naplps_lastColor.z);
             //ignore mode 2 for now
         
-            this.col = lastColor;
+            this.col = naplps_lastColor;
             return true;
         } catch (e) {
-            colorMode = 0;
+            naplps_colorMode = 0;
 
-            this.col = lastColor;
+            this.col = naplps_lastColor;
             return false;
         }
     }
@@ -906,7 +910,7 @@ class NapCmd {
                     if (!_allPointsRelative && i===0) {
                         this.points.push(new Vector2(nv.x, nv.y));
                     } else if (_allPointsRelative && i===0) {
-						this.points.push(napDrawingCursor)
+						this.points.push(naplps_drawingCursor)
 					} else {
                         var p = this.points[this.points.length-1];
                         
@@ -934,7 +938,7 @@ class NapCmd {
         if (_set) {
         	try {
         		var lastPoint = this.points[this.point.length-1];
-        		napDrawingCursor = new Vector2(lastPoint.x, lastPoint.y);
+        		naplps_drawingCursor = new Vector2(lastPoint.x, lastPoint.y);
         	} catch (e) { 
             	console.log("*Error* " + this.opcode.id + " tried to set cursor position but failed.")
         	}
@@ -949,27 +953,27 @@ class NapCmd {
                 return;
             }
             if ((c & parseInt('001', 8)) != 0) { // reset domain
-                singleValLength = 1;
-                multiValLength = 3;
-                is3D = false;
+                naplps_singleValLength = 1;
+                naplps_multiValLength = 3;
+                naplps_is3D = false;
             }
             var colormodeVal = ((c & parseInt('005', 8)) >> 1);
             switch (colormodeVal) {
                 case 0:
                     break;
                 case 1:
-                    colorMode = 0;
+                    naplps_colorMode = 0;
                     break;
                 case 2:
-                    colorMode = 1;
+                    naplps_colorMode = 1;
                     break;
                 case 3:
-                    colorMode = 1;
-                    lastColor = white;
+                    naplps_colorMode = 1;
+                    naplps_lastColor = naplps_white;
                     break;
             }
             var screenVal = ((c & parseInt('070', 8)) >> 3);
-            //var saveColor = lastColor;
+            //var saveColor = naplps_lastColor;
             switch (screenVal) {
                 case 0:
                     break;
@@ -984,9 +988,9 @@ class NapCmd {
                     if (screenstuff != 6)
                         break;      // case 6 drops through to 3
                 case 3:
-                    //gr.setColor(Color.black);
+                    //gr.setColor(Color.naplps_black);
                     //gr.drawRect(0, 0, ctx.screen, ctx.screen);
-                    //lastColor = saveColor;
+                    //naplps_lastColor = saveColor;
                     break;
                 case 4:
                     //gr.drawRect(0, 0, ctx.screen, ctx.screen);
@@ -997,7 +1001,7 @@ class NapCmd {
                 return;
             }
             if ((c & parseInt('001', 8)) != 0) {       // reset text
-                napDrawingCursor = new Vector2(0.0, 0.0);
+                naplps_drawingCursor = new Vector2(0.0, 0.0);
             }
             if ((c & parseInt('010', 8)) != 0) {       // reset texture
                 //ctx.highlight = false;
@@ -1009,11 +1013,11 @@ class NapCmd {
     }
 
     sendNsr() {
-        colorMode = 0;
-        for (var i=0; i<colorMap.length; i++) {
-            colorMap[i] = defaultColorMap[i];
+        naplps_colorMode = 0;
+        for (var i=0; i<naplps_colorMap.length; i++) {
+            naplps_colorMap[i] = naplps_defaultColorMap[i];
         }
-        lastColor = new Vector3(255, 255, 255);
+        naplps_lastColor = new Vector3(255, 255, 255);
     }
 
     setText() {
