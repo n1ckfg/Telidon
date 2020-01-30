@@ -255,6 +255,7 @@ var naplps_backgroundColor = naplps_black;
 var naplps_drawBackground = true;
 var naplps_singleValLength = 1;
 var naplps_multiValLength = 3;
+var naplps_minVal = 40; // 64
 var naplps_is3D = false;
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -592,8 +593,8 @@ class NapText extends NapDataArray {
 class NapCmd {
     
     constructor(_cmd, _index) { // string, int
-        this.pointBytes = 4; // int
-        this.singleBytes = 1; // int
+        this.pointBytes = naplps_multiValLength; // int
+        this.singleBytes = naplps_singleValLength; // int
         //this.pointRelative = true; // bool, TODO set programatically from header info...if this is in header?
         this.cmdRaw = _cmd; // string
         this.index = _index; // int
@@ -802,14 +803,13 @@ class NapCmd {
     setColor() {
         var r = 0, g = 0, b = 0;
         var r2 = 0, g2 = 0, b2 = 0;
-        var naplps_multiValLength = this.data.length;
-        var shift = 8 - (2 * naplps_multiValLength);
-        var minVal = 40; // 64
+        var colorValLength = this.data.length;
+        var shift = 8 - (2 * colorValLength);
         naplps_lastColor = naplps_yellow; // default
         
         try {
             var c = this.data[0].ascii;
-            if (c < minVal) {
+            if (c < naplps_minVal) {
                 this.col = naplps_lastColor;
                 return false;
             }
@@ -823,9 +823,9 @@ class NapCmd {
             g >>= 4;
             r >>= 3;
             b >>= 2;
-            for (var i = 1; i < naplps_multiValLength; i++ ) {
+            for (var i = 1; i < colorValLength; i++ ) {
                 c = this.data[i].ascii;
-                if (c < minVal) {
+                if (c < naplps_minVal) {
                     this.col = naplps_lastColor;
                     return false;
                 }
@@ -869,10 +869,9 @@ class NapCmd {
     }
 
     selectColor() {
-        var minVal = 40; // 64
         try {
             var c = this.data[0].ascii;
-            if (c < minVal) {
+            if (c < naplps_minVal) {
                 naplps_colorMode = 0;
                 return;
             }
@@ -946,10 +945,9 @@ class NapCmd {
     }
 
     sendReset() {
-        var minVal = 40;
         try {
             var c = this.data[0].ascii;
-            if (c < minVal) {
+            if (c < naplps_minVal) {
                 return;
             }
             if ((c & parseInt('001', 8)) != 0) { // reset domain
@@ -997,7 +995,7 @@ class NapCmd {
                     break;
                 }
             c = this.data[1].ascii;
-            if (c < minVal) {
+            if (c < naplps_minVal) {
                 return;
             }
             if ((c & parseInt('001', 8)) != 0) {       // reset text
@@ -1057,56 +1055,59 @@ class NapCmd {
     	var domainByte = this.data[0].getBinary();
     	var domainPointBytes = domainByte[2] + domainByte[3] + domainByte[4];
     	var domainSingleBytes = domainByte[5] + domainByte[6];
+    	
+    	// TODO find out why this fails in some cases
     	switch (domainPointBytes) {
    			case("000"):
-   				this.pointBytes = 1;
+   				naplps_multiValLength = 1;
    				break;   
 		    case("001"):
-		    	this.pointBytes = 2;
+		    	naplps_multiValLength = 2;
 		    	break;
 		    case("010"):
-		    	this.pointBytes = 3;
+		    	naplps_multiValLength = 3;
 		    	break;
 		    case("011"):
-		    	this.pointBytes = 4;
+		    	naplps_multiValLength = 4;
 		    	break;
 		    case("100"):
-		    	this.pointBytes = 5;
+		    	naplps_multiValLength = 5;
 		    	break;
 		    case("101"):
-		    	this.pointBytes = 6;
+		    	naplps_multiValLength = 6;
 		    	break;
 		    case("110"):
-		    	this.pointBytes = 7;
+		    	naplps_multiValLength = 7;
 		    	break;
 		    case("111"):
-		    	this.pointBytes = 8;
+		    	naplps_multiValLength = 8;
 		    	break;
 	    	default:
-	    		this.pointBytes = 3;
+	    		naplps_multiValLength = 3;
 	    		break;
     	}
+
     	switch (domainSingleBytes) {
 		    case("00"):
-		        this.singleBytes = 1;
+		        naplps_singleValLength = 1;
 		        break;
 		    case("01"):
-		        this.singleBytes = 2;
+		        naplps_singleValLength = 2;
 		        break;
 		    case("10"):
-		        this.singleBytes = 3;
+		        naplps_singleValLength = 3;
 		        break;
 		    case("11"):
-		        this.singleBytes = 4;
+		        naplps_singleValLength = 4;
 		        break;
 		    default:
-		    	this.singleBytes = 1;
+		    	naplps_singleValLength = 1;
 		    	break;
     	}
 
-    	//this.pointBytes = 1 + ((domainByte & '\x1C') >> 2);
+    	//this.pointBytes = 1 + (domainByte & '\x1C' >> 2);
     	//this.singleBytes = 1 + (domainByte & '\x3c');
-    	console.log("DOMAIN SETTINGS: " + this.pointBytes + " bytes per coordinate.");
+    	console.log("DOMAIN SETTINGS: " + naplps_multiValLength + " bytes per coordinate.");
 
 
     }
