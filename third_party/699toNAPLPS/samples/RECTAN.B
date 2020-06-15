@@ -1,0 +1,1 @@
+=B>@$@@@=T[<P1[x$Xx\=M<@1bNK$Xx\<p=L0bNK$BGz<x=M=``=aBRECTANGLE$JLb=aCSample rectangles:$AYa=L<p=S=TI1Aih$POa<X=P=TxGO1O]X$QRQ<H=R=TH{1@uN$HeL<P=P=T[0@W[$BRa<x=MA$IHQB$H\eA$IuxB$YGmA$QIyB$PKCA$XoIB

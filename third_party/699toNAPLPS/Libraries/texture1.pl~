@@ -1,0 +1,76 @@
+#!/usr/bin/perl
+
+#if you want a regular grid x and y have to divide evenly into
+# the dimension ... so on a 16 x 16 grid, x and y can only be
+# 2,4,8,16 ... if you want regular spacing.
+
+use POSIX;
+
+$nchar = '0'; #say we want to reverse it (values higher than .5)
+$pchar = '1';
+
+$thickness = 1; #how many pixels per line
+
+#to reverse y, we need to do $i % y != 0
+
+$dimension = 8;
+
+$x = 6; #every other 
+$y = 4; #every fourth
+
+my $grid='';
+
+for ($i=0;$i<$dimension;$i++){ #number of rows
+
+	for ($j=0;$j<$dimension;$j++){  #8 bits
+		                            			
+		if (($y > 0) && ($i % $y == 0)) {
+			print '1';  
+			$grid .= '1';
+			
+		} elsif (($x > 0) && ( $j % $x == 0)) {
+			
+			print $pchar;
+			$grid .= $pchar;
+			
+		} else {
+			print $nchar;
+			$grid .= $nchar;
+				
+		}
+
+	} 
+		
+ 	print "\n";	
+}
+
+# To pack as an encoding on an 8 x 8 grid
+# each coord needs two bytes (6 + 2 = 8)
+
+# On a 16x16 grid, 3 bytes (6+6+4);
+
+# On a 32x32 grid, 6 bytes (6+6+6+6+6+2)
+
+$num_bytes = ceil($dimension/6); #number of bytes needed to represent each line
+
+print "number of bytes: $num_bytes" . "\n";
+
+
+
+my @grid = ($grid =~ m/......../g);
+my $encoded = '';
+
+
+
+
+foreach my $coord (@grid) {
+	
+	
+
+	$byte1 = '01' . substr($coord, 0,6);
+	$byte2 = '01' . substr($coord,6,2) . '0000';
+	print "byte 1: $byte1 " . pack("B*", $byte1) . "\n";
+	print "byte 2: $byte2 " . pack("B*", $byte2) . "\n";
+	
+	
+}

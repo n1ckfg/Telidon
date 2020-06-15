@@ -1,0 +1,1 @@
+=B>@<P=T[3@@@[x<@=M3Xx\bNK<p=L2Xx\bNK<x=M=``=aB$BOSDENSITY>@=aC$BUuDX 2 DY 2    DX 4 DY 2    DX 4 DY 4$ASHDX 8 DY 16   DX 2 DY 16   DX 16 DY 16>@<h=L=TI3AL~I@k<X=TIWo3I\^I@k<p=TIRm3QlFI@k>@<P=T@jU3@JqI@k<`=THz}3HZYI@k<X=M=T@@3PjAI@k<x$H@WAll are F5 and Solid

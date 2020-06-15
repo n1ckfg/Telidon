@@ -1,0 +1,1 @@
+=B>@<P=T[3@@@[x<H3Xx\bNK<p2Xx\bNK<x=M=``=aB$BGrTEXTURES<X=L=R3A[G@wR<p=S3Int@wR<P=P3Qqb@wR<h=Q3H]P@wR<x=M=aC$Iu[DotDash$QxxSolid$HkUDot$Ab}Dash<p=L$@iCAll textures are F5 DX 1 DY 1
