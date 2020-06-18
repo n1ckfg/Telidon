@@ -1122,8 +1122,19 @@ class NapDecoder {
     constructor(input) { // string[]
         this.napRaw = input[0]; // string
         this.cmds = this.parseCommands(this.napRaw); // NapCmd[]
+        this.version = this.detectVersion();
+        console.log("* * * * * * * * * * *\n" + "Telidon " + this.version + " file containing " + this.cmds.length + " commands.\n" + "* * * * * * * * * * *\n");
     }
     
+    detectVersion() {
+    	var input = this.cmds[0].opcode.hex;
+    	if (input == "0E") { // TODO find additional cases
+    		return 699;
+    	} else {
+    		return 709;
+    	}
+    }
+
     isOpcode(c) { // char or string
         var b = binary(c);
         return b[b.length-7] === '0';
