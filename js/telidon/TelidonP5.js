@@ -18,6 +18,9 @@ class TelidonDraw {
 
     draw() {
         this.finished = true;
+        
+        if (this.decoder.version === 699) background(127);
+
         for (var i=0; i<this.drawCmds.length; i++) {
             var drawCmd = this.drawCmds[i];
             if (!drawCmd.moveScanline) this.counter++;
