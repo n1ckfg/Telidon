@@ -1,7 +1,7 @@
 TELIDONP5 PROJECT
 
 Contents:<br>
-* naplps-decoder.js<br>
+* naplps.js<br>
 The heart of the project; parses the NAPLPS drawing instructions.
 
 * TelidonP5.js<br>

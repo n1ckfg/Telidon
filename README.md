@@ -1,7 +1,7 @@
 ![TelidonP5](/tools/rosetta_stone/cover/screenshots/shark.gif)
 # TelidonP5 Project
 <p>
-	<b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/TelidonP5.js">TelidonP5.js</a></b> allows NAPLPS vector graphics files to be displayed in a browser using <a href="https://p5js.org/">p5.js</a>. Its companion decoder library <b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/naplps-decoder.js">naplps-decoder.js</a></b> can also be used independently.<br/>
+	<b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/TelidonP5.js">TelidonP5.js</a></b> allows NAPLPS vector graphics files to be displayed in a browser using <a href="https://p5js.org/">p5.js</a>. Its companion decoder library <b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/naplps.js">naplps.js</a></b> can also be used independently.<br/>
 	[ <a href="https://n1ckfg.github.io/Telidon/"><i>See an example</i></a> ]
 </p>
 
