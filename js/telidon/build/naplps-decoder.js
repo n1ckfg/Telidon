@@ -1,262 +1,43 @@
-"use strict";
-
-/* 
-NAPLPS JavaScript decoder (part of the TelidonP5 Project)
-Nick Fox-Gieg https://fox-gieg.com
-
-Note: Uses no p5.js-specific code
-
-Binary utilities adapted from the methods in:
-https://github.com/processing-js/processing-js
-*/
-
-/*
-* binary()
-* Converts a byte, char, int, or color to a String containing the equivalent binary
-* notation. For example color(0, 102, 153, 255) will convert to the String
-* "11111111000000000110011010011001".
-*
-* @param {byte|char|int|color} num                    byte, char, int, color: value to convert
-* @param {int} numBits                                            number of digits to return
-* @returns {String}
-*/
-
-function binary(num, numBits) {
-    var bit;
-    if (numBits > 0) {
-        bit = numBits;
-    } else if(num instanceof Char) {
-        bit = 16;
-        num |= 0; // making it int
-    } else {
-        // autodetect, skipping zeros
-        bit = 32;
-        while (bit > 1 && !((num >>> (bit - 1)) & 1)) {
-            bit--;
-        }
-    }
-    var result = "";
-    while (bit > 0) {
-        result += ((num >>> (--bit)) & 1) ? "1" : "0";
-    }
-    return result;
-}
-
-/*
-* unbinary()
-* Converts a String representation of a binary number to its equivalent integer value.
-* For example, unbinary("00001000") will return 8.
-*
-* @param {String} binaryString String
-* @returns {Int}
-*/
-function unbinary(binaryString) {
-    var i = binaryString.length - 1, mask = 1, result = 0;
-    while (i >= 0) {
-        var ch = binaryString[i--];
-        if (ch !== '0' && ch !== '1') {
-            throw "the value passed into unbinary was not an 8 bit binary number";
-        }
-        if (ch === '1') {
-            result += mask;
-        }
-        mask <<= 1;
-    }
-    return result;
-}
-
-function decimalToHex(d, padding) {
-    //if there is no padding value added, default padding to 8 else go into while statement.
-    padding = (padding === undefined || padding === null) ? padding = 8 : padding;
-    if (d < 0) {
-        d = 0xFFFFFFFF + d + 1;
-    }
-    var hex = Number(d).toString(16).toUpperCase();
-    while (hex.length < padding) {
-        hex = "0" + hex;
-    }
-    if (hex.length >= padding) {
-        hex = hex.substring(hex.length - padding, hex.length);
-    }
-    return hex;
-}
-
-/*
-* hex()
-* Converts a byte, char, int, or color to a String containing the equivalent hexadecimal notation.
-* For example color(0, 102, 153, 255) will convert to the String "FF006699".
-*
-* Note: since we cannot keep track of byte, int types by default the returned string is 8 chars long
-* if no 2nd argument is passed.    closest compromise we can use to match java implementation Feb 5 2010
-* also the char parser has issues with chars that are not digits or letters IE: !@#$%^&*
-*
-* @param {byte|char|int|Color} value     the value to turn into a hex string
-* @param {int} digits                                 the number of digits to return
-* @returns {String}
-*/
-function hex(value, len) {
-    if (arguments.length === 1) {
-        if (value instanceof Char) {
-            len = 4;
-        } else { // int or byte, indistinguishable at the moment, default to 8
-            len = 8;
-        }
-    }
-    return decimalToHex(value, len);
-}
-
-function unhexScalar(hex) {
-    var value = parseIntAlt("0x" + hex, 16);
-
-    // correct for int overflow java expectation
-    if (value > 2147483647) {
-        value -= 4294967296;
-    }
-    return value;
-}
-
-/*
-* unhex()
-* Converts a String representation of a hexadecimal number to its equivalent integer value.
-*
-* @param {String} hex     the hex string to convert to an int
-* @returns {int}
-*/
-function unhex(hex) {
-    if (hex instanceof Array) {
-        var arr = [];
-        for (var i = 0; i < hex.length; i++) {
-            arr.push(unhexScalar(hex[i]));
-        }
-        return arr;
-    }
-    return unhexScalar(hex);
-}
-
-function parseIntAlt(val, radix) {
-    if (val instanceof Array) {
-        var ret = [];
-        for (var i = 0; i < val.length; i++) {
-            if (typeof val[i] === 'string' && !/^\s*[+\-]?\d+\s*$/.test(val[i])) {
-                ret.push(0);
-            } else {
-                ret.push(intScalar(val[i], radix));
-            }
-        }
-        return ret;
-    }
-    return intScalar(val, radix);
-}
-
-function intScalar(val, radix) {
-    if (typeof val === 'number') {
-        return val & 0xFFFFFFFF;
-    }
-    if (typeof val === 'boolean') {
-        return val ? 1 : 0;
-    }
-    if (typeof val === 'string') {
-        var number = parseIntAlt(val, radix || 10); // Default to decimal radix.
-        return number & 0xFFFFFFFF;
-    }
-    if (val instanceof Char) {
-        return val.code;
-    }
-}
-
-function removeCharAt(s, index) { // string, int
-  var returns = "";
-  for (var i=0; i<s.length; i++) {
-    if (i != index) returns += s.charAt(i);
-  }
-  return returns;
-}
-
-class Char {
-
-    constructor(chr) {
-        if (typeof chr === 'string' && chr.length === 1) {
-            this.code = chr.charCodeAt(0);
-        } else if (typeof chr === 'number') {
-            this.code = chr;
-        } else if (chr instanceof Char) {
-            this.code = chr;
-        } else {
-            this.code = NaN;
-        }
-        return this.code;
-    }
-
-    toString() {
-        return String.fromCharCode(this.code);
-    }
-
-    valueOf() {
-        return this.code;
-    }
-
-}
-
-class Vector2 {
-
-    constructor(_x, _y) {
-        this.x = _x;
-        this.y = _y;
-    }
-
-}
-
-class Vector3 {
-
-    constructor(_x, _y, _z) {
-        this.x = _x;
-        this.y = _y;
-        this.z = _z;
-    }
-
-}
-
-// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~w
+// + + +   D E C O D E R   + + +
 
 // The original NAPLPS decoders assumed a global state for reading colors.
 // In our decoder, we don't have to use a limited palette, so 
 // once read, each RGB color is just stored in its drawing command.
 
-var naplps_drawingCursor = new Vector2(0.0, 0.0);
+let naplps_drawingCursor = new Vector2(0.0, 0.0);
 
-var naplps_black = new Vector3(0, 0, 0);
-var naplps_gray1 = new Vector3(32, 32, 32);
-var naplps_gray2 = new Vector3(64, 64, 64);
-var naplps_gray3 = new Vector3(96, 96, 96);
-var naplps_gray4 = new Vector3(128, 128, 128);
-var naplps_gray5 = new Vector3(160, 160, 160);
-var naplps_gray6 = new Vector3(192, 192, 192);
-var naplps_gray7 = new Vector3(224, 224, 224);
-var naplps_blue = new Vector3(0, 0, 255);
-var naplps_blue_magenta = new Vector3(5*36, 0, 7*36);
-var naplps_pinkish_red = new Vector3(7*36, 0, 4*36);
-var naplps_orange_red = new Vector3(7*36, 2*36, 0);
-var naplps_yellow = new Vector3(255, 255, 0);
-var naplps_yellow_green = new Vector3(2*36, 7*36, 0);
-var naplps_greenish = new Vector3(0, 7*36, 4*36);
-var naplps_bluegreen = new Vector3(0, 5*36, 7*36);  
+let naplps_black = new Vector3(0, 0, 0);
+let naplps_gray1 = new Vector3(32, 32, 32);
+let naplps_gray2 = new Vector3(64, 64, 64);
+let naplps_gray3 = new Vector3(96, 96, 96);
+let naplps_gray4 = new Vector3(128, 128, 128);
+let naplps_gray5 = new Vector3(160, 160, 160);
+let naplps_gray6 = new Vector3(192, 192, 192);
+let naplps_gray7 = new Vector3(224, 224, 224);
+let naplps_blue = new Vector3(0, 0, 255);
+let naplps_blue_magenta = new Vector3(5*36, 0, 7*36);
+let naplps_pinkish_red = new Vector3(7*36, 0, 4*36);
+let naplps_orange_red = new Vector3(7*36, 2*36, 0);
+let naplps_yellow = new Vector3(255, 255, 0);
+let naplps_yellow_green = new Vector3(2*36, 7*36, 0);
+let naplps_greenish = new Vector3(0, 7*36, 4*36);
+let naplps_bluegreen = new Vector3(0, 5*36, 7*36);  
 
 // naplps_white is not part of the default palette
-var naplps_white = new Vector3(255, 255, 255);
+let naplps_white = new Vector3(255, 255, 255);
 
-var naplps_defaultColorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
-var naplps_colorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
-var naplps_colorMode = 0;
-var naplps_lastColor = naplps_white;
-var naplps_lastIndex = 0;
+let naplps_defaultColorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
+let naplps_colorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
+let naplps_colorMode = 0;
+let naplps_lastColor = naplps_white;
+let naplps_lastIndex = 0;
 
-var naplps_backgroundColor = naplps_black;
-var naplps_drawBackground = true;
-var naplps_singleValLength = 1;
-var naplps_multiValLength = 3;
-var naplps_minVal = 40; // 64
-var naplps_is3D = false;
+let naplps_backgroundColor = naplps_black;
+let naplps_drawBackground = true;
+let naplps_singleValLength = 1;
+let naplps_multiValLength = 3;
+let naplps_minVal = 40; // 64
+let naplps_is3D = false;
 
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -281,9 +62,9 @@ class NapChar {
     }
     
     getBinary() {
-        var returns = "";
-        var b = binary(this.ascii);
-        for (var i=b.length-7; i<b.length; i++) {
+        let returns = "";
+        let b = binary(this.ascii);
+        for (let i=b.length-7; i<b.length; i++) {
             returns += b.charAt(i);
         }
         return returns;
@@ -294,9 +75,9 @@ class NapChar {
     }
     
     getHex() {
-        var returns = "";
-        var h = hex(parseIntAlt(this.ascii));
-        for (var i=h.length-2; i<h.length; i++) {
+        let returns = "";
+        let h = hex(parseIntAlt(this.ascii));
+        for (let i=h.length-2; i<h.length; i++) {
             returns += h.charAt(i);
         }        
         return returns;
@@ -317,7 +98,7 @@ class NapOpcode extends NapChar {
     // This is the first step, where we match the hex code to a command.
     // The second step happens later on in this decoder.
     getId() { 
-        var returns = "";
+        let returns = "";
         switch(this.hex) {
         	//~ ~ ~ ~ ~ CONTROL CODES ~ ~ ~ ~ ~
             case("0E"):
@@ -458,7 +239,7 @@ class NapData extends NapChar {
     }
     
     getNormFloat() {
-        var returns = parseFloat(this.ascii / 127.0);
+        let returns = parseFloat(this.ascii / 127.0);
         return returns;
     }
 
@@ -496,15 +277,15 @@ class NapDataArray {
     }
 
     binaryConv(n, loc) { // NapData, int
-        var returns = "";
-        for (var i=loc; i<loc+this.bitsPerByte; i++) {
+        let returns = "";
+        for (let i=loc; i<loc+this.bitsPerByte; i++) {
             returns += n.binary.charAt(i);
         }
         return returns;
     }
     
     getSingleByteVal(n, axis) { // NapData, string
-        var returns = "";
+        let returns = "";
         if (axis === "x") {
             returns = "" + this.binaryConv(n, 1);
         } else if (axis === "y") {
@@ -541,18 +322,18 @@ class NapVector extends NapDataArray {
     -----------------      -----------------
 */  
     getCoordFromBytes(n, axis) { // NapData[], string
-        var returns = "";
-        for (var i=0; i<n.length; i++) {
+        let returns = "";
+        for (let i=0; i<n.length; i++) {
             returns += this.getSingleByteVal(n[i], axis);
         }
         
-        var sign = 1;
+        let sign = 1;
         if (this.firstBitSign) {
             sign = this.getSign(returns.charAt(0));
             returns = removeCharAt(returns, 0);
         }
         
-        var finalReturns = 0;
+        let finalReturns = 0;
         
         if (axis === "x") {
             finalReturns = (unbinary(returns) / this.bitVals) * sign;
@@ -578,8 +359,8 @@ class NapText extends NapDataArray {
     }
 
     setTextFromBytes(n) {
-        var returns = "";
-        for (var i=0; i<n.length; i++) {
+        let returns = "";
+        for (let i=0; i<n.length; i++) {
             returns += "" + n[i].c;
         }
         return returns;
@@ -605,7 +386,7 @@ class NapCmd {
 
         this.opcode = new NapOpcode(this.cmdRaw.charAt(0)); // NapOpcode
         if (this.cmdRaw.length > 1) {
-            for (var i=1; i<this.cmdRaw.length; i++) {
+            for (let i=1; i<this.cmdRaw.length; i++) {
                 this.data.push(new NapData(this.cmdRaw.charAt(i)));
             }
         }
@@ -748,7 +529,7 @@ class NapCmd {
     // This prints out the command contents in various formats
     // Helpful for debugging
     formatCmd(mode) {
-        var returns = "(" + this.index + ") " + this.opcode.id;
+        let returns = "(" + this.index + ") " + this.opcode.id;
         if (this.data.length > 0) returns += ": ";
         if (this.opcode.id === "") {
             switch(mode) {
@@ -773,7 +554,7 @@ class NapCmd {
         }
         if (this.data.length > 0) {
             if (this.opcode.id === "") returns += ", ";
-            for (var i=0; i<this.data.length; i++) {
+            for (let i=0; i<this.data.length; i++) {
                 switch(mode) {
                     case("char"):
                         returns += "" + this.data[i].c;
@@ -801,14 +582,14 @@ class NapCmd {
 
     // ~ ~ ~ Parsing methods begin here ~ ~ ~
     setColor() {
-        var r = 0, g = 0, b = 0;
-        var r2 = 0, g2 = 0, b2 = 0;
-        var colorValLength = this.data.length;
-        var shift = 8 - (2 * colorValLength);
+        let r = 0, g = 0, b = 0;
+        let r2 = 0, g2 = 0, b2 = 0;
+        let colorValLength = this.data.length;
+        let shift = 8 - (2 * colorValLength);
         naplps_lastColor = naplps_yellow; // default
         
         try {
-            var c = this.data[0].ascii;
+            let c = this.data[0].ascii;
             if (c < naplps_minVal) {
                 this.col = naplps_lastColor;
                 return false;
@@ -823,7 +604,7 @@ class NapCmd {
             g >>= 4;
             r >>= 3;
             b >>= 2;
-            for (var i = 1; i < colorValLength; i++ ) {
+            for (let i = 1; i < colorValLength; i++ ) {
                 c = this.data[i].ascii;
                 if (c < naplps_minVal) {
                     this.col = naplps_lastColor;
@@ -846,7 +627,7 @@ class NapCmd {
                 r |= r2;
                 b |= b2;
             }
-            var fill = 0; //(2 << shift) - 1;
+            let fill = 0; //(2 << shift) - 1;
             r <<= shift;
             g <<= shift;
             b <<= shift;
@@ -870,7 +651,7 @@ class NapCmd {
 
     selectColor() {
         try {
-            var c = this.data[0].ascii;
+            let c = this.data[0].ascii;
             if (c < naplps_minVal) {
                 naplps_colorMode = 0;
                 return;
@@ -894,33 +675,33 @@ class NapCmd {
 
     setPoints(_allPointsRelative, _set) {
         try {
-            var nvList = []; // NapVector[];
-            for (var i=0; i<this.data.length; i+=this.pointBytes) {
-                var n = []; // NapData[]
-                for (var j=0; j<this.pointBytes; j++) {
+            let nvList = []; // NapVector[];
+            for (let i=0; i<this.data.length; i+=this.pointBytes) {
+                let n = []; // NapData[]
+                for (let j=0; j<this.pointBytes; j++) {
                     n.push(this.data[i + j]);
                 }
                 nvList.push(new NapVector(n));
             }
             
-            for (var i=0; i<nvList.length; i++) {
-                var nv = nvList[i];
+            for (let i=0; i<nvList.length; i++) {
+                let nv = nvList[i];
 
                     if (!_allPointsRelative && i===0) {
                         this.points.push(new Vector2(nv.x, nv.y));
                     } else if (_allPointsRelative && i===0) {
 						this.points.push(naplps_drawingCursor)
 					} else {
-                        var p = this.points[this.points.length-1];
+                        let p = this.points[this.points.length-1];
                         
-                        var x = 0;         
+                        let x = 0;         
                         if (nv.x < 0) {
                             x = (abs(nv.x) + abs(p.x)) - 1.0;
                         } else {
                             x = nv.x + p.x;
                         }
                         
-                        var y = 0;
+                        let y = 0;
                         if (nv.y < 0) {
                             y = abs(nv.y) + p.y;
                         } else {
@@ -936,7 +717,7 @@ class NapCmd {
 
         if (_set) {
         	try {
-        		var lastPoint = this.points[this.point.length-1];
+        		let lastPoint = this.points[this.point.length-1];
         		naplps_drawingCursor = new Vector2(lastPoint.x, lastPoint.y);
         	} catch (e) { 
             	console.log("*Error* " + this.opcode.id + " tried to set cursor position but failed.")
@@ -946,7 +727,7 @@ class NapCmd {
 
     sendReset() {
         try {
-            var c = this.data[0].ascii;
+            let c = this.data[0].ascii;
             if (c < naplps_minVal) {
                 return;
             }
@@ -955,7 +736,7 @@ class NapCmd {
                 naplps_multiValLength = 3;
                 naplps_is3D = false;
             }
-            var colormodeVal = ((c & parseInt('005', 8)) >> 1);
+            let colormodeVal = ((c & parseInt('005', 8)) >> 1);
             switch (colormodeVal) {
                 case 0:
                     break;
@@ -970,8 +751,8 @@ class NapCmd {
                     naplps_lastColor = naplps_white;
                     break;
             }
-            var screenVal = ((c & parseInt('070', 8)) >> 3);
-            //var saveColor = naplps_lastColor;
+            let screenVal = ((c & parseInt('070', 8)) >> 3);
+            //let saveColor = naplps_lastColor;
             switch (screenVal) {
                 case 0:
                     break;
@@ -1012,14 +793,14 @@ class NapCmd {
 
     sendNsr() {
         naplps_colorMode = 0;
-        for (var i=0; i<naplps_colorMap.length; i++) {
+        for (let i=0; i<naplps_colorMap.length; i++) {
             naplps_colorMap[i] = naplps_defaultColorMap[i];
         }
         naplps_lastColor = new Vector3(255, 255, 255);
     }
 
     setText() {
-        var nt = new NapText(this.data);
+        let nt = new NapText(this.data);
         this.text += nt.text;
     }
 
@@ -1052,9 +833,9 @@ class NapCmd {
 		        1 1    4 bytes
 		*/
     	if (this.data.length < 1) return;
-    	var domainByte = this.data[0].getBinary();
-    	var domainPointBytes = domainByte[2] + domainByte[3] + domainByte[4];
-    	var domainSingleBytes = domainByte[5] + domainByte[6];
+    	let domainByte = this.data[0].getBinary();
+    	let domainPointBytes = domainByte[2] + domainByte[3] + domainByte[4];
+    	let domainSingleBytes = domainByte[5] + domainByte[6];
     	
     	// TODO find out why this fails in some cases
     	switch (domainPointBytes) {
@@ -1127,7 +908,7 @@ class NapDecoder {
     }
     
     detectVersion() {
-    	var input = this.cmds[0].opcode.hex;
+    	let input = this.cmds[0].opcode.hex;
     	if (input == "0E") { // TODO find additional cases
     		return 699;
     	} else {
@@ -1136,24 +917,24 @@ class NapDecoder {
     }
 
     isOpcode(c) { // char or string
-        var b = binary(c);
+        let b = binary(c);
         return b[b.length-7] === '0';
     }
 
     parseCommands(input) {
-    	var returns = [];
+    	let returns = [];
 
-	    var counter = 0; // int
-        var tempCmd = "";
+	    let counter = 0; // int
+        let tempCmd = "";
 
-        for (var i=0; i<input.length; i++) {
-            var c = input[i]; // char or string
+        for (let i=0; i<input.length; i++) {
+            let c = input[i]; // char or string
             if (this.isOpcode(new Char(c))) {
                 if (tempCmd === "") {
                     tempCmd += c;
                 } else {
                     if (tempCmd.length >= 1) {
-                        var nextNapCmd = new NapCmd(tempCmd, counter);
+                        let nextNapCmd = new NapCmd(tempCmd, counter);
                         returns.push(nextNapCmd);
                         counter++;
                     }
@@ -1165,7 +946,7 @@ class NapDecoder {
             }
         }
 
-        for (var i=0; i<returns.length; i++) {
+        for (let i=0; i<returns.length; i++) {
             returns[i].printCmd("hex");
         }    
 
