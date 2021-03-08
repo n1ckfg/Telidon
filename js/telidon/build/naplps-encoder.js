@@ -14,15 +14,24 @@ class NapEncoder {
 
 	constructor(input) {
 		this.cmds = this.parseCommands(input);
+		this.napRaw = this.cmds.join("");
+		console.log(napRaw);
 	}
 
 	parseCommands(input) {
 		let returns = [];
 
+		input = this.normalizeAllStrokes(input);
+
 		for (let stroke of input) {
+			let cmd = this.makeNapOpcode(stroke.isFill);
+			cmd += this.makeNapColor(stroke.color);
+			
 			for (let point of stroke.points) {
-				//
+				cmd += this.makeNapVector(point);
 			}
+
+			returns.push(cmd);
 		}
 
 		return returns;
@@ -76,16 +85,20 @@ class NapEncoder {
         return min2 + (valueScaled * range2);
     }
 
-	makeOpcode(input) {
-
+	makeNapOpcode(_isFill) { // only poly line and fill are implemented
+		if (_isFill) {
+			return "A";
+		} else {
+			return "B";
+		}
 	}
 
-	makeNapData(input) {
-
+	makeNapColor(_color) {
+		return "C";
 	}
 
-	makeNapDataArray(input) {
-		
+	makeNapVector(input) {
+		return "D";		
 	}
 
 }
