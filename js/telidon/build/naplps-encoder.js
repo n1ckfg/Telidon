@@ -2,10 +2,10 @@
 
 class StrokeInput {
 
-	constructor(_strokeColor, _fillColor, _points) {
-		this.strokeColor = _strokeColor;
-		this.fillColor = _fillColor;
+	constructor(_color,_points, _isFill) {
+		this.color = _color;
 		this.points = _points;
+		this.isFill = _isFill;
 	}
 
 }
