@@ -1,0 +1,1654 @@
+TITLE: Annotation text - workstation support
+
+MODULE#: 04.02.04.02
+
+DESCRIPTION: This module tests the bundled entries and other
+workstation facilities for Annotation text.  These entries control
+the appearance of Annotation text when they are under bundled (as
+opposed to individual) control.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** ***   Text index   *** *** *** ***
+
+SR1.  Upon traversal of a "annotation text relative" or "annotation
+text relative 3" element, the current text index in the PTSL is bound
+to the resulting primitive.
+#F 27
+#D 7.3.1.7 7.3.1.8 3.3.1
+#S 4.5.2/38/3
+#T P01/1 P01/2 P01/3 P02/1 P02/2 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+   P04/1 P04/2 P04/3 P04/4 P04/5 P04/6 P06/1 P06/2 P06/3 P06/4 P07/1
+   P07/2 P08/1
+
+SR2. <Set text index> creates a "set text index" element (in the
+open structure), whose associated value is taken from the
+function's parameter.
+#F 27
+#D 7.3.2.1.3
+#S 4.4.1/23/1 4.5.2/38/3
+#T P02/1 P02/2
+
+SR3.  Upon traversal of a "set text index" element, the current
+text index entry in the PHIGS traversal state list (PTSL) is set
+to the element's associated value.
+#F 27
+#D 3.3.1 7.3.2.1.3
+#S 4.4.1/23/1 4.5.2/38/3
+#T P02/1 P02/2 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P04/1 P04/2 P04/3
+   P04/4 P04/5 P04/6 P06/1 P06/2 P06/3 P06/4 P07/1 P07/2 P08/1
+
+SR4.  When an annotation text relative primitive is displayed,
+if its bound text index is defined on the workstation, then the
+indicated bundle is the source for the bundled aspects of that
+primitive.
+#F 27
+#D 3.3.1 5.11.1 5.11.2
+#S 4.5.2/38/7 4.5.2/39/7 4.5.5/44/10
+#T P01/1 P01/2 P01/3 P02/1 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P04/1
+   P04/2 P04/3 P04/4 P04/5 P04/6 P06/1 P06/2 P06/3 P06/4 P07/1 P07/2
+   P08/1
+
+SR5.  When an annotation text relative primitive is displayed,
+if its bound text index is undefined on the workstation, then
+bundle number 1 in the text bundle table is the source for the
+bundled aspects of that primitive.
+#F 27
+#D 3.3.1 5.11.1 5.11.2
+#S 4.5.2/38/7 4.5.2/39/7 4.5.2/43/3 4.5.5/44/10
+#T P02/2
+
+*** *** ***   Text index: network traversal   *** *** ***
+
+SR6.  At the start of a top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current text index of the PTSL is set to 1.
+#F
+#D 2.12.1 3.3.1
+#S 4.4.3/26/2 4.4.3/28/1 6.3/309/1
+#T P08/1
+
+SR7.  As part of the PTSL, the current text index is saved (but
+not changed) by execute structure and then, upon completion of
+the sub-traversal of the invoked network, restored to the saved
+value.
+#F 113
+#D 3.3.1
+#S 4.4.3/28/1
+#T P08/1
+
+*** *** ***   Predefined Bundle Facilities   *** *** ***
+
+SR8.  <Inquire predefined text representation> returns the font,
+precision, character expansion factor, character spacing, and
+text color index for a predefined text bundle.
+#F 267
+#D 6.12.2
+#S n
+#T P01/1 P01/2 P01/3
+
+SR9.  Immediately after <open workstation>, for each WDT
+predefined text entry there exists a Workstation State List (WSL)
+text entry with the same attributes, including the same text
+index.
+#F 226 227 267 3
+#D 5.11.2 6.12.2
+#S 4.5.2/42/3 6.6/317/1 6.7/322/1
+#T P01/1 P01/2
+
+*** *** ***   Font Precision Pairs Support   *** *** ***
+
+SR10.  The valid values for text precision are: STRING, CHAR, or
+STROKE.
+#F 65 227 266 267
+#D 5.11.2.3 6.12.1.2.1 6.12.2.2
+#S 4.5.5/47/5
+#T P03/1 P03/2 P03/3 P03/4 P03/5
+
+SR11.  When an annotation text relative primitive is displayed, if
+its text font ASF is bundled, then its text font aspect is taken
+from the text bundle determined by the text index.
+#F 27 62 65
+#D 3.3.1 3.3.7 5.11.2.1 5.11.2.2
+#S 4.5.2/39/7 4.5.5/44/10
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P04/1 P04/2 P04/3 P04/4 P04/5
+   P04/6
+#C Only valid text fonts may be set in text bundles, so that
+the font must be available.
+
+SR12.  When an annotation text relative primitive is displayed, if
+its text precision ASF is bundled, then its requested text precision
+is taken from the text bundle determined by the text index.
+#F 27 62 65
+#D 3.3.1 3.3.8 5.11.2.1 5.11.2.3
+#S 4.5.2/39/7 4.5.5/44/10
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P04/1 P04/2 P04/3 P04/4 P04/5
+   P04/6 P05/1
+
+SR13.  When an annotation text relative primitive is displayed, then
+the appearance of the text font agrees with the implementor
+documentation and, if the text font is greater than 2, with the ISO
+register.
+#F 65 266
+#D 5.11.2.2 6.12.1.1 6.12.1.2
+#S 4.1.1/15/1 4.1.2/15/2 4.5.2/39/7 4.5.5/44/10 4.5.5/47/4 4.5.5/48/6
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P04/1 P04/2 P04/3 P04/4
+#C For registered fonts, the details of character shapes may be
+set by the implementor, even though the basic character set is
+specified.
+
+SR14. Text fonts 1 and 2 both contain all the ASCII characters,
+i.e. those defined within ANSI X3.4-1986.
+#F
+#D 2.7
+#S 4.5.5/47/4 4.5.5/48/5
+#T P03/1 P03/2 P03/3 P03/4 P04/6
+
+SR15. Text fonts 1 and 2 are visually distinguishable.
+#F
+#D
+#S 4.5.5/47/4 4.5.5/48/5
+#T P03/5
+
+SR16. For all text fonts, a character body in TLC, before
+application of annotation character up vector, is a rectangle
+generally surrounding the character, aligned such that the top,
+cap, half, base, and bottom lines are all parallel to the TLC
+x-axis and the left, centre, and right lines are all parallel
+to the TLC y-axis.
+#F
+#D
+#S 4.5.5/48/6 4.5.5/48/7
+#T P03/6 P04/5
+#C A small part of a kerned character may lie slightly outside
+its character body.
+
+SR17.  All text fonts are either monospaced or proportionately
+spaced.  All character bodies within a monospaced font have the
+same font nominal height and the same font nominal width.  All
+character bodies within a proportionately spaced font have the
+same font nominal height.
+#F
+#D
+#S 4.5.5/48/6
+#T P03/6 P04/5
+#C In monospaced fonts, the nominal height need not equal the
+nominal width.  Font nominal height and width is the size, in
+TLC, of the character bodies of a given font as set by the
+character height and width aspects, before the application of
+other text aspects and before the effect of the transformation
+pipeline.
+
+SR18. Text font 1 is monospaced.
+#F
+#D
+#S 4.5.5/48/5 4.14/113/3
+#T P03/6 P06/1 P06/2
+
+SR19. If a requested character in an annotation text relative
+primitive is not available within the font, an implementation
+dependent representation is generated to so indicate.
+#F
+#D
+#S 4.5.5/47/4
+#T P04/6
+
+SR20.  A valid text precision (one that may be set by <set text
+representation>, together with the specified text font) is
+realized as itself or some higher precision.
+#F 65 227 266
+#D 5.11.2.3 6.12.1.1 6.12.1.2
+#S 4.5.5/48/5
+#T P05/1
+
+SR21. For text precision = STRING, the annotation text string
+as a whole is displayed with the appropriate text font and the
+nearest DC character expansion factor available on the workstation,
+based on the first character in the annotation text string.
+#F
+#D 6.12.1.6 6.12.1.7 6.12.1.8
+#S 4.5.5/47/5 4.5.5/48/3 4.5.5/49/5
+#T P04/2 P04/4 P05/1
+#C In the case where STRING is used as a result of coercion from
+an unavailable font and precision, then the actual font (1) may
+differ from the requested font.  See SRs below for details of
+coercion of character height and expansion factor.
+
+SR22. For text precision = CHAR, each character of the annotation
+text is displayed with the requested text font and the nearest
+DC character expansion factor available on the workstation.
+Character spacing and annotation text alignment aspects are
+applied exactly.
+#F
+#D 6.12.1.6 6.12.1.7 6.12.1.8
+#S 4.5.5/47/5 4.5.5/48/3 4.5.5/49/5
+#T P04/2 P04/4 P05/1
+#C See SRs below for details of coercion of character height and
+expansion factor.
+
+SR23. For text precision = STROKE, annotation text is displayed
+with all text aspects applied exactly.
+#F
+#D
+#S 4.5.5/48/1 4.5.5/49/5
+#T P03/6 P04/5 P06/1 P06/2 P06/3 P06/4
+
+*** ***   Character Expansion Factor Support   *** ***
+
+SR24.  When an annotation text relation primitive is displayed,
+if its character expansion factor ASF is bundled, then its TLC
+character expansion factor is taken from the text bundle determined
+by the text index.
+#F 27 62 65
+#D 3.3.1 3.3.9 5.11.2.1 5.11.2.4
+#S 4.5.2/39/7 4.5.5/44/10
+#T P03/6 P04/5 P05/1 P06/1 P06/2 P06/3 P06/4
+
+SR25. The magnitude of the TLC character expansion factor
+specifies the amount by which the font nominal width/height ratio
+of individual TLC character bodies is multiplied to yield the
+actual TLC width/height ratio.
+#F 269
+#D
+#S 4.5.5/45/2 4.5.5/45/4 5.4.2/138/6
+#T P03/6 P04/5 P05/1 P06/1 P06/2 P06/3 P06/4
+
+SR26.  When an annotation text relative primitive is displayed,
+then the actual DC character expansion factor used when displaying
+the text is the nearest available to the requested DC character
+expansion factor resulting from its TLC character expansion factor
+(after undergoing modelling, viewing and workstation transformations).
+The requested DC character expansion factor equals the requested
+DC width to height ratio times the character's font nominal
+height to width ratio.
+#F 266
+#D 5.11.2.4 6.12.1.6 6.12.1.7 6.12.1.8
+#S 4.5.5/49/2 4.5.5/49/4 4.5.5/49/5 5.4.2/138/6 4.5.5/47/5
+#T P05/1 P06/1 P06/2 P06/3 P06/4
+#S 4.14/114/2 5.4.2/138/6
+#C Character expansion factor may be approximated only for STRING
+or CHAR text precision; STROKE precision implies exact
+realization.  See the SRs on text precision, above.  Of course,
+by the above rule, if a requested expansion factor is available
+on the workstation, then the result is exact for any precision.
+Note also that requested DC expansion factor may well differ from
+nominal TLC expansion factor, since it reflects both that nominal
+factor and the effects of modelling and viewing transformation.
+For instance, in the case of a horizontal text string, if the
+nominal factor is 2.0 and a modelling transformation scales X
+(but not Y) by 3.0, the effective requested DC expansion factor
+will be 6.0.
+
+*** *** ***   Character Spacing Support   *** *** ***
+
+SR27.  When an annotation text relative primitive is displayed,
+if its character spacing ASF is bundled, then its requested
+character spacing is taken from the text bundle determined by
+the text index.
+#F 27 62 65
+#D 3.3.1 3.3.10 5.11.2.1 5.11.2.5
+#S 4.5.2/39/7 4.5.5/44/10
+#T P03/6 P04/5 P06/1 P06/2 P06/3 P06/4
+#C See SRs above on text precision for derivation of actual
+character from requested character spacing.  For STROKE and CHAR
+precision, the requested character spacing is realized exactly.
+
+SR28. Character spacing specifies the TLC distance (positive) or
+overlap (negative) between adjacent character bodies, expressed
+in units of the font nominal character height.
+#F 269
+#D
+#S 4.5.5/45/3
+#T P03/6 P04/5 P06/1 P06/2 P06/3 P06/4
+
+*** *** ***   Text Color Index Support   *** *** ***
+
+SR29.  When an annotation text relative primitive is displayed,
+if its text colour index ASF is bundled, then its requested text
+colour index is taken from the text bundle determined by the text
+index.
+#F 27 62 65
+#D 3.3.1 3.3.11 5.11.2.1 5.11.2.6
+#S 4.5.2/39/7 4.5.5/44/10
+#T P07/1 P07/2
+
+SR30.  When annotation text is displayed, if its requested text
+colour index is defined on the workstation, then the text colour
+index is realized as itself.
+#F 227 235
+#D 5.11.2.6 5.15.3
+#S 4.5.2/39/7 4.5.5/44/10 4.5.12/63/4
+#T P07/1
+
+SR31.  When annotation text is displayed, if its requested text
+colour index is not defined on the workstation, then the text colour
+index is realized as number 1.
+#F 227 235
+#D 5.11.2.6 5.15.3
+#S 4.5.2/39/7 4.5.2/43/3 4.5.5/44/10 4.5.12/63/4
+#T P07/2
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+   27: pstxi   <set text index>
+   62: psiasf  <set individual asf>
+   65: pstxr   <set text representation>
+  113: pexst   <execute structure>
+  226: pqetxi  <inquire list of text indices>
+  227: pqtxr   <inquire text representation>
+  235: pqeci   <inquire list of colour indices>
+  266: pqtxf   <inquire text facilities>
+  267: pqptxr  <inquire predefined text representation>
+  269: pqtxx   <inquire text extent>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.7  ...  list_of_available_character_sets
+  2.12 ...  default_text_attributes
+  2.12.1  ...  default_text_index
+  3  ...  phigs_traversal_state_list
+  3.3  ...  current_text_attributes
+  3.3.1  ...  current_text_index
+  3.3.7  ...  current_text_font_asf
+  3.3.8  ...  current_text_precision_asf
+  3.3.9  ...  current_character_expansion_factor_asf
+  3.3.10 ...  current_character_spacing_asf
+  3.3.11 ...  current_text_colour_index_asf
+  5  ...  workstation_state_list
+  5.11  ...  text_entry
+  5.11.1  ...  number_of_text_bundle_table_entries
+  5.11.2  ...  text_bundle_table
+  5.11.2.1  ...  text_index
+  5.11.2.2  ...  text_font
+  5.11.2.3  ...  text_precision
+  5.11.2.4  ...  character_expansion_factor
+  5.11.2.5  ...  character_spacing
+  5.11.2.6  ...  text_colour_index
+  5.15  ...  colour_entry
+  5.15.3  ...  colour_table
+  6  ...  workstation_description_table
+  6.12  ...  text_entry
+  6.12.1  ...  text_facilities
+  6.12.1.1  ...  number_of_text_font_and_precision_pairs
+  6.12.1.2  ...  list_of_text_font_and_precision_pairs
+  6.12.1.2.1  ...  text_font_and_precision_pair
+  6.12.1.6  ...  number_of_available_character_expansion_factors
+  6.12.1.7  ...  minimum_character_expansion_factor
+  6.12.1.8  ...  maximum_character_expansion_factor
+  6.12.2  ...  predefined_text_bundle_table
+  6.12.2.2  ...  text_precision
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.7  ...  annotation_text_relative_3
+  7.3.1.8  ...  annotation_text_relative
+  7.3.2  ...  primitive_attributes
+  7.3.2.1  ...  bundle_index_attributes
+  7.3.2.1.3  ...  text_index
+ 
+
+
+
+PROGRAM 1: Appearance of predefined text bundles
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES 1-6: This
+screen displays 7 pairs (consisting of the first 6, with one
+repeated) of predefined text bundles and individual text
+attributes.  Identify the pair of annotation text relative
+primitives that is different.
+
+WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES > 6: This
+screen displays several pairs (at most 8) of predefined
+text bundles and individual text attributes.  Identify
+the pair of annotation text relative primitives that is different.
+
+PREDEFINED TEXT BUNDLES: This screen displays a sample (at most
+8) of predefined text bundles and their bundle values for font,
+precision, expansion, spacing, and color, as reported by <inquire
+predefined text representation>.  For each displayed bundle,
+verify that 1) the actual appearance of the annotation text agrees
+with the aspect values reported on the screen and 2) these both agree
+with any external documentation provided by the implementor.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+use <inquire text facilities> to determine:
+  nprei  = number of predefined bundles
+
+*** *** ***   predefined text bundles 1-6   *** *** ***
+
+numbun = 7
+bundis = bundles to be displayed (1 to 6, with one repeated)
+bundif = location of repeated bundle identifier (so that all 6
+         may be verified)
+
+TEST: #SR 1 4 8 9
+      "Immediately after <open workstation>, the first 6 defined
+       text bundles of the WSL should appear as specified in
+       the corresponding predefined text bundles of the WDT."
+
+The actual results (annotation text relative primitives drawn from
+initial state of WSL) are drawn on the left side of the picture.
+The corresponding expected results (annotation text primitives with
+individual attributes taken from WDT) are drawn on the right side,
+except for one annotation text relative primitive which will be
+different.
+
+actual:
+for ix = 1 to numbun
+   display and label annotation text "Bundles 1-6", under control of
+      bundles in bundis(ix)
+next ix
+
+expected:
+set font, precision, expansion, spacing, and color ASF to individual
+for ix = 1 to numbun
+   <inquire predefined text representation> on index
+        bundis(ix), determine:
+      pdfn = font
+      pdpr = precision
+      pdex = expansion
+      pdsp = spacing
+      pdci = color index
+
+   if (ix = bundif) then
+      if (pdfn = 1) then
+         pdfn = 2
+      else
+         pdfn = 1
+      endif
+   endif
+   draw annotation text with pdfn, pdpr, pdex, pdsp, pdci
+next ix
+
+OPQA/WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES 1-6:
+   Which pair of annotation text relative primitives is different?
+pass/fail depending on (operator selects bundif)
+
+*** *** ***   predefined text bundles > 6   *** *** ***
+
+if nprei <= 6 then
+   skip to end_comp_tables
+endif
+
+numbun = min (8, nprei-6)
+bundis = distinct bundles to be displayed - randomly chosen
+         from [7,nprei] predefined bundles
+
+TEST: #SR 1 4 8 9
+      "Immediately after <open workstation>, the defined text
+       bundles > 6 of the WSL should appear as specified in the
+       corresponding predefined text bundles of the WDT."
+
+The actual results (annnotation text relative primitives drawn
+from initial state of WSL) are drawn on the left side of the picture.
+The corresponding expected results (annotation text relative primitive
+with individual attributes copied from WDT) are drawn on the right side,
+except for one annotation text primitive which will be different.
+
+actual:
+for ix = 1 to numbun
+   display and label annotation text "Bundles > 6", under control of
+     bundles  in bundis(ix)
+next ix
+
+expected:
+set font, precision, expansion, spacing, and color ASF to individual
+for ix = 1 to numbun
+   <inquire predefined text representation> on index
+        bundis(ix), determine:
+      pdfn = font
+      pdpr = precision
+      pdex = expansion
+      pdsp = spacing
+      pdci = color index
+
+   if (ix = bundif) then
+      if (pdfn = 1) then
+         pdfn = 2
+      else
+         pdfn = 1
+      endif
+   endif
+   draw annotation text with pdfn, pdpr, pdex, pdsp, pdci
+next ix
+
+OPQA/WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES > 6:
+   Which pair of annotation text relative primitives is different?
+pass/fail depending on (operator selects bundif)
+
+end_comp_tables:
+
+*** *** *** ***   predefined bundle descriptions   *** *** *** ***
+
+TEST: #SR 1 4 8
+      "The appearance of predefined text bundles should agree
+       with the descriptions supplied by the implementor."
+
+numbun = min(8, nprei)
+bundis = distinct bundles to be displayed, sorted
+
+use two loops here so that plain text can be used for labelling
+
+set all ASFs to BUNDLED
+for ix = 1 to numbun
+   draw annotation text "Phigs" using bundle bundis(ix)
+next ix
+
+set all ASFs to INDIVIDUAL
+for ix = 1 to numbun
+   <inquire predefined text representation> on index
+    bundis(ix) to determine:
+      pdfn = font
+      pdpr = precision
+      pdex = expansion
+      pdsp = spacing
+      pdci = color index
+   display and label values for pdfn, pdpr, pdex, pdsp, pdci
+next ix
+
+OPQA/PREDEFINED TEXT BUNDLES: Does the appearance of each
+  annotation text relative primitive agree with the displayed aspect
+  values for that bundle?
+if (operator responds "yes") then
+   OPQA/PREDEFINED TEXT BUNDLES: If the implementor provides
+       external documentation, is it consistent with the
+       appearance of the annotation text relative primitive and with
+       the displayed aspect values for every bundle identifier?
+   pass/fail depending on (operator responds "yes")
+else
+   fail
+endif
+
+END PROGRAM 1
+
+
+PROGRAM 2: Text bundle index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEFINED TEXT INDICES: All annotation text relative primitives but one
+are identical (drawn with the same attributes).  Identify the annotation
+text relative primitive that is different.
+
+UNDEFINED TEXT INDICES: A reference annotation text relative primitive
+is drawn above a line with several other annotation text relative
+primitives beneath it.  Normally, all of these will have the same
+attributes as the reference annotation text relative primitive.
+Count up and report the number of the text primitives below the line
+which match the reference text primitive in font, precision, expansion,
+spacing, and color.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+<inquire workstation state table lengths> to determine
+   szbt = maximum size of text bundle table
+
+*** *** ***   text index   *** *** ***
+
+TEST: #SR 1 2 3 4
+      "A defined text index should cause the addressed entry in
+       the bundle table to be used when rendering an annotation text
+       relative primitive."
+
+bundis = number of bundles to be displayed = min(8, szbt)
+set all text bundles in bundis to:
+   font      = 1
+   precision = STROKE
+   expansion = 0.7
+   spacing   = 0.1
+   color     = 1
+
+bundif = randomly selected bundle from bundis
+set text bundle #bundif to:
+   font      = 2
+   precision = STROKE
+   expansion = 1.1
+   spacing   = 0.1
+   color     = 1
+
+Display and label the annotation text relative primitive for each
+  bundle in bundis
+
+OPQA/DEFINED TEXT INDICES: which annotation text relative primitive
+  is different?
+pass/fail depending on (annotation text relative primitive with
+                        attributes from bundle #bundif selected)
+
+TEST: #SR 1 2 3 5
+      "An undefined text index should cause bundle number 1 in
+       the text bundle table to be used when rendering an annotation
+       text relative primitive."
+
+set text bundle #1 to:
+   font      = 2
+   precision = STROKE
+   expansion = 0.8
+   spacing   = 0.2
+   color     = 2
+
+u1,u2,u3 = 3 undefined, positive indices - all greater than
+  maximum defined index in bundle table (szbt)
+explct = number of explicit annotation text relative primitives
+  using bundle #1 = random integer from 0 to 4
+
+draw reference annotation text relative primitive "Test text"
+  with bundle #1 near top of display
+
+draw line underneath
+
+display interleaved, below line:
+  three annotation text relative primitives "Test text" using
+    bundle index u1,u2,u3,
+  explct annotation text relative primitives
+    "Test text" using bundle index 1
+
+OPQA/UNDEFINED TEXT INDICES: How many of the annotation text relative
+  primitives below the line have the same annotation text attributes
+  as the reference annotation text relative primitive above it?
+pass/fail depending on (response = 3+explct)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Appearance of text fonts 1 and 2
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+ASCII SPECIAL CHARACTERS: Each numbered character should be
+recognizable from its name in the prompt.  Respond by entering
+a list of numeric labels, in the same order as requested by the
+prompt. For instance if the screen shows:
+   1: (
+   2: *
+   3: &
+and the prompt asks for <asterisk>, <ampersand>, <opening
+parenthesis>, the correct response is 2,3,1.  All 33 special
+characters are checked for all three precisions in fonts 1 and 2,
+so there will be several prompts for this heading.
+
+ASCII UPPERCASE LETTERS: All 26 uppercase letters and one
+lowercase letter should be displayed.  Identify the position of
+the lowercase letter.  Character positions are displayed to the
+left of each of the strings.  For example, in this line:
+   9-16: DTSRFkCB
+the lowercase "k" is in position 14.  As above, this test is
+executed for all three precisions in fonts 1 and 2.
+
+ASCII LOWERCASE LETTERS: All 26 lowercase letters and one
+uppercase letter should be displayed.  Identify the position of
+the uppercase letter.  Character positions are displayed to the
+left of each of the strings.  As above, this test is executed for
+all three precisions in fonts 1 and 2.
+
+ASCII DIGITS: All 10 digits and one non-digit should be
+displayed.  Identify the position of the non-digit. Character
+positions are displayed to the left of each of the strings.  As
+above, this test is executed for all three precisions in fonts 1
+and 2.
+
+DISTINGUISHABILITY OF FONTS 1 AND 2: For each of the three
+precisions, five lines are displayed, four in one font (1 or 2)
+and one in the other font.  Identify the line in the distinctive
+font.
+
+FONT 1 MONOSPACED: Each line has a character string with some
+leading potentially narrow characters and trailing potentially
+wide characters.  In every string but one, each of its characters
+should line up between the vertical lines.  Identify the one
+string where this is not so.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+set up array for ASCII characters and names:
+ascch = all special characters =  !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+
+ascnm = names of all special characters
+      = space, exclamation point, double quote, pound sign,
+   dollar sign, percent sign, ampersand, apostrophe, left
+   parenthesis, right parenthesis, asterisk, plus sign, comma, dash,
+   period, slash, colon, semi-colon, less-than sign, equals,
+   greater-than sign, question mark, at sign, left bracket, back
+   slash, right bracket, carat, underline, single opening quote,
+   left curly brace, vertical bar, right curly brace, tilde
+
+TEST: #SR 1 3 4 10 11 12 13 14
+      "Fonts 1 and 2 should both contain all the ASCII special
+       characters, in any precision."
+
+grpsiz = how many characters to display at a time = 6
+set text index = 1
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_spec
+    set text rep #1: font, precision, expansion, spacing, color
+                     font, prec       1.0        0.1      1
+    perm = array to randomize order of the 33 characters
+    for ix = 0 to 32 by grpsiz
+       display next grpsiz randomly ordered characters starting
+          from ascch(perm(ix+1))
+       OPQA/ASCII SPECIAL CHARACTERS: Identify, in order, the following
+          characters: ascnm(perm(ix+1)) to ascnm(perm(ix+grpsiz))
+       if (operator response incorrect) then
+          fail
+          goto end_ascii_special
+       endif
+    next ix
+end_fp_spec:
+next prec
+next font
+
+pass
+
+end_ascii_special:
+
+upper  = uppercase characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+noncap = a lowercase letter randomly chosen from "bdfhkt"
+tststr = test string = noncap + upper
+
+TEST: #SR 1 3 4 10 11 12 13 14
+      "Fonts 1 and 2 should both contain all the ASCII uppercase
+       letters, in any precision."
+
+set text index = 2
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_upper
+    set text rep #2: font, precision, expansion, spacing, color
+                     font, prec       1.0        0.1      1
+    perm = array to randomize order of the 27 characters
+    display annotation string tststr in random order
+    OPQA/ASCII UPPERCASE LETTERS: which character is NOT an
+      uppercase letter?
+    if (operator fails to identify noncap) then
+       fail
+       goto end_ascii_upper
+    endif
+end_fp_upper:
+next prec
+next font
+
+pass
+
+end_ascii_upper:
+
+lower  = lowercase characters = 'abcdefghijklmnopqrstuvwxyz'
+nonlow = an uppercase letter randomly chosen from upper
+tststr = test string = nonlow + lower
+
+TEST: #SR 1 3 4 10 11 12 13 14
+      "Fonts 1 and 2 should both contain all the ASCII lowercase
+       letters, in any precision."
+
+set text index = 3
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_lower
+    set text rep #3: font, precision, expansion, spacing, color
+                     font, prec       1.0        0.1      1
+    perm = array to randomize order of the 27 characters
+    display annotation string tststr in random order
+    OPQA/ASCII LOWERCASE LETTERS: which character is NOT a
+      lowercase letter?
+    if (operator fails to identify nonlow) then
+       fail
+       goto end_ascii_lower
+    endif
+end_fp_lower:
+next prec
+next font
+
+pass
+
+end_ascii_lower:
+
+digit  = digit characters = '0123456789'
+nondig = one non-digit randomly chosen from "CEISZ"
+tststr = test string = nondig + digit
+
+TEST: #SR 1 3 4 10 11 12 13 14
+      "Fonts 1 and 2 should both contain all the ASCII digit
+       characters, in any precision."
+
+set text index = 4
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_digit
+    set text rep #4: font, precision, expansion, spacing, color
+                     font, prec       1.0        0.1      1
+    perm = array to randomize order of the 11 characters
+    display annotation string tststr in random order
+    OPQA/ASCII DIGITS: which character is NOT a digit?
+    if (operator fails to identify nondig) then
+       fail
+       goto end_ascii_digit
+    endif
+end_fp_digit:
+next prec
+next font
+
+pass
+
+end_ascii_digit:
+
+TEST: #SR 1 3 4 10 11 12 13 15
+      "Text fonts 1 and 2 should be visually distinguishable in
+       any precision."
+
+fonta = random integer, 1 or 2
+fontb = 3 - fonta
+numlin = 5
+for prec = STRING, CHAR, STROKE
+    set text precision to prec
+    txdif = random integer from 1 to numlin
+    fonta = 3 - fonta
+    fontb = 3 - fontb
+
+    for ix = 1 to numlin
+       if (ix = txdif) then
+          thisfn = fontb
+       else
+          thisfn = fonta
+       endif
+       set text index = ix
+       set text rep #1: font,   precision, expansion, spacing, color
+                        thisfn, prec       1.0        0.1      1
+       display annotation text "Test" at next location
+    next ix
+    OPQA/DISTINGUISHABILITY OF FONTS 1 AND 2: Which line has a
+       different font?
+    if (operator response does not indicate location txdif) then
+       fail
+       goto end_distin
+    endif
+next prec
+
+pass
+
+end_distin:
+
+TEST: #SR 1 3 4 11 12 16 17 18 23 24 25 27 28
+      "In text font 1, all character bodies affected by the same
+       annotation text character height, character expansion
+       factor, and character spacing should have the same width."
+
+set annotation text alignment = LEFT,BASE
+
+Use <inquire text extent> to determine
+  ncwh = nominal character width/height ratio for font 1
+
+numlin = number of lines to display = 6
+ngline = incorrect line = random number from 1 to numlin
+
+display labels for all numlin lines to be shown
+
+chsp = character spacing = 0.2
+for ix = 1 to numlin
+  chht   = random value from .2/numlin to .6/numlin
+  chexp  = random value from .3 to 3
+  chsiz  = horizontal distance per character
+         = chht * (ncwh*chexp + chsp)
+  numch  = number of characters this string = .6 / chsiz
+  make sure numch between 4 and 25, else pick new values
+  numnar = number of narrow characters = numch/2
+  distrg = display string = numnar narrow characters
+    followed by (numch-numnar) wide characters
+  set annotation text character height = chht
+  set text index = ix
+  set text rep #ix: font,   precision, expansion, spacing, color
+                    1,      STROKE,    chexp,     chsp,    1
+  display annotation text distrg at location ix
+  if (ix = ngline) then
+     offact = offset factor = .80 or 1.20
+  else
+     offact = offset factor = 1.00
+  endif
+
+  draw vertical lines between characters, assuming that chht,
+    chsp, and chexp are in effect, distorted by offact
+next ix
+
+OPQA/FONT 1 MONOSPACED: In which line are the characters NOT
+  located between the separators?
+pass/fail depending on (operator indicates location ngline)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Appearance of all text fonts
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+NON-MANDATORY REGISTERED TEXT FONTS: These screens display a
+sample of supported registered text fonts (at most 8).  For each
+displayed line, look up its text font identifier in the ISO
+register and verify that the actual appearance of the text agrees
+with the ISO specification.
+
+IMPLEMENTOR DEFINED TEXT FONTS: These screens display a sample of
+implementor defined text fonts (at most 8).  For each displayed
+line, look up its text font identifier in the implementor's
+documentation and verify that the actual appearance of the text
+agrees with the specification.  Also verify that font identifiers
+are described in a workstation independent way, i.e. the same
+identifier must not specify different fonts for different
+workstation types.
+
+UNIFORM HEIGHT FOR CHARACTER BODIES: Each column has a character
+string composed of some short characters followed by some tall
+characters.  In every string but one, each of its characters
+should line up between the horizontal lines.  Identify the one
+string where this is not so.
+
+IDENTIFY UNREPRESENTED CHARACTER CODES: You must enter a list of
+integers for which font 1 or 2 has no graphic representation.  If
+this is an ASCII machine, values between 0 and 31 may qualify.
+Any entries beyond the first 6 are ignored.  If all values
+are representable, indicate the null list by entering "n".
+Since the entered character codes will be used by the program
+to generate an annotation text relative primitive, do not enter
+any codes which will cause the implementation to take some special
+action.
+
+APPEARANCE OF UNREPRESENTED CHARACTER CODES:  The implementation
+must provide a special representation or symbol to indicate the
+presence of character codes within an annotation text string for
+which the font has no normal representation.  Identify all and
+only the positions in the displayed annotation text string which
+contain this distinctive symbol.  There may be different symbols
+for different non-representable codes.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+use <inquire text facilities> to determine
+  lposfn = list of positive fonts and highest available precision
+           for each, other than fonts 1 and 2
+  lnegfn = list of non-positive fonts and highest available precision
+           for each
+  lstrk  = list of fonts available in STROKE precision
+
+chstr = character string = AaZz09$;^}
+lcc = list of character codes = codes for chstr
+
+if (lposfn empty)
+   informative message: no non-mandatory text fonts
+   goto end_pos
+endif
+
+TEST: #SR 1 3 4 11 12 13
+      "All positive text fonts should appear as specified in the
+       ISO register."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lposfn > 8) then
+   ldisp = 8 randomly chosen from lposfn
+else
+   ldisp = all of lposfn
+endif
+
+display lcc
+display annotation text chstr for each font in ldisp, using a
+  text representation with that font's associated precision
+label each chstr
+
+OPQA/NON-MANDATORY REGISTERED TEXT FONTS: do all displayed,
+  labelled text fonts agree with the corresponding description in
+  the ISO register?
+pass/fail depending on (operator responds "yes")
+
+TEST: #SR 1 3 4 11 12 13 21 22
+      "All positive text fonts should appear as specified in the
+       ISO register, even when less precision is requested than
+       is available for the font."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lposfn > 8) then
+   ldisp = 8 randomly chosen from lposfn
+else
+   ldisp = all of lposfn
+endif
+
+display lcc
+display annotation text chstr for each font in ldisp, using a text
+  representation with a precision less than that font's associated
+  precision (or equal if STRING)
+label each chstr
+
+OPQA/NON-MANDATORY REGISTERED TEXT FONTS: do all displayed,
+  labelled text fonts agree with the corresponding description in
+  the ISO register?
+pass/fail depending on (operator responds "yes")
+
+end_pos:
+
+if (lnegfn empty)
+   informative message: no non-mandatory text fonts
+   goto end_font_id
+endif
+
+TEST: #SR 1 3 4 11 12 13
+      "All non-positive text fonts should appear as specified in
+       the implementor's documentation."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lnegfn > 8) then
+   ldisp = 8 randomly chosen from lnegfn
+else
+   ldisp = lnegfn
+endif
+
+display lcc
+display annotation text chstr for each font in ldisp, using a text
+  representation with that font's associated precision
+label each chstr
+
+OPQA/IMPLEMENTOR DEFINED TEXT FONTS: Do all displayed, labelled
+  text fonts agree with the corresponding description in the
+  implementor documentation?
+pass/fail depending on (operator responds "yes")
+
+TEST: #SR 1 3 4 11 12 13 21 22
+      "All non-positive text fonts should appear as specified in
+       the implementor's documentation, even when less precision
+       is requested than is available for the font."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lnegfn > 8) then
+   ldisp = 8 randomly chosen from lnegfn
+else
+   ldisp = lnegfn
+endif
+
+display lcc
+display annotation text chstr for each font in ldisp, using a text
+  representation with a precision less than that font's associated
+  precision (or equal if STRING)
+label each chstr
+
+OPQA/IMPLEMENTOR DEFINED TEXT FONTS: Do all displayed, labelled
+  text fonts agree with the corresponding description in the
+  implementor documentation?
+pass/fail depending on (operator responds "yes")
+
+if (ldisp = all of lnegfn)
+   all negative fonts displayed already
+   goto end_font_id
+endif
+
+end_font_id:
+
+TEST: #SR 1 3 4 11 12 16 17 23 24 25 27 28
+      "In each text font, all character bodies affected by the
+       same annotation text character height, character expansion
+       factor, and character spacing should have the same height."
+
+set annotation text alignment = LEFT,TOP
+set annotation text path = DOWN
+
+numcol = number of columns to display = 6
+ngcol  = incorrect column = random number from 1 to numcol
+
+display labels for all numcol columns to be shown
+
+chsp = character spacing = 0.4
+for ix = 1 to numcol
+  txfnt  = random value from lstrk
+  Use <inquire text extent> to determine
+    ncsh = nominal vertical character body size /
+           requested character height
+           for txfnt
+  chht   = random value from .2/numcol to .6/numcol
+  chexp  = random value from .3 to 3
+  chsiz  = vertical distance per character
+         = chht * (ncsh + chsp)
+  numch  = number of characters this string = vert-space / chsiz
+  make sure numch between 4 and 25, else pick new values
+
+  numsht = number of short characters = numch/2
+  distrg = display string = numsht short characters
+    followed by (numch-numsht) tall characters
+
+  set annotation character height = chht
+  set text index = ix
+  set text rep #ix: font,   precision, expansion, spacing, color
+                    txfnt,  STROKE,    chexp,     chsp,    1
+
+  display annotation text distrg in column ix
+  if (ix = ngcol) then
+     offact = offset factor = .80 or 1.20
+  else
+     offact = offset factor = 1.00
+  endif
+
+  draw horizontal lines between characters, assuming that chht,
+    chsp, and chexp are in effect, distorted by offact
+next ix
+
+OPQA/UNIFORM HEIGHT FOR CHARACTER BODIES: In which column are the
+  characters NOT aligned between the separators?
+pass/fail depending on (operator indicates location ngcol)
+
+OPQA/IDENTIFY UNREPRESENTED CHARACTER CODES: Enter list of 6 or
+fewer character codes for which font 1 has no representation (n
+if none).
+
+unr1ls = operator response
+
+OPQA/IDENTIFY UNREPRESENTED CHARACTER CODES: Enter list of 6 or
+fewer character codes for which font 2 has no representation (n
+if none).
+
+unr2ls = operator response
+
+if (unr1ls and unr2ls empty) then
+   informative message: cannot test SR46, no unrepresentable
+      character codes in fonts 1 or 2
+   goto end_unrep
+endif
+
+TEST: #SR 1 3 4 11 12 14 19
+      "There should be an implementation dependent way to depict
+       a character code for which a font has no graphic
+       representation."
+
+if (unr1ls empty) then
+   goto do_f2
+endif
+
+set text index = 1
+for prec = STRING,CHAR,STROKE
+   str = random mix of ASCII and unrepresented character codes
+   set text rep #1: font,   precision, expansion, spacing, color
+                    1,      prec,      1.0,       0.2,     1
+   display annotation text str, using index #1
+
+   OPQA/APPEARANCE OF UNREPRESENTED CHARACTER CODES: The
+   implementation has a special symbol to indicate the
+   presence of non-representable character codes within
+   an annotation text string.  List, in order, all the
+   character positions containing this special symbol.
+
+   if (operator response incorrect) then
+      fail
+      goto end_unrep
+   endif
+next precision
+
+if (unr2ls empty) then
+   pass
+   goto end_unrep
+endif
+
+do_f2:
+set text index = 1
+for prec = STRING,CHAR,STROKE
+   str = random mix of ASCII and unrepresented character codes
+   set text rep #1: font,   precision, expansion, spacing, color
+                    2,      prec,      1.0,       0.2,     1
+   display annotation text str, using index #1
+
+   OPQA/APPEARANCE OF UNREPRESENTED CHARACTER CODES: The
+   implementation has a special symbol to indicate the
+   presence of non-representable character codes within
+   an annotation text string.  List, in order, all the character
+   positions containing this special symbol.
+
+   if (operator response incorrect) then
+      fail
+      goto end_unrep
+   endif
+next precision
+pass
+
+end_unrep:
+
+END PROGRAM 4
+
+
+PROGRAM 5: Appearance of character expansion factor for STRING
+           and CHAR precision
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 12 20 21 22 24 25 26
+      "Test cases for the visual effect of the approximated annotation
+       text attribute character expansion factor in STRING and CHAR
+       precision are not yet available."
+pass
+
+END PROGRAM 5
+
+
+PROGRAM 6: Appearance of character expansion factor and
+           character spacing
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+CHARACTER EXPANSION AND SPACING IN HORIZONTAL ANNOTATION TEXT:
+Several horizontal lines containing an annotation text string are
+drawn with various values for the character attributes.
+The expected character body positions are outlined with a dotted
+line and a dashed baseline is drawn, usually of different colors
+than the annotation text itself. Identify the single line in which
+the characters either do NOT fall within the dotted boxes or are NOT
+aligned on the baseline. Since the boxes are character bodies,
+they are bounded by the topline and bottomline, and thus may be
+somewhat larger vertically than the enclosed character.  In the
+case of overlapping characters due to negative character spacing,
+half-boxes are drawn, so that the boxes themselves don't overlap.
+
+CHARACTER EXPANSION AND SPACING IN VERTICAL ANNOTATION TEXT: Same
+as above, except that the annotation text choices are vertical columns,
+not horizontal lines.  Note that the expected position is
+aligned on the vertical centerline (not left- or right-justified);
+the actual characters, therefore, must not appear to the left or
+right of the expected box.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+use <inquire text extent> with
+  text font                  = 1
+  character height           = 1
+  character spacing          = 0
+  character expansion factor = 1
+  text string                = "WWiig!"
+to determine
+  ncbht = nominal character body height
+  ncbwd = nominal character body width
+
+set annotation text path = RIGHT
+numlin = number of lines = 6
+ngline = random number from 1 to numlin
+for ix = 1 to numlin
+   randomly select, to fit on one line
+      chht  = character height
+      chexp = expansion factor
+      chsp  = character spacing
+
+   set annotation text character height = chht
+   set text index = ix
+   set text rep #ix: font,   precision, expansion, spacing, color
+                     1,      STROKE,    chexp,     chsp,    1
+
+   display annotation text "WWiig!" on line ix
+   calculate expected character boxes
+   if (ix = ngline) then
+      distort character boxes
+   endif
+   draw annotation text in character boxes, using dotted line style,
+     color #2
+next ix
+
+TEST: #SR 1 3 4 18 23 24 25 26 27 28
+      "The size and shape of an annotation text string displayed with
+       STROKE precision in a monospaced font on a horizontal annotation
+       text path should conform exactly to the annotation text character
+       height, expansion factor, and spacing in effect."
+
+OPQA/CHARACTER EXPANSION AND SPACING IN HORIZONTAL ANNOTATION TEXT:
+  In which line are the characters of the annotation text string NOT
+  aligned within dotted character boxes and on the dashed baseline?
+pass/fail depending on (operator picks location ngline)
+
+set annotation text path = DOWN
+numcol = number of columns = 6
+ngcol  = random number from 1 to numcol
+for ix = 1 to numcol
+   randomly select, to fit in one column
+      chht  = character height
+      chexp = expansion factor
+      chsp  = character spacing
+
+   set annotation character height = chht
+   set text index = ix
+   set text rep #ix: font,   precision, expansion, spacing, color
+                     1,      STROKE,    chexp,     chsp,    1
+
+   display annotation text "WWiig!" in column ix
+   calculate expected character boxes
+   if (ix = ngcol) then
+      distort character boxes
+   endif
+   draw annotation text in character boxes, using dotted line style,
+     color #2
+next ix
+
+TEST: #SR 1 3 4 18 23 24 25 26 27 28
+      "The size and shape of an annotation text string displayed with
+       STROKE precision in a monospaced font on a vertical annotation
+       text path should conform exactly to the annotation text character
+       height, expansion factor, and spacing in effect."
+
+OPQA/CHARACTER EXPANSION AND SPACING IN VERTICAL ANNOTATION TEXT:
+  In which column are the characters of the annotation text string NOT
+  aligned within dotted character boxes and on the dashed centerline?
+pass/fail depending on (operator picks location ngcol)
+
+bestfn = a stroke text font other than 1, preferably not #2 and
+         not monospaced
+
+bestsc = best score so far for font properties = -1
+bestfn = best font so far = -1
+for ix = each available non-#1 stroke font
+   thisfn = ixth font from <inquire text facilities>
+   use <inquire text extent> with
+     text font                  = thisfn
+     character height           = 1
+     character spacing          = 0
+     character expansion factor = 1
+     annotation text string     = "WWW"
+   to determine
+     tcbhtw = nominal character body height for W
+     tcbwdw = nominal character body width for W
+
+   use <inquire text extent> with
+     text font                  = thisfn
+     character height           = 1
+     character spacing          = 0
+     character expansion factor = 1
+     annotation text string     = "iii"
+   to determine
+     tcbhti = nominal character body height for i
+     tcbwdi = nominal character body width for i
+
+   if (thisfn = 2) then
+      fnscor = score for this font = 0
+   else
+      fnscor = score for this font = 1
+   endif
+
+   if (ncbwdi approx= ncbwdw) then
+      do nothing
+   else
+      add 2 to fnscor
+   endif
+
+   if (fnscor > bestsc) then
+      best font so far:
+      bestsc = fnscor
+      bestfn = thisfn
+      ncbhtw = tcbhtw
+      ncbwdw = tcbwdw
+      ncbhti = tcbhti
+      ncbwdi = tcbwdi
+      if (fnscor .ge. 3) then
+         got a non-2, non-monospaced font: goto got_font
+      endif
+   endif
+next stroke font
+
+if (bestsc <= -1) then
+   message: skipping tests for proportionately spaced fonts; none
+            available.
+   goto endit
+endif
+
+got_font:
+
+set annotation text path = LEFT
+numlin = number of lines = 6
+ngline = random number from 1 to numlin
+for ix = 1 to numlin
+   randomly select, to fit on one line
+      chht  = character height
+      chexp = expansion factor
+      chsp  = character spacing
+
+   set annotation text character height = chht
+   set text index = ix
+   set text rep #ix: font,   precision, expansion, spacing, color
+                     bestfn, STROKE,    chexp,     chsp,    1
+
+   display annotation text "WWiiiW" on line ix
+   calculate expected character boxes
+   if (ix = ngline) then
+      distort character boxes
+   endif
+   draw annotation text in character boxes, using dotted line style,
+     color #2
+next ix
+
+TEST: #SR 1 3 4 23 24 25 26 27 28
+      "The size and shape of an annotation text string displayed with
+       STROKE precision in any font on a horizontal annotation text
+       path should conform exactly to the annotation text character
+       height, expansion factor, and spacing in effect."
+
+OPQA/CHARACTER EXPANSION AND SPACING IN HORIZONRAL ANNOTATION TEXT:
+  In which line are the characters of the annotation text string NOT
+  aligned within dotted character boxes and on the dashed baseline?
+pass/fail depending on (operator picks location ngline)
+
+set annotation text path = UP
+numcol = number of columns = 6
+ngcol  = random number from 1 to numcol
+for ix = 1 to numcol
+   randomly select, to fit in one column
+      chht  = character height
+      chexp = expansion factor
+      chsp  = character spacing
+
+   set annotation text character height = chht
+   set text index = ix
+   set text rep #ix: font,   precision, expansion, spacing, color
+                     bestfn, STROKE,    chexp,     chsp,    1
+
+   display annotation text "WWiiiW" in column ix
+   calculate expected character boxes
+   if (ix = ngcol) then
+      distort character boxes
+   endif
+   draw annotation text in character boxes, using dotted line style,
+     color #2
+next ix
+
+TEST: #SR 1 3 4 23 24 25 26 27 28
+      "The size and shape of an annotation text string displayed with
+       STROKE precision in any font on a vertical annotation text path
+       should conform exactly to the annotation text character height,
+       expansion factor, and spacing in effect."
+
+OPQA/CHARACTER EXPANSION AND SPACING IN VERTICAL ANNOTATION TEXT:
+  In which column are the characters of the annotation text string NOT
+  aligned within dotted character boxes and on the dashed centerline?
+pass/fail depending on (operator picks location ngcol)
+
+endit:
+
+END PROGRAM 6
+
+
+PROGRAM 7: Appearance of text color index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEFINED TEXT COLOR INDICES: All annotation text lines but one are
+drawn in the background color.  Identify the single annotation text
+line drawn in the default foreground color.
+
+UNDEFINED TEXT COLOR INDICES: A star is drawn with several
+horizontal annotation text lines beneath it.  Normally, all of these
+will be the same color as the star.  Count up and report the number of
+annotation text lines that match the star in color.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+TEST: #SR 1 3 4 29 30
+      "A defined text color index should cause the addressed
+       entry in the color table to be used when rendering an
+       annotation text primitive."
+
+bckcol = background color = realized color spec for entry #0
+forcol = foreground color = realized color spec for entry #1
+
+szcolt = maximum size of color table (including entry #0)
+numlin = number of annotation text lines to be drawn = min(8, szcolt)
+lncol  = random permutation of #0,#1, and numlin-2 random choices
+         from entries #2 to #szcolt-1
+visdx = from lncol, randomly select an entry to be made visible
+        but not the one that contains 0, since this may not be
+        re-settable.
+
+for ix = 1 to numlin
+   set entry lncol(ix) to bckcol
+   randomly pick prec = precision, to ensure no interaction
+
+   set text index = ix
+   set text rep #ix color = lncol(ix)
+
+   draw annotation text line #ix, using text rep #ix
+next ix
+
+set entry lncol(visdx) to forcol
+
+OPQA/DEFINED TEXT COLOR INDICES: which annotation text line is visible?
+pass/fail depending on (response = annotation text line colored by visdx)
+
+end_def_col:
+
+TEST: #SR 1 3 4 29 31
+      "An undefined text color index should cause entry
+       number 1 in the color table to be used when rendering an
+       annotation text primitive."
+
+set entry #1 in color table opposite from BCKCOL
+set entry #1 different from FORCOL - make sure that the undefined
+  entries default to *current* color-rep of #1, not just a
+  predefined color.
+
+set polyline index = 1
+set polyline rep #1: type, width, color
+                     1,    3.0,   1
+draw star, using polyline rep #1
+
+u1,u2,u3 = 3 undefined, positive color indices - all greater
+  than maximum defined entry in color table
+explct = number of explicit annotation text lines of color #1 =
+   random integer from 0 to 4
+
+set text rep #1: color = u1
+set text rep #2: color = u2
+set text rep #3: color = u3
+set text rep #4: color = 1
+
+display interleaved:
+  three annotation text lines of color u1,u2,u3 (using text rep #1,2,3)
+  explct annotation text lines of color #1 (using text rep #4)
+
+OPQA/UNDEFINED TEXT COLOR INDICES: how many annotation text lines are the
+  same color as the star?
+pass/fail depending on response = 3+explct
+
+END PROGRAM 7
+
+
+PROGRAM 8: Network inheritance and initialization of text index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR TEXT INDEX: This screen
+displays several left-right pairs of annotation text relative primitives.
+Make sure that all pairs except one have matching font, precision,
+expansion, spacing, and color.  Identify the non-matching pair.
+
+DESIGN:
+
+All test cases use same basic structure network for testing
+inheritance.  Five (distinct if possible) values for the
+attribute to be tested are set up and propagated throughout the
+network.  The first value is the system default from the PDT.
+Note that structure #104 is executed by both #103 and #101.
+Actual results are displayed on the left, expected results
+on the right, with the 14th deliberately made incorrect.
+
+default = val#1
+  |                  102
+  |                 /  prim 2
+  |               /    attr = val#3   val#3
+  V        val#1/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   attr = val#4
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  attr = val#2                                  prim 7    \ val#4
+  prim 10                                                   \
+  transform             val#2                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        attr = val#5
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+
+set all ASFs to BUNDLED
+
+*** *** ***   inheritance for text index   *** *** ***
+
+call DISCOL to try to get 5 distinct foreground colors,
+  returning fcol = actual number of foreground colors
+colind(1:5) = [1,2,3,4,5]
+if (fcol < 5) then
+   copy 1st valid part of list to tail of list
+endif
+
+set up bundles 1-5:
+
+   bundle
+   index    font  precision  expansion  spacing  color
+   ------   ----  ---------  ---------  -------  -----
+     1        1   STROKE         1.0       0.0   colind(1)
+     2        2   STROKE         1.0       0.3   colind(2)
+     3        1   STROKE         0.7       0.3   colind(3)
+     4        2   STROKE         0.7       0.0   colind(4)
+     5        1   STROKE         1.3       0.0   colind(5)
+
+randomize location of annotation text relative primitives
+
+set up CSS as described above
+
+display 14 pairs of annotation text primitives, "ABC", using bundles 1-5
+
+TEST: #SR 1 3 4 6 7
+      "The text index should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR TEXT INDEX:
+  which pair of annotation text relative primitives does NOT match?
+pass/fail depending on (response = position of text 14)
+
+END PROGRAM 8

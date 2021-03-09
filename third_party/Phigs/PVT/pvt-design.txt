@@ -1,0 +1,320 @@
+Interactive Conformance Testing for PHIGS
+John V􏰀 Cugini
+Computer Systems Lab oratory􏰁 National Institute of Standards and Technology􏰁 Gaithersburg􏰁 MD 􏰂􏰃􏰄􏰅􏰅􏰁 USA
+ABSTRACT
+Conformance testing for the Programmer􏰆s Hierarchical Interactive Graphics System 􏰇PHIGS􏰈 standard presents certain novel di􏰉culties􏰁 esp ecially the indirect e􏰊ect of many functions􏰁 and the inaccessibility to the program of visual e􏰊ects􏰀 The PHIGS Validation Tests 􏰇PVT􏰈 incorp orate several innovative design features in order to address these di􏰉culties􏰀 The mo del of deductive inference suggests ways to organize a system as logically complex as the PVT􏰀 This complexity makes the use of certain database concepts quite valuable in allowing users to navigate within the system􏰀 The problem of inaccessible e􏰊ects can be addressed by careful design of the user interface􏰁 so as to minimize the sub jectivity and operational di􏰉culty inherent in testing such features􏰀 Sub jectivity is minimized by posing short simple questions to the op erator􏰁 in which the exp ected answer is randomized􏰀 Several design fea􏰋 tures enhance ease of use􏰁 including a customizable interface􏰁 self􏰋explanatory displays􏰁 and automatic capture of results􏰀
+KEYWORDS􏰌 conformance testing􏰍 graphics standards􏰍 human factors􏰍 interactive test􏰋 ing􏰍 PHIGS standard􏰍 validation of software
+􏰑 Overview
+Standards for graphics programming 􏰎GKS􏰄􏰏 􏰁 PHIGS􏰄􏰅􏰐􏰁 while similar in some resp ects to programming language standards􏰁 present sp ecial challenges for conformance testing􏰀 The Computer Systems Lab oratory 􏰇CSL􏰈 of the National Institute of Standards and Technology 􏰇NIST􏰈 of the US Department of Commerce has undertaken the development of a PHIGS Validation Test 􏰇PVT􏰈 system 􏰎CUGI􏰅􏰃􏰐 for the recently adopted Programmer􏰆s Hierarchi􏰋 cal Interactive Graphics System 􏰇PHIGS􏰈 standard􏰀 In this test suite􏰁 we have addressed systematically some of the problems p osed by the nature of graphics standards􏰀
+Contribution of the US National Institute of Standards and Technology􏰀 Not sub ject to copyright􏰀 An earlier version of this pap er was presented at Eurographics 􏰆􏰅􏰑􏰀
+ 
+􏰂 Problems􏰌 Indirect and Inaccessible E􏰊ects
+The PHIGS standard􏰁 unlike programming language standards􏰁 and to some extent the GKS standard􏰁 is built largely around a state􏰋machine concept􏰀 Many functions􏰁 such as polyline􏰁 do not directly generate graphic output􏰁 but rather set or inquire a complex state environment􏰀 The two data structures of immediate interest are those describing the state of the workstation􏰁 upon which graphical ob jects may be drawn􏰁 and the Centralized Structure Store 􏰇CSS􏰈 that contains a database logically describing graphical ob jects􏰀 Only when these two are made to interact􏰁 by posting parts of the CSS to a workstation􏰁 do es a program generate any visible results􏰀 These visible results are􏰁 moreover􏰁 not sub ject to automatic testing􏰁 since PHIGS provides no function for reading pixels from the screen􏰀 Thus􏰁 most of the functions to b e tested have e􏰊ects which are either indirect􏰁 or inaccessible to the program􏰀
+As an example of the former􏰁 consider the archive structure function􏰁 which writes a p ortion of the CSS to a 􏰒le􏰀 In order to test such a function􏰁 one must 􏰒rst create some entities within the CSS􏰁 archive them􏰁 read them back into the CSS 􏰇with the retrieve structure function􏰈􏰁 and 􏰒nally􏰁 examine the state of the CSS􏰀 Thus􏰁 the only feasible self􏰋 checking test cases for archive structure are necessarily dep endent on many other features of PHIGS􏰀
+The problem of inaccessible 􏰇to the program􏰈 e􏰊ects for graphics testing is p erhaps b etter appreciated􏰀 Clearly􏰁 the most imp ortant requirement of the PHIGS or GKS standard is that some predictable visual display is pro duced􏰀 The app earance of this display is accessible only to the human op erator􏰁 who thus b ecomes an intrinsic part of the test system􏰀 This contrasts sharply with the testing of more traditional software systems such as programming language compilers􏰁 in which the role of the op erator is merely to interpret automatically generated rep orts􏰀 The testing of graphic input􏰁 as well as graphic output􏰁 p oses di􏰉culties􏰀 We may characterize this as the problem of inaccessible causes􏰁 rather than e􏰊ects􏰌 the standard provides no way for the program alone to generate input op erations􏰀 Once again􏰁 the op erator must b e actively involved􏰀
+Schematically􏰁 we can think of the input􏰓output structure of PHIGS functions as depicted in Figure 􏰑􏰀 Note that only the op erator can examine graphic output or provide graphic input􏰀
+􏰔 Foundation of the PVT􏰌
+Because of the size of the PHIGS sp eci􏰒cation
+CSL 􏰇two p eople􏰈􏰁 we needed an approach that would allow incremental development of a test suite􏰀 Since interactive tests are more di􏰉cult b oth to write and to run􏰁 we decided to defer these and concentrate 􏰒rst on testing the internal state of PHIGS􏰀 Thus􏰁 we would face at 􏰒rst only the problem of indirectness􏰁 but not inaccessibility􏰀
+Version 􏰑􏰀􏰃 of the PHIGS Validation Tests 􏰇PVT􏰈 was distributed to several implementors for b eta􏰋testing in January 􏰑􏰅􏰅􏰃 and b ecame o􏰉cially available in July 􏰑􏰅􏰅􏰃􏰀 It included 􏰂􏰑􏰄 programs 􏰇in Fortran􏰈􏰁 􏰑􏰁􏰔􏰔􏰕 test cases 􏰇the smallest unit that can pass or fail􏰈􏰁 over 􏰖􏰄􏰁􏰃􏰃􏰃 lines of co de􏰁 over 􏰖􏰏􏰁􏰃􏰃􏰃 lines of do cumentation􏰁 and consumed 􏰔􏰅 sta􏰊􏰋months of e􏰊ort􏰁
+Version 􏰑􏰀􏰃
+􏰇􏰔􏰑􏰅 functions􏰈 and the limited resources at
+
+      Input parameters
+􏰢􏰣􏰢 Z 􏰢􏰢􏰣 Z
+Z􏰤 Z􏰤Z 􏰚􏰢􏰠􏰚􏰢􏰠􏰚􏰠
+􏰢Z􏰢Z
+Graphic output
+     Program PHIGS function Op erator
+      􏰘􏰡􏰘􏰡􏰘􏰡 QkQ 􏰥􏰥􏰕QkQ 􏰥􏰥
+    Q 􏰥􏰦 Q 􏰥􏰦 􏰧
+􏰧 􏰧􏰨
+      Output parameters
+􏰜
+Figure 􏰑􏰌 Input􏰓output structure of PHIGS
+functions
+Graphic input
+     Internal Data Structures
+ a 􏰂􏰑 month p erio d􏰀 Comments on the PVT from users have b een generally
+exp ended over
+favorable􏰍 as might b e exp ected􏰁 the PVT has raised a numb er of interpretation issues which will be submitted to the appropriate ISO committee for resolution􏰀
+We wanted some mo del to guide the construction of test cases􏰁 rather than approaching this as an ad hoc task􏰀 In particular􏰁 we had to solve the problem of relating test cases back to the standard which supposedly justi􏰒es them􏰀 Three ma jor design ideas emerged in the construction of version 􏰑􏰀􏰃􏰌
+􏰑􏰀 Designing conformance tests using concepts of deductive logic
+􏰂􏰀 Asso ciating the various entities of the PVT using concepts of database design
+􏰔􏰀 Structuring the PVT into hierarchically organized mo dules
+􏰔􏰀􏰑 PVT as Logical System
+One helpful way of understanding conformance testing is within the framework of deductive logic􏰀 In a logical system􏰁 the basic op eration is that of inference􏰀 From a 􏰒nite numb er of given premises􏰁 one can infer a set of conclusions􏰀 If the premises are true and the inference is valid􏰁 then the conclusions must also b e true􏰀 Conversely􏰁 if the inference is valid and the conclusion is false􏰁 then one of the premises relied up on must b e false􏰀 This latter mo de of reasoning is the one typically used in conformance testing􏰀
+􏰔􏰀􏰑􏰀􏰑 Application to PHIGS Standard
+The PHIGS standard can b e understo o d as a set of premises or axioms for a logical system􏰀 The premises are of the form􏰌 􏰗For all X􏰁 if X is a conforming implementation􏰁 then X b ehaves in the following way􏰌 􏰀􏰀􏰀􏰘􏰍 i􏰀e􏰀􏰁 the standard de􏰒nes the b ehavior of a conforming implementation􏰀 When we test an alleged implementation􏰁 P􏰁 we rely on the additional premise􏰌 􏰗P is a conforming implementation􏰀􏰘 From these premises we can then infer a
+
+great deal ab out the b ehavior of P􏰀 If we discover that the actual b ehavior of P di􏰊ers from this theoretical b ehavior􏰁 we can then conclude that the premise that P conforms is false􏰀
+Although this outline is simple in theory􏰁 in practice there are a numb er of di􏰉culties􏰀
+First and foremost􏰁 the standard is not cast as
+comp osed of English prose􏰀 Second􏰁 in order to infer a seemingly simple conclusion􏰁 one often needs a large numb er of premises from the standard including several which are not of direct interest to the test at hand􏰁 as we saw ab ove in the example of archive structure􏰀 Finally􏰁 it is di􏰉cult to relate all this logical machinery to the actual co de􏰀
+Despite the impracticality of carrying out the full realization of the pure logical mo del􏰁 it serves as an ideal which can suggest ways of structuring the actual system􏰀 In particular􏰁 the PVT uses the notion of semantic requirements 􏰇SRs􏰈􏰁 which play the role of the premises of the standard􏰁 and test case 􏰇TC􏰈 results􏰁 which play the role of conclusions􏰀
+􏰔􏰀􏰑􏰀􏰂 Semantic Requirements
+The PVT system consists of mo dules 􏰇see b elow􏰈􏰁 each of which contains a set of semantic requirements􏰀 These SRs represent a partial axiomatization of a given topical area of the standard􏰀 Like logical premises􏰁 well􏰋designed SRs should b e􏰌
+􏰑􏰀 Indep endent 􏰙 If one SR implies another we keep only the stronger of the two􏰁 since the other is redundant􏰀
+􏰂􏰀 Complete 􏰙 The SRs should require everything that the standard requires􏰀
+􏰔􏰀 Consistent 􏰙 The SRs should not contradict each other􏰀
+􏰖􏰀 Sp eci􏰒c 􏰙 Each SR must have some testable consequence􏰁 perhaps in conjunction
+with other SRs􏰀 Broad generalities are to b e avoided in favor of lower􏰋level concrete assertions􏰀
+􏰏􏰀 Simple 􏰙 An SR should not b e a long list of requirements􏰍 to a reasonable extent􏰁
+each SR
+Even given
+given mo dule􏰀
+ment of the requirements to which an implementation will b e held􏰀 This serves to sharp en any interpretation question which may emerge􏰀 These cases serve as feedback to the stan􏰋 dardization pro cess so that inconsistent or incomplete sp eci􏰒cations in the standard may b e
+a series of logical premises􏰁 but as a do cument
+should state an atomic rule ab out conforming implementations􏰀
+these guidelines􏰁 there is no uniquely b est way of formulating the SRs for a Once a set of SRs has b een develop ed􏰁 however􏰁 we do have a clear state􏰋
+corrected􏰀 See Figure 􏰂 for some examples of
+􏰔􏰀􏰑􏰀􏰔 Test Cases
+semantic requirements􏰀
+The typical situation􏰁 rather􏰁 is that a testable Such a conclusion is the basis for a test case one the the
+A single SR cannot usually b e tested directly􏰀
+conclusion logically dep ends on several SRs􏰀
+􏰇TC􏰈􏰀 There is􏰁 in general􏰁 a many to many relationship b etween SRs and TCs􏰌 just as
+TC may dep end on several SRs􏰁 each SR may b e used by several TCs􏰀 The TCs are executable core of the PVT system􏰀 Each TC consists of an explicit statement ab out
+b ehavior of a conforming implementation􏰁 worded so as to state what 􏰗should􏰘 happ en􏰀 Its
+
+Semantic Requirements􏰌
+SR􏰑􏰀 􏰪Element search􏰣 searches for the next matching element in the specified structure􏰁 beginning at the start element position and proceeding in the direction specified􏰀
+SR􏰂􏰀 When using 􏰪element search􏰣􏰁 the search terminates if an element is selected or if the limits of the structure are reached􏰀
+SR􏰔􏰀 When using 􏰪element search􏰣􏰁 an element qualifies for selection if and only if its type belongs to the inclusion set and does not belong to the exclusion set􏰀
+ 􏰀􏰀􏰀
+SR􏰄􏰀 When using 􏰪element search􏰣􏰁 if the search the status indicator returns the value FAILURE􏰀
+Test Case pseudo􏰋co de􏰌
+is unsuccessful􏰁
+ selpos 􏰫 􏰃􏰍 dir 􏰫 FORWARD􏰍 elinc 􏰫 LABEL􏰍 elexc 􏰫 LABEL TEST􏰌 􏰚SR 􏰑 􏰂 􏰔 􏰄
+􏰘When using 􏰪element search􏰣􏰁 if an element
+specified in both the exclusion set and inclusion set􏰁 it should be excluded􏰀􏰘
+􏰪element search􏰣 with strid􏰁 selpos􏰁 dir􏰁 elinc􏰁 elexc
+pass􏰓fail depending on 􏰇errind 􏰫 􏰃 and statid 􏰫 FAILURE􏰈
+Message resulting from test case􏰌
+OK􏰌 Condition 􏰚 􏰑􏰏 passed􏰌 􏰚SR 􏰑 􏰂 􏰔 􏰄􏰁 When using 􏰪element search􏰣􏰁 if an element type is specified in both the exclusion set and inclusion set􏰁 it should be excluded􏰀
+Figure 􏰂􏰌 Examples of PVT elements from mo dule 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂
+type is
+ 
+execution generates a pass􏰓fail message which can b e routed to the op erator􏰁 a program rep ort 􏰒le􏰁 a cumulative rep ort 􏰒le􏰁 or any combination thereof􏰀
+The imp ortant thing is to relate a TC back to its SRs and ultimately to the standard itself􏰀 Each TC is annotated with a set of SRs in order to suggest how one would prove that all conforming implementations must succeed for that TC 􏰇see Figure 􏰂􏰈􏰀 Explicitly citing the SRs that justify each TC makes it easier to settle disputes if the validity of the TC is challenged􏰀 Furthermore􏰁 as we shall see b elow􏰁 each SR cites the parts of the standard up on which it is based􏰀 Thus the complete chain of inference from standard to TC is exhibited􏰀
+Passing the TCs is no guarantee that an implementation really do es conform􏰍 it might well violate the standard in untested areas􏰀 But failure in a valid TC do es strictly imply failure to conform􏰀
+􏰔􏰀􏰂 PVT as a Database
+We have seen that there are several typ es of entities involved in a conformance test system􏰌 PHIGS functions􏰁 PHIGS data structures􏰁 programs􏰁 semantic requirements􏰁 test cases􏰁 and the PHIGS standard itself􏰀 Users of the test system need to navigate around this set of ob jects􏰀 In particular􏰁 conformance tests must b e informative ab out the relationship of the test to the standard􏰁 otherwise the advantages of the logical mo del are lost􏰀 We to ok it as a central goal not merely that the tests b e logically correct􏰁 but also that interested users b e given a way to see for themselves that the exp ected outcome is correctly grounded in the sp eci􏰒cations of the standard 􏰇see section 􏰔􏰀􏰑􏰀􏰔􏰈􏰀
+The database paradigm provides well􏰋understo o d techniques for addressing these issues􏰀 The 􏰗navigation􏰘 problem can b e thought of as a database design problem􏰀 We develop ed a database schema to express the relationships among the ob jects mentioned􏰀 By adopting strict conventions for the do cumentation􏰁 we not only enhance human readability􏰁 but also allow automatic capture of the relationships to be used in comprehending the PVT system􏰀
+The SRs anchor the system􏰍 they sp ecify the precise b ehavior of PHIGS functions and data􏰀 Therefore􏰁 the SRs also serve as the reference p oints for related entities􏰀 Sp eci􏰒cally􏰁 each SR is annotated with a list of related functions 􏰇denoted by 􏰚F􏰈􏰁 data structures 􏰇􏰚D􏰈􏰁 references to the standard 􏰇􏰚S􏰈􏰁 and asso ciated test cases 􏰇􏰚T􏰈􏰀 By adopting a canonical numb ering of the functions and data structures and do cumenting the references according to a well􏰋de􏰒ned format􏰁 we allow cross􏰋reference tables to b e built automatically once the
+original annotation Besides enabling
+Figure 􏰔 contains a diagram exhibiting the main features of this database􏰁 namely its entities and the relationships among them􏰀 Note the central role of the SRs􏰀
+􏰔􏰀􏰔 PVT Architecture
+should b e such as to b e easily accessible by b oth
+is done 􏰇see Figure 􏰔􏰈􏰀
+users to navigate within the system􏰁 another imp ortant goal of
+this gives us a go o d coverage metric􏰌 we can see which functions and data
+approach is that it
+structures have b een prob ed by the total PVT system􏰀
+Given the design goals and mo dels set forth􏰁 the
+an actual system of software and do cumentation􏰀 The representation of the abstract entities
+question b ecomes how to realize these in automatic pro cesses and the human user􏰀
+
+Annotated SR􏰌
+ SR􏰄􏰀 When using 􏰪element search􏰣􏰁 if
+the status indicator returns the value FAILURE􏰀
+􏰚F 􏰔􏰑􏰃
+􏰚D 􏰛􏰀􏰔
+􏰚S 􏰖􏰀􏰖􏰀􏰕􏰓􏰔􏰑􏰓􏰕
+􏰚T P􏰃􏰑􏰓􏰛 P􏰃􏰑􏰓􏰄 P􏰃􏰑􏰓􏰑􏰃 P􏰃􏰑􏰓􏰑􏰑 P􏰃􏰑􏰓􏰑􏰂 P􏰃􏰑􏰓􏰑􏰏 P􏰃􏰑􏰓􏰑􏰕 P􏰃􏰑􏰓􏰂􏰃 P􏰃􏰑􏰓􏰂􏰔 P􏰃􏰂􏰓􏰑
+Cross reference excerpts􏰌
+􏰚F 􏰔􏰑􏰃 􏰪element search􏰣􏰌
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰑 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰂 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰔 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰏 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰕 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰛
+   􏰚D 􏰛􏰀􏰔 list􏰬of􏰬structure􏰬elements􏰌
+   􏰀􏰀􏰀
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰖
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰄
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰏
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰔􏰓SR􏰃􏰛
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰖
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰄
+the search is
+unsuccessful􏰁
+ 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰂 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰔 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰕 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰛
+􏰚S 􏰖􏰀􏰖􏰀􏰕􏰓􏰔􏰑􏰓􏰕􏰌 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰑 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰂 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰏 􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰕
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰖
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰄
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰔
+􏰃􏰂􏰀􏰃􏰔􏰀􏰃􏰂􏰓SR􏰃􏰛
+􏰕 A
+Database schema􏰌
+  􏰜 DB
+􏰋􏰩􏰋
+   Standard
+Sp eci􏰒cations
+    Semantic Requirements
+      Test Mo dule
+Functions
+          􏰜F
+      Programs
+􏰋
+G
+Test Cases
+Data Structures
+     􏰕􏰕 E􏰋
+ 􏰜
+C
+An arrowhead next to an entity indicates that there may b e many instances of the
+example􏰁 the D relationship b etween Test Mo dule and Semantic Requirements is one􏰋to􏰋many􏰍 the B relationship b etween Semantic Requirements and Functions is many􏰋to􏰋many􏰀
+Figure 􏰔􏰌 The PVT as a database
+entity􏰀 For
+
+􏰔􏰀􏰔􏰀􏰑
+The set entity􏰀 Ideally within
+TC dep endent mainly on the SRs of its own mo dule􏰀 Thus􏰁 the rationale for grouping a set of SRs and TCs into one mo dule is that their functions and data structures must b e tested together􏰁 i􏰀e􏰀􏰁 their b ehavior is strongly interrelated􏰀 Hence􏰁 the mo dule􏰆s set of SRs and TCs form a 􏰗natural cluster􏰀􏰘
+Although the SRs of a mo dule are closely related􏰁 the TCs may b e numerous or diverse enough to justify further sub division into several programs􏰀 We tried to strike a reasonable balance􏰁 grouping closely related TCs within single programs􏰁 yet keeping the programs fairly small and comprehensible􏰀 We thereby avoid unwieldy programs at one extreme􏰁 and the high overhead of one test case p er program at the other􏰀
+Thus􏰁 the PVT suite is organized as a set of logically indep endent mo dules􏰁 each of which contains a set of annotated SRs and a set of TCs􏰁 with the TCs distributed among several programs􏰀 Concretely􏰁 each mo dule consists of a􏰈 a single do cumentation 􏰒le􏰁 conventionally named DOC􏰀TXT􏰁 containing the SRs and the design of the programs􏰁 and b􏰈 several source co de 􏰒les􏰁 one p er program􏰀
+􏰔􏰀􏰔􏰀􏰂 Hierarchical Organization
+The standard is not just an undi􏰊erentiated set of requirements􏰁 but has clearly delineated functional areas􏰀 We considered using the sequence of function de􏰒nitions in section 􏰏 of the standard or the data structures of section 􏰕 as an organizing principle􏰁 but it seemed 􏰒nally that the more conceptual organization of section 􏰖 provided the b est mo del􏰁 esp ecially given the goal that each mo dule deal with all the strongly related requirements of a topic􏰀 For instance􏰁 corresp onding set and inquire functions often must b e tested together and obviously b elong in the same mo dule􏰁 even though in section 􏰏 all the inquires are treated as a separate group􏰀
+The standard is organized in a hierarchical structure􏰀 Moreover􏰁 most computer systems provide a hierarchy for their 􏰒le systems􏰀 It therefore seemed reasonable to take advantage of this built􏰋in order and organize the mo dules into a topical hierarchy􏰁 or tree􏰁 to b e realized
+Mo dularity
+entire PHIGS standard is far to o large to b e handled as a single
+divided into topically cohesive subsets􏰁 which we call mo dules􏰀 there would b e no interaction b etween mo dules and strong logical interdep endence
+of all SRs for the Rather􏰁 they are
+each mo dule􏰀
+Recalling the many􏰋to􏰋many relationship b etween SRs and TCs􏰁 we strive to keep each
+using the tree structure
+􏰖 Interactive
+of the 􏰒le directory system􏰀
+Testing􏰌 Version 􏰂􏰀􏰃
+Version 􏰑􏰀􏰃 of the PVT system was delib erately limited to the state􏰋machine semantics of PHIGS􏰀 Version 􏰂􏰀􏰃 incorp orates all the design features describ ed ab ove for version 􏰑􏰀􏰃􏰁 but also addresses the issues surrounding the so􏰋called 􏰗real e􏰊ects􏰘 of PHIGS programming􏰀
+PHIGS semantics are describ ed in English􏰀
+as 􏰗dotted line􏰁􏰘 􏰗yellow􏰁􏰘 􏰗invisible􏰁􏰘 and so on 􏰙 the common􏰋sense vo cabulary of human visual p erception􏰀 These terms are taken as primitive􏰍 for instance􏰁 there is no attempt
+These descriptions app eal freely to notions such
+
+in the standard to de􏰒ne 􏰗dotted line􏰘􏰀 Barring exotic technology such as this means that a test system for PHIGS must rely on human op erators􏰀 A interface then b ecomes essential to the tests􏰁 not just an incidental feature􏰀
+rob otic vision􏰁 go o d op erator
+Version 􏰂􏰀􏰃 was released in Octob er 􏰑􏰅􏰅􏰂􏰀 It includes 􏰔􏰃􏰃 programs􏰁 􏰑􏰁􏰛􏰂􏰔 test cases􏰁 over 􏰄􏰅􏰁􏰃􏰃􏰃 lines of co de􏰁 over 􏰕􏰛􏰁􏰃􏰃􏰃 lines of do cumentation􏰁 and consumed 􏰛􏰖 sta􏰊􏰋months of e􏰊ort􏰀
+􏰖􏰀􏰑 The GKS Approach
+The only system which has confronted the problems asso ciated with visual testing of graph􏰋
+ics is the
+op erator with a non􏰋trivial visual display􏰀 The op erator must have at hand the 􏰇pap er􏰈 do c􏰋 umentation for the test􏰁 which asks several yes􏰓no questions regarding the display􏰀 E􏰀g􏰀􏰁 for linetyp e􏰁 the display includes a depiction of the sun􏰁 with rays of various linetyp es emanating from it􏰀 The op erator script includes the questions􏰌
+Do four rays and clouds app ear on the display surface􏰁 with annotation 􏰇in anti􏰋 clo ckwise order starting from the horizontal􏰈 of 􏰆SOLID􏰆􏰁 􏰆DASHED􏰆􏰁 􏰆DOTTED􏰆􏰁 and 􏰆DASHED􏰋DOTTED􏰆 􏰜
+and
+conformance test suite for GKS 􏰎GKST􏰄􏰅 􏰐􏰀 The GKS tests typically present the
+Is each ray drawn in a linetyp e and 􏰆DASHED􏰋DOTTED􏰆􏰁 in
+that is recognisable as 􏰆SOLID􏰆􏰁 􏰆DASHED􏰆􏰁 􏰆DOTTED􏰆􏰁 the order describ ed ab ove􏰜
+answers on the sheet􏰁 p erhaps with comments􏰁 and this
+The op erator then writes his􏰓her constitutes the result of the test􏰀
+􏰖􏰀􏰂 Generic PVT Features
+Given the necessity of human intervention to generate graphic input and evaluate graphic output􏰁 we then ask how to minimize 􏰑􏰈 the sub jectivity and 􏰂􏰈 the operational di􏰉culty that may result􏰀 Figure 􏰖 contains a summary of the design features of version 􏰂􏰀􏰃 and indicates which of these two goals each feature supp orts􏰀
+􏰖􏰀􏰂􏰀􏰑 Minimize Op erator Discretion
+The core requirement for a PHIGS implementation is to b e able to pro duce displays that are visually accessible to a human observer􏰀 The key issue􏰁 then􏰁 is whether a human op erator can recognize the results of some PHIGS op eration􏰀 It do es not follow that the b est or only way to determine this is to ask the op erator directly whether or not the display is in a certain state􏰀 Consider a vision test given for a driver􏰆s license􏰍 we would not simply ask an applicant whether or not he can read the eye chart􏰀 Rather we would insist that he actually read it􏰁 thus proving his recognition􏰁 not merely asserting it􏰀
+In much the same spirit􏰁 we devise visual test cases for PHIGS which require the operator to evince recognition of the graphical object or attribute under test􏰀 Of course􏰁 in this case 􏰇unlike the driver􏰆s test􏰈 we are interested in testing the display􏰁 not the viewer􏰀 Thus􏰁
+
+ design feature
+minimize op erator discretion
+recognition questions
+randomized answers pap erless op eration
+self􏰋explanatory screens machine􏰋captured resp onses op erator comments
+customized interface
+jectivity
+x x
+x x
+Interactive
+ease
+of use
+x
+x x x x
+ob
+         we assume
+command of English􏰀
+go o d
+Figure 􏰖􏰌 Design Features
+of
+Tests
+throughout that the op erator has normal vision and intelligence􏰁 and a
+First of all􏰁 this recognition􏰋oriented approach implies asking recognition questions􏰁 not yes􏰓no questions􏰁 e􏰀g􏰀􏰁 􏰗which line is dotted􏰜􏰘 rather than 􏰗is the 􏰔rd line dotted􏰜􏰘 The op erator􏰆s ability to give a correct resp onse then b ecomes the op erational de􏰒nition of con􏰋 formance􏰀 E􏰀g􏰀􏰁 a red dotted line is de􏰒ned as an image which most English􏰋sp eaking visually normal p eople would describ e as a 􏰗red dotted line􏰀􏰘 Secondly􏰁 this approach means that the exp ected answer should b e randomized􏰁 lest the op erator know the correct answer inde􏰋 p endently of the display􏰀 A simple case of this is a multiple􏰋choice question in which the order of the choices is shu􏰝ed each time the program is executed􏰀
+With these techniques􏰁 we invest the results of the test with more credibility􏰁 since a careless 􏰇or dishonest􏰈 op erator cannot simply plug in the exp ected answers without reference to the screen􏰀 Note that randomization requires on􏰋line question and answer 􏰇see next section􏰈􏰁 rather than the pap er􏰋oriented approach of GKS􏰀
+These b ene􏰒ts are not without cost􏰁 however􏰀 The co de needed to supp ort this approach
+is necessarily complex􏰀
+to b e very careful ab out
+we cannot ask op erator
+widths􏰁 nearly equal colors􏰁 etc􏰀 The test develop er must make
+chological judgment ab out what most p eople can b e exp ected to discriminate􏰀 For instance􏰁 when testing line width􏰁 we ensure that the alternatives presented have a relative di􏰊erence from each other of at least 􏰂􏰏􏰞 and an absolute di􏰊erence of at least two 􏰇􏰂􏰈 mm􏰀
+􏰖􏰀􏰂􏰀􏰂 Pap erless Op eration
+Clearly􏰁 it is desirable to have the op erator dep end as little as p ossible on external do cu􏰋 mentation􏰀 A more automated system is easier to maintain􏰁 easier to op erate􏰁 and provides more reliable recording of results􏰀 Pap er do cumentation cannot b e entirely disp ensed with􏰍 the op erator must have some guidance when the program fails catastrophically􏰁 and some complex tests may require a more lengthy explanation than can b e easily provided on􏰋screen􏰀 But in the ordinary course of events􏰁 the PVT provides self􏰋explanatory screens and machine􏰋 captured responses􏰀
+Furthermore􏰁 when asking the op erator to make a choice􏰁 we have presenting him􏰓her with visually distinguishable alternatives􏰀 E􏰀g􏰀􏰁
+to cho ose b etween nearly equal 􏰇though
+numerically distinct􏰈 line􏰋 some sort of intuitive psy􏰋
+
+op erator always sees a square picture area in which the visual result of the PHIGS under test is displayed􏰁 and a dialogue area in which questions are p osed and an􏰋 The dialogue area may b e a designated part of the PHIGS display surface􏰁 or a separate window 􏰇see section 􏰖􏰀􏰂􏰀􏰔􏰈􏰀 The question in the dialogue area is worded as simply
+The results of all test cases􏰁 including op erator comments􏰁 are saved in a rep ort 􏰒le 􏰇as describ ed in section 􏰔􏰀􏰑􏰀􏰔􏰈 which can b e examined up on completion of program execution􏰀 Thus􏰁 in the usual case􏰁 the op erator need have no recourse whatever to pap er􏰁 either for instructions or to record the results of the test􏰀
+􏰖􏰀􏰂􏰀􏰔 Customized Interface
+PHIGS functions are used only in an incidental way for the generation of questions and acceptance of resp onses􏰍 the substance of the tests has to do with the contents of the picture area􏰁 not the dialogue area􏰀 Accordingly􏰁 the system initialization pro cess allows the user to sp ecify just how these messages to and from the op erator are to b e handled􏰀 The PVT can b e con􏰒gured to use either the Fortran PRINT statement􏰁 or the PHIGS text or message function to send messages􏰁 and either the Fortran READ statement􏰁 or the PHIGS request string function to accept messages􏰀 If PHIGS functions are used􏰁 the op erator can designate the lo cation and size of the dialogue area within the screen􏰀 The largest remaining square is used for the picture area􏰀
+􏰖􏰀􏰔 Sp ecial Problems Testing PHIGS Functions
+The design features discussed so far apply to all PHIGS testing􏰀 Let us now examine some problems sp eci􏰒c to certain PHIGS features􏰀
+􏰖􏰀􏰔􏰀􏰑 Discrete and Continuous Choices
+The examples of recognition testing given ab ove were all multiple􏰋choice typ e questions􏰀 The testing of certain features􏰁 such as the linestyle attribute􏰁 lends itself quite nicely to this approach􏰁 since the attribute itself has discrete values􏰀 Attributes with continuous values􏰁 such as linewidth and color􏰁 can still b e handled reasonably well by 􏰗quantizing􏰘 the choices available􏰁 i􏰀e􏰀􏰁 selecting visually distinct values within the continuous range of choices􏰁 and
+The feature
+swered􏰀
+as p ossible􏰁 and admits of a
+many asterisks are visible􏰜􏰘􏰈􏰀
+are answered correctly􏰀 If for any reason no
+the picture area is empty􏰈􏰁 the op erator is
+enter a free􏰋form comment to explain why no answer was p ossible􏰀
+presenting Perhaps
+these to the op erator􏰀
+the asp ects least susceptible to multiple􏰋choice questioning are the geometrical
+single correct A test case is
+answer 􏰇e􏰀g􏰀􏰁 􏰗which line is dotted􏰜􏰘 or 􏰗how passed if and only if all the asso ciated questions resp onse can b e given for the picture area 􏰇e􏰀g􏰀􏰁 given the option of so indicating and may also
+prop erties of primitives􏰀 For instance􏰁 the PHIGS features for geometric transformations 􏰇which provide 􏰔􏰋D p ersp ective views of ob jects􏰈 are an imp ortant part of the standard􏰁 yet di􏰉cult to verify visually􏰁 b ecause of the 􏰒ne judgment involved􏰀
+We test such features by generating the actual graphical primitive several times 􏰇p erhaps dividing the picture area into quarters􏰈 and also generating a simulated comparison 􏰒gure
+
+for each􏰀 Only one of these comparison 􏰒gures would b e the correct exp ected value􏰀 The op erator would then have to indicate which pair matched􏰀 The comparison 􏰒gures could b e drawn slightly o􏰊set from the actual or p erhaps drawn with a di􏰊erent kind of primitive􏰁 e􏰀g􏰀􏰁 using p olymarker to verify p olyline􏰀 Figure 􏰏 illustrates a typical picture area presented to the op erator􏰀
+ 􏰑
+e
+e 􏰧
+ 􏰧 􏰧
+ee 􏰧
+ 􏰂
+e
+e 􏰧
+ 􏰧
+􏰧􏰧 e
+e
+ 􏰔
+􏰧􏰧 e
+e
+e
+e 􏰧
+􏰧
+  􏰖
+e
+e 􏰧
+ e􏰧
+e
+􏰧 􏰧
+      Which p olyline has circles at all its vertices􏰜
+Figure 􏰏􏰌 Multiple Choice Testing of Geometry
+􏰖􏰀􏰔􏰀􏰂 Absolute Measurement and Geometry
+The previous section discussed the
+actual results in order to check the
+avoid the problem of circularity􏰁 since PHIGS itself must b e used to draw the exp ected results as well as the actual results􏰜
+technique of comparing simulated exp ected results with accuracy of geometrical PHIGS features􏰀 How do es one
+We b elieve that this do es not p ose an insup erable problem􏰀 The solution is to use only very simple op erations 􏰇such as untransformed 􏰂D p olylines or p olymarkers􏰈 which have already b een veri􏰒ed indep endently when generating the exp ected 􏰒gure􏰀 There must b e􏰁 then􏰁 a prior pro cess of checking the absolute accuracy of these simple constructs􏰁 in order that they may then b e used as 􏰗standard measuring ro ds􏰘 for the more sophisticated op erations􏰀 Some base tests therefore require absolute physical measurement of image size on screen 􏰇testing
+
+the relative sizes of various primitives won􏰆t work􏰁 since this wouldn􏰆t catch systematic distortion􏰈􏰀
+􏰖􏰀􏰔􏰀􏰔 Workstation Dep endence 􏰓 Optional Features
+Since all visual tests
+but b e dep endent on its facilities􏰀 Even though the CSS provides a clean abstract mo del in which any option can b e requested 􏰇e􏰀g􏰀􏰁 linestyle 􏰋􏰔􏰔􏰁 color index 􏰑􏰖􏰈􏰁 in practice these are co erced to some di􏰊erent available value if the workstation do esn􏰆t supp ort their realization􏰀
+Accordingly􏰁 there is some need for the use of external do cuments􏰁 i􏰀e􏰀􏰁 not all screens can b e fully self􏰋explanatory􏰀 For instance􏰁 the only sense in which the rendering of imple􏰋 mentor de􏰒ned linestyles may b e said to b e correct or not is insofar as it agrees with the implementor􏰆s do cumentation 􏰇whose existence is mandated by the PHIGS standard􏰈􏰀
+􏰏 Summary
+Conformance testing b ecomes more di􏰉cult as software standards
+computational applications􏰀 Nonetheless􏰁 by drawing on a variety of techniques􏰁 some of which have originated in non􏰋graphical areas of computer science􏰁 the testing pro cess can b e made reliable􏰁 comprehensible􏰁 and predominantly automated􏰀
+References
+􏰎CUGI􏰅􏰃􏰐
+􏰎GKS􏰄􏰏􏰐
+􏰎GKST􏰄􏰅􏰐
+􏰎PHIGS􏰄􏰅􏰐
+John Cugini􏰁 Mary T􏰀 Gunn􏰁 Lynne S􏰀 Rosenthal􏰁 User􏰆s Guide for the PHIGS Validation Tests 􏰇Version 􏰑􏰀􏰃􏰈􏰁 NISTIR 􏰅􏰃􏰋􏰖􏰔􏰖􏰅􏰁 National Institute of Stan􏰋 dards and Technology􏰁 Gaithersburg􏰁 MD 􏰂􏰃􏰄􏰅􏰅􏰁 􏰑􏰅􏰅􏰃􏰀
+Computer Graphics 􏰙 Graphical Kernel System 􏰇GKS􏰈 Functional Descrip􏰋 tion􏰁 ISO 􏰛􏰅􏰖􏰂􏰁 International Organization for Standardization􏰁 􏰑􏰅􏰄􏰏􏰀
+Conformity Testing Services for the Graphical Kernel System􏰁 Gesellschaft fu􏰟 r Mathematik und Datenverarb eitung mbH 􏰇GMD􏰈􏰁 Sankt Augustin􏰁 Deutsch􏰋 land􏰀
+Computer Graphics 􏰙 Programmer􏰆s Hierarchical Interactive Graphics Sys􏰋 tem 􏰇PHIGS􏰈 Functional Description􏰁 Archive File Format􏰁 Clear􏰋Text En􏰋 coding of Archive File􏰁 ISO􏰓IEC 􏰅􏰏􏰅􏰂􏰋􏰑􏰌􏰑􏰅􏰄􏰅􏰁 International Organization for Standardization􏰁 􏰑􏰅􏰄􏰅􏰀
+must b e p erformed through some actual workstation􏰁 we can􏰆t help
+address more complex

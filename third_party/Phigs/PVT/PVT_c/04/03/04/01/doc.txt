@@ -1,0 +1,547 @@
+TITLE: Namesets
+
+MODULE#: 04.03.04.01
+
+DESCRIPTION: This module tests the ability of the programmer to
+control a nameset in the CSS and also tests that the provided
+facilities meet the minimum simulation requirements.  Namesets
+affect the eligibility of a primitive for highlighting,
+invisibility, pickability, and incremental spatial search.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** ***   Namesets *** *** *** *** ***
+
+SR1.  <Add names to set> creates an `add names to set' element in
+the CSS.
+#F 60
+#D 7.3.2.7.1
+#S 4.4.1/23/1 4.5.15/64/7
+#T P01/1 P01/2 P02/2 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P04/1
+
+SR2.  If current element is `add names to set' then <inquire
+current element type and size> returns the element type as `add
+names to set' and the appropriate element size.
+#F 303
+#D 7.3.2.7.1
+#S 4.4.4/29/5
+#T P01/1
+
+SR3.  If current element is `add names to set' then <inquire
+current element content> returns the appropriate data for `add
+names to set'.
+#F 304
+#D 7.3.2.7.1
+#S 4.4.4/29/5
+#T P01/2 P02/2
+
+SR4.  <Remove names from set> creates a `remove names from set'
+element in the CSS.
+#F 61
+#D 7.3.2.7.2
+#S 4.4.1/23/1 4.5.15/64/7
+#T P01/3 P01/4 P02/3 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/8 P04/1
+
+SR5.  If current element is `remove names from set' then <inquire
+current element type and size> returns the element type as
+`remove names from set' and the appropriate element size.
+#F 303
+#D 7.3.2.7.2
+#S 4.4.4/29/5
+#T P01/3
+
+SR6.  If current element is `remove names from set' then <inquire
+current element content> returns the appropriate data for `remove
+names from set'.
+#F 304
+#D 7.3.2.7.2
+#S 4.4.4/29/5
+#T P01/4 P02/3
+
+SR7.  <Inquire PHIGS facilities> returns the number of available
+names for namesets.
+#F 205
+#D 2.5
+#S 4.5.15/65/4
+#T P02/1
+
+SR8.  The number of available names for namesets is at least 64.
+#F 205
+#D 2.5
+#S 4.5.15/65/4
+#T P02/1 P02/3
+
+SR9.  The range of accessible names for use by <add names to set>
+and <remove names from set> is at least 0-63.
+#F 60 61
+#D 7.3.2.7.1 7.3.2.7.2 2.5
+#S 4.5.15/65/4
+#T P01/2 P01/4
+
+SR10.  The range of valid names for use by <add names to set> and
+<remove names from set> consists of the consecutive integers from 0 to
+the implementation dependent `number of available names for namesets' - 1.
+#F 60 61
+#D 7.3.2.7.1 7.3.2.7.2 2.5
+#S n
+#T P02/2 P02/3 P03/7 P03/8
+#C See defect 9592-1/0025 and FORTRAN BINDING: section 5, description
+of NM data type.
+
+SR11.  At the start of a top-level traversal of a structure
+network (not a sub-traversal initiated by `execute structure'),
+the `current name set' of the PTSL is set to the null set.
+#F
+#D 2.22 3.11
+#S 6.3/310/1 6.4/313/1
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P04/1
+
+SR12.  During traversal, an `add names to set' element changes
+the `current name set' to become the union of its former value
+and the specified valid names.
+#F 60
+#D 3.11 7.3.2.7.1
+#S 4.5.15/64/7 4.5.15/65/2
+#T P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P04/1
+
+SR13.  During traversal, a `remove names from set' element
+changes the `current name set' to become the set difference of
+its former value minus the specified valid names.
+#F 61
+#D 3.11 7.3.2.7.2
+#S 4.5.15/64/7 4.5.15/65/2
+#T P03/2 P03/3 P03/4 P03/5 P03/6 P03/8 P04/1
+
+SR14.  As part of the PHIGS traversal state list, the `current
+name set' is saved by `execute structure' and then, upon
+completion of the sub-traversal of the invoked network, restored
+to the saved value.
+#F 113
+#D 3.11
+#S 4.4.3/28/1
+#T P03/5 P03/6 P04/1
+
+SR15.  Upon traversal of any element that generates an output
+primitive, the `current name set' of the PTSL is bound to the
+resulting primitive.
+#F 9-24 60 61
+#D 3.11 7.3.1.1
+#S 4.5.2/38/3 4.5.2/40/3
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P04/1
+
+SR16. During traversal, invalid names specified by an `add names to
+set' or `remove names from set' element are ignored.
+#F 60 61
+#D 3.11 7.3.2.7.1 7.3.2.7.2
+#S 4.5.15/64/7 4.5.15/65/2
+#T P03/7 P03/8
+#C See defect 9592-1/0025.
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    9: ppl3    <polyline 3>
+   10: ppl     <polyline>
+   11: ppm3    <polymarker 3>
+   12: ppm     <polymarker>
+   13: ptx3    <text 3>
+   14: ptx     <text>
+   15: patr3   <annotation text relative 3>
+   16: patr    <annotation text relative>
+   17: pfa3    <fill area 3>
+   18: pfa     <fill area>
+   19: pfas3   <fill area set 3>
+   20: pfas    <fill area set>
+   21: pca3    <cell array 3>
+   22: pca     <cell array>
+   23: pgdp3   <generalized drawing primitive 3>
+   24: pgdp    <generalized drawing primitive>
+   60: pads    <add names to set>
+   61: pres    <remove names from set>
+  113: pexst   <execute structure>
+  205: pqphf   <inquire phigs facilities>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.5  ...  number_of_available_names_for_name_sets
+  2.22  ...  default_name_set
+  3  ...  phigs_traversal_state_list
+  3.11 ...  current_name_set
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.1  ...  polyline_3
+  7.3.2  ...  primitive_attributes
+  7.3.2.7  ...  nameset_attributes
+  7.3.2.7.1  ...  add_names_to_set
+  7.3.2.7.2  ...  remove_names_from_set
+ 
+SEMANTIC CROSS-REFERENCES:
+  02.03.03/SR20
+ 
+LOCAL SUBROUTINES:
+CURNMS checks the current nameset by performing a conceptual
+traversal with <incremental spatial search>, and setting its
+filters so as to accept only the expected value.
+
+
+PROGRAM 1: Simple setting and inquiring
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> throughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+<add names to set>: 30,62,63,0,1
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       add names to set as the type of the created element
+       and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = add names to set and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3 9
+      "<Inquire current element content> should return the standard
+       representation for add names to set for any set of names
+       drawn from the accessible range."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+<remove names from set>: 30,62,63,0,1
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       remove names from set as the type of the created element
+       and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = remove names from set and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 4 6 9
+      "<Inquire current element content> should return the standard
+       representation for remove names from set for any set of names
+       drawn from the accessible range."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Nameset facilities
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire PHIGS facilities> to determine
+  nanams = number of available names in namesets
+
+TEST: #SR 7 8
+      "The reported number of available names should be at least 64."
+pass/fail depending on (nanams >= 64)
+
+<add names to set>: 0, nanams-1
+
+TEST: #SR 1 3 10
+      "<Inquire current element content> should return the standard
+       representation for add names to set when the operand includes
+       the minimum and maximum allowed value for a name."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+<remove names from set>: all names from 0 to nanams-1
+
+TEST: #SR 4 6 8 10
+      "<Inquire current element content> should return the standard
+       representation for remove names from set when the nameset contains
+       the maximum number of names."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Current nameset during conceptual traversal
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Throughout, incremental spatial search (ISS) is used to probe the
+behavior of the current nameset.  It always searches for a
+primitive at location 1,1,1.  Its filters are set to accept only
+the expected nameset.
+
+<inquire PHIGS facilities> to determine
+  nanams = number of available names in namesets
+
+maxnam = min (nanams, 100)
+maxnam is used by ISS to generate the correct filters
+
+Set up structure #101:
+1. add names to set: 3,4,5,9
+2. execute structure 102
+3. remove names from set: 4,6
+4. execute structure 102
+
+Set up structure #102:
+1. polymarker at 1,1,1
+2. remove names from set: 5,6,7,8
+3. add names to set: 1,2,8,9
+4. polymarker at 1,1,1
+
+TEST: #SR 1 4 11 15
+      "The current name set should be initialized to the null set
+       at the start of traversal."
+
+perform ISS with:
+  starting path:       102,0
+  expected found path: 102,1
+  expected nameset:    empty
+
+pass/fail depending on (primitive found at expected location
+  and nothing found beyond that location)
+
+TEST: #SR 1 4 11 12 13 15
+      "The current name set should be augmented by <add names to
+       set> and reduced by <remove names from set> during
+       traversal within a structure."
+
+perform ISS with:
+  starting path:       102,0
+  expected found path: 102,4
+  expected nameset:    1,2,8,9
+
+pass/fail depending on (primitive found at expected location
+  and nothing found beyond that location)
+
+TEST: #SR 1 4 11 12 13 15
+      "The current name set should be inherited unchanged from an
+       invoking structure during traversal."
+
+perform ISS with:
+  starting path:       101,0
+  expected found path: 101,2, 102,1
+  expected nameset:    3,4,5,9
+
+pass/fail depending on (primitive found at expected location
+  and nothing found beyond that location)
+
+TEST: #SR 1 4 11 12 13 15
+      "The current name set should be inherited unchanged from an
+       invoking structure during traversal and then modified by
+       <add names to set> and <remove names from set> within the
+       structure."
+
+perform ISS with:
+  starting path:       101,0
+  expected found path: 101,2, 102,4
+  expected nameset:    1,2,3,4,8,9
+
+pass/fail depending on (primitive found at expected location
+  and nothing found beyond that location)
+
+TEST: #SR 1 4 11 12 13 14 15
+      "After sub-traversal of the network specified by <execute
+       structure>, the current name set should be restored to the
+       value it had just prior to the sub-traversal."
+
+perform ISS with:
+  starting path:       101,0
+  expected found path: 101,4, 102,1
+  expected nameset:    3,5,9
+
+pass/fail depending on (primitive found at expected location
+  and nothing found beyond that location)
+
+TEST: #SR 1 4 11 12 13 14 15
+      "The current nameset should reflect all the effects of
+       traversal: inheritance, restoration after sub-traversal,
+       and additions and removals within the current structure."
+
+perform ISS with:
+  starting path:       101,0
+  expected found path: 101,4, 102,4
+  expected nameset:    1,2,3,8,9
+
+pass/fail depending on (primitive found at expected location
+  and nothing found beyond that location)
+
+
+C  Set up structure #103:
+C  1. add names to set: 0, 1, max+1, -1
+C  2. polymarker at 1,1,1
+C  3. remove names from set: 1, max+11, -10
+C  4. polymarker at 1,1,1
+
+TEST: #SR 1 10 11 12 15 16
+      "The current name set should be augmented by the valid names
+       specified by <add names to set> during traversal within a
+       structure, and invalid names should be ignored."
+
+perform ISS with:
+  starting path:       103,0
+  expected found path: 103,2
+  expected nameset:    0,1
+
+pass/fail depending on (primitive found at expected location
+  and nothing found beyond that location)
+
+TEST: #SR 4 10 11 13 15 16
+      "The current name set should be reduced by the valid names
+       specified by <remove names from set> during traversal within
+       a structure, and invalid names should be ignored."
+
+perform ISS with:
+  starting path:       103,0
+  expected found path: 103,4
+  expected nameset:    0
+
+pass/fail depending on (primitive found at expected location
+  and nothing found beyond that location)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Network inheritance and initialization
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR NAMESET: Fourteen pairs of
+primitives are displayed, either normally, highlighted, or
+invisible.  Identify the non-matching pair.
+
+DESIGN:
+
+Five distinct values for nameset are set up and propagated
+throughout the network.  The first value is the system default
+from the PDT. Note that structure #104 is executed by both #103
+and #101. Actual results are displayed on the left, expected
+results on the right, with the 14th deliberately made incorrect.
+
+default = null
+  |                  102                 {3,
+  |                 /  prim 2             4,
+  |               /    nmset = {3,4,5}    5}
+  V         null/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   nmset = {1,6}
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  nmset = {2,3}                                 prim 7    \ {1,6}
+  prim 10                                                   \
+  transform             {2,3}                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        nmset = {5,6}/{2,3,5}
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+nameset    feature
+-------    -------
+null       normal
+{2,3}      invisible
+{3,4,5}    highlighted
+{1,6}      invisible
+{5,6}      normal
+{2,3,5}    highlighted
+{7}        normal
+
+set highlighting filter:
+   inclusion set = {2,3,5}
+   exclusion set = {6}
+
+set invisibility filter:
+   inclusion set = {3,6}
+   exclusion set = {5}
+
+randomize location of primitives
+
+structure #101
+polyline 1 (order within traversal)
+execute 102
+polymarker 9
+add names to set: 2,3
+fill area 10
+set local transformation to make primitives 11,12 distinguishable
+  from 5,6
+execute 104
+re-set local transformation to identity
+text 13
+text 14
+execute 105
+
+structure #102
+cell array 2
+add names to set: 3,4,5
+execute 103
+annotation text 8
+
+structure #103
+polyline 3
+add names to set: 1,6; remove names from set: 3,4,5
+polymarker 4
+execute 104
+polyline 7
+
+structure #104
+fill area 5 / 11
+remove names from set: 1; add names to set: 5
+fill area set 6 / 12
+
+Expected attributes (except #14, whose actual nameset should be {2,3}
+
+structure #105
+sequence #   primitive         nameset      feature
+----------   ---------         -------      -------
+   01        polyline          null         normal
+   02        cell array        null         normal
+   03        polyline          {3,4,5}      highlighted
+   04        polymarker        {1,6}        invisible
+   05        fill area         {1,6}        invisible
+   06        fill area set     {5,6}        normal
+   07        polyline          {1,6}        invisible
+   08        annotation text   {3,4,5}      highlighted
+   09        polymarker        null         normal
+   10        fill area         {2,3}        invisible
+   11        fill area         {2,3}        invisible
+   12        fill area set     {2,3,5}      highlighted
+   13        text              {2,3}        invisible
+   14        text              {7}          normal
+
+TEST: #SR 1 4 11 12 13 14 15
+      "The nameset attribute for the all primitives should be
+       saved and restored by <execute structure> during
+       traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR NAMESET: Which pair
+  of primitives does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+END PROGRAM 4

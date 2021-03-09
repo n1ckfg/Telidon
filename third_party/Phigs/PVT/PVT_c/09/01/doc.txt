@@ -1,0 +1,325 @@
+TITLE: General error handling capabilities
+
+MODULE#: 09.01
+
+DESCRIPTION: This module tests the error handling capabilities which
+the PHIGS implementation provides.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <set error handling mode> turns error handling mode OFF or ON.
+#F 318
+#D 8.2
+#S 4.12/110/3
+#T P01/2 P01/3 P02/1 P02/2 P03/1 P04/1
+
+SR2.   The default error handling mode is ON.
+#F
+#D 8.2
+#S 4.12/110/3
+#T P01/1
+
+SR3.   <inquire error handling mode> reports the correct error handling
+mode as OFF or ON.
+#F 314
+#D 8.2
+#S 4.12/110/3
+#T P01/1 P01/2 P01/3
+
+SR4.   The implementation provides a default <error handling> function.
+#F 316
+#D 8 8.1 8.2 8.3
+#S 4.12/109/1 4.12/109/7
+#T P03/1 P04/1
+
+SR5.   The implementaion provides a means for the application program to
+specify its own <error handling> function.
+#F 316
+#D
+#S 4.12/109/7 4.12/109/7
+#T P02/1
+
+SR6.   If the application program does not provide an <error handling>
+function, it uses the default <error handling> function.
+#F 316
+#D
+#S 4.12/109/7
+#T P03/1
+
+SR7.   If an error is generated and error handling mode is ON, the <error
+handling> function currently in effect is called, and the appropriate error
+number, function identifier, and error file are passed to it as parameters.
+#F 316
+#D 8.2
+#S 4.12/109/7
+#T P02/1 P03/1
+
+SR8.   The default <error handling> function calls <error logging> function
+using the same parameters as passed to it.
+#F 316 317
+#D
+#S 4.12/109/8
+#T P03/1
+
+SR9.   The <error logging> function writes an error message and PHIGS function
+identifier on the error file, then returns to the calling function.
+#F 317
+#D 8.3
+#S 4.12/110/1
+#T P03/1 P05/1
+
+SR10.   If an error is generated and error handling mode is OFF, no <error
+handling> function is called.
+#F 316
+#D 8.2
+#S 4.12/110/3
+#T P02/2 P04/1
+
+SR11.  When <emergency close phigs> is called, the open structure is closed,
+all open archive files are closed, all open workstations are updated and
+closed, and PHIGS is closed.
+#F 315
+#D 4.1 4.2 4.6 1.1 1.2 1.3 1.4
+#S 4.12/109/5
+#T P06/1
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  314: pqerhm  <inquire error handling mode>
+  315: peclph  <emergency close phigs>
+  316: perhnd  <error handling>
+  317: perlog  <error logging>
+  318: pserhm  <set error handling mode>
+ 
+  Data Structures ---
+  1  ...  operating_state
+  1.1  ...  system_state
+  1.2  ...  workstation_state
+  1.3  ...  structure_state
+  1.4  ...  archive_state
+  4  ...  phigs_state_list
+  4.1  ...  set_of_open_workstations
+  4.2  ...  name_of_open_structure
+  4.6  ...  set_of_open_archive_files
+  8  ...  phigs_error_state_list
+  8.1  ...  error_state
+  8.2  ...  error_handling_mode
+  8.3  ...  error_file
+ 
+
+PROGRAM 1: Testing the error handling mode
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire error handling mode> to determine the result of <set error
+handling mode>
+
+TEST: #SR 2 3
+      "After opening PHIGS, <inquire error handling mode> should return ON."
+<inquire error handling mode> hndmod
+pass/fail depending on (hndmod = ON)
+
+TEST: #SR 1 3
+      "After <set error handling mode> to OFF, <inquire error handling mode>
+       should return OFF."
+<set error handling mode> to OFF
+<inquire error handling mode> hndmod
+pass/fail depending on (hndmod = OFF)
+
+TEST: #SR 1 3
+      "After <set error handling mode> to ON, <inquire error handling mode>
+       should return ON."
+<set error handling mode> to ON
+<inquire error handling mode> hndmod
+pass/fail depending on (hndmod = ON)
+
+END PROGRAM 1
+
+
+
+PROGRAM 2: User error handling capabilities
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+In user defined PERHND, there are variables ERRCOM, FUNCOM, FILCOM
+in the common block ERRINF, which are used for recording the error number
+function identifier and error file passed by PHIGS when an error occur.
+Pass/fail depends on whether correct error number, function identifier
+and error file are passed to ERRCOM, FUNCOM, FILCOM.
+
+pxa = (0.,0.5)
+pya = (0.,0.5)
+n = 2
+
+TEST: #SR 1 5 7
+      "If error handling mode is ON, and no structure is open, then
+       <polyline> should return error number, function identifier, and
+       error file to the user defined error handler."
+<set error handling mode> to ON
+errcom = 999
+funcom = 999
+filcom = 999
+set errctl to ON
+<polyline>
+set errctl to OFF
+pass/fail depending on (errcom = 5 and funcom = <polyline> and
+                        filcom = ERRFIL)
+
+TEST: #SR 1 10
+      "If error handling mode is OFF, and no structure is open, then
+       <polyline> should not return error number, function identifier
+       and error file to the user defined error handler."
+
+<set error handling mode> to OFF
+errcom = 999
+funcom = 999
+filcom = 999
+set errctl to ON
+<polyline>
+set errctl to OFF
+pass/fail depending on (errcom = 999 and funcom = 999 and filcom = 999)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Default error handling with error mode ON
+
+CHARACTERISTICS: nnny
+
+OPERATOR SCRIPT:
+
+This program uses the system default error handler.  The usual means
+of invoking PVT programs links in a user-defined error handler.  Be
+sure to use the special mechanism provided (normally the "phfe" or
+"phce" command) for invoking programs without the user-defined error
+handler, since it overrides the system handler.
+
+Operator responds to the questions on the screen.
+
+DESIGN:
+
+In order to test the default system error handling, write all error
+messages at an error file, then close phigs, rewind error file,
+display error message to operator, interact with operator to determine
+pass or fail.
+
+pxa = (0.,0.5)
+pya = (0.,0.5)
+n = 2
+
+TEST: #SR 1 4 6 7 8 9
+      "If error handling mode is ON, the default error handler is in
+       effect, and no structure is open, then <polyline> should
+       invoke the default handler."
+
+<polyline>
+read error message from error file and display to operator
+ask operator: does error message indicate function <polyline>
+  with error #5?
+pass/fail depending on (operator's response is yes)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Default error handling with error mode OFF
+
+CHARACTERISTICS: nnny
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 3, above.
+
+DESIGN:
+
+For default error handling, set error handling mode to OFF, generate an
+error condition, test if there is nothing in error file.
+
+TEST: #SR 1 4 10
+      "If error handling mode is OFF, and no structure is open, then
+       <polyline> should not write any error message to error file."
+
+<set error handling mode> to OFF
+<polyline>
+<set error handling mode> to ON
+<polyline 3>
+
+read error message from error file and display to operator
+ask operator: does error message indicate function <polyline 3>
+  with error #5?
+pass/fail depending on (operator's response is yes)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Error logging function for default error handling
+
+CHARACTERISTICS: nnny
+
+OPERATOR SCRIPT:
+This program uses the system default error handler.  The usual means
+of invoking PVT programs links in a user-defined error handler.  Be
+sure to use the special mechanism provided (normally the "phfe" or
+"phce" command) for invoking programs without the user-defined error
+handler, since it overrides the system handler. Operator responds to
+the questions on the screen.
+
+DESIGN:
+
+TEST: #SR 9
+      "<Error logging> should write the specified error message on the
+       error file."
+
+<set error handling mode> to OFF
+<error logging> for error #59 on function <unpost all structures>
+set expected error to match <error logging>
+
+pass/fail depending on (operator verifies error message in error file)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Emergency close phigs
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Open phigs, workstation, structure and archive first, then call emergency
+close phigs. Using inquire system state, workstation state, structure state
+and archive state to determine the test is pass/fail.
+
+TEST: #SR 11
+      "If <emergency close phigs> is called, open structure should be
+       closed, open archive files should be closed, all open
+       workstations should be updated and closed, and PHIGS should be
+       closed."
+
+<open workstation>
+<open structure>
+<open archive file>
+<emergency close phigs>
+<inquire system state value> with sysval
+<inquire workstation state value> with wkval
+<inquire structure state value> with stval
+<inquire archive state value> with arval
+if (sysval=PHCL and wkval=WKCL and stval=STCL and arval=ARCL) then
+   ok = .TRUE.
+else
+   ok = .FALSE.
+endif
+pass/fail depending on (ok = .TRUE.)
+
+END PROGRAM 6
+
+

@@ -1,0 +1,247 @@
+TITLE: Generalized drawing primitive
+
+MODULE#: 04.01.08
+
+DESCRIPTION: This module tests the ability of the programmer to
+set up a generalized drawing primitive element in the CSS, which
+will create a primitive upon traversal.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** ***   <Generalized drawing primitive 3>   *** *** *** *** ***
+
+SR1.   <Generalized drawing primitive 3> creates a generalized
+drawing primitive 3 element in the CSS; the element is created
+even if the GDP 3 primitive is not supported by the implementation.
+#F 23
+#D 7.3.1.15
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/3 P01/4
+
+SR2.   If current element is generalized drawing primitive 3 then
+<inquire current element type and size> returns the element type
+as generalized drawing primitive 3 and the appropriate element
+size.
+#F 303
+#D 7.3.1.15
+#S 4.4.4/29/5
+#T P01/3
+
+SR3.   If current element is generalized drawing primitive 3 then
+<inquire current element content> returns the appropriate data
+for generalized drawing primitive 3.
+#F 304
+#D 7.3.1.15
+#S 4.4.4/29/5
+#T P01/4
+
+SR4.  <Inquire list of available generalized drawing primitives 3>
+returns the list of GDP 3 identifiers.
+#F 279
+#D 6.18.1 6.18.2
+#S 6.7/323/1
+#T P01/1
+
+SR5. <Inquire generalized drawing primitive 3> returns the list
+of sets of attributes used by a given GDP 3 identifier.
+#F 281
+#D 6.18.2.3
+#S 6.7/323/1
+#T P01/2
+
+*** *** *** *** ***   <Generalized drawing primitive>   *** *** *** *** ***
+
+SR6.   <Generalized drawing primitive> creates a generalized
+drawing primitive element in the CSS; the element is created
+even if the GDP primitive is not supported by the implementation.
+#F 24
+#D 7.3.1.16
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/7 P01/8
+
+SR7.   If current element is generalized drawing primitive then
+<inquire current element type and size> returns the element type
+as generalized drawing primitive and the appropriate element
+size.
+#F 303
+#D 7.3.1.16
+#S 4.4.4/29/5
+#T P01/7
+
+SR8.   If current element is generalized drawing primitive then
+<inquire current element content> returns the appropriate data
+for generalized drawing primitive.
+#F 304
+#D 7.3.1.16
+#S 4.4.4/29/5
+#T P01/8
+
+SR9.  <Inquire list of available generalized drawing primitives>
+returns the list of GDP identifiers.
+#F 280
+#D 6.18.3 6.18.4
+#S 6.7/323/1
+#T P01/5
+
+SR10. <Inquire generalized drawing primitive> returns the list
+of sets of attributes used by a given GDP identifier.
+#F 282
+#D 6.18.4.3
+#S 6.7/323/1
+#T P01/6
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   23: pgdp3   <generalized drawing primitive 3>
+   24: pgdp    <generalized drawing primitive>
+  279: pqegd3  <inquire list of available generalized drawing primitives 3>
+  280: pqegdp  <inquire list of available generalized drawing primitives>
+  281: pqgdp3  <inquire generalized drawing primitive 3>
+  282: pqgdp   <inquire generalized drawing primitive>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  6  ...  workstation_description_table
+  6.18  ...  generalized_drawing_primitives_entry
+  6.18.1  ...  number_of_available_generalized_drawing_primitives_3
+  6.18.2  ...  list_of_available_generalized_drawing_primitives_3
+  6.18.2.3  ...  list_of_sets_of_attributes_used
+  6.18.3  ...  number_of_available_generalized_drawing_primitives
+  6.18.4  ...  list_of_available_generalized_drawing_primitives
+  6.18.4.3  ...  list_of_sets_of_attributes_used
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.15 ...  generalized_drawing_primitive_3
+  7.3.1.16 ...  generalized_drawing_primitive
+ 
+
+PROGRAM 1: Generalized drawing primitive
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> throughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+n = 5
+xarr = 0.0  -99.99  .00013  3.2e-12  -3.4e23
+yarr = 4.2  0.0  99.99  0.0  .002
+zarr = 34.2  1.4  .032e2  99e2  0.0
+
+dr = data record to hold
+integers: 174, 175, 176
+reals:    17.4,17.5,17.6
+strings:  "This is a GDP test string.", "This is another."
+
+*** *** *** *** ***   Generalized drawing primitive 3   *** *** *** *** ***
+
+TEST: #SR 4
+      "<Inquire list of available generalized drawing primitives 3>
+       should be able to return the list of GDP 3 identifiers."
+
+Use <inquire list of available generalized drawing primitives 3> to
+   obtain list of GDP 3 identifiers - gdplist
+
+pass/fail depending on (no errors returned from function).
+
+TEST: #SR 5
+      "<Inquire generalized drawing primitive 3> should be able to
+       return the list of sets of attributes used by a given GDP 3
+       identifier."
+
+For each gdpid in gdplist
+   Use <inquire generalized drawing primitive 3> to
+       get list of sets of attributes.
+   if invalid values from function
+      fail
+      informative message about gdpid
+      goto donelist3
+   endif
+next gdpid
+
+pass
+
+donelist3:
+
+select ugdpid = not in gdplist (unsupported)
+
+<generalized drawing primitive 3> with ugdpid, xarr,yarr,zarr, dr
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       generalized drawing primitive 3 as the type of the created
+       element and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = generalized drawing primitive 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for a generalized drawing primitive 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+*** *** *** *** ***   Generalized drawing primitive   *** *** *** *** ***
+
+TEST: #SR 9
+      "<Inquire list of available generalized drawing primitives>
+       should be able to return the list of GDP identifiers."
+
+Use <inquire list of available generalized drawing primitives> to
+   obtain list of GDP identifiers - gdplist
+
+pass/fail depending on (no errors returned from function).
+
+TEST: #SR 10
+      "<Inquire generalized drawing primitive> should be able to
+       return the list of sets of attributes used by a given GDP
+       identifier."
+
+For each gdpid in gdplist
+   Use <inquire generalized drawing primitive> to
+       get list of sets of attributes.
+   if invalid values from function
+      fail
+      informative message about gdpid
+      goto donelist
+   endif
+next gdpid
+
+pass
+
+donelist:
+
+select ugdpid = not in gdplist (unsupported)
+
+<generalized drawing primitive> with ugdpid, xarr,yarr, dr
+
+TEST: #SR 6 7
+      "<Inquire current element type and size> should return
+       generalized drawing primitive as the type of the created
+       element and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = generalized drawing primitive and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 6 8
+      "<Inquire current element content> should return the standard
+       representation for a generalized drawing primitive."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+END PROGRAM 1

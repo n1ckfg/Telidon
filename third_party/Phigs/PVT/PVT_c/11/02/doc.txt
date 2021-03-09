@@ -1,0 +1,826 @@
+TITLE: Features specific to C
+
+MODULE#: 11.02
+
+DESCRIPTION: This module tests the PHIGS features specific to the
+C-language binding.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  Every PHIGS/C implementation supplies a phigs.h file.
+#F
+#D
+#S C/3.1/3/2 C/3.8/4/9ff
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P04/1 P04/2
+
+SR2.  The mandatory value of every function identifier is
+specified by a #define in phigs.h.
+#F 1-319 322-324
+#D
+#S C/3.8/4/9 C/6.1/73/1ff
+#T P01/1
+
+SR3.  The mandatory value of every error code is specified by
+a #define in phigs.h.
+#F
+#D
+#S C/3.8/4/9 C/6.2/76/2ff
+#T P01/2
+
+SR4.  The mandatory value of every linetype is specified by
+a #define in phigs.h.
+#F
+#D
+#S C/3.8/4/9 C/6.3.1/83/1
+#T P01/3
+
+SR5.  The mandatory value of every marker type is specified by
+a #define in phigs.h.
+#F
+#D
+#S C/3.8/4/9 C/6.3.2/83/2
+#T P01/4
+
+SR6.  The mandatory value of every annotation style is specified
+by a #define in phigs.h.
+#F
+#D
+#S C/3.8/4/9 C/6.3.3/83/3
+#T P01/5
+
+SR7.  The mandatory value of every colour model is specified by
+a #define in phigs.h.
+#F
+#D
+#S C/3.8/4/9 C/6.3.4/83/4
+#T P01/6
+
+SR8.  The mandatory value of every prompt and echo type is
+specified by a #define in phigs.h.
+#F
+#D
+#S C/3.8/4/9 C/6.3.5/83/5ff
+#T P01/7
+
+SR9.  The mandatory value of the default parameters of <open
+phigs> is specified by a #define in phigs.h.
+#F 1
+#D
+#S C/3.8/4/9 C/6.3.6/84/5
+#T P01/9 P01/10
+
+SR10.  The mandatory value of every element enumeration is
+specified by a #define in phigs.h.
+#F
+#D
+#S C/3.8/4/9 C/6.3.7/84/6
+#T P01/8
+
+SR11.  Every mandatory data type is specified by a typedef in
+phigs.h.
+#F
+#D
+#S C/3.8/4/9 C/5.3/29/1ff C/5.4/38/2ff
+#T P04/2
+
+SR12.  Every mandatory function declaration is specified by a
+prototype in phigs.h.
+#F
+#D
+#S C/3.8/4/11 C/7/85/1ff
+#T P04/1
+
+SR13.  <Create store> creates a new instance of the store data
+type and returns a pointer to this instance.
+#F 322
+#D
+#S C/3.9.2/6/8
+#T P05/1
+
+SR14.  <Delete store> accepts a pointer to an existing instance
+of the store data type, deletes that instance, and alters the
+pointer to null to signify that it no longer points to an
+existing entity.
+#F 323
+#D
+#S C/3.9.2/6/13
+#T P05/2
+
+SR15.  The implementation dependent value of size_t is specified by
+a #define in <stddef.h>, which is included <phigs.h>.
+#F
+#D
+#S C/3.8/4/10
+#T P01/11
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    1: popph   <open phigs>
+    2: pclph   <close phigs>
+    3: popwk   <open workstation>
+    4: pclwk   <close workstation>
+    5: prst    <redraw all structures>
+    6: puwk    <update workstation>
+    7: psdus   <set display update state>
+    8: pmsg    <message>
+    9: ppl3    <polyline 3>
+   10: ppl     <polyline>
+   11: ppm3    <polymarker 3>
+   12: ppm     <polymarker>
+   13: ptx3    <text 3>
+   14: ptx     <text>
+   15: patr3   <annotation text relative 3>
+   16: patr    <annotation text relative>
+   17: pfa3    <fill area 3>
+   18: pfa     <fill area>
+   19: pfas3   <fill area set 3>
+   20: pfas    <fill area set>
+   21: pca3    <cell array 3>
+   22: pca     <cell array>
+   23: pgdp3   <generalized drawing primitive 3>
+   24: pgdp    <generalized drawing primitive>
+   25: pspli   <set polyline index>
+   26: pspmi   <set polymarker index>
+   27: pstxi   <set text index>
+   28: psii    <set interior index>
+   29: psedi   <set edge index>
+   30: psln    <set linetype>
+   31: pslwsc  <set linewidth scale factor>
+   32: psplci  <set polyline colour index>
+   33: psmk    <set marker type>
+   34: psmksc  <set marker size scale factor>
+   35: pspmci  <set polymarker colour index>
+   36: pstxfn  <set text font>
+   37: pstxpr  <set text precision>
+   38: pschxp  <set character expansion factor>
+   39: pschsp  <set character spacing>
+   40: pstxci  <set text colour index>
+   41: pschh   <set character height>
+   42: pschup  <set character up vector>
+   43: pstxp   <set text path>
+   44: pstxal  <set text alignment>
+   45: psatch  <set annotation text character height>
+   46: psatcu  <set annotation text character up vector>
+   47: psatp   <set annotation text path>
+   48: psatal  <set annotation text alignment>
+   49: psans   <set annotation style>
+   50: psis    <set interior style>
+   51: psisi   <set interior style index>
+   52: psici   <set interior colour index>
+   53: psedfg  <set edge flag>
+   54: psedt   <set edgetype>
+   55: psewsc  <set edgewidth scale factor>
+   56: psedci  <set edge colour index>
+   57: pspa    <set pattern size>
+   58: psprpv  <set pattern reference point and vectors>
+   59: psparf  <set pattern reference point>
+   60: pads    <add names to set>
+   61: pres    <remove names from set>
+   62: psiasf  <set individual asf>
+   63: psplr   <set polyline representation>
+   64: pspmr   <set polymarker representation>
+   65: pstxr   <set text representation>
+   66: psir    <set interior representation>
+   67: psedr   <set edge representation>
+   68: pspar   <set pattern representation>
+   69: pscr    <set colour representation>
+   70: pshlft  <set highlighting filter>
+   71: psivft  <set invisibility filter>
+   72: pscmd   <set colour model>
+   73: pshrid  <set hlhsr identifier>
+   74: pshrm   <set hlhsr mode>
+   75: pslmt3  <set local transformation 3>
+   76: pslmt   <set local transformation>
+   77: psgmt3  <set global transformation 3>
+   78: psgmt   <set global transformation>
+   79: psmcv3  <set modelling clipping volume 3>
+   80: psmcv   <set modelling clipping volume>
+   81: psmcli  <set modelling clipping indicator>
+   82: prmcv   <restore modelling clipping volume>
+   83: psvwi   <set view index>
+   84: psvwr3  <set view representation 3>
+   85: psvwr   <set view representation>
+   86: psvtip  <set view transformation input priority>
+   87: pswkw3  <set workstation window 3>
+   88: pswkw   <set workstation window>
+   89: pswkv3  <set workstation viewport 3>
+   90: pswkv   <set workstation viewport>
+   91: ptr3    <translate 3>
+   92: ptr     <translate>
+   93: psc3    <scale 3>
+   94: psc     <scale>
+   95: prox    <rotate x>
+   96: proy    <rotate y>
+   97: proz    <rotate z>
+   98: pro     <rotate>
+   99: pcom3   <compose matrix 3>
+  100: pcom    <compose matrix>
+  101: ptp3    <transform point 3>
+  102: ptp     <transform point>
+  103: pbltm3  <build transformation matrix 3>
+  104: pbltm   <build transformation matrix>
+  105: pcotm3  <compose transformation matrix 3>
+  106: pcotm   <compose transformation matrix>
+  107: pevom3  <evaluate view orientation matrix 3>
+  108: pevom   <evaluate view orientation matrix>
+  109: pevmm3  <evaluate view mapping matrix 3>
+  110: pevmm   <evaluate view mapping matrix>
+  111: popst   <open structure>
+  112: pclst   <close structure>
+  113: pexst   <execute structure>
+  114: plb     <label>
+  115: pap     <application data>
+  116: pgse    <generalized structure element>
+  117: psedm   <set edit mode>
+  118: pcelst  <copy all elements from structure>
+  119: psep    <set element pointer>
+  120: posep   <offset element pointer>
+  121: pseplb  <set element pointer at label>
+  122: pdel    <delete element>
+  123: pdelra  <delete element range>
+  124: pdellb  <delete elements between labels>
+  125: pemst   <empty structure>
+  126: pdst    <delete structure>
+  127: pdsn    <delete structure network>
+  128: pdas    <delete all structures>
+  129: pcstid  <change structure identifier>
+  130: pcstrf  <change structure references>
+  131: pcstir  <change structure identifier and references>
+  132: ppost   <post structure>
+  133: pupost  <unpost structure>
+  134: pupast  <unpost all structures>
+  135: poparf  <open archive file>
+  136: pclarf  <close archive file>
+  137: parst   <archive structures>
+  138: parsn   <archive structure networks>
+  139: parast  <archive all structures>
+  140: pscnrs  <set conflict resolution>
+  141: prsid   <retrieve structure identifiers>
+  142: prest   <retrieve structures>
+  143: presn   <retrieve structure networks>
+  144: prast   <retrieve all structures>
+  145: prepan  <retrieve paths to ancestors>
+  146: prepde  <retrieve paths to descendants>
+  147: pdstar  <delete structures from archive>
+  148: pdsnar  <delete structure networks from archive>
+  149: pdasar  <delete all structures from archive>
+  150: pspkid  <set pick identifier>
+  151: pspkft  <set pick filter>
+  152: pinlc3  <initialize locator 3>
+  153: pinlc   <initialize locator>
+  154: pinsk3  <initialize stroke 3>
+  155: pinsk   <initialize stroke>
+  156: pinvl3  <initialize valuator 3>
+  157: pinvl   <initialize valuator>
+  158: pinch3  <initialize choice 3>
+  159: pinch   <initialize choice>
+  160: pinpk3  <initialize pick 3>
+  161: pinpk   <initialize pick>
+  162: pinst3  <initialize string 3>
+  163: pinst   <initialize string>
+  164: pslcm   <set locator mode>
+  165: psskm   <set stroke mode>
+  166: psvlm   <set valuator mode>
+  167: pschm   <set choice mode>
+  168: pspkm   <set pick mode>
+  169: psstm   <set string mode>
+  170: prqlc3  <request locator 3>
+  171: prqlc   <request locator>
+  172: prqsk3  <request stroke 3>
+  173: prqsk   <request stroke>
+  174: prqvl   <request valuator>
+  175: prqch   <request choice>
+  176: prqpk   <request pick>
+  177: prqst   <request string>
+  178: psmlc3  <sample locator 3>
+  179: psmlc   <sample locator>
+  180: psmsk3  <sample stroke 3>
+  181: psmsk   <sample stroke>
+  182: psmvl   <sample valuator>
+  183: psmch   <sample choice>
+  184: psmpk   <sample pick>
+  185: psmst   <sample string>
+  186: pwait   <await event>
+  187: pflush  <flush device events>
+  188: pgtlc3  <get locator 3>
+  189: pgtlc   <get locator>
+  190: pgtsk3  <get stroke 3>
+  191: pgtsk   <get stroke>
+  192: pgtvl   <get valuator>
+  193: pgtch   <get choice>
+  194: pgtpk   <get pick>
+  195: pgtst   <get string>
+  196: pwitm   <write item to metafile>
+  197: pgtitm  <get item type from metafile>
+  198: prditm  <read item from metafile>
+  199: piitm   <interpret item>
+  200: pqsys   <inquire system state value>
+  201: pqwkst  <inquire workstation state value>
+  202: pqstrs  <inquire structure state value>
+  203: pqars   <inquire archive state value>
+  204: pqewk   <inquire list of available workstation types>
+  205: pqphf   <inquire phigs facilities>
+  206: pqgsef  <inquire generalized structure element facilities>
+  207: pqmclf  <inquire modelling clipping facilities>
+  208: pqedm   <inquire edit mode>
+  209: pqopwk  <inquire set of open workstations>
+  210: pqsid   <inquire structure identifiers>
+  211: pqarf   <inquire archive files>
+  212: pqcnrs  <inquire conflict resolution>
+  213: pqcst   <inquire all conflicting structures>
+  214: pqcstn  <inquire conflicting structures in network>
+  215: pqsim   <inquire more simultaneous events>
+  216: pqwkc   <inquire workstation connection and type>
+  217: pqevwi  <inquire list of view indices>
+  218: pqvwr   <inquire view representation>
+  219: pqhrm   <inquire hlhsr mode>
+  220: pqpost  <inquire posted structures>
+  221: pqdus   <inquire display update state>
+  222: pqepli  <inquire list of polyline indices>
+  223: pqplr   <inquire polyline representation>
+  224: pqepmi  <inquire list of polymarker indices>
+  225: pqpmr   <inquire polymarker representation>
+  226: pqetxi  <inquire list of text indices>
+  227: pqtxr   <inquire text representation>
+  228: pqeii   <inquire list of interior indices>
+  229: pqir    <inquire interior representation>
+  230: pqeedi  <inquire list of edge indices>
+  231: pqedr   <inquire edge representation>
+  232: pqepai  <inquire list of pattern indices>
+  233: pqpar   <inquire pattern representation>
+  234: pqcmd   <inquire colour model>
+  235: pqeci   <inquire list of colour indices>
+  236: pqcr    <inquire colour representation>
+  237: pqhlft  <inquire highlighting filter>
+  238: pqivft  <inquire invisibility filter>
+  239: pqwkt3  <inquire workstation transformation 3>
+  240: pqwkt   <inquire workstation transformation>
+  241: pqlcs3  <inquire locator device state 3>
+  242: pqlcs   <inquire locator device state>
+  243: pqsks3  <inquire stroke device state 3>
+  244: pqsks   <inquire stroke device state>
+  245: pqvls3  <inquire valuator device state 3>
+  246: pqvls   <inquire valuator device state>
+  247: pqchs3  <inquire choice device state 3>
+  248: pqchs   <inquire choice device state>
+  249: pqpks3  <inquire pick device state 3>
+  250: pqpks   <inquire pick device state>
+  251: pqsts3  <inquire string device state 3>
+  252: pqsts   <inquire string device state>
+  253: pqwkca  <inquire workstation category>
+  254: pqdsp3  <inquire display space size 3>
+  255: pqdsp   <inquire display space size>
+  256: pqhrif  <inquire hlhsr facilities>
+  257: pqvwf   <inquire view facilities>
+  258: pqpvwr  <inquire predefined view representation>
+  259: pqwkcl  <inquire workstation classification>
+  260: pqdswa  <inquire dynamics of workstation attributes>
+  261: pqddus  <inquire default display update state>
+  262: pqplf   <inquire polyline facilities>
+  263: pqpplr  <inquire predefined polyline representation>
+  264: pqpmf   <inquire polymarker facilities>
+  265: pqppmr  <inquire predefined polymarker representation>
+  266: pqtxf   <inquire text facilities>
+  267: pqptxr  <inquire predefined text representation>
+  268: pqanf   <inquire annotation facilities>
+  269: pqtxx   <inquire text extent>
+  270: pqif    <inquire interior facilities>
+  271: pqpir   <inquire predefined interior representation>
+  272: pqedf   <inquire edge facilities>
+  273: pqpedr  <inquire predefined edge representation>
+  274: pqpaf   <inquire pattern facilities>
+  275: pqppar  <inquire predefined pattern representation>
+  276: pqcmdf  <inquire colour model facilities>
+  277: pqcf    <inquire colour facilities>
+  278: pqpcr   <inquire predefined colour representation>
+  279: pqegd3  <inquire list of available generalized drawing primitives 3>
+  280: pqegdp  <inquire list of available generalized drawing primitives>
+  281: pqgdp3  <inquire generalized drawing primitive 3>
+  282: pqgdp   <inquire generalized drawing primitive>
+  283: pqegse  <inquire list of available generalized structure elements>
+  284: pqdp    <inquire number of display priorities supported>
+  285: pqwksl  <inquire workstation state table lengths>
+  286: pqdstr  <inquire dynamics of structures>
+  287: pqli    <inquire number of available logical input devices>
+  288: pqdlc3  <inquire default locator device data 3>
+  289: pqdlc   <inquire default locator device data>
+  290: pqdsk3  <inquire default stroke device data 3>
+  291: pqdsk   <inquire default stroke device data>
+  292: pqdvl3  <inquire default valuator device data 3>
+  293: pqdvl   <inquire default valuator device data>
+  294: pqdch3  <inquire default choice device data 3>
+  295: pqdch   <inquire default choice device data>
+  296: pqdpk3  <inquire default pick device data 3>
+  297: pqdpk   <inquire default pick device data>
+  298: pqdst3  <inquire default string device data 3>
+  299: pqdst   <inquire default string device data>
+  300: pqwkpo  <inquire set of workstations to which posted>
+  301: pqopst  <inquire open structure>
+  302: pqep    <inquire element pointer>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+  305: pqets   <inquire element type and size>
+  306: pqeco   <inquire element content>
+  307: pqstst  <inquire structure status>
+  308: pqpan   <inquire paths to ancestors>
+  309: pqpde   <inquire paths to descendants>
+  310: pels    <element search>
+  311: piss3   <incremental spatial search 3>
+  312: piss    <incremental spatial search>
+  313: pqiqov  <inquire input queue overflow>
+  314: pqerhm  <inquire error handling mode>
+  315: peclph  <emergency close phigs>
+  316: perhnd  <error handling>
+  317: perlog  <error logging>
+  318: pserhm  <set error handling mode>
+  319: pesc    <escape>
+ 
+  Data Structures ---
+ 
+
+
+PROGRAM 1: Definition of macros in phigs.h
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+This program exploits the ifdef facility of the C-preprocessor.
+In order to pass, every required macro must be defined to the
+correct value.  If a macro is undefined or defined to the wrong
+value, the test case fails.
+
+For every required macro with a numeric value, check that it is
+defined to the correct value.
+
+for expfun = expected function identifiers
+   macnam = name of macro for expfun
+   TEST: #SR 1 2
+         macnam + " should be defined as " + expfun + "."
+   #ifdef macnam
+      pass/fail depending on (macnam = expfun)
+   #else
+      fail
+   #endif
+next expfun
+
+for experr = expected error codes
+   macnam = name of macro for experr
+   TEST: #SR 1 3
+         macnam + " should be defined as " + experr + "."
+   #ifdef macnam
+      pass/fail depending on (macnam = experr)
+   #else
+      fail
+   #endif
+next experr
+
+for explin = expected linetypes
+   macnam = name of macro for explin
+   TEST: #SR 1 4
+         macnam + " should be defined as " + explin + "."
+   #ifdef macnam
+      pass/fail depending on (macnam = explin)
+   #else
+      fail
+   #endif
+next explin
+
+for expmrk = expected marker types
+   macnam = name of macro for expmrk
+   TEST: #SR 1 5
+         macnam + " should be defined as " + expmrk + "."
+   #ifdef macnam
+      pass/fail depending on (macnam = expmrk)
+   #else
+      fail
+   #endif
+next expmrk
+
+for expann = expected annotation styles
+   macnam = name of macro for expann
+   TEST: #SR 1 6
+         macnam + " should be defined as " + expann + "."
+   #ifdef macnam
+      pass/fail depending on (macnam = expann)
+   #else
+      fail
+   #endif
+next expann
+
+for expcmd = expected colour models
+   macnam = name of macro for expcmd
+   TEST: #SR 1 7
+         macnam + " should be defined as " + expcmd + "."
+   #ifdef macnam
+      pass/fail depending on (macnam = expcmd)
+   #else
+      fail
+   #endif
+next expcmd
+
+for exppet = expected prompt and echo types
+   macnam = name of macro for exppet
+   TEST: #SR 1 8
+         macnam + " should be defined as " + exppet + "."
+   #ifdef macnam
+      pass/fail depending on (macnam = exppet)
+   #else
+      fail
+   #endif
+next exppet
+end processing of numeric macros
+
+for expsym = expected enumeration constant values
+   macnam = name of macro for expsym
+   TEST: #SR 1 10
+         macnam + " should be defined as " + expsym + "."
+   #ifdef macnam
+      pass/fail depending on (macnam = expsym)
+   #else
+      fail
+   #endif
+next expsym
+
+TEST: #SR 1 9
+      "PDEF_MEM_SIZE should be defined as ((size_t) (-1))."
+
+#ifdef PDEF_MEM_SIZE
+   exp_def_mem = ((size_t) (-1))
+   pass/fail depending on (exp_def_mem = PDEF_MEM_SIZE)
+#else
+   fail
+#endif
+
+TEST: #SR 1 9
+      "PDEF_ERR_FILE should be defined as ((char *) (0))."
+
+#ifdef PDEF_ERR_FILE
+   exp_def_err = ((char *) (0))
+   pass/fail depending on (exp_def_err = PDEF_ERR_FILE)
+#else
+   fail
+#endif
+
+TEST: #SR 1 15
+      "Size_t should be defined to some implementation dependent value."
+#ifdef size_t
+   pass
+#else
+   fail
+#endif
+
+END PROGRAM 1
+
+
+PROGRAM 2: Prevent re-definition of function names
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: The following three programs, P02, P03, and P04,
+are designed to check the correctness of the typedefs and
+function declarations in the phigs.h file supplied by the
+implementation.  They do not invoke any PHIGS functions, but
+rather serve to analyze the phigs.h file.  Also, these tests
+assume that certain facilities are available directly from the
+operating system.  The following diagram explains the overall
+data flow:
+
+
+       phigs.h (implementation file under test)
+          |
+          V
+  -----------------
+  | P02: delete   |
+  | re-definition |
+  | of PHIGS      |
+  | functions     |
+  -----------------
+          |
+          V
+       phigs.c: long function names are in force
+          |
+          V
+  ------------------
+  | C preprocessor |
+  | resolves all   |
+  | directives     |
+  ------------------
+          |
+          V
+       phigs.hp: preprocessed, comments stripped,
+          |      directives resolved
+          V
+  -----------------
+  | P03: extract  |
+  | typedefs and  |
+  | prototypes,   |
+  | and normalize |
+  -----------------
+          |
+          V
+       phigs.hpn: normalized format, contains only
+          |       typedefs and extern void's
+          V
+  -----------------
+  |      sort     |
+  -----------------
+          |
+          V
+       phigs.hpns: sorted and     std_phigs.hpns (from NIST)
+          |        normalized         |
+          V                           V
+  ------------------------------------------------
+  | P04: compare, look for missing, incorrect    |
+  | records; skip implementation dependent parts |
+  ------------------------------------------------
+                        |
+                        V
+                     p04.msg
+
+The operator must perform the following steps:
+
+1. Run P02, which reads phigs.h as input and writes phigs.c as
+output.  P02 searches for #define's that cause re-naming of the
+standard C function names and comments them out so that the
+original names are preserved.
+
+2. Run the system C preprocessor on phigs.c to produce phigs.hp.
+A standard conforming preprocessor should resolve #ifdef's,
+#define's and other directives, and also delete comments.
+E.g. on some Unix systems, the command "cc -E phigs.c > phigs.hp"
+will perform this function.  If your system cannot produce
+preprocessor output as a separate file, NIST will provide
+assistance in this step.
+
+3. Run P03, which reads phigs.hp as input and writes phigs.hpn as
+output.  P03 breaks the file up into statements and writes one
+statement per record, with superfluous spaces suppressed.  Thus
+all token-equivalent statements should be coerced to the same
+character string.  All statements other than typedefs and
+function declarations starting with "extern void" are omitted.
+
+4. Run the system sort routine on phigs.hpn to produce
+phigs.hpns. The sort key is the entire record treated as a
+character string.  E.g. on some Unix systems, the command "sort
+phigs.hpn > phigs.hpns" will perform this function.  If your
+system cannot sort a file in this way, NIST will provide
+assistance.
+
+5. Run P04, which reads phigs.hpns and std_phigs.hpns as input
+and writes a normal message file (p04.msg) as output.
+Std_phigs.hpns is a reference file from NIST containing all
+mandatory typedefs and function declarations, normalized and
+sorted.  P04 essentially checks that phigs.hpns is a superset of
+std_phigs.hpns.
+
+
+DESIGN:
+
+open phigs.c for output
+open phigs.h for input
+
+next_log_line:
+loglin = logical line = blank
+
+nextrec:
+read next record from phigs.h, at EOF end program
+append record to end of loglin
+if last non-blank character of loglin = '\' then
+   goto nextrec
+endif
+
+convert all whitespace to blanks in loglin
+
+if loglin is of the form: # define <standard C-function name> then
+   enclose as comment:
+   loglin = '/* ' loglin ' */'
+endif
+
+write loglin to phigs.c
+
+goto next_log_line
+
+END PROGRAM 2
+
+
+PROGRAM 3: Normalize prototypes and typedefs in phigs.h
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: See description of process in P02, above.
+
+DESIGN:
+
+open phigs.hp for input
+open phigs.hpn for output
+rstrec = will hold contents beyond current statement = blanks
+
+next_statement:
+inbuf = rstrec
+
+read records from phigs.hp into inbuf until
+  a zero-level ";" is found
+  ("{" increases current level by 1, "}" decreases by 1)
+  at EOF, end program
+
+rstrec = anything in inbuf beyond first zero-level ";"
+blank out inbuf beyond first zero-level ";"
+
+inbuf now has exactly one statement
+
+convert all whitespace in inbuf to blanks
+
+delete irrelevant statement types:
+if inbuf does not start with "typedef " or "extern " then
+   goto next_statement
+endif
+
+delete all superfluous blanks in inbuf
+
+if inbuf contains typedef statement then
+   move type name from end to front of inbuf
+endif
+
+write inbuf to phigs.hpn
+goto next_statement
+
+END PROGRAM 3
+
+
+PROGRAM 4: Check prototypes and typedefs in phigs.h
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: See description of process in P02, above.
+
+DESIGN:
+
+open phigs.hpns for input
+open std_phigs.hpns for input
+
+futrec = file-under-test record = blank
+
+next_refrec:
+read refrec = reference record from std_phigs.hpns,
+  at EOF end program
+
+if refrec is a function declaration then
+   TEST: #SR 1 12
+         "The phigs.h file should contain a correct declaration
+          for " + functionname + "."
+else
+   TEST: #SR 1 11
+         "The phigs.h file should contain a correct declaration
+          for " + typename + "."
+endif
+
+rec_compare:
+if (futrec-name < refrec-name) then
+   read futrec from phigs.hpns
+      at EOF goto no_more_fut
+   goto rec_compare
+elseif (futrec-name > refrec-name) then
+   fail
+   informational message: no declaration found for refrec-name
+   goto next_refrec
+endif
+
+got name match between futrec and refrec
+
+adjust comparison length for "typedef enum" or for partially
+implementation dependent types
+
+pass/fail depending on (futrec = refrec) for required length
+goto next_refrec
+
+no_more_fut:
+fail
+informational message: No more declarations in phigs.h
+
+END PROGRAM 4
+
+
+PROGRAM 5: Create store and delete store
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 13
+      "<Create store> should return a non-null pointer."
+<create store> to set ptr
+pass/fail depending on (error indicator = 0 and ptr not= null)
+
+TEST: #SR 14
+      "<Delete store> should return a null pointer."
+<delete store> to set ptr
+pass/fail depending on (error indicator = 0 and ptr = null)
+
+END PROGRAM 5

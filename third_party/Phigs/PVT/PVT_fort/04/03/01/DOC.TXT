@@ -1,0 +1,1234 @@
+TITLE: Set individual aspect source flag
+
+MODULE#: 04.03.01
+
+DESCRIPTION: This module tests the visual effect of setting the
+aspect source flags, and that a program can set up an individual
+ASF element in the CSS, which will set the value of the
+appropriate ASF upon traversal.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** ***   <Set individual ASF>   *** *** *** ***
+
+SR1.   <Set individual ASF> creates a set individual ASF element
+in the CSS.
+#F 62
+#D 7.3.2.8
+#S 4.5.2/39/6
+#T P01/1 P01/2 P02/1 P02/2 P02/3 P02/4 P02/5
+
+SR2.   If current element is set individual ASF then <inquire
+current element type and size> returns the element type as set
+individual ASF and the appropriate element size.
+#F 303
+#D 7.3.2.8
+#S 4.4.4/29/5
+#T P01/1
+
+SR3.   If current element is set individual ASF then  <inquire
+current element content> returns the appropriate data for set
+individual ASF.
+#F 304
+#D 7.3.2.8
+#S 4.4.4/29/5
+#T P01/2
+
+SR4.   The valid values for the aspect identifier for <set
+individual ASF> are LINETYPE, LINEWIDTH_SCALE_FACTOR,
+POLYLINE_COLOUR_INDEX, MARKER_TYPE, MARKER_SIZE_SCALE_FACTOR,
+POLYMARKER_COLOUR_INDEX, TEXT_FONT, TEXT_PRECISION,
+CHARACTER_EXPANSION_FACTOR, CHARACTER_SPACING, TEXT_COLOUR_INDEX,
+INTERIOR_STYLE, INTERIOR_STYLE_INDEX, INTERIOR_COLOUR_INDEX,
+EDGE_FLAG, EDGETYPE, EDGEWIDTH_SCALE_FACTOR, and
+EDGE_COLOUR_INDEX.
+#F 62
+#D 7.3.2.8
+#S 4.5.2/39/5 4.5.2/40/3ff
+#T P01/1 P01/2 P02/1 P02/2 P02/3 P02/4 P02/5 P03/2 P03/3 P03/4 P03/5
+   P03/6 P03/7 P03/8 P03/9
+
+SR5.   The valid values for the aspect source for <set individual
+ASF> are BUNDLED and INDIVIDUAL.
+#F 62
+#D 7.3.2.8
+#S 4.5.2/39/5
+#T P01/1 P01/2 P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2 P03/3 P03/4
+   P03/5 P03/6 P03/7 P03/8 P03/9
+
+SR6.  Upon traversal of a "set individual ASF" element, the entry
+in the PHIGS traversal state list (PTSL) corresponding to the
+aspect identifier parameter is set to the value of the aspect
+source parameter.
+#F 62
+#D 7.3.2.8 3.1.5 3.1.6 3.1.7 3.2.5 3.2.6 3.2.7 3.3.7 3.3.8 3.3.9
+#D 3.3.10 3.3.11 3.5.5 3.5.6 3.5.7 3.6.6 3.6.7 3.6.8 3.6.9
+#S 4.5.2/39/5
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7
+   P03/8 P03/9
+
+SR7.  Upon traversal of the following elements (either the 2D or
+3D version), the indicated current ASFs in the PTSL are bound to
+the resulting primitive:
+POLYLINE: linetype ASF, linewidth scale factor ASF, polyline
+colour index ASF;
+POLYMARKER: marker type ASF, marker size scale factor ASF,
+polymarker colour index ASF;
+TEXT: text font ASF, text precision ASF, character expansion
+factor ASF, character spacing ASF, text colour index ASF;
+ANNOTATION TEXT: text font ASF, text precision ASF, character
+expansion factor ASF, character spacing ASF, text colour index
+ASF;
+FILL AREA: interior style ASF, interior style index ASF, interior
+colour index ASF;
+FILL AREA SET: interior style ASF, interior style index ASF,
+interior colour index ASF, edge flag ASF, edgetype ASF, edgewidth
+scale factor ASF, edge colour index ASF;
+#F 62
+#D 3.1.5 3.1.6 3.1.7 3.2.5 3.2.6 3.2.7 3.3.7 3.3.8 3.3.9 3.3.10
+#D 3.3.11 3.5.5 3.5.6 3.5.7 3.6.6 3.6.7 3.6.8 3.6.9
+#D 7.3.1.1 7.3.1.2 7.3.1.3 7.3.1.4 7.3.1.5 7.3.1.6 7.3.1.7
+#D 7.3.1.8 7.3.1.9 7.3.1.10 7.3.1.11 7.3.1.12
+#S 4.5.2/38/3 4.5.2/40/3ff
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+   P03/7 P03/8 P03/9
+#C For example, the traversal of a <fill area 3> element
+generates a fill area 3 primitive with the current interior style
+ASF, interior style index ASF, and interior colour index ASF
+bound to it
+
+SR8.  When a primitive is displayed, each of its non-geometric
+aspects for which the corresponding ASF is INDIVIDUAL is
+determined by its corresponding bound individual attribute.
+#F 62
+#D 3.1 3.2 3.3 3.5 3.6
+#S 4.5.2/39/2 4.5.2/39/7 4.5.2/42/2
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+   P03/7 P03/8 P03/9
+#C For example, a fill area 3 primitive with bound interior style
+index ASF = INDIVIDUAL gets its interior style index aspect from
+its bound interior style index attribute.  (This value may then
+itself be used as a hatch index or pattern index.)
+
+SR9.  When a primitive is displayed, each of its non-geometric
+aspects for which the corresponding ASF is BUNDLED is determined
+by the relevant component of the indicated (by its corresponding
+bound bundle index) entry of the appropriate workstation bundle.
+#F 62
+#D 3.1 3.2 3.3 3.5 3.6
+#S 4.5.2/38/7 4.5.2/39/2 4.5.2/39/7 4.5.2/42/2
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+   P03/7 P03/8 P03/9
+#C For example, a fill area 3 primitive with bound interior style
+index ASF = BUNDLED and interior index = 5 gets its interior
+style index aspect from the interior style index component of
+entry #5 of the workstation's interior bundle table.  (This value
+may then itself be used as a hatch index or pattern index.)
+
+SR10.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), all
+current ASFs of the PTSL are set to the same value.
+#F
+#D 2.10.5 2.10.6 2.10.7 2.11.5 2.11.6 2.11.7 2.12.7 2.12.8 2.12.9
+#D 2.12.10 2.12.11 2.14.5 2.14.6 2.14.7 2.15.6 2.15.7 2.15.8 2.15.9
+#D 3.1.5 3.1.6 3.1.7 3.2.5 3.2.6 3.2.7 3.3.7 3.3.8 3.3.9
+#D 3.3.10 3.3.11 3.5.5 3.5.6 3.5.7 3.6.6 3.6.7 3.6.8 3.6.9
+#S 4.4.3/26/2 4.4.3/28/1 4.5.2/39/5 6.3/309/1ff
+#T P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+#C The implementation may initialize the all ASFs to either
+INDIVIDUAL or BUNDLED, but may not initialize some ASFs to
+INDIVIDUAL and others to BUNDLED.
+
+SR11.  As part of the PTSL, every ASF is saved (but not changed)
+by execute structure and then, upon completion of the
+sub-traversal of the invoked network, restored to the saved
+value.
+#F 113
+#D 3.1.5 3.1.6 3.1.7 3.2.5 3.2.6 3.2.7 3.3.7 3.3.8 3.3.9
+#D 3.3.10 3.3.11 3.5.5 3.5.6 3.5.7 3.6.6 3.6.7 3.6.8 3.6.9
+#S 4.4.3/28/1
+#T P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   62: psiasf  <set individual asf>
+  113: pexst   <execute structure>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.10 ...  default_polyline_attributes
+  2.10.5  ...  default_linetype_asf
+  2.10.6  ...  default_linewidth_scale_factor_asf
+  2.10.7  ...  default_polyline_colour_index_asf
+  2.11 ...  default_polymarker_attributes
+  2.11.5  ...  default_marker_type_asf
+  2.11.6  ...  default_marker_size_scale_factor_asf
+  2.11.7  ...  default_polymarker_colour_index_asf
+  2.12 ...  default_text_attributes
+  2.12.7  ...  default_text_font_asf
+  2.12.8  ...  default_text_precision_asf
+  2.12.9  ...  default_character_expansion_factor_asf
+  2.12.10 ...  default_character_spacing_asf
+  2.12.11 ...  default_text_colour_index_asf
+  2.14  ...  default_interior_attributes
+  2.14.5  ...  default_interior_style_asf
+  2.14.6  ...  default_interior_style_index_asf
+  2.14.7  ...  default_interior_colour_index_asf
+  2.15  ...  default_edge_attributes
+  2.15.6  ...  default_edge_flag_asf
+  2.15.7  ...  default_edgetype_asf
+  2.15.8  ...  default_edgewidth_scale_factor_asf
+  2.15.9  ...  default_edge_colour_index_asf
+  3  ...  phigs_traversal_state_list
+  3.1  ...  current_polyline_attributes
+  3.1.5  ...  current_linetype_asf
+  3.1.6  ...  current_linewidth_scale_factor_asf
+  3.1.7  ...  current_polyline_colour_index_asf
+  3.2  ...  current_polymarker_attributes
+  3.2.5  ...  current_marker_type_asf
+  3.2.6  ...  current_marker_size_scale_factor_asf
+  3.2.7  ...  current_polymarker_colour_index_asf
+  3.3  ...  current_text_attributes
+  3.3.7  ...  current_text_font_asf
+  3.3.8  ...  current_text_precision_asf
+  3.3.9  ...  current_character_expansion_factor_asf
+  3.3.10 ...  current_character_spacing_asf
+  3.3.11 ...  current_text_colour_index_asf
+  3.5  ...  current_interior_attributes
+  3.5.5  ...  current_interior_style_asf
+  3.5.6  ...  current_interior_style_index_asf
+  3.5.7  ...  current_interior_colour_index_asf
+  3.6  ...  current_edge_attributes
+  3.6.6  ...  current_edge_flag_asf
+  3.6.7  ...  current_edgetype_asf
+  3.6.8  ...  current_edgewidth_scale_factor_asf
+  3.6.9  ...  current_edge_colour_index_asf
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.1  ...  polyline_3
+  7.3.1.2  ...  polyline
+  7.3.1.3  ...  polymarker_3
+  7.3.1.4  ...  polymarker
+  7.3.1.5  ...  text_3
+  7.3.1.6  ...  text
+  7.3.1.7  ...  annotation_text_relative_3
+  7.3.1.8  ...  annotation_text_relative
+  7.3.1.9  ...  fill_area_3
+  7.3.1.10 ...  fill_area
+  7.3.1.11 ...  fill_area_set_3
+  7.3.1.12 ...  fill_area_set
+  7.3.2  ...  primitive_attributes
+  7.3.2.8  ...  individual_asf
+ 
+
+
+PROGRAM 1: Set individual ASF element
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> thoughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+*** *** ***   Set individual ASF for each ASF value   *** *** ***
+
+badtyp = false
+badcon = false
+
+for each attribute-id (atrid) from LINETYPE to EDGE_COLOUR_INDEX and
+   for each ASF-value (asfval) from INDIVIDUAL to BUNDLED
+
+      <set individual ASF> with atrid, asfval
+
+      <inquire current element type and size>
+      if returned type and size data is incorrect then
+         set badtyp = true
+         goto over1
+      endif
+
+   next ASF-value
+next attribute-id
+
+over1:
+
+TEST: #SR 1 2 4 5
+      "<Inquire current element type and size> should return
+       set individual ASF as the type of the created
+       element and the appropriate element size."
+
+if badtyp then
+   fail
+   information message on atrid and asfval
+else
+   pass
+endif
+
+for each attribute-id (atrid) from LINETYPE to EDGE_COLOUR_INDEX and
+   for each ASF-value (asfval) from INDIVIDUAL to BUNDLED
+
+      <set individual ASF> with atrid, asfval
+
+      <inquire current element content>
+      if returned content data is incorrect then
+         set badcon = true
+         goto over2
+      endif
+
+   next ASF-value
+next attribute-id
+
+over2:
+
+TEST: #SR 1 3 4 5
+      "<Inquire current element content> should return the standard
+       representation for set individual ASF."
+
+if badcon then
+   fail
+   information message on atrid and asfval
+else
+   pass
+endif
+
+END PROGRAM 1
+
+
+PROGRAM 2: Selective control of primitive aspects
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+In all the test cases, several primitives are shown, and the
+operator must indicate the one that is different. Note that ALL
+the other primitives must be EXACTLY alike.
+
+ASF CONTROL OF POLYLINE: The screen should show several lines,
+all but one of which have the same aspects (linetype, linewidth,
+color).  Identify the one line with some distinct aspect(s).
+
+ASF CONTROL OF POLYMARKER: The screen should show several
+polymarkers (each line contains one polymarker), all but one of
+which have the same aspects (markertype, markersize, color).
+Identify the one polymarker with some distinct aspect(s).
+
+ASF CONTROL OF TEXT: The screen should show several text lines,
+all but one of which have the same aspects (text font, text
+precision, character expansion factor, character spacing, color).
+Identify the one text line with some distinct aspect(s).
+
+ASF CONTROL OF INTERIOR STYLE: The screen should show several
+fill areas, all but one of which have the same interior style
+(only HOLLOW and EMPTY are used).  Identify the one fill area
+with a distinct style.  Note that an "invisible" fill area is
+valid, since interior style = EMPTY is used.
+
+ASF CONTROL OF INTERIOR STYLE INDEX:  The screen should show
+several fill areas, all but one of which have the same interior
+style and style index.  This test is run only if HATCH or PATTERN
+is supported.  Identify the one fill area with a distinct
+interior style index, i.e. a different hatch style or pattern.
+
+ASF CONTROL OF INTERIOR COLOR:  The screen should show several
+fill areas, all but one of which have the same interior color.
+Identify the one fill area with a distinct color.
+
+ASF CONTROL OF EDGE FLAG: The screen should show several fill
+areas, all but one of which have the same edge flag.  Identify
+the one fill area with a distinct edge flag.  Note that an
+"invisible" fill area is valid, since edge flag = OFF is used.
+
+ASF CONTROL OF EDGE ASPECTS: The screen should show several fill
+areas, all but one of which have the same visible edge aspects
+(edgetype, edgewidth scale factor, color).  Identify the one fill
+area with some distinct aspect(s).
+
+DESIGN:
+
+try to set color table with #1,2,3 distinct
+
+*** *** *** ***   polyline   *** *** *** ***
+
+TEST: #SR 1 4 5 6 7 8 9
+      "The program should be able to specify each of the
+       non-geometric aspects of polyline primitives using either
+       individual or bundled control."
+
+aspects to be displayed:
+linetype = 2, linewidth = 0.05 in WC, linecolor = 2
+
+aspects to be suppressed:
+linetype = 1, linewidth = 0.0001 in WC, linecolor = 1
+
+set individual color indices for other primitives to 3, to make
+  sure they don't interact with polyline.
+
+numlin = number of lines to be displayed = 6
+ngprim = line to be drawn incorrectly = random from 1 to 6
+for ix = 1 to numlin
+   typsrc = linetype source  = INDIVIDUAL or BUNDLED (random)
+   widsrc = linewidth source = INDIVIDUAL or BUNDLED (random)
+   colsrc = linecolor source = INDIVIDUAL or BUNDLED (random)
+
+   set bundle #ix to displayed aspects, for BUNDLED source
+                and suppressed aspects, for INDIVIDUAL source
+   set polyline index to ix
+   set individual attributes
+                  to displayed aspects, for INDIVIDUAL source
+                and suppressed aspects, for BUNDLED source
+
+   set ASF flags in accordance with typsrc,widsrc,colsrc
+   if (ix = ngprim) then
+      set ASF flag NOT in accordance with typsrc,widsrc,colsrc
+   endif
+   if (ix <= numlin/2) then
+      draw <polyline> #ix
+   else
+      draw <polyline 3> #ix
+   endif
+next ix
+
+OPQA/ASF CONTROL OF POLYLINE: Which line is different?
+pass/fail depending on (operator selects line #ngprim)
+
+*** *** *** ***   polymarker   *** *** *** ***
+
+TEST: #SR 1 4 5 6 7 8 9
+      "The program should be able to specify each of the
+       non-geometric aspects of polymarker primitives using
+       either individual or bundled control."
+
+aspects to be displayed:
+markertype = 4, markerwidth = 0.05 in WC, markercolor = 2
+
+aspects to be suppressed:
+markertype = 5, markerwidth = 0.03 in WC, markercolor = 1
+
+set individual color indices for other primitives to 3, to make
+  sure they don't interact with polymarker.
+
+numlin = number of markers to be displayed = 6
+ngprim = marker to be drawn incorrectly = random from 1 to 6
+for ix = 1 to numlin
+   typsrc = markertype source  = INDIVIDUAL or BUNDLED (random)
+   widsrc = markerwidth source = INDIVIDUAL or BUNDLED (random)
+   colsrc = markercolor source = INDIVIDUAL or BUNDLED (random)
+
+   set bundle #ix to displayed aspects, for BUNDLED source
+                and suppressed aspects, for INDIVIDUAL source
+   set polymarker index to ix
+   set individual attributes
+                  to displayed aspects, for INDIVIDUAL source
+                and suppressed aspects, for BUNDLED source
+
+   set ASF flags in accordance with typsrc,widsrc,colsrc
+   if (ix = ngprim) then
+      set ASF flag NOT in accordance with typsrc,widsrc,colsrc
+   endif
+   if (ix <= numlin/2) then
+      draw <polymarker> #ix
+   else
+      draw <polymarker 3> #ix
+   endif
+next ix
+
+OPQA/ASF CONTROL OF POLYMARKER: Which marker is different?
+pass/fail depending on (operator selects marker #ngprim)
+
+*** *** *** ***   text   *** *** *** ***
+
+TEST: #SR 1 4 5 6 7 8 9
+      "The program should be able to specify each of the
+       non-geometric aspects of text and annotation text
+       primitives using either individual or bundled control."
+
+aspects to be displayed:
+font = 2, precision = STROKE, expansion = 0.5, spacing = 0.3,
+textcolor = 2
+
+aspects to be suppressed:
+font = 1, precision = STRING, expansion = 1.2, spacing = -0.3,
+textcolor = 1
+
+set individual color indices for other primitives to 3, to make
+  sure they don't interact with text.
+
+numlin = number of text lines to be displayed = 6
+ngprim = text to be drawn incorrectly = random from 1 to 6
+iprim = 1
+for ix = 1 to numlin
+   fntsrc = text font source      = INDIVIDUAL or BUNDLED (random)
+   prcsrc = text precision source = INDIVIDUAL or BUNDLED (random)
+   expsrc = text expansion source = INDIVIDUAL or BUNDLED (random)
+   spcsrc = text spacing source   = INDIVIDUAL or BUNDLED (random)
+   colsrc = text color source     = INDIVIDUAL or BUNDLED (random)
+
+   set bundle #ix to displayed aspects, for BUNDLED source
+                and suppressed aspects, for INDIVIDUAL source
+   set text index to ix
+   set individual attributes
+                  to displayed aspects, for INDIVIDUAL source
+                and suppressed aspects, for BUNDLED source
+
+   set ASF flags in accordance with
+     fntsrc, prcsrc, expsrc, spcsrc, colsrc
+
+   if (ix = ngprim) then
+      set ASF flag NOT in accordance with
+        fntsrc, prcsrc, expsrc, spcsrc, colsrc
+      next = iprim
+   else
+      next = iprim + 1
+   endif
+   iprim ensures that each primitive is drawn correctly at least once
+
+   if (iprim = 1) then
+      draw <text> #ix
+   elseif (iprim = 2) then
+      draw <text 3> #ix
+   elseif (iprim = 3) then
+      draw <annotation text> #ix
+   elseif (iprim = 4) then
+      draw <annotation text 3> #ix
+   else
+      draw <text> #ix
+   endif
+   iprim = next
+next ix
+
+OPQA/ASF CONTROL OF TEXT: Which text is different?
+pass/fail depending on (operator selects text #ngprim)
+
+*** *** *** ***   interior   *** *** *** ***
+
+TEST: #SR 1 4 5 6 7 8 9
+      "The program should be able to specify each of the
+       non-geometric aspects in the interior bundle using either
+       individual or bundled control."
+
+set individual color indices for other primitives to 3, to make
+  sure they don't interact with interior.
+
+*** *** *** ***   interior style   *** *** *** ***
+
+aspects to be displayed:
+interior style = HOLLOW, interior style index = 1, interior-color = 2
+
+aspects to be suppressed:
+interior style = EMPTY, interior style index = 1, interior-color = 1
+
+numlin = number of interior lines to be displayed = 6
+ngprim = interior to be drawn incorrectly = random from 1 to 6
+set edge flag = OFF
+iprim = 1
+
+for ix = 1 to numlin
+   stysrc = interior style source = INDIVIDUAL or BUNDLED (random)
+   iixsrc = interior style index source = INDIVIDUAL or BUNDLED (random)
+   colsrc = interior color source = INDIVIDUAL or BUNDLED (random)
+
+   set bundle #ix to displayed aspects, for BUNDLED source
+                and suppressed aspects, for INDIVIDUAL source
+   set interior index to ix
+   set individual attributes
+                  to displayed aspects, for INDIVIDUAL source
+                and suppressed aspects, for BUNDLED source
+
+   set ASF flags in accordance with: stysrc, iixsrc, colsrc
+
+   if (ix = ngprim) then
+      set ASF flag NOT in accordance with stysrc, iixsrc, colsrc
+      next = iprim
+   else
+      next = iprim+1
+   endif
+   iprim ensures that each primitive is drawn correctly at least once
+
+   if (iprim = 1) then
+      draw <fill area> #ix
+   elseif (iprim = 2) then
+      draw <fill area 3> #ix
+   elseif (iprim = 3) then
+      draw <fill area set> #ix
+   elseif (iprim = 4) then
+      draw <fill area set 3> #ix
+   else
+      draw <fill area> set #ix
+   endif
+   iprim = next
+next ix
+
+OPQA/ASF CONTROL OF INTERIOR STYLE: Which interior is different?
+if (operator selects interior #ngprim) then
+   OK so far
+else
+   fail
+   goto end_int
+endif
+
+*** *** *** ***   interior style index   *** *** *** ***
+
+if (HATCH available) then
+   int-style = HATCH
+   iix1, iix2 = two available hatch styles
+elseif (PATTERN available) then
+   int-style = PATTERN
+   iix1, iix2 = 1,2 = define two distinct patterns
+else
+   goto end_int_index
+endif
+
+aspects to be displayed:
+interior style = int-style, interior style index = iix1, interior-color = 2
+
+aspects to be suppressed:
+interior style = int-style, interior style index = iix2, interior-color = 1
+
+numlin = number of interior lines to be displayed = 6
+ngprim = interior to be drawn incorrectly = random from 1 to 6
+set edge flag = OFF
+iprim = 1
+
+for ix = 1 to numlin
+   stysrc = interior style source = INDIVIDUAL or BUNDLED (random)
+   iixsrc = interior style index source = INDIVIDUAL or BUNDLED (random)
+   colsrc = interior color source = INDIVIDUAL or BUNDLED (random)
+
+   set bundle #ix to displayed aspects, for BUNDLED source
+                and suppressed aspects, for INDIVIDUAL source
+   set interior index to ix
+   set individual attributes
+                  to displayed aspects, for INDIVIDUAL source
+                and suppressed aspects, for BUNDLED source
+
+   set ASF flags in accordance with: stysrc, iixsrc, colsrc
+
+   if (ix = ngprim) then
+      set ASF flag NOT in accordance with stysrc, iixsrc, colsrc
+      next = iprim
+   else
+      next = iprim + 1
+   endif
+   iprim ensures that each primitive is drawn correctly at least once
+
+   if (iprim = 1) then
+      draw <fill area> #ix
+   elseif (iprim = 2) then
+      draw <fill area 3> #ix
+   elseif (iprim = 3) then
+      draw <fill area set> #ix
+   elseif (iprim = 4) then
+      draw <fill area set 3> #ix
+   else
+      draw <fill area> set #ix
+   endif
+   iprim = next
+next ix
+
+OPQA/ASF CONTROL OF INTERIOR STYLE INDEX: Which interior is different?
+if (operator selects interior #ngprim) then
+   OK so far
+else
+   fail
+   goto end_int
+endif
+
+end_int_index:
+
+*** *** *** ***   interior color   *** *** *** ***
+
+if (number of distinct colors < 2) then
+   pass
+   goto end_int
+endif
+
+if (SOLID available) then
+   int-style = SOLID
+else
+   int-style = HOLLOW
+endif
+
+aspects to be displayed:
+interior style = int-style, interior style index = 1, interior-color = 2
+
+aspects to be suppressed:
+interior style = int-style, interior style index = 1, interior-color = 1
+
+numlin = number of interior lines to be displayed = 6
+ngprim = interior to be drawn incorrectly = random from 1 to 6
+set edge flag = OFF
+iprim = 1
+
+for ix = 1 to numlin
+   stysrc = interior style source = INDIVIDUAL or BUNDLED (random)
+   iixsrc = interior style index source = INDIVIDUAL or BUNDLED (random)
+   colsrc = interior color source = INDIVIDUAL or BUNDLED (random)
+
+   set bundle #ix to displayed aspects, for BUNDLED source
+                and suppressed aspects, for INDIVIDUAL source
+   set interior index to ix
+   set individual attributes
+                  to displayed aspects, for INDIVIDUAL source
+                and suppressed aspects, for BUNDLED source
+
+   set ASF flags in accordance with: stysrc, iixsrc, colsrc
+
+   if (ix = ngprim) then
+      set ASF flag NOT in accordance with stysrc, iixsrc, colsrc
+      next = iprim
+   else
+      next = iprim + 1
+   endif
+   iprim ensures that each primitive is drawn correctly at least once
+
+   if (iprim = 1) then
+      draw <fill area> #ix
+   elseif (iprim = 2) then
+      draw <fill area 3> #ix
+   elseif (iprim = 3) then
+      draw <fill area set> #ix
+   elseif (iprim = 4) then
+      draw <fill area set 3> #ix
+   else
+      draw <fill area> set #ix
+   endif
+   iprim = next
+next ix
+
+OPQA/ASF CONTROL OF INTERIOR COLOR: Which interior color is different?
+pass/fail depending on (operator selects interior #ngprim)
+
+end_int:
+
+*** *** *** ***   edge   *** *** *** ***
+
+TEST: #SR 1 4 5 6 7 8 9
+      "The program should be able to specify each of the
+       non-geometric aspects in the edge bundle using either
+       individual or bundled control."
+
+set individual color indices for other primitives to 3, to make
+  sure they don't interact with edge color.
+
+*** *** *** ***   edge flag   *** *** *** ***
+
+ed1,ed2 = two available edge types
+
+aspects to be displayed:
+edge flag = ON, edgetype = ed2, edgewidth = 0.02 in WC, edgecolor = 2
+
+aspects to be suppressed:
+edge flag = OFF, edgetype = ed1, edgewidth = 0.001 in WC, edgecolor = 1
+
+set interior style = EMPTY
+
+numlin = number of edge lines to be displayed = 6
+ngprim = edge to be drawn incorrectly = random from 1 to 6
+
+for ix = 1 to numlin
+   flgsrc = edge flag source = INDIVIDUAL or BUNDLED (random)
+   typsrc = edgetype source  = INDIVIDUAL or BUNDLED (random)
+   widsrc = edgewidth source = INDIVIDUAL or BUNDLED (random)
+   colsrc = edgecolor source = INDIVIDUAL or BUNDLED (random)
+
+   set bundle #ix to displayed aspects, for BUNDLED source
+                and suppressed aspects, for INDIVIDUAL source
+   set edge index to ix
+   set individual attributes
+                  to displayed aspects, for INDIVIDUAL source
+                and suppressed aspects, for BUNDLED source
+
+   set ASF flags in accordance with: flgsrc,typsrc,widsrc,colsrc
+
+   if (ix = ngprim) then
+      set ASF flag NOT in accordance with flgsrc,typsrc,widsrc,colsrc
+   endif
+
+   if (ix <= numlin/2) then
+      draw <fill area set> #ix
+   else
+      draw <fill area set 3> #ix
+   endif
+next ix
+
+OPQA/ASF CONTROL OF EDGE FLAG: Which edge is different?
+if (operator selects edge #ngprim) then
+   OK so far
+else
+   fail
+   goto end_edge:
+endif
+
+*** *** *** ***   edge type,width,color   *** *** *** ***
+
+if (only one edge type,width,color available) then
+   pass
+   goto end_edge
+endif
+ed1,ed2 = two available edge types
+
+aspects to be displayed:
+edge flag = ON, edgetype = ed2, edgewidth = 0.02 in WC, edgecolor = 2
+
+aspects to be suppressed:
+edge flag = ON, edgetype = ed1, edgewidth = 0.001 in WC, edgecolor = 1
+
+set interior style = EMPTY
+
+numlin = number of edge lines to be displayed = 6
+ngprim = edge to be drawn incorrectly = random from 1 to 6
+
+for ix = 1 to numlin
+   flgsrc = edge flag source = INDIVIDUAL or BUNDLED (random)
+   typsrc = edgetype source  = INDIVIDUAL or BUNDLED (random)
+   widsrc = edgewidth source = INDIVIDUAL or BUNDLED (random)
+   colsrc = edgecolor source = INDIVIDUAL or BUNDLED (random)
+
+   set bundle #ix to displayed aspects, for BUNDLED source
+                and suppressed aspects, for INDIVIDUAL source
+   set edge index to ix
+   set individual attributes
+                  to displayed aspects, for INDIVIDUAL source
+                and suppressed aspects, for BUNDLED source
+
+   set ASF flags in accordance with: flgsrc,typsrc,widsrc,colsrc
+
+   if (ix = ngprim) then
+      set ASF flag NOT in accordance with flgsrc,typsrc,widsrc,colsrc
+   endif
+
+   if (ix <= numlin/2) then
+      draw <fill area set> #ix
+   else
+      draw <fill area set 3> #ix
+   endif
+next ix
+
+OPQA/ASF CONTROL OF EDGE ASPECTS: Which edge is different?
+pass/fail depending on (operator selects edge #ngprim)
+
+end_edge:
+
+END PROGRAM 2
+
+
+PROGRAM 3: Network inheritance and initialization of ASFs
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+ASF DEFAULT: The screen should display a single polymarker, whose
+type is either plus (+) or circle (O).  Indicate which is shown
+(as usual, if neither, enter 0).
+
+STRUCTURE NETWORK INHERITANCE FOR POLYLINE ASFS: The screen
+displays several left-right pairs of polylines.  Make sure that
+all pairs except one have matching linetypes, linewidths, and
+color.  Identify the non-matching pair.
+
+
+STRUCTURE NETWORK INHERITANCE FOR POLYMARKER ASFS: The screen
+displays several left-right pairs of polymarkers.  Make sure that
+all pairs except one have matching markertypes, markerwidths, and
+color.  Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR TEXT ASFS: The screen displays
+several left-right pairs of text primitives.  Make sure that all
+pairs except one have matching fonts, precisions, expansions,
+spacings, and color.  Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR INTERIOR STYLE ASF: The screen
+displays several left-right pairs of fill areas.  Make sure that
+all pairs except one have matching inetrior style (either HOLLOW
+or EMPTY).  Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR INTERIOR STYLE INDEX ASF: The
+screen displays several left-right pairs of fill areas.  Make
+sure that all pairs except one have matching hatch styles or
+patterns.  Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR INTERIOR COLOR ASF: The screen
+displays several left-right pairs of fill areas.  Make sure that
+all pairs except one have matching interior styles and color.
+Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR EDGE FLAG ASF: The screen
+displays several left-right pairs of fill areas.  Make sure that
+all pairs except one have matching edge flags (ON or OFF).
+Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR EDGE ASFS: The screen displays
+several left-right pairs of fill areas.  Make sure that all pairs
+except one have matching edgetypes, edgewidths, and color.
+Identify the non-matching pair.
+
+DESIGN:
+
+call DISCOL to try to get 2 distinct foreground colors
+
+TEST: #SR 5 7 8 9
+      "The implementation should initialize the ASF for markertype
+       to individual or bundled."
+
+Determine whether individual or bundled is the default (no ASFs
+  set yet):
+indmrk = individual markertype = plus or circle, randomly
+bunmrk = bundled markertype = circle or plus, opposite of indmrk
+
+set individual attribute:
+   markertype = indmrk
+   markerwidth = 0.1 in WC
+set bundle #1 to:
+   markertype = bunmrk, markerwidth = 0.1 in WC, markercolor = 1
+
+display a polymarker
+
+OPQA/ASF DEFAULT: Is the displayed marker: 1-plus or 2-circle?
+opans = operator response
+
+if (opans = 0) then
+   fail
+   message: cannot determine ASF default
+   goto to done
+endif
+
+pass
+if (opans = indmrk) then
+   asfdef = ASF default = INDIVIDUAL
+   message: default is INDIVIDUAL
+else
+   asfdef = ASF default = BUNDLED
+   message: default is BUNDLED
+endif
+
+oppdef = opposite of asfdef
+
+All the rest of the test cases use same basic structure network
+for testing inheritance.  Five (distinct if possible) values for
+the attribute to be tested are set up and propagated throughout
+the network.  The first value is the system default from the PDT.
+Note that structure #104 is executed by both #103 and #101.
+Actual results are displayed on the left, expected results on the
+right, with the 14th deliberately made incorrect.
+
+default = val#1
+  |                  102
+  |                 /  prim 2
+  |               /    attr = val#3   val#3
+  V        val#1/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   attr = val#4
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  attr = val#2                                  prim 7    \ val#4
+  prim 10                                                   \
+  transform             val#2                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        attr = val#5
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+*** *** ***   inheritance for polyline ASFs   *** *** ***
+
+asftab = ASF table:
+      linetype    linewidth   color
+      --------    ---------   -----
+1:    asfdef      asfdef      asfdef
+2:    individual  bundled     individual
+3:    oppdef      oppdef      oppdef
+4:    bundled     individual  bundled
+5:    asfdef      asfdef      oppdef
+
+Make individual and bundled as distinct as possible:
+
+set individual attributes:
+   linetype = dotted, linewidth = .03 in WC, linecolor = 1
+set bundle #1 to:
+   linetype = dashed, linewidth = .001 in WC, linecolor = 2
+
+randomize order of polylines
+
+set up CSS as described above
+
+display 14 pairs of polylines, using ASF entries 1-5
+
+TEST: #SR 4 5 6 7 8 9 10 11
+      "The polyline ASFs should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR POLYLINE ASFS:
+  which pair of lines does NOT match?
+pass/fail depending on (response = position of line #14)
+
+*** *** ***   inheritance for polymarker ASFs   *** *** ***
+
+asftab = ASF table:
+      markertype  markerwidth   color
+      --------    ---------     -----
+1:    asfdef      asfdef        asfdef
+2:    individual  bundled       individual
+3:    oppdef      oppdef        oppdef
+4:    bundled     individual    bundled
+5:    asfdef      asfdef        oppdef
+
+Make individual and bundled as distinct as possible:
+
+set individual attributes:
+   markertype = cross, markerwidth = .04 in WC, markercolor = 1
+set bundle #1 to:
+   markertype = circle, markerwidth = .02 in WC, markercolor = 2
+
+randomize order of polymarkers
+
+set up CSS as described above
+
+display 14 pairs of polymarkers, using ASF entries 1-5
+
+TEST: #SR 4 5 6 7 8 9 10 11
+      "The polymarker ASFs should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR POLYMARKER ASFS:
+  which pair of markers does NOT match?
+pass/fail depending on (response = position of marker #14)
+
+
+*** *** ***   inheritance for text ASFs   *** *** ***
+
+asftab = ASF table:
+      font      precision   expansion  spacing  color
+      ----      ---------   ---------  -------  -----
+1:    asfdef    asfdef      asfdef     asfdef   asfdef
+2:    individ   bundled     individ    bundled  individ
+3:    oppdef    oppdef      oppdef     oppdef   oppdef
+4:    bundled   individ     bundled    individ  bundled
+5:    bundled   individ     individ    individ  bundled
+
+Make individual and bundled as distinct as possible:
+
+set individual attributes:
+  font=2, precision=STROKE, expansion=0.5, spacing=0.3, color=2
+set bundle #1 to:
+  font=1, precision=STRING, expansion=1.2, spacing=-0.3, color=1
+randomize order of text
+
+set up CSS as described above
+
+display 14 pairs of text primitives, using ASF entries 1-5
+
+TEST: #SR 4 5 6 7 8 9 10 11
+      "The text ASFs should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR TEXT ASFS:
+  which pair of text primitives does NOT match?
+pass/fail depending on (response = position of text #14)
+
+*** *** ***   inheritance for interior style ASF   *** *** ***
+
+set edge flag = OFF
+
+asftab = ASF table: (this combination judged most likely to catch
+  a failure)
+      interior style
+      --------------
+1:    asfdef
+2:    oppdef
+3:    oppdef
+4:    asfdef
+5:    oppdef
+
+Make individual and bundled as distinct as possible:
+
+set individual attributes: interior style = hollow
+set bundle #1 to: interior style = empty
+
+randomize order of interiors
+
+set up CSS as described above
+
+display 14 pairs of interiors, using ASF entries 1-5
+
+TEST: #SR 4 5 6 7 8 9 10 11
+      "The interior style ASF should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR INTERIOR STYLE ASF:
+  which pair of interiors does NOT match?
+pass/fail depending on (response = position of interior #14)
+
+*** *** ***   inheritance for interior style index ASF   *** *** ***
+
+set edge flag = OFF
+
+if (HATCH available) then
+   thisis = this interior style = HATCH
+   iix1,iix2 = two available hatch styles
+elseif (PATTERN available) then
+   thisis = this interior style = PATTERN
+   iix1,iix2 = 1,2
+   define patterns 1,2 as distinct
+else
+   message: cannot test interior style index
+   goto end_int_index
+endif
+
+asftab = ASF table: (this combination judged most likely to catch
+  a failure)
+      interior style index
+      --------------------
+1:    asfdef
+2:    oppdef
+3:    oppdef
+4:    asfdef
+5:    oppdef
+
+Make individual and bundled as distinct as possible:
+
+set individual attributes:
+  interior style=thisis, interior style index=iix1
+set bundle #1 to:
+  interior style=thisis, interior style index=iix2, color=2
+
+randomize order of interior indices
+
+set up CSS as described above
+
+display 14 pairs of interior indices, using ASF entries 1-5
+
+TEST: #SR 4 5 6 7 8 9 10 11
+      "The interior style index ASF should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR INTERIOR STYLE INDEX ASF:
+  which pair of interiors does NOT match?
+pass/fail depending on (response = position of interior #14)
+
+end_int_index:
+
+*** *** ***   inheritance for interior color ASF   *** *** ***
+
+set edge flag = OFF
+
+ints1 = 1st interior style = HOLLOW
+
+if (SOLID available) then
+   ints2 = 2nd interior style = SOLID
+elseif (HATCH available) then
+   ints2 = 2nd interior style = HATCH
+else
+   ints2 = 2nd interior style = HOLLOW
+endif
+
+asftab = ASF table:
+      style       color
+      -----       -----
+1:    asfdef      asfdef
+2:    asfdef      oppdef
+3:    oppdef      oppdef
+4:    oppdef      asfdef
+5:    oppdef      oppdef
+
+Make individual and bundled as distinct as possible:
+
+set individual attributes: style=ints1, color=2
+set bundle #1 to:          style=ints2, color=1
+
+randomize order of interiors
+
+set up CSS as described above
+
+display 14 pairs of interiors, using ASF entries 1-5
+
+TEST: #SR 4 5 6 7 8 9 10 11
+      "The interior colour ASF should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR INTERIOR COLOR ASF:
+  which pair of interiors does NOT match?
+pass/fail depending on (response = position of interior #14)
+
+*** *** ***   inheritance for edge flag ASF   *** *** ***
+
+set interior style = EMPTY
+
+asftab = ASF table: (this combination judged most likely to catch
+  a failure)
+      edge flag
+      ---------
+1:    asfdef
+2:    oppdef
+3:    oppdef
+4:    asfdef
+5:    oppdef
+
+Make individual and bundled as distinct as possible:
+
+set individual attributes: edge flag=ON
+set bundle #1 to:          edge flag=OFF
+
+randomize order of edges
+
+set up CSS as described above
+
+display 14 pairs of edges, using ASF entries 1-5
+
+TEST: #SR 4 5 6 7 8 9 10 11
+      "The edge flag ASF should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR EDGE FLAG ASF:
+  which pair of edges does NOT match?
+pass/fail depending on (response = position of edge #14)
+
+*** *** ***   inheritance for edge aspects ASFs   *** *** ***
+
+set interior style = EMPTY
+set edge flag = ON
+
+asftab = ASF table:
+      edgetype    edgewidth   color
+      --------    ---------   -----
+1:    asfdef      asfdef      asfdef
+2:    individual  bundled     individual
+3:    oppdef      oppdef      oppdef
+4:    bundled     individual  bundled
+5:    asfdef      asfdef      oppdef
+
+Make individual and bundled as distinct as possible:
+
+set individual attributes:
+   edgetype = dotted, edgewidth = .03 in WC, edgecolor = 1
+set bundle #1 to:
+   edgetype = dashed, edgewidth = .001 in WC, edgecolor = 2
+
+randomize order of edges
+
+set up CSS as described above
+
+display 14 pairs of edges, using ASF entries 1-5
+
+TEST: #SR 4 5 6 7 8 9 10 11
+      "The edge ASFs should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR EDGE ASFS:
+  which pair of edges does NOT match?
+pass/fail depending on (response = position of edge #14)
+
+done:
+
+END PROGRAM 3

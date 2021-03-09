@@ -1,0 +1,317 @@
+TITLE: Miscellaneous CSS elements
+
+MODULE#: 02.02.02
+
+DESCRIPTION: This module tests the ability of the programmer to
+set up a label or application data or GSE element in the CSS.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** ***   <Label>   *** *** *** *** ***
+
+SR1.   <Label> creates a label element in the CSS.
+#F 114
+#D 7.3.5
+#S 4.4.4/28/7
+#T P01/1 P01/2
+
+SR2.   If current element is label then <inquire current element
+type and size> returns the element type as label and the
+appropriate element size.
+#F 303
+#D 7.3.5
+#S 4.4.4/29/5
+#T P01/1
+
+SR3.   If current element is label then <inquire current element
+content> returns the appropriate data for a label element.
+#F 304
+#D 7.3.5
+#S 4.4.4/29/5
+#T P01/2
+
+*** *** *** *** ***   <Application Data>   *** *** *** *** ***
+
+SR4.   <Application data> creates an application data element in
+the CSS.
+#F 115
+#D 7.3.6
+#S 4.4.9/33/4
+#T P02/1 P02/2
+
+SR5.   If current element is application data then <inquire
+current element type and size> returns the element type as
+application data and the appropriate element size.
+#F 303
+#D 7.3.6
+#S 4.4.4/29/5
+#T P02/1
+
+SR6.   If current element is application data then <inquire
+current element content> returns the appropriate data for the
+application data.
+#F 304
+#D 7.3.6
+#S 4.4.4/29/5
+#T P02/2
+
+*** *** *** *** ***   <Generalized structure element>   *** *** *** *** ***
+
+SR7.   <Generalized structure element> creates a generalized
+structure element in the CSS.
+#F 116
+#D 7.3.7
+#S 4.4.8/33/3
+#T P03/2 P03/3
+
+SR8.   A generalized structure element with an unsupported
+identifier must be accepted as an element in the CSS.
+#F 116
+#D 7.3.7
+#S n
+#T P03/2 P03/3
+
+SR9.   If current element is generalized structure element then
+<inquire current element type and size> returns the element type
+as generalized structure element and the appropriate element
+size.
+#F 303
+#D 7.3.7
+#S 4.4.4/29/5
+#T P03/2
+
+SR10.  If current element is generalized structure element then
+<inquire current element content> returns the appropriate data
+for GSE.
+#F 304
+#D 7.3.7
+#S 4.4.4/29/5
+#T P03/3
+
+SR11.  The set of workstation dependent GSE's within the PHIGS
+list of available GSE equals the union of the workstation GSE
+lists.
+#F 116 206 283
+#D 2.2 2.18 6.19.2
+#S 6.3/310/1 6.7/323/1
+#T P03/4
+
+SR12.  <Inquire generalized structure element facilities> returns
+a list of all generalized structure element identifiers which are
+supported by the implementation, both workstation dependent and
+independent.
+#F 206
+#D 2.17 2.18
+#S n
+#T P03/1 P03/4
+
+SR13.  <Inquire list of available generalized structure elements>
+returns the list of all workstation dependent generalized
+structure elements supported by a particular workstation type.
+#F 283
+#D 6.19.1 6.19.2
+#S n
+#T P03/4
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  114: plb     <label>
+  115: pap     <application data>
+  116: pgse    <generalized structure element>
+  206: pqgsef  <inquire generalized structure element facilities>
+  283: pqegse  <inquire list of available generalized structure elements>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.2  ...  list_of_available_workstation_types
+  2.17  ...  number_of_available_generalized_structure_elements
+  2.18  ...  list_of_available_generalized_structure_elements
+  6  ...  workstation_description_table
+  6.19  ...  generalized_structure_elements_entry
+  6.19.1  ...  number_of_available_generalized_structure_elements
+  6.19.2  ...  list_of_available_generalized_structure_elements
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.5  ...  label
+  7.3.6  ...  application_data
+  7.3.7  ...  generalized_structure_element
+ 
+
+
+PROGRAM 1: Label
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> thoughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+labid = 46
+<label> with labid
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       label as the type of the created element and the
+       appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = label and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for label."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Application data
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> thoughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+dr = data record to hold
+integers:  174,  175,  176
+reals:     17.4, 17.5, 17.6
+strings:   "This is a application data test string.", "This is another."
+
+<application data> with dr
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       application data as the type of the created element and the
+       appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = application data and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 4 6
+      "<Inquire current element content> should return the standard
+       representation for application data."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Generalized structure element
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> thoughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+dr = data record to hold
+integers:  174,  175,  176
+reals:     17.4, 17.5, 17.6
+strings:   "This is a GSE test string.", "This is another."
+
+TEST: #SR 12
+      "<Inquire generalized structure element facilities> should
+       return a valid list of GSE identifiers and workstation
+       dependency indicators."
+
+<inquire generalized structure element facilities> to set
+  ugseid = an unsupported GSE identifier
+  lgseim = list of workstation-dependent GSE's for this
+           implementation.
+
+pass/fail depending on (output from <inquire generalized
+                        structure element facilities> is valid)
+
+<generalized structure element> with ugseid, dr
+
+TEST: #SR 7 8 9
+      "<Inquire current element type and size> should return
+       generalized structure element as the type of the created element
+       and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = generalized structure element and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 7 8 10
+      "<Inquire current element content> should return the standard
+       representation for generalized structure element."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and
+   language binding)
+
+gsemsg = 'No error yet'
+lgseim = list of workstation-dependent GSE's for this
+         implementation.
+<inquire list of available workstation types> to get list of all
+   workstation types
+
+for each workstation type
+   <inquire list of available generalized structure elements>
+      to get list of all generic workstation GSE's
+   if (cannot inquire on generic type) goto end_gse
+   for each workstation GSE
+      if (workstation GSE matches at least one element from lgseim) then
+         mark implementation GSE as matched
+      else
+         gsemsg = 'Unmatched workstation GSE.'
+         goto perform_test
+      endif
+   next workstation GSE
+next workstation type
+
+if all implementation GSE elements are marked then
+   do nothing
+else
+   gsemsg = 'Unmatched PHIGS GSE.'
+   goto perform_test
+endif
+
+perform_test:
+TEST: #SR 11 12 13
+      "The set of workstation dependent GSEs within the PHIGS GSE list
+       as reported by <inquire generalized structure element facilities>
+       should be the union of the workstation GSE lists as reported by
+       <inquire list of available generalized structure elements>."
+
+if (gsemsg = 'No error yet') then
+   pass
+else
+   fail
+   informative message: gsemsg
+endif
+
+end_gse:
+
+END PROGRAM 3

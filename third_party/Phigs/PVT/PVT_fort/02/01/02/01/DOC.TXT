@@ -1,0 +1,550 @@
+TITLE: Individual structure deletion
+
+MODULE#: 02.01.02.01
+
+DESCRIPTION: This module tests the deletion of individual structures
+using the <delete structure> function.  The state of the CSS is
+examined for the changes which occur when the individual structures
+are removed.  The effect that <delete structure> has on the list of
+posted structures is also tested.
+
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Delete structure> causes the removal of a specified, closed
+structure in the CSS.
+#F 126
+#D 7.1 4.5
+#S 4.4.5/29/7
+#T P01/1 P04/1
+
+SR2.   <Delete structure> causes the deletion of all references to that
+structure contained in other structures.
+#F 126
+#D 7.3.4
+#S 4.4.5/29/7
+#T P01/1 P02/3 P02/6 P04/1
+
+SR3.   <Delete structure> using a non-existent structure identifier has
+no effect on the contents of the CSS.
+#F 126
+#D 7.1 4.5
+#S 4.4.2/25/3
+#T P03/1
+
+SR4.   <Delete structure> causes the specified structure to become
+unposted from the workstations to which it is posted.
+#F 126
+#D 5.7
+#S 4.4.5/29/9
+#T P05/1 P05/2
+#X 05.03
+
+SR5.   <Delete structure> with the structure identifier referencing
+an open structure causes the structure to exist as an open, empty
+structure in the CSS.
+#F 126
+#D 7.1 4.2 4.5
+#S n
+#T P02/1 P02/2 P02/4 P02/5
+
+SR6.  If references to a deleted structure exist in the open
+structure and none of them is the current element, then, after
+they are deleted, the element pointer still points to the same
+element as before.  If the element pointer was zero, it remains
+at zero.
+#F 126
+#D 7.3 7.3.4 4.3
+#S 4.4.5/29/7
+#T P06/1 P06/2 P06/5 P06/6
+#X 02.02.03
+
+SR7.  If references to a deleted structure exist in the open
+structure and one of them is the current element, then, after
+they are deleted, the element pointer is altered to point to the
+last preceding element, or to zero if there is no such element.
+#F 126
+#D 7.3 7.3.4 4.3
+#S 4.4.5/29/7
+#T P06/3 P06/4 P06/7 P06/8
+#X 02.02.03
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  126: pdst    <delete structure>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.2  ...  name_of_open_structure
+  4.3  ...  element_pointer
+  4.5  ...  list_of_structure_identifiers
+  5  ...  workstation_state_list
+  5.7  ...  list_of_posted_structures
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.3  ...  list_of_structure_elements
+  7.3.4  ...  execute_structure
+ 
+
+PROGRAM 1: Simple structure deletion
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+        100
+        / \
+     1 /   \ 2
+      /     \
+   105       110
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-2) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 1 2
+      "Deleting a structure should remove the specified structure from
+       the CSS and all references made to that structure contained in
+       other structures."
+
+delstr = 105
+<delete structure> delstr
+
+examine the contents of the CSS for the existing structure identifiers
+and the associated element references
+
+                                           100
+                                            |
+pass/fail depending on  (CSS contents  =    |1   )
+                                            |
+                                           110
+
+END PROGRAM 1
+
+
+PROGRAM 2: Structure deletion with an open structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+        100
+        / \
+     1 /   \ 2
+      /     \
+   105       110
+             / \
+           1/   \2
+           /     \
+         115     120
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-2) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 5
+      "Deleting an open root structure should cause the structure to
+       exist in the CSS as an open structure."
+
+delstr = 100
+<open structure> delstr
+<delete structure> delstr
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strid = structure id
+
+if (stype <> open  or
+    strid <> delstr) then
+    fail
+else
+    pass
+    <close structure>
+endif
+
+TEST: #SR 5
+      "Deleting an open root structure should cause the structure to
+       exist in the CSS as an empty structure."
+
+use <inquire structure status> on strid to determine
+    strsti = structure status identifier
+
+pass/fail depending on (strsti = empty)
+
+TEST: #SR 2
+      "Deleting an open root structure should cause the deletion of
+       all references made to that structure contained in other
+       structures."
+
+examine the contents of the CSS for the existing structure identifiers
+and the associated element references
+
+pass/fail depending on  (CSS contents =
+                 100,     105,       110
+                  |        |         / \
+                 0|       0|       1/   \2
+                  |        |       /     \
+                                115      120   )
+
+TEST: #SR 5
+      "Deleting a non-root structure should cause the structure to
+       exist in the CSS as an open structure."
+
+delstr = 115
+<open structure> delstr
+<delete structure> delstr
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strid = structure id
+
+if (stype <> open    or
+    strid <> delstr)  then
+    fail
+else
+    pass
+    <close structure>
+endif
+
+TEST: #SR 5
+      "Deleting a non-root structure should cause the structure to
+       exist in the CSS as an empty structure."
+
+use <inquire structure status> on strid to determine
+    strsti = structure status identifier
+
+pass/fail depending on (strsti = empty)
+
+TEST: #SR 2
+      "Deleting a non-root structure should cause the deletion of
+       all references made to that structure contained in other
+       structures."
+
+examine the contents of the CSS for the existing structure identifiers
+and the associated element references
+
+pass/fail depending on (CSS contents =
+                 100,     105,     115,    110
+                  |        |        |       |
+                 0|       0|       0|      1|
+                  |        |        |       |
+                                           120   )
+
+
+END PROGRAM 2
+
+
+PROGRAM 3: Deletion of a non-existent structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+        100
+        / \
+     1 /   \ 2
+      /     \
+   105       110
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-2) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 3
+      "Deleting a non-existent structure should have no effect on the
+       contents of the CSS."
+
+nostid = 25
+<delete structure> nostid
+
+examine the contents of the CSS for the existing structure identifiers
+and the associated element references
+                                            100
+                                            / \
+pass/fail depending on (CSS contents =   1 /   \ 2
+                                          /     \
+                                       105       110   )
+
+END PROGRAM 3
+
+
+PROGRAM 4: Deletion of multiple structures
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+
+               100
+               / \
+             1/   \2
+             /     \
+          103       104     102
+         / \          \     / \
+       1/   \2        1\  1/   \2
+       /     \          \ /     \
+     105     105        106     109
+                        / \     / \
+                      1/   \2 1/   \2
+                      /     \ /     \
+                    107     108     110
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (0-2) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 1 2
+      "Changes to the CSS should be reflected when deleting more than
+       one structure."
+
+delstr = 103
+<delete structure> delstr
+
+examine the contents of the CSS for the existing structure identifiers
+and the associated element references
+if (CSS contents <>
+        105,   100
+         |      |
+        0|     1|
+         |      |
+               104     102
+                 \     / \
+                 1\  1/   \2
+                   \ /     \
+                   106     109
+                   / \     / \
+                 1/   \2 1/   \2
+                 /     \ /     \
+               107     108     110   ) then
+
+   goto fail_test
+endif
+
+delstr = 106
+<delete structure> delstr
+
+examine the contents of the CSS for the existing structure identifiers
+and the associated element references
+if (CSS contents <>
+        105,   100,      107,      102
+         |      |         |         |
+        0|     1|        0|        1|
+         |      |         |         |
+               104                 109
+                                   / \
+                                 1/   \2
+                                 /     \
+                               108     110   ) then
+   goto fail_test
+endif
+
+delstr = 102
+<delete structure> delstr
+
+examine the contents of the CSS for the existing structure identifiers
+and the associated element references
+if (CSS contents <>
+        105,   100,      107,      109
+         |      |         |        / \
+        0|     1|        0|      1/   \2
+         |      |         |      /     \
+               104             108     110   ) then
+   goto fail_test
+endif
+
+delstr = 110
+<delete structure> delstr
+
+examine the contents of the CSS for the existing structure identifiers
+and the associated element references
+if (CSS contents <>
+        105,   100,      107,      109
+         |      |         |         |
+        0|     1|        0|        1|
+         |      |         |         |
+               104                 108    ) then
+   goto fail_test
+else
+   pass
+   goto done
+endif
+
+fail_test:
+
+fail
+generate informative message that failure is due to deletion of
+   structure # delstr
+
+done:
+
+END PROGRAM 4
+
+PROGRAM 5: Unposting structures by deletion
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+TEST: #SR 4
+      "Deleting a closed posted structure should cause that
+       structure to become unposted from the workstation to
+       which it is posted."
+
+strid = 25
+<post structure> strid
+
+<delete structure> strid
+Use <inquire posted structures> to determine:
+    pstnum = number of posted structures
+pass/fail depending on (pstnum = 0)
+
+TEST: #SR 4
+      "Deleting an open posted structure should cause that
+       structure to become unposted from the workstation to
+       which it is posted."
+
+strid = 40
+<open structure> strid
+<post structure> strid
+
+<delete structure> strid
+Use <inquire posted structures> to determine:
+    pstnum = number of posted structures
+pass/fail depending on (pstnum = 0)
+
+END PROGRAM 5
+
+PROGRAM 6: Effect of <delete structure> on element pointer
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Set up CSS as:
+
+                                100
+                                 |
+                                 |
+  ----------------------------------------------------------------------
+  | |       | |       | |       | |       | |       | |       | |      |
+  | |       | |       | |       | |       | |       | |       | |      |
+2 | | 3   1 | | 6   4 | | 5   7 | | 11  8 | | 12  9 | | 13 10 | | 14   | 15
+  | |       | |       | |       | |       | |       | |       | |      |
+  101       102       103       104       105       106       107     108
+
+The nodes of the graph (100 and above) represent structures, and
+the labelled edges are references to invoke (lower) structures.
+The labels (1- 15) represent the element position of the <execute
+structure> function within the calling structure.
+
+Structure 100 is left open.
+
+Throughout, expected state is shown as the sequence of
+references within structure #100, with the current element
+marked by an asterisk.  Thus the first state is:
+(102, 101, 101, 103, 103, 102, 104, 105, 106, 107,
+ 104, 105, 106, 107, 108*)
+
+set edit mode to INSERT
+informational message: following tests run in INSERT mode
+
+set element pointer to 5
+delete structure #107
+TEST: #SR 6
+      "When <delete structure> causes deletion of references
+       following the current element, the element pointer should be
+       unchanged."
+pass/fail depending on (current element position = 5)
+(102, 101, 101, 103, 103*, 102, 104, 105, 106, 104, 105, 106, 108)
+
+delete structure #101
+TEST: #SR 6
+      "When <delete structure> causes deletion of references
+       preceding the current element, the element pointer should be
+       changed so as to point to the same element."
+pass/fail depending on (current element position = 3)
+(102, 103, 103*, 102, 104, 105, 106, 104, 105, 106, 108)
+
+delete structure #103
+TEST: #SR 7
+      "When <delete structure> causes deletion of references at the
+       current element, the element pointer should be changed so as
+       to point to the preceding element."
+pass/fail depending on (current element position = 1)
+(102*, 102, 104, 105, 106, 104, 105, 106, 108)
+
+delete structure #102
+TEST: #SR 7
+      "When <delete structure> causes deletion of references at the
+       current element, and no preceding element exists, the element
+       pointer should be changed to point to zero."
+pass/fail depending on (current element position = 0)
+(* 104, 105, 106, 104, 105, 106, 108)
+
+set edit mode to REPLACE
+informational message: following tests run in REPLACE mode
+
+delete structure #108
+TEST: #SR 6
+      "When <delete structure> causes deletion of references and
+       the element pointer is zero, it should remain at zero."
+pass/fail depending on (current element position = 0)
+(* 104, 105, 106, 104, 105, 106)
+
+set element pointer to 4
+delete structure #105
+TEST: #SR 6
+      "When <delete structure> causes deletion of references
+       surrounding the current element, the element pointer should be
+       changed so as to point to the same element."
+pass/fail depending on (current element position = 3)
+(104, 106, 104*, 106)
+
+set element pointer to 4
+delete structure #106
+TEST: #SR 7
+      "When <delete structure> causes deletion of references at the
+       current element, which is the last element, the element
+       pointer should be changed so as to point to the preceding
+       element."
+pass/fail depending on (current element position = 2)
+(104, 104*)
+
+delete structure #104
+TEST: #SR 7
+      "When <delete structure> causes deletion of references at the
+       current element thereby emptying the structure, the element
+       pointer should be changed to point to zero."
+pass/fail depending on (current element position = 0)
+
+END PROGRAM 6

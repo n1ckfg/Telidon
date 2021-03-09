@@ -1,0 +1,430 @@
+TITLE: Opening and closing workstations
+
+
+MODULE#: 05.01.01
+
+
+DESCRIPTION: This module tests the ability of the programmer to
+to open and close single and multiple workstations.  Workstation
+parameters (e.g., number of accessible workstations, workstation
+identifier, connnection identifier, and workstation type) are
+taken taken from the PVT configuration file.
+
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** *** Initial values and state *** *** *** *** *** ***
+
+SR1.  Immediately after <open phigs>, the 'set of open
+workstations' is empty.
+#F 1 209
+#D 4.1
+#S 6.5/314/1
+#T P01/1
+
+SR2.  Immediately after <open phigs>, the workstation state value
+is WSCL.
+#F 1 201
+#D 1.2
+#S 4.10/107/6 6.2/308/1
+#T P01/2
+
+SR3.  <Inquire workstation state values> returns the workstation
+state of PHIGS.
+#F 201
+#D 1.2
+#S 4.10/107/3
+#T P01/2 P02/1 P02/2 P02/7 P03/4 P03/7 P03/8
+
+SR4.  The workstation state value is WSCL if and only if no
+workstations are open.
+#F 201
+#D 1.2 4.1
+#S 4.10/107/3 6.2/308/2
+#T P01/2 P02/1 P02/7 P03/8
+
+SR5.  The workstation state value is WSOP if and only if at least
+1 workstation is open.
+#F 201
+#D 1.2 4.1
+#S 4.10/107/3 6.2/308/2
+#T P02/1 P02/2 P03/4 P03/7
+
+*** *** *** *** *** Open workstation *** *** *** *** ***
+
+SR6.  <Open workstation> causes the workstation identifier to be
+added to the 'set of open workstations' in the PHIGS State List
+Table.
+#F 3 209
+#D 4.1 5.1
+#S 4.6.2/68/7
+#T P02/3 P02/4 P03/5
+
+SR7.  <Inquire set of open workstations> returns the workstation
+identifiers for all currently opened workstations.
+#F 209
+#D 4.1
+#S n
+#T P01/1 P02/3 P02/4 P02/6 P03/5 P03/9
+
+SR8.  <Open workstation> causes a unique specific workstation
+type, (different from all other workstation types) to be placed
+in the Workstation State List table.
+#F 3
+#D 2.2.1 5.3
+#S 4.6.1/67/2 4.6.2/68/7
+#T P02/5 P03/6
+#C See also the description of <close workstation> in support of
+this. It is noted there that when a workstation is closed, the
+type becomes undefined; therefore it cannot be defined elsewhere.
+
+
+*** *** *** *** Simultaneously open workstations *** *** *** ***
+
+SR9.  <Inquire phigs facilities> returns the 'maximum number of
+simultaneously open workstations'.
+#F 205
+#D 2.3
+#S n
+#T P03/1 P03/2 P03/3
+
+SR10.  The reported maximum number of simultaneously open
+workstations must be at least 1.
+#F 205
+#D 2.3
+#S 6.3/309/1
+#T P03/1
+
+SR11.  Any number of accessible workstations can be open
+simultaneously, up to the 'maximum number of simultaneously open
+workstations'.
+#F 3 205
+#D 2.3 4.1
+#S 6.3/309/1
+#T P03/2 P03/3
+
+*** *** *** *** *** Close workstation *** *** *** ***
+
+SR12.  <Close workstation> causes the specific workstation
+identifier to be removed from the 'set of open workstations' in
+the PHIGS State List Table.
+#F 4 209
+#D 4.1 5.1
+#S n
+#T P02/6 P03/9
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    1: popph   <open phigs>
+    3: popwk   <open workstation>
+    4: pclwk   <close workstation>
+  201: pqwkst  <inquire workstation state value>
+  205: pqphf   <inquire phigs facilities>
+  209: pqopwk  <inquire set of open workstations>
+ 
+  Data Structures ---
+  1  ...  operating_state
+  1.2  ...  workstation_state
+  2  ...  phigs_description_table
+  2.2  ...  list_of_available_workstation_types
+  2.2.1  ...  workstation_type
+  2.3  ...  maximum_number_of_simultaneously_open_workstations
+  4  ...  phigs_state_list
+  4.1  ...  set_of_open_workstations
+  5  ...  workstation_state_list
+  5.1  ...  workstation_identifier
+  5.3  ...  workstation_type
+ 
+
+
+PROGRAM 1: Initial state of workstations
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<open phigs>
+<Inquire set of open workstations> to determine
+   numopw = number of open workstation
+<Inquire workstation state value> to determine
+   wksval = workstation state value
+
+TEST: #SR 1 7
+      "Immediately after <open phigs>, and until the first invocation
+       of <open workstation>, the set of open workstations
+       should be empty."
+pass/fail depending on (numopw =0)
+
+TEST: #SR 2 3 4
+      "Immediately after <open phigs> and until the first invocation
+       of <open workstation>, the workstation state should be WSCL."
+pass/fail depending on (wksval =  WSCL)
+
+
+END PROGRAM 1
+
+
+PROGRAM 2: Simple open and close of a single workstation
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+wkopen = true = workstation state is WSOP
+wkclos = true = workstation state is WSCL
+oneopn = true = one workstation identifier in 'set of open
+                workstations'
+inset  = true = correct workstation identifier in 'set of open
+                workstations'
+noopwk = true = no workstations open
+valok  = true = state value either WSOP or WSCL
+typdif = true = workstation type different
+
+<inquire workstation state value> to determine
+   wksval = workstation state value
+if (wksval not= WSCL or WSOP) then
+   valok = false
+   message about wksval
+endif
+
+Do for each accessible workstation
+   <open workstation>
+
+   <inquire workstation state value> to determine wksval
+   if (wksval not= WSOP) then
+      wkopen = false
+      if (wksval not= WSCL) then
+         valok = false
+      endif
+   endif
+
+   <inquire set of open workstations> to determine
+      numopw = number of open workstations
+      lopwk = list of open workstations
+   if (numopw not= 1) then
+      oneopn = false
+   endif
+
+   owkid = current workstation identifier
+   if (owkid not in lopwk) then
+      inset = false
+   endif
+
+   <inquire workstation connection and type> to determine
+      specwt = specific workstation type
+   wtype = generic workstation type from configuration file
+   if (specwt = wtype) then
+      typdif = false
+   endif
+
+   <close workstation>
+
+   <inquire set of open workstations> to determine
+      numopw = number of open workstations
+   if (numopw not= 0) then
+      noopwk = false
+   endif
+
+   <inquire workstation state value> to determine wksval
+   if (wksval not= WSCL) then
+      wkclos = false
+      if (wksval not= WSOP) then
+         valok = false
+      endif
+   endif
+next workstation
+
+*** *** *** actual tests go here *** ***
+
+TEST: #SR 3 4 5
+      "In all circumstances, the reported workstation state
+       values should be either WSOP or WSCL."
+pass/fail depending on (valok)
+
+TEST: #SR 3 5
+      "After <open workstation>, the workstation state value
+       should be WSOP."
+pass/fail depending on (wkopen)
+
+TEST: #SR 6 7
+      "If no workstations are open, then immediately after <open
+       workstation>, the number of workstation identifiers in the
+       set of open workstations should be 1."
+pass/fail depending on (oneopn)
+
+TEST: #SR 6 7
+      "Immediately after <open workstation>, the set of open
+       workstations should contain the workstation identifier
+       just opened."
+pass/fail depending on (inset)
+
+TEST: #SR 8
+      "The specific workstation type of an open workstation
+       should be different from the generic type with which it
+       was opened."
+pass/fail depending on (typdif)
+
+TEST: #SR 7 12
+      "If only one workstation is open, then <close workstation>
+       should result in the set of open workstations being empty."
+pass/fail depending on (noopwk)
+
+TEST: #SR 3 4
+      "If no workstations are open, then the workstation state value
+       should be WSCL."
+pass/fail depending on (wkclos)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Opening and closing multiple workstations
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+numacc = number of accessible workstations (from configuration file)
+
+TEST: #SR 9 10
+      "The maximum number of simultaneously open workstations
+       returned by <inquire phigs facilities> should be at least 1."
+
+<inquire phigs facilities> to determine
+   maxsim = maximum number of simultaneously open workstations
+pass/fail depending on (maxsim >=1)
+
+if (maxsim <= numacc) then
+   maxct = maxsim
+   TEST: #SR 9 11
+         "If the maximum number of simultaneously open
+          workstations is less than or equal to the number of
+          accessible workstations, then it should be possible to
+          have that maximum simultaneously open."
+else
+   maxct = numacc
+   TEST: #SR 9 11
+         "If the maximum number of simultaneously open
+          workstations is greater than the number of accessible
+          workstations, then it should be possible to open all
+          accessible workstations simultaneously."
+endif
+
+*** *** *** *** ***   open workstations  *** *** *** *** ***
+
+openok = true = workstation state value is open
+setok  = true = set of open workstations is correct
+ident(1 : maxct) = array of workstation identifiers
+type (1 : maxct) = array of specific workstation types
+
+do id = 1 to maxct
+   <open workstation> id'th wkid in configuration file
+   if error then
+      fail
+      message about error signalled, wkid
+      maxct = id - 1 (adjust for failed workstation)
+      goto end_open_test
+   endif
+
+   <inquire workstation state value> to determine
+     wksval = workstation state value
+   if (wksval not= WSOP) then
+      openok = false
+   endif
+
+   idents(id) = wkid
+   <inquire workstation connection and type> to determine
+      specwt = specific workstation type
+   type(id) = specwt
+
+   <inquire set of open workstations> to determine
+      setopn = set of open workstations
+   if (setopn not= idents(1 : id) then
+      setok = false
+   endif
+
+loop
+pass
+
+end_open_test:
+
+TEST: #SR 3 5
+      "If at least 1 workstation is open, the workstation
+       state value should be WSOP."
+pass/fail depending on (openok)
+
+TEST: #SR 6 7
+      "As workstations are opened, the set of open workstations
+       should contain the identifiers of the open workstations
+       and nothing else."
+pass/fail depending on (setok)
+
+TEST: #SR 8
+      "Every open workstation should have a unique specific
+       workstation type."
+do id = 1 to maxct-1
+   do id2 = id+1 to maxct
+      if (type(id) = type(id2)) then
+         fail
+         message about type(id) and type(id2)
+         goto end_typedif
+      endif
+   loop
+loop
+pass
+
+end_typedif:
+
+*** *** *** *** close workstations *** *** *** ***
+
+wsopok = true = workstation state value WSOP is ok
+wsclok = true = workstation state value WSCL is ok
+setok  = true = set of open workstations is correct
+
+do id = 1 to maxct
+   <close workstation> ident(id)
+   <inquire workstation state value> to determine
+      wksval
+
+   if (id < maxct) then
+      if (wksval not= WSOP) then
+         wsopok = false
+      endif
+   else
+     if (wksval not= WSCL) then
+        wsclok = false
+     endif
+   endif
+
+   <inquire set of open workstations> to determine
+      setopn = set of open workstations
+   if (setopn not= idents(id+1 : maxct) then
+      setok = false
+   endif
+loop
+
+**** *** *** *** *** rest of tests go here *** *** *** ***
+
+TEST: #SR 3 5
+      "As workstations are closed, if at least one workstation is
+       still open, the workstation state value should be WSOP."
+pass/fail depending on (wsopok)
+
+TEST: #SR 3 4
+      "After the last open workstation is closed, the workstation
+       state value should be WSCL."
+pass/fail depending on (wsclok)
+
+TEST: #SR 7 12
+      "As workstations are closed, the set of open workstations
+       should contain the identifiers of the workstations left
+       open and nothing else."
+pass/fail depending on (setok)
+
+END PROGRAM 3

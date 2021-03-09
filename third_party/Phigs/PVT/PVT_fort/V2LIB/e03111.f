@@ -1,0 +1,59 @@
+      SUBROUTINE E03111 (USEPRM)
+
+C  E03111 tests the handling of error 111
+
+      COMMON /GLOBNU/ CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT, DUMRL
+      INTEGER         CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT(20), ERRIND
+      REAL    DUMRL(20)
+
+      COMMON /ERRINF/ ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR,
+     1                USRERR, ERRSAV,      FUNSAV,      FILSAV,
+     2                EFCNT, EFID
+      INTEGER         ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR(10),
+     1                USRERR, ERRSAV(200), FUNSAV(200), FILSAV(200),
+     2                EFCNT, EFID(100)
+      COMMON /ERRCHR/ CURCON,     ERRSRS,    ERRMRK,    ERFLNM,
+     1                CONTAB
+      CHARACTER       CURCON*200, ERRSRS*40, ERRMRK*20, ERFLNM*80,
+     1                CONTAB(40)*150
+
+      INTEGER   USEPRM, IX, UNTYPE,  MXH,THISH, NHLHMD
+      INTEGER   SPECWT, CHHMOD, IDUM1, IDUM2
+      LOGICAL   STREQ
+
+      CURCON = 'the specified hlhsr mode is not available '//
+     1         'on the specified workstation'
+      CALL SETVS ('111', EXPERR, EXPSIZ)
+      ERRSRS = '10'
+      CALL ESETUP (USEPRM)
+
+      CALL POPWK (WKID, CONID, WTYPE)
+      CALL PQWKC (WKID, ERRIND, CONID, SPECWT)
+      CALL CHKINQ ('pqwkc', ERRIND)
+
+      CALL PQHRMF (SPECWT, 1, ERRIND, NHLHMD, MXH)
+      CALL CHKINQ ('pqhrmf', ERRIND)
+      DO 50 IX = 1, NHLHMD
+        CALL PQHRMF (SPECWT, IX, ERRIND, IDUM1, THISH)
+        CALL CHKINQ ('pqhrmf', ERRIND)
+        IF (THISH .GT. MXH) MXH=THISH
+50    CONTINUE
+      UNTYPE = MXH + 1
+
+      CALL PSHRM (WKID, THISH)
+      CALL RSHRM (WKID, UNTYPE)
+      CALL PQHRM (WKID, ERRIND, IDUM1,CHHMOD,IDUM2)
+      CALL CHKINQ ('pqhrm', ERRIND)
+      CALL TSTIGN (STREQ('OO**') .AND. CHHMOD.EQ.THISH)
+
+      CALL PCLWK (WKID)
+
+      CALL ENDERR
+
+      END

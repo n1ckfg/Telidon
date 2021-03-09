@@ -1,0 +1,961 @@
+TITLE: Control of workstation view table
+
+MODULE#: 06.02.02
+
+DESCRIPTION: This module tests the manipulation and inquiry of
+the entries in the view table of the WSL and also the effect of
+the predefined view table in the WDT.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** ***   Setting view index   *** *** *** *** ***
+
+SR1.  <Set view index> creates a `view index' element in the CSS
+for any non-negative index.
+#F 83
+#D 7.3.2.10
+#S 4.7.4/84/6
+#T P01/1 P01/2 P01/3
+
+SR2.  If current element is `view index' then <inquire current
+element type and size> returns the element type as `view index'
+and the appropriate size.
+#F 303
+#D 7.3.2.10
+#S 4.4.4/29/5
+#T P01/1
+
+SR3.  If current element is `view index' then <inquire current
+element content> returns the appropriate data for `view index'.
+#F 304
+#D 7.3.2.10
+#S 4.4.4/29/5
+#T P01/2 P01/3
+
+
+*** *** *** ***   Initialization of view table  *** *** *** ***
+
+SR4.  <Inquire viewing facilities> returns the number of
+predefined view entries.
+#F 257
+#D 6.6.1
+#S n
+#T P02/1 P02/2 P03/2
+
+SR5.  The number of predefined viewing entries is at least 6.
+#F 257
+#D 6.6.1
+#S 4.14/114/2 6.7/320/1
+#T P02/1
+
+SR6.  <Inquire predefined view representation> returns the
+specified entry in the predefined view table.
+#F 258
+#D 6.6.2
+#S n
+#T P02/2 P02/3 P02/4 P02/5 P03/4
+
+SR7.  Entry number 0 of the WDT predefined viewing table has the
+following contents: the view orientation matrix and view mapping
+matrix are both 4x4 identity matrices; the view clipping limits
+are [0,1] in all three dimensions (x,y,z); and the three clipping
+indicators (x-y, front, and back) are all set to CLIP.
+#F 258
+#D 6.6.2.1 6.6.2.2 6.6.2.3 6.6.2.4 6.6.2.5 6.6.2.6
+#S 4.7.4/83/4
+#T P02/3 P02/4 P02/5
+
+SR8.  The set of view indices in the view table of the WSL are
+always numbered by the integers between 0 and N-1, where N is the
+number of entries.
+#F 217
+#D 5.4.1 5.4.2.1
+#S 4.7.4/83/3
+#T P03/1
+
+SR9.  <Open workstation> causes each requested and current entry
+in the WSL view table to be initialized from the corresponding
+entry, if one exists, in the WDT predefined view table.
+#F 3 218 258
+#D 5.4.2 6.6.2
+#S 4.7.4/83/6 6.6/316/1
+#T P03/2 P03/4
+
+SR10.  <Open workstation> causes each requested and current entry
+in the WSL view table, up to the maximum table size, for which
+there is no corresponding entry in the WDT predefined view table,
+to be initialized to the same values as entry number 0.
+#F 3 218
+#D 5.4.2
+#S 4.7.4/83/6 6.6/316/1
+#T P03/3 P03/5
+
+SR11.  <Open workstation> causes the `view transformation update
+state' for each entry in the WSL view table to be set to
+NOTPENDING.
+#F 3 218
+#D 5.4.2.2
+#S 4.7.4/83/6 6.6/316/1
+#T P03/6
+
+*** *** *** ***   Setting view representation   *** *** *** ***
+
+SR12.  <Inquire workstation state table lengths> returns the
+maximum size of the view table.
+#F 285
+#D 6.21.8
+#S n
+#T P03/3 P04/1 P04/2
+
+SR13.  The maximum size of the view table is at least 6.
+#F 285
+#D 6.21.8
+#S 4.14/114/2 6.7/324/1
+#T P04/1
+
+SR14.  <Set view representation 3> and <set view representation>
+can re-set a requested entry, other than number 0, which has been
+initialized by default.
+#F 84 85
+#D 5.4.2.4.1 5.4.2.4.2 5.4.2.4.3 5.4.2.4.4 5.4.2.4.5 5.4.2.4.6
+#S 4.7.4/83/6
+#T P04/2
+
+SR15.  <Set view representation 3> and <set view representation>
+can re-set a user-defined requested entry.
+#F 84 85
+#D 5.4.2.4.1 5.4.2.4.2 5.4.2.4.3 5.4.2.4.4 5.4.2.4.5 5.4.2.4.6
+#S 4.7.4/83/6
+#T P04/3
+
+SR16.  When <set view representation> is used to set a requested
+entry, the following default values are stored:
+a) the 3x3 matrices specified are expanded to 4x4 as follows:
+| a b 0 c |            | a b c |
+| d e 0 f |  replaces  | d e f |
+| 0 0 1 0 |            | g h i |
+| g h 0 i |
+b) ZMIN and ZMAX are set to 0 and 1, respectively, and
+c) the front and back clipping indicators are set to CLIP.
+#F 85
+#D 5.4.2.4.1 5.4.2.4.2 5.4.2.4.3 5.4.2.4.5 5.4.2.4.6
+#S 4.7.4/83/7
+#T P04/3
+
+SR17.  <Inquire view representation> returns the specified
+current and requested entry in the view table.
+#F 218
+#D 5.4.2.3 5.4.2.4
+#S n
+#T P03/4 P03/5 P04/2 P04/3 P06/3 P06/5
+
+*** *** *** ***   Order of view table   *** *** *** ***
+
+SR18.  <Inquire list of view indices> returns the ordered list of
+defined entries in the view table.
+#F 217
+#D 5.4.2 5.4.2.1
+#S n
+#T P03/1 P05/1 P05/2 P05/3 P05/4 P05/5
+
+SR19.  Immediately after <open workstation> the entries in the
+view table are in ascending index order (0,1,2,..,N-1).
+#F 3 217
+#D 5.4.2 5.4.2.1
+#S 4.7.4/84/5
+#T P03/1
+
+SR20.  The order of entries in the view table is the same as the
+order of their input priority (highest priority first).
+#F 217
+#D 5.4.2 5.4.2.1
+#S 4.7.4/84/5
+#T P05/1 P05/2 P05/3 P05/4
+
+SR21.  <Set view transformation input priority> sets the
+specified view entry to the next higher or lower (as specified)
+priority relative to the reference view entry, when these are
+distinct.
+#F 86
+#D 5.4.2 5.4.2.1
+#S n
+#T P05/1 P05/2 P05/3 P05/4
+
+SR22.  <Set view transformation input priority> has no effect
+when the specified view entry is the same as the reference view
+entry.
+#F 86
+#D 5.4.2 5.4.2.1
+#S n
+#T P05/5
+
+*** *** *** ***   Update control of view table   *** *** *** ***
+
+SR23.  The requested values of the entries in the view table are
+those most recently set.
+#F 84 85
+#D 5.4.2.4.1 5.4.2.4.2 5.4.2.4.3 5.4.2.4.4 5.4.2.4.5 5.4.2.4.6
+#S 4.7.4/84/1
+#T P04/2 P04/3
+
+SR24.  <Inquire view representation> returns the `view
+transformation update state' of a specified entry in the view
+table as PENDING or NOTPENDING.
+#F 218
+#D 5.4.2.2
+#S n
+#T P03/6 P06/1
+
+SR25.  The `view transformation update state' of an entry is
+PENDING if and only if the current values of that entry in the
+view table have not yet been copied from the requested values.
+#F 218
+#D 5.4.2.3 5.4.2.4
+#S 4.7.4/84/2
+#T P06/3
+
+SR26.  The `view transformation update state' of an entry is
+NOTPENDING if and only if the current values of that entry in the
+view table have been copied from the requested values.
+#F 218
+#D 5.4.2.3 5.4.2.4
+#S 4.7.4/84/2
+#T P06/5 P07/1
+
+SR27.  If the `view transformation update state' of an entry is
+PENDING, then the `state of visual representation' for that
+workstation is DEFERRED.
+#F 218 221
+#D 5.4.2.2 5.8.4
+#S 4.7.4/84/2
+#T P06/2
+#X 05.02
+
+SR28.  If the `state of visual representation' for a workstation
+is CORRECT, then the `view transformation update state' of all
+entries is NOTPENDING.
+#F 218 221
+#D 5.4.2.2 5.8.4
+#S 4.7.4/84/4
+#T P06/4
+#X 05.02
+
+SR29.  For workstations of category INPUT, the `view
+transformation update state' of all entries is NOTPENDING.
+#F 218
+#D 5.4.2.2
+#S 4.7.4/84/3
+#T P07/1
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+   83: psvwi   <set view index>
+   84: psvwr3  <set view representation 3>
+   85: psvwr   <set view representation>
+   86: psvtip  <set view transformation input priority>
+  217: pqevwi  <inquire list of view indices>
+  218: pqvwr   <inquire view representation>
+  221: pqdus   <inquire display update state>
+  257: pqvwf   <inquire view facilities>
+  258: pqpvwr  <inquire predefined view representation>
+  285: pqwksl  <inquire workstation state table lengths>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.4  ...  view_table
+  5.4.1  ...  number_of_view_table_entries
+  5.4.2  ...  view_table_ordered_by_input_priority
+  5.4.2.1  ...  view_index
+  5.4.2.2  ...  view_transformation_update_state
+  5.4.2.3  ...  current_view
+  5.4.2.4  ...  requested_view
+  5.4.2.4.1  ...  requested_view_orientation_matrix
+  5.4.2.4.2  ...  requested_view_mapping_matrix
+  5.4.2.4.3  ...  requested_view_clipping_limits
+  5.4.2.4.4  ...  requested_x_y_clipping_indicator
+  5.4.2.4.5  ...  requested_back_clipping_indicator
+  5.4.2.4.6  ...  requested_front_clipping_indicator
+  5.8  ...  update_status
+  5.8.4  ...  state_of_visual_representation
+  6  ...  workstation_description_table
+  6.6  ...  predefined_view_table
+  6.6.1  ...  number_of_predefined_view_indices
+  6.6.2  ...  table_of_predefined_view_representations
+  6.6.2.1  ...  view_orientation_matrix
+  6.6.2.2  ...  view_mapping_matrix
+  6.6.2.3  ...  view_clipping_limits
+  6.6.2.4  ...  x_y_clipping_indicator
+  6.6.2.5  ...  back_clipping_indicator
+  6.6.2.6  ...  front_clipping_indicator
+  6.21  ...  maximum_table_lengths
+  6.21.8  ...  maximum_number_of_view_table_indices
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.2  ...  primitive_attributes
+  7.3.2.10 ...  view_index
+ 
+LOCAL SUBROUTINES: TSTVIP is used to compute the expected result
+from <set view transformation input priority> and compare this
+with the actual results.
+
+
+PROGRAM 1: View index
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> throughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+<set view index> 0
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       view index as the type of the created element
+       and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = view index and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for view index, when the index is 0."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+<inquire workstation state table lengths> to determine
+   unavid = view index not available for primary workstation type
+TEST: #SR 1 3
+      "Any non-negative view index should be accepted as valid,
+       even if not supported by some workstation types."
+<set view index> to unavid
+if error signalled then
+   fail
+   write message about view index
+   go to done
+endif
+<inquire current element content> to determine if view index set
+pass/fail depending on
+  (celcon = standard representation for view index = unavid)
+
+done:
+
+END PROGRAM 1
+
+
+PROGRAM 2: Validity of predefined view table
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<Inquire view facilities> to determine
+  npvw = number of predefined views
+
+TEST: #SR 4 5
+      "The reported number of predefined views should be at least 6."
+pass/fail depending on (npvw > 5)
+
+TEST: #SR 4 6
+      "All the predefined view entries should be accessible by
+       <inquire predefined view representation>."
+for ivw = 0 to npvw-1
+    <inquire predefined view representation> on entry #ivw
+    if (error returned) then
+       fail
+       goto end_access
+    endif
+next ivw
+pass
+
+end_access:
+
+<inquire predefined view representation> on entry #0 to determine:
+   vom(4,4) = orientation matrix
+   vmm(4,4) = mapping matrix
+   vclm(6)  = view clipping limits
+   vcid(3)  = clipping indicators
+
+TEST: #SR 6 7
+      "The orientation and mapping matrices for predefined view #0
+       should both be the identity matrix."
+pass/fail depending on (vom = identity matrix and
+                        vmm = identity matrix )
+
+TEST: #SR 6 7
+      "The clipping limits for predefined view #0 should be [0,1]
+       in all three dimensions."
+pass/fail depending on (vclm = 0,1,0,1,0,1)
+
+TEST: #SR 6 7
+      "All three clipping indicators for predefined view #0
+       should be CLIP."
+pass/fail depending on (vcid = CLIP, CLIP, CLIP)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Initialization of WSL view table
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+msgsuf = message suffix = "opening workstation."
+
+check_table:
+<open workstation>
+<Inquire list of view indices> to determine
+   ldvi = list of defined indices in the view table
+   ndvi = number of defined indices in the view table
+
+TEST: #SR 8 18 19
+      "List of view indices should be in consecutive
+       ascending order, starting with zero, after " + msgsuf
+for ivw = 1 to ndvi
+    if (ivwth entry in ldvi not= ivw-1) then
+       fail
+       goto end_order
+    endif
+next ivw
+pass
+
+end_order:
+
+<Inquire view facilities> to determine
+   npvw = number of predefined views
+
+<inquire workstation state table lengths> to determine
+   maxvw = maximum size of the view table
+
+TEST: #SR 4 9
+      "There should be at least as many defined view indices as
+       predefined view entries, after " + msgsuf
+pass/fail depending on (ndvi >= npvw)
+
+TEST: #SR 10 12
+      "The number of defined view indices should be the same
+       as the maximum table length, after " + msgsuf
+pass/fail depending on (ndvi = maxvw)
+
+TEST: #SR 6 9 17
+      "For each WDT predefined view, the corresponding WSL
+       requested and current view table entry should have the
+       same values, after " + msgsuf
+for ivwdx = 0 to npvw-1
+   <Inquire predefined view representation> to determine
+      wdtval = set of values from WDT for index=ivwdx
+   if inquire fails then
+      fail
+      message about inquire-WDT failure
+      goto end_correspond
+   endif
+   <Inquire view representation> to determine
+      rqwsl = set of requested values from WSL for index=ivwdx
+      cuwsl = set of current values from WSL for index=ivwdx
+   if inquire fails then
+      fail
+      message about inquire-WSL failure
+      goto end_correspond
+   endif
+   if (rqval = wdtval and
+       cuval = wdtval)   then
+      OK so far
+   else
+      fail
+      goto end_correspond
+   endif
+next ivwdx
+pass
+
+end_correspond:
+
+TEST: #SR 10 17
+      "Each WSL requested and current view table entry for which
+       there is no corresponding WDT predefined entry should have
+       the same values as entry #0, after " + msgsuf
+<Inquire view representation> to determine
+   ent0 = set of values from WSL for index=0
+for ivwdx = npvw to ndvi-1
+   <Inquire view representation> to determine
+      rqwsl = set of requested values from WSL for index=ivwdx
+      cuwsl = set of current values from WSL for index=ivwdx
+   if inquire fails then
+      fail
+      message about inquire-WSL failure
+      goto end_no_correspond
+   endif
+
+   if (rqval = ent0 and
+       cuval = ent0)   then
+      OK so far
+   else
+      fail
+      goto end_no_correspond
+   endif
+next ivwdx
+pass
+
+end_no_correspond:
+
+TEST: #SR 11 24
+      "The view transformation update state for each entry in
+       the WSL view table should be NOTPENDING after " + msgsuf
+for ivwdx = 0 to ndvi-1
+   <Inquire view representation> to determine
+      vwtupd = view transformation update state
+   if inquire fails then
+      fail
+      goto end_notpend
+   endif
+
+   if (vwtupd not= NOTPENDING) then
+      fail
+      goto end_notpend
+   endif
+next ivwdx
+pass
+
+end_notpend:
+
+alter view table:
+  for view #1:
+     add 1.0 to orientation matrix, mapping matrix
+     new clip limits = old_limits / 2 + 0.1
+     new clip indicator = reverse of old
+change order of entries in view table
+   make view #2 higher priority than view #0
+
+<close workstation>
+if (msgsuf = "opening workstation.") then
+   msgsuf = "re-opening workstation."
+   goto check_table
+endif
+
+END PROGRAM 3
+
+
+PROGRAM 4: Setting and inquiring on the WSL view table
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire workstation state table lengths> to determine
+   maxvw = maximum size of the view table
+
+TEST: #SR 12 13
+      "Reported maximum size of the view table should be
+       at least 6."
+pass/fail depending on (maxvw > 5)
+
+expected values for entry are:
+exvom(4,4) = orientation matrix   =
+   | -5.378     -2.251  -7.886     30.706    |
+   | -0.4014    0.6207  9.1292E-02 -5.423    |
+   | -104.806   0.0     2.804      8.502E-02 |
+   | -7.375E-02 -21.465 -128.958   -0.2066   |
+
+exvmm(4,4) = mapping matrix       =
+   | 28.482  106.135 -131.300 16.022 |
+   | -150.45 0.0     0.0      13.851 |
+   | 35.318  -0.5466 84.676   0.7512 |
+   | 2.4107  -5.7922 -101.682 1.1572 |
+
+exvclm(6)  = view clipping limits = .2 .3 .4 .5 .6 .7
+exvcid(3)  = clipping indicators  = NOCLIP, CLIP, NOCLIP
+
+TEST: #SR 12 14 17 23
+      "<Set view representation 3> should be able to set all
+       requested entries, up to the maximum table size."
+
+for ivwdx = 1 to maxvw-1
+    <Set view representation 3> for index #ivwdx, with entry value =
+       exvom, exvmm, exvclm, exvcid
+    if (error signalled) then
+       fail
+       informational message re error code
+       goto end_set3
+    endif
+    <Inquire view representation> for index #ivwdx, to determine
+       invom, invmm, invclm, invcid
+    if (invom  = exvom   .and.
+        invmm  = exvmm   .and.
+        invclm = exvclm  .and.
+        invcid = exvcid  .and. ) then
+       OK so far
+    else
+       fail
+       informational message re ivwdx
+       goto end_set3
+    endif
+next ivwdx
+pass
+
+end_set3:
+
+Set/expected values for entry are:
+e2vom(3,3) = orientation matrix   =
+   | -5.378     -2.251  30.706    |
+   | -0.4014    0.6207  -5.423    |
+   | -7.375E-02 -21.465 -0.2066   |
+
+exvom(4,4) = expanded version of e2vom
+
+e2vmm(3,3) = mapping matrix       =
+   | 28.482  106.135 16.022 |
+   | -150.45 0.0     13.851 |
+   | 2.4107  -5.7922 1.1572 |
+
+exvmm(4,4) = expanded version of e2vmm
+
+e2vclm(4)  = view clipping limits = .1 .2 .3 .4
+e2vcid     = x-y clipping indicator = NOCLIP
+
+TEST: #SR 15 16 17 23
+      "<Set view representation> should be able to re-set a
+       user-defined requested entry, with correct defaults
+       supplied by the implementation."
+
+<Set view representation> for index #1, with entry value =
+   e2vom, e2vmm, e2vclm, e2vcid
+if (error signalled) then
+   fail
+   informational message re error code
+   goto end_set2
+endif
+<Inquire view representation> for index #1, to determine
+   invom, invmm, invclm, invcid
+pass/fail depending on
+   (invom  = exvom               .and.
+    invmm  = exvmm               .and.
+    invclm = e2vclm, 0.0, 1.0    .and.
+    invcid = e2vcid, CLIP, CLIP  .and. )
+
+end_set2:
+
+END PROGRAM 4
+
+
+PROGRAM 5: Order of view indices
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<Inquire list of view indices> to determine
+   ndvi = number of defined indices in the view table
+
+TEST: #SR 18 20 21
+      "<Set view transformation input priority> should be able to
+       set a middle view to priority higher than the first view."
+Pass to TSTVIP:
+  spcpos = ndvi/2 (position of specified view)
+  refpos = 1      (position of reference view)
+  relpri = HIGHER (relative priority)
+pass/fail depending on results of TSTVIP subroutine (see below)
+
+TEST: #SR 18 20 21
+      "<Set view transformation input priority> should be able to
+       set a middle view to priority lower than the last view."
+Pass to TSTVIP:
+  spcpos = ndvi/2 (position of specified view)
+  refpos = ndvi   (position of reference view)
+  relpri = LOWER  (relative priority)
+pass/fail depending on results of TSTVIP subroutine (see below)
+
+TEST: #SR 18 20 21
+      "<Set view transformation input priority> should be able to
+       set the first view to priority lower than a middle view."
+Pass to TSTVIP:
+  spcpos = 1      (position of specified view)
+  refpos = ndvi/2 (position of reference view)
+  relpri = LOWER  (relative priority)
+pass/fail depending on results of TSTVIP subroutine (see below)
+
+TEST: #SR 18 20 21
+      "<Set view transformation input priority> should be able to
+       set the last view to priority higher than a middle view."
+Pass to TSTVIP:
+  spcpos = ndvi   (position of specified view)
+  refpos = ndvi/2 (position of reference view)
+  relpri = HIGHER (relative priority)
+pass/fail depending on results of TSTVIP subroutine (see below)
+
+TEST: #SR 18 22
+      "<Set view transformation input priority> should have no
+       effect when the specified view is the same as the
+       reference view."
+Pass to TSTVIP:
+  spcpos = 2      (position of specified view)
+  refpos = spcpos (position of reference view)
+  relpri = LOWER  (relative priority)
+pass/fail depending on results of TSTVIP subroutine (see below)
+
+---------------------------------------------------------------
+
+TSTVIP subroutine:
+   Use <inquire list of view indices> to determine
+      curord = current order
+   from parameters, calculate expord = expected order
+   Use <inquire list of view indices> to determine
+      spcvw = curord (spcpos)
+      refvw = curord (refpos)
+   invoke <set view transformation input priority> using
+      spcvw, refvw, relpri
+   Use <inquire list of view indices> to determine
+      actord = actual order
+   pass/fail depending on (actord = expord)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Update control of view table
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<Inquire list of view indices> to determine
+   ndvi = number of defined indices in the view table
+<Set display update state> to WAIT, NIVE to try to defer
+   updates
+
+testvw = ndvi/2
+<inquire view representation> on testvw to determine original
+   requested and current state:
+   orvom(4,4) = orientation matrix
+   orvmm(4,4) = mapping matrix
+   orvclm(6)  = view clipping limits
+   orvcid(3)  = clipping indicators
+
+   ocvom(4,4) = orientation matrix
+   ocvmm(4,4) = mapping matrix
+   ocvclm(6)  = view clipping limits
+   ocvcid(3)  = clipping indicators
+
+generate different values:
+nwvom  = orvom elements + 1.0
+nwvmm  = orvmm elements + 1.0
+nwvclm = orvclm / 2 + 0.1
+if (requested x-y clip indicator = CLIP) then
+   nwvcid = NOCLIP, NOCLIP, NOCLIP
+else
+   nwvcid = CLIP, CLIP, CLIP
+endif
+
+<set view representation 3> on testvw with
+   nwvom, nwvmm, nwvclm, nwvcid
+
+<inquire view representation> on testvw to determine new
+   current state:
+   vwtupd     = view transformation update state
+   cuvom(4,4) = current orientation matrix
+   cuvmm(4,4) = current mapping matrix
+   cuvclm(6)  = current view clipping limits
+   cuvcid(3)  = current clipping indicators
+
+TEST: #SR 24
+      "The view transformation update state returned by <inquire
+       view representation> should be either PENDING or
+       NOTPENDING."
+
+if (vwtupd = NOTPENDING) then
+   pass
+   message: skipping PENDING test
+   goto notpending_test
+elseif (vwtupd = PENDING) then
+   pass
+else
+   fail
+   goto notpending_test
+endif
+
+pending_test:
+
+TEST: #SR 27
+      "If the view transformation update state of an entry in the
+       view table is PENDING, then the state of visual
+       representation for that workstation should be DEFERRED."
+
+<inquire display update state> to determine
+   svr = state of visual representation
+pass/fail depending on (svr = DEFERRED)
+
+TEST: #SR 17 25
+      "If the view transformation update state of an entry in the
+       view table is PENDING, then the current values of that
+       entry should be the same as they were before the requested
+       values were last set."
+
+pass/fail depending on
+  ( cuvom   = ocvom   and
+    cuvmm   = ocvmm   and
+    cuvclm  = ocvclm  and
+    cuvcid  = ocvcid )
+
+notpending_test:
+
+<update workstation> to force update of view table
+
+<inquire display update state> to determine
+   svr = state of visual representation
+if (svr = CORRECT) then
+   TEST: #SR 28
+         "If the state of visual representation for a workstation
+          is CORRECT, then the view transformation update state
+          of all entries should be NOTPENDING."
+
+   for ivw = 0 to ndvi-1
+       <inquire view representation> on ivw to determine
+          vwtupd = view transformation update state
+       if (vwtupd = NOTPENDING) then
+          OK so far
+       else
+          fail
+          goto end_correct
+       endif
+   next ivw
+   pass
+else
+   message: skipping test that CORRECT implies NOTPENDING
+endif
+
+end_correct:
+
+<inquire view representation> on testvw to determine new
+   current state:
+   vwtupd     = view transformation update state
+   cuvom(4,4) = current orientation matrix
+   cuvmm(4,4) = current mapping matrix
+   cuvclm(6)  = current view clipping limits
+   cuvcid(3)  = current clipping indicators
+
+if (vwtupd not= NOTPENDING) then
+   message: skipping NOTPENDING test
+   goto end_notpending_test
+endif
+
+TEST: #SR 17 26
+      "If the view transformation update state of an entry in the
+       view table is NOTPENDING, then the current values of that
+       entry should be the same as the most recently set
+       requested values."
+
+pass/fail depending on
+  ( cuvom   = nwvom   and
+    cuvmm   = nwvmm   and
+    cuvclm  = nwvclm  and
+    cuvcid  = nwvcid )
+
+end_notpending_test:
+
+END PROGRAM 6
+
+
+PROGRAM 7: Update status of view table for INPUT workstations
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+linwk = list of accessible workstations of category INPUT
+
+if (linwk is empty) then
+   message: no INPUT workstations to be tested
+   goto done
+endif
+
+TEST: #SR 26 29
+      "For all workstations of category INPUT, the view
+       transformation update state of all entries in the view
+       table should always be NOTPENDING and reported as such."
+
+for each iwk in linwk
+   <open workstation> iwk
+   <Inquire list of view indices> to determine
+      ndvi = number of defined indices in the view table
+   <Set display update state> to WAIT, NIVE to try to defer
+      updates
+
+   testvw = ndvi/2
+   <inquire view representation> on testvw to determine original
+      requested state:
+
+      orvom(4,4) = orientation matrix
+      orvmm(4,4) = mapping matrix
+      orvclm(6)  = view clipping limits
+      orvcid(3)  = clipping indicators
+
+   generate different values:
+   nwvom  = orvom elements + 1.0
+   nwvmm  = orvmm elements + 1.0
+   nwvclm = orvclm / 2 + 0.1
+   if (requested x-y clip indicator = CLIP) then
+      nwvcid = NOCLIP, NOCLIP, NOCLIP
+   else
+      nwvcid = CLIP, CLIP, CLIP
+   endif
+
+   <set view representation 3> on testvw with
+      nwvom, nwvmm, nwvclm, nwvcid
+
+   <inquire view representation> on testvw to determine new
+      current state:
+      vwtupd     = view transformation update state
+      cuvom(4,4) = current orientation matrix
+      cuvmm(4,4) = current mapping matrix
+      cuvclm(6)  = current view clipping limits
+      cuvcid(3)  = current clipping indicators
+
+   <close workstation> iwk
+
+   if (vwtupd not= NOTPENDING) then
+      fail
+      message about vwtupd
+      goto done
+   endif
+
+   if ( cuvom   = nwvom   and
+        cuvmm   = nwvmm   and
+        cuvclm  = nwvclm  and
+        cuvcid  = nwvcid )   then
+      OK so far
+   else
+      fail
+      message about current values
+      goto done
+   endif
+
+next iwk
+pass
+
+done:
+
+END PROGRAM 7

@@ -1,0 +1,610 @@
+TITLE: Output attribute error indicators
+
+MODULE#: 09.02.03
+
+DESCRIPTION: This module tests that the functions related to output
+attribites set the specified workstation error to the error indicator
+if they are executed in an incorrect condition.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  If functions <inquire polyline representation>, <inquire
+polymarker representation>, <inquire text representation>, <inquire
+interior representation>, <inquire edge representation>, <inquire
+predefined polyline representation>, <inquire predefined polymarker
+representation>, <inquire predefined text representation>, <inquire
+predefined interior representation>, <inquire predefined edge
+representation> are called, and the bundle index value is less than
+one, then the error indicator is set to 100.
+#F 223 225 227 229 231 263 265 267 271 273
+#D 5.9.2.1 5.10.2.1 5.11.2.1 5.12.2.1 5.13.2.1 6.10.2 6.11.2 6.12.2
+#D 6.14.2 6.15.2
+#S 4.11/109/1 5.12.1/232/1
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10
+
+SR2.  If functions <inquire view representation>, <inquire polyline
+representation>, <inquire polymarker representation>, <inquire text
+representation>, <inquire interior representation>, <inquire edge
+representation>, <inquire pattern representation>, <inquire colour
+representation>, <inquire predefined view representation> are called,
+and the specified representation has not been defined, then the error
+indicator is set to 101.
+#F 218 223 225 227 229 231 233 236 258
+#D 5.9.2 5.10.2 5.11.2 5.12.2 5.13.2
+#S 4.11/109/1 5.12.1/232/1
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7
+
+SR3.  If functions <inquire predefined polyline representation>,
+<inquire predefined polymarker representation>, <inquire predefined
+text representation>, <inquire predefined interior representation>,
+<inquire predefined edge representation>, <inquire predefined pattern
+representation>, <inquire predefined colour representation> are
+called, and the specified representation has not been predefined on
+this workstation, then the error indicator is set to 102.
+#F 263 265 267 271 273 275 278
+#D 6.10.2 6.11.2 6.12.2 6.14.2 6.15.2
+#S 4.11/109/1 5.12.1/232/1
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8
+
+SR4.  If function <inquire text extent> is called, and the specified
+font is not available for the requested text precision on the
+specified workstation, then the error indicator is set to 106.
+#F 269
+#D 6.12.1.2.1
+#S 4.11/109/1 5.12.1/232/1
+#T P04/1
+
+SR5.  If function <inquire pattern representation> is called, and
+interior style PATTERN is not supported on the workstation, then the
+error indicator is set to 109.
+#F 233
+#D 6.14.1.2.1
+#S 4.11/109/1 5.12.1/232/1
+#T P05/1
+
+SR6.  If functions <inquire pattern representation>, <inquire
+predefined pattern representation> are calld, and the pattern index
+value is less than one, then the error indicator is set to 112.
+#F 233 275
+#D 5.14.2.1 6.16.2
+#S 4.11/109/1 5.12.1/232/1
+#T P06/1 P06/2
+
+SR7.  If functions <inquire colour representation>, <inquire
+predefined colour representation> are called, and the colour index
+value is less than zero, then the error indicator is set to 113.
+#F 236 278
+#D 5.15.3.1 6.17.3
+#S 4.11/109/1 5.12.1/232/1
+#T P07/1 P07/2
+
+SR8.  If functions <inquire view representation>, <inquire predefined
+view representation> are called, and the view index value is less than
+zero, then the error indicator is set to 114.
+#F 218 258
+#D 5.4.2.1 6.6.2
+#S 4.11/109/1 5.12.1/232/1
+#T P08/1 P08/2
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  218: pqvwr   <inquire view representation>
+  223: pqplr   <inquire polyline representation>
+  225: pqpmr   <inquire polymarker representation>
+  227: pqtxr   <inquire text representation>
+  229: pqir    <inquire interior representation>
+  231: pqedr   <inquire edge representation>
+  233: pqpar   <inquire pattern representation>
+  236: pqcr    <inquire colour representation>
+  258: pqpvwr  <inquire predefined view representation>
+  263: pqpplr  <inquire predefined polyline representation>
+  265: pqppmr  <inquire predefined polymarker representation>
+  267: pqptxr  <inquire predefined text representation>
+  269: pqtxx   <inquire text extent>
+  271: pqpir   <inquire predefined interior representation>
+  273: pqpedr  <inquire predefined edge representation>
+  275: pqppar  <inquire predefined pattern representation>
+  278: pqpcr   <inquire predefined colour representation>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.4  ...  view_table
+  5.4.2  ...  view_table_ordered_by_input_priority
+  5.4.2.1  ...  view_index
+  5.9  ...  polyline_entry
+  5.9.2  ...  polyline_bundle_table
+  5.9.2.1  ...  polyline_index
+  5.10 ...  polymarker_entry
+  5.10.2  ...  polymarker_bundle_table
+  5.10.2.1  ...  polymarker_index
+  5.11  ...  text_entry
+  5.11.2  ...  text_bundle_table
+  5.11.2.1  ...  text_index
+  5.12  ...  interior_entry
+  5.12.2  ...  interior_bundle_table
+  5.12.2.1  ...  interior_index
+  5.13  ...  edge_entry
+  5.13.2  ...  edge_bundle_table
+  5.13.2.1  ...  edge_index
+  5.14  ...  pattern_entry
+  5.14.2  ...  pattern_table
+  5.14.2.1  ...  pattern_index
+  5.15  ...  colour_entry
+  5.15.3  ...  colour_table
+  5.15.3.1  ...  colour_index
+  6  ...  workstation_description_table
+  6.6  ...  predefined_view_table
+  6.6.2  ...  table_of_predefined_view_representations
+  6.10 ...  polyline_entry
+  6.10.2  ...  predefined_polyline_bundle_table
+  6.11  ...  polymarker_entry
+  6.11.2  ...  predefined_polymarker_bundle_table
+  6.12  ...  text_entry
+  6.12.1  ...  text_facilities
+  6.12.1.2  ...  list_of_text_font_and_precision_pairs
+  6.12.1.2.1  ...  text_font_and_precision_pair
+  6.12.2  ...  predefined_text_bundle_table
+  6.14  ...  interior_entry
+  6.14.1  ...  interior_facilities
+  6.14.1.2  ...  list_of_available_interior_styles
+  6.14.1.2.1  ...  interior_style
+  6.14.2  ...  predefined_interior_bundle_table
+  6.15  ...  edge_entry
+  6.15.2  ...  predefined_edge_bundle_table
+  6.16  ...  pattern_entry
+  6.16.2  ...  predefined_pattern_table
+  6.17  ...  colour_entry
+  6.17.3  ...  predefined_colour_table
+ 
+
+
+PROGRAM 1: Error indicator = 100
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 223,225,227,229,231,263,265,267,271,273 with a bundle
+index value less than one to test if functions set number 100 to the error
+indicator: Ignoring function, the bundle index value is less than one.
+
+<open workstation>
+
+<inquire polyline representation> with index=0
+TEST: #SR 1
+      "If <inquire polyline representation> is called and the bundle index
+       value is less than one, it should return error indicator = 100."
+pass/fail depending on (returned error indicator = 100)
+
+<inquire polymarker representation> with index=-1
+TEST: #SR 1
+      "If <inquire polymarker representation> is called and the bundle index
+       value is less than one, it should return error indicator = 100."
+pass/fail depending on (returned error indicator = 100)
+
+<inquire text representation> with index=-100
+TEST: #SR 1
+      "If <inquire text representation> is called and the bundle index
+       value is less than one, it should return error indicator = 100."
+pass/fail depending on (returned error indicator = 100)
+
+<inquire interior representation> with index=0
+TEST: #SR 1
+      "If <inquire interior representation> is called and the bundle index
+       value is less than one, it should return error indicator = 100."
+pass/fail depending on (returned error indicator = 100)
+
+<inquire edge representation> with index=-1
+TEST: #SR 1
+      "If <inquire edge representation> is called and the bundle index
+       value is less than one, it should return error indicator = 100."
+pass/fail depending on (returned error indicator = 100)
+
+<inquire predefined polyline representation> with index=-100
+TEST: #SR 1
+      "If <inquire predefined polyline representation> is called and the
+       bundle index value is less than one, it should return error indicator
+       = 100."
+pass/fail depending on (returned error indicator = 100)
+
+<inquire predefined polymarker representation> with index=0
+TEST: #SR 1
+      "If <inquire predefined polymarker representation> is called and the
+       bundle index value is less than one, it should return error
+       indicator = 100."
+pass/fail depending on (returned error indicator = 100)
+
+<inquire predefined text representation> with index=-1
+TEST: #SR 1
+      "If <inquire predefined text representation> is called and the bundle
+       index value is less than one, it should return error indicator =
+       100."
+pass/fail depending on (returned error indicator = 100)
+
+<inquire predefined interior representation> with index=-100
+TEST: #SR 1
+      "If <inquire predefined interior representation> is called and the
+       bundle index value is less than one, it should return error indicator
+       = 100."
+pass/fail depending on (returned error indicator = 100)
+
+<inquire predefined edge representation> with index=0
+TEST: #SR 1
+      "If <inquire predefined edge representation> is called and the bundle
+       index value is less than one, it should return error indicator
+       = 100."
+pass/fail depending on (returned error indicator = 100)
+
+<close workstation>
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error indicator = 101
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 218,223,225,227,229,231,233,236 with an undefined
+representation index to test if the functions set the error indicator
+to 100: ignoring function, the specified representation has not been defined.
+
+<open workstation>
+
+use <inquire list of view indices> to get :
+   index1 = max value in list + 1
+<inquire view representation> with index=index1
+TEST: #SR 2
+      "If <inquire view representation> is called and the specified
+       representation has not been defined, it should return error indicator
+       = 101."
+pass/fall depending on (returned error indicator = 101)
+
+use <inquire list of polyline indices> to get :
+   index1 = max value in list + 1
+<inquire polyline representation> with index=index1
+TEST: #SR 2
+      "If <inquire polyline representation> is called and the specified
+       representation has not been defined, it should return error indicator
+       = 101."
+pass/fall depending on (returned error indicator = 101)
+
+use <inquire list of polymarker indices> to get:
+   index1 = max value in list + 1
+<inquire polymarker representation> with index=index1
+TEST: #SR 2
+      "If <inquire polymarker representation> is called and the specified
+       representation has not been defined, it should return error indicator
+       = 101."
+pass/fall depending on (returned error indicator = 101)
+
+use <inquire list of text indices> to get:
+   index1 = max value in list + 1
+<inquire text representation> with index=index1
+TEST: #SR 2
+      "If <inquire text representation> is called and the specified
+       representation has not been defined, it should return error indicator
+       = 101."
+pass/fall depending on (returned error indicator = 101)
+
+use <inquire list of interior indices> to get:
+   index1 = max value in list + 1
+<inquire interior representation> with index=index1
+TEST: #SR 2
+      "If <inquire interior representation> is called and the specified
+       representation has not been defined, it should return error indicator
+       = 101."
+pass/fall depending on (returned error indicator = 101)
+
+use <inquire list of edge indices> to get:
+   index1 = max value in list + 1
+<inquire edge representation> with index=index1
+TEST: #SR 2
+      "If <inquire edge representation> is called and the specified
+       representation has not been defined, it should return error indicator
+       = 101."
+pass/fall depending on (returned error indicator = 101)
+
+use <inquire list of colour indices> to get:
+   index1 = max value in list + 1
+<inquire colour representation> with index=index1
+TEST: #SR 2
+      "If <inquire colour representation> is called and the specified
+       representation has not been defined, it should return error indicator
+       = 101."
+pass/fall depending on (returned error indicator = 101)
+
+<close workstation>
+
+END PROGRAM 2
+
+
+
+PROGRAM 3: Error indicator = 102
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call the functions 258,263,265,267,271,273,275,278 with not predefined
+representation to test if they set the error indicator to 102: ignoring
+function, the specified representation has not been predefined on this
+workstation.
+
+<open workstation>
+
+use <inquire view facilities> to get:
+   index1 = number of predefined entries
+<inquire predefined view representation> with index = index1+1
+TEST: #SR 3
+      "If <inquire predefined view representation> is called and the
+       specified representation has not been predefined on this workstation,
+       it should return error indicator = 102."
+pass/fail depending on (return error indicator = 102)
+
+use <inquire polyline facilities> to get:
+   index1 = number of predefined entries
+<inquire predefined polyline representation> with index = index1+1
+TEST: #SR 3
+      "If <inquire predefined polyline representation> is called and the
+       specified representation has not been predefined on this workstation,
+       it should return error indicator = 102."
+pass/fail depending on (return error indicator = 102)
+
+use <iqnuire polymarker facilities> to get:
+   index1 = number of predefined entries
+<inquire predefined polymarker representation> with index = index1+1
+TEST: #SR 3
+      "If <inquire predefined polymarker representation> is called and the
+       specified representation has not been predefined on this workstation,
+       it should return error indicator = 102."
+pass/fail depending on (return error indicator = 102)
+
+use <inquire text facilities> to get:
+   index1 = number of predefined entries
+<inquire predefined text representation> with index = index1+1
+TEST: #SR 3
+      "If <inquire predefined text representation> is called and the
+       specified representation has not been predefined on this workstation,
+       it should return error indicator = 102."
+pass/fail depending on (return error indicator = 102)
+
+use <inquire interior facilities> to get:
+   index1 = number of predefined entries
+<inquire predefined interior representation> with index = index1+1
+TEST: #SR 3
+      "If <inquire predefined interior representation> is called and the
+       specified representation has not been predefined on this workstation,
+       it should return error indicator = 102."
+pass/fail depending on (return error indicator = 102)
+
+use <inquire edge facilities> to get:
+   index1 = number of predefined entries
+<inquire predefined edge representation> with index = index1+1
+TEST: #SR 3
+      "If <inquire predefined edge representation> is called and the
+       specified representation has not been predefined on this workstation,
+       it should return error indicator = 102."
+pass/fail depending on (return error indicator = 102)
+
+use <inquire pattern facilities> to ge:
+   index1 = number of predefined entries
+<inquire predefined pattern representation> with index = index1+1
+TEST: #SR 3
+      "If <inquire predefined pattern representation> is called and the
+       specified representation has not been predefined on this workstation,
+       it should return error indicator = 102."
+pass/fail depending on (return error indicator = 102)
+
+use <inquire colour facilities> to get:
+   index1 = number of predefined entries
+<inquire predefined colour representation> with index = index1+1
+TEST: #SR 3
+      "If <inquire predefined colour representation> is called and the
+       specified representation has not been predefined on this workstation,
+       it should return error indicator = 102."
+pass/fail depending on (return error indicator = 102)
+
+<close workstation>
+
+END PROGRAM 3
+
+
+PROGRAM 4: Error indicator = 106
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+<inquire text extent> with an unavailable font for the requested text
+precision on the specified workstation to test if it generates error 106:
+ignoring function, the specified font is not available for the requested
+text precision on the specified workstation.
+
+<open workstation> wkid
+
+Use <inquire text facility> to determine:
+   npair = number of text font and precision pairs
+   txtfnt(1:npair) = list of text font
+   txtprc(1:npair) = list of text precision
+
+For each text precision on the specifier workstation, find one font which is
+   not available for the text precision:
+jj=0
+for ip = string to strike
+   ii=0
+   for ir = 1 to npair
+      if (txtprc(ir) == ip) then
+          ii = ii+1
+          fontip(ii) = txtfnt(ir)
+      endif
+   next ir
+   if (ii = 0) goto nextip
+   jj=jj+1
+   prec(jj) = ip
+   font(jj) = max(all elements of fontip)+1
+   <inquire text extent> with font=font(jj)
+TEST: #SR 4
+      "If <inquire text extent> is called and the specified font is
+       not available for the requested text precision on the specified
+       workstation, it should return error indicator = 106."
+pass/fail depending on (returned error indicator = 106)
+   nextip:
+next ip
+
+
+<close workstation>
+
+END PROGRAM 4
+
+
+PROGRAM 5: Error indicator = 109
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Find if the specified workstation supports the interior style PATTERN.
+If yes, skip the test. Otherwise <inquire pattern representation> to test
+if it generates error indicator 109: ignoring function, interior style
+PATTERN is not supported on the workstation.
+
+<open workstation>
+use <inqurie interior facilities> to get:
+    nstyle = number of available interior styles
+    an array style = list of available interior styles
+stypat=0
+for ix = 1 to nstyle
+    if (style(ix)=PATTERN) then
+        stypat=1
+    endif
+next ix
+
+if (stypat=0) then
+   INMSG ("This workstation supports the interior style PATTERN.
+           Skip the test.")
+else
+   <inquire pattern representation>
+TEST: #SR 5
+      "If <inquire pattern representation> is called and interior style
+       PATTERN is not supported on the workstation, it should return
+       error indicator = 109 or 101."
+pass/fail depending on (returned error indicator = 109 or 101)
+endif
+
+<close workstation>
+
+END PROGRAM 5
+
+
+PROGRAM 6: Error indicator = 112
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions <inquire pattern representation> and <inquire predefined pattern
+representation> with pattern index value less than one to test if they return
+error indicator 112: ignoring function, the pattern index value is less than
+one.
+
+<open workstation>
+
+<inquire pattern representation> with pattern index=0
+TEST: #SR 6
+      "If <inquire pattern representation> is called and the pattern index
+       value is less than one, it should return error indicator = 112 or 101."
+pass/fail depending on (returned error indicator = 112 or 101)
+
+<inquire predefined pattern representation> with pattern index=-1
+TEST: #SR 6
+      "If <inquire predefined pattern representation> is called and the
+       pattern index value is less than one, it should return error
+       indicator = 112 or 102."
+pass/fail depending on (returned error indicator = 112 or 102)
+
+<close workstation>
+
+END PROGRAM 6
+
+
+PROGRAM 7: Error indicator = 113
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions <inquire colour representation> and <inquire predefined colour
+representation> with colour index value less than zero to test if they return
+error indicator 113: ignoring function, the colour index value is less than
+zero.
+
+<open workstation>
+
+<inqurie colour representation> with colour index=-1
+TEST: #SR 7
+      "If <inquire colour representation> is called and the colour index
+       value is less than zero, it should return error indicator = 113."
+pass/fail depending on (returned error indicator = 113)
+
+<inquire predefined colour representation> with colour index=-10
+TEST: #SR 7
+      "If <inquire predefined colour representation> is called and the
+       colour index value is less than zero, it should return error indicator
+       = 113."
+pass/fail depending on (returned error indicator = 113)
+
+<close workstation>
+
+END PROGRAM 7
+
+
+PROGRAM 8: Error indicator = 114
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions <inquire view representation> and <inquire predefined view
+representation> with view index value less than zero to test if they return
+error indicator 114: ignoring function, the view index value is less than
+zero.
+
+<open workstation>
+
+<inquire view representation> with view index=-1
+TEST: #SR 8
+      "If <inquire view representation> is called and the view index value
+       is less than zero, it should return error indicator = 114."
+pass/fail depending on (returned error indicator = 114)
+
+<inquire predefined view representation> with view index=-10
+TEST: #SR 8
+      "If <inquire predefined view representation> is called and the view
+       index value is less than zero, it should return error indicator =
+       114."
+pass/fail depending on (returned error indicator = 114)
+
+<close workstation>
+
+END PROGRAM 8
+
+

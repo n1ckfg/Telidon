@@ -1,0 +1,916 @@
+TITLE: Workstation error indicators
+
+MODULE#: 09.02.02
+
+DESCRIPTION: This module tests that the functions related to workstations
+set the specified workstation error to the error indicator if they are
+executed in an incorrect condition.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   If functions <inquire workstation category>-<inquire default string
+device data> are called, and the required information is not yet available
+for the generic workstation type, then the error indicator is set to 51.
+#F 253-299
+#D 2.1 2.2
+#S 4.11/109/1 5.12.1/232/1
+#T
+
+SR2.   If functions <inquire workstation category>-<inquire default string
+device data> are called, and the workstation type is not recognized by
+the implementation, then the error indicator is set to 52.
+#F 253-299
+#D 2.1 2.2 2.2.1
+#S 4.11/109/1 5.12.1/232/1
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P01/18 P01/19 P01/20
+   P01/21 P01/22 P01/23
+
+SR3.   If functions <inquire workstation connection and type>-<inquire string
+device state> are called, and the specified workstation is not open, then
+the error indicator is set to 54.
+#F 216-252
+#D 4.1 4.1.1
+#S 4.11/109/1 5.12.1/232/1
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11
+   P02/12 P02/13 P02/14 P02/15 P02/16 P02/17 P02/18 P02/19 P02/20
+   P02/21 P02/22 P02/23 P02/24 P02/25
+
+SR4.   If functions <inquire list of view indices>-<inquire hlhsr mode>,
+<inquire workstation transformation 3>,<inquire workstation transformation>,
+<inquire display space size 3>-<inquire predefined view representation>
+are called, and the specified workstation is of category MI, then the error
+indicator is set to 57.
+#F 217-219 239 240 254-258
+#D 6.2
+#S 4.11/109/1 5.12.1/232/1
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9 P03/10
+
+SR5.   If functions <inquire posted structures>-<inquire invisibility filter>,
+<inquire workstation classification>-<inquire annotation facilities>,
+<inquire interior facilities>-<inquire dynamics of structures> are called,
+and the specified workstation does not have output capability, then the
+error indicator is set to 59.
+#F 220-238 259-268 270-286
+#D 6.2
+#S 4.11/109/1 5.12.1/232/1
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P04/6 P04/7 P04/8 P04/9 P04/10 P04/11
+   P04/12 P04/13 P04/14 P04/15 P04/16 P04/17 P04/18 P04/19 P04/20
+   P04/21 P04/22 P04/23 P04/24 P04/25 P04/26 P04/27 P04/28
+
+SR6.   If functions <inquire pick device state 3>, <inquire pick device
+state> are called, and the specified workstation is not of category OUTIN,
+then the error indicator is set to 60.
+#F 249 250
+#D 6.2
+#S 4.11/109/1 5.12.1/232/1
+#T
+
+SR7.   If functions <inquire locator device state 3>-<inquire choice device
+state>, <inquire string device state 3>, <inquire string device>, <inquire
+number of available logical input device>-<inquire default string device data>
+are called, and the specified workstation is neither of category INPUT nor
+of category OUTIN, then the error indicator is set to 61.
+#F 241-248 251 252 287-299
+#D 6.2
+#S 4.11/109/1 5.12.1/232/1
+#T
+
+SR8.   If functions <inquire display space size 3>-<inquire dynamics of
+structures> are called, and the required information is not available for
+this MO workstation type, then the error indicator is set to 62.
+#F 254-286
+#D 6.2
+#S 4.11/109/1 5.12.1/232/1
+#T
+
+SR9.   If functions <inquire generalized drawing primitive 3>, <inquire
+generalized drawing primitive> are called, and the specified workstation
+type is not able to generate the specified generalized drawing primitive,
+then the error indicator is set to 64.
+#F 281 282
+#D 6.1 6.2
+#S 4.11/109/1 5.12.1/232/1
+#T
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  216: pqwkc   <inquire workstation connection and type>
+  217: pqevwi  <inquire list of view indices>
+  218: pqvwr   <inquire view representation>
+  219: pqhrm   <inquire hlhsr mode>
+  220: pqpost  <inquire posted structures>
+  221: pqdus   <inquire display update state>
+  222: pqepli  <inquire list of polyline indices>
+  223: pqplr   <inquire polyline representation>
+  224: pqepmi  <inquire list of polymarker indices>
+  225: pqpmr   <inquire polymarker representation>
+  226: pqetxi  <inquire list of text indices>
+  227: pqtxr   <inquire text representation>
+  228: pqeii   <inquire list of interior indices>
+  229: pqir    <inquire interior representation>
+  230: pqeedi  <inquire list of edge indices>
+  231: pqedr   <inquire edge representation>
+  232: pqepai  <inquire list of pattern indices>
+  233: pqpar   <inquire pattern representation>
+  234: pqcmd   <inquire colour model>
+  235: pqeci   <inquire list of colour indices>
+  236: pqcr    <inquire colour representation>
+  237: pqhlft  <inquire highlighting filter>
+  238: pqivft  <inquire invisibility filter>
+  239: pqwkt3  <inquire workstation transformation 3>
+  240: pqwkt   <inquire workstation transformation>
+  241: pqlcs3  <inquire locator device state 3>
+  242: pqlcs   <inquire locator device state>
+  243: pqsks3  <inquire stroke device state 3>
+  244: pqsks   <inquire stroke device state>
+  245: pqvls3  <inquire valuator device state 3>
+  246: pqvls   <inquire valuator device state>
+  247: pqchs3  <inquire choice device state 3>
+  248: pqchs   <inquire choice device state>
+  249: pqpks3  <inquire pick device state 3>
+  250: pqpks   <inquire pick device state>
+  251: pqsts3  <inquire string device state 3>
+  252: pqsts   <inquire string device state>
+  253: pqwkca  <inquire workstation category>
+  254: pqdsp3  <inquire display space size 3>
+  255: pqdsp   <inquire display space size>
+  256: pqhrif  <inquire hlhsr facilities>
+  257: pqvwf   <inquire view facilities>
+  258: pqpvwr  <inquire predefined view representation>
+  259: pqwkcl  <inquire workstation classification>
+  260: pqdswa  <inquire dynamics of workstation attributes>
+  261: pqddus  <inquire default display update state>
+  262: pqplf   <inquire polyline facilities>
+  263: pqpplr  <inquire predefined polyline representation>
+  264: pqpmf   <inquire polymarker facilities>
+  265: pqppmr  <inquire predefined polymarker representation>
+  266: pqtxf   <inquire text facilities>
+  267: pqptxr  <inquire predefined text representation>
+  268: pqanf   <inquire annotation facilities>
+  269: pqtxx   <inquire text extent>
+  270: pqif    <inquire interior facilities>
+  271: pqpir   <inquire predefined interior representation>
+  272: pqedf   <inquire edge facilities>
+  273: pqpedr  <inquire predefined edge representation>
+  274: pqpaf   <inquire pattern facilities>
+  275: pqppar  <inquire predefined pattern representation>
+  276: pqcmdf  <inquire colour model facilities>
+  277: pqcf    <inquire colour facilities>
+  278: pqpcr   <inquire predefined colour representation>
+  279: pqegd3  <inquire list of available generalized drawing primitives 3>
+  280: pqegdp  <inquire list of available generalized drawing primitives>
+  281: pqgdp3  <inquire generalized drawing primitive 3>
+  282: pqgdp   <inquire generalized drawing primitive>
+  283: pqegse  <inquire list of available generalized structure elements>
+  284: pqdp    <inquire number of display priorities supported>
+  285: pqwksl  <inquire workstation state table lengths>
+  286: pqdstr  <inquire dynamics of structures>
+  287: pqli    <inquire number of available logical input devices>
+  288: pqdlc3  <inquire default locator device data 3>
+  289: pqdlc   <inquire default locator device data>
+  290: pqdsk3  <inquire default stroke device data 3>
+  291: pqdsk   <inquire default stroke device data>
+  292: pqdvl3  <inquire default valuator device data 3>
+  293: pqdvl   <inquire default valuator device data>
+  294: pqdch3  <inquire default choice device data 3>
+  295: pqdch   <inquire default choice device data>
+  296: pqdpk3  <inquire default pick device data 3>
+  297: pqdpk   <inquire default pick device data>
+  298: pqdst3  <inquire default string device data 3>
+  299: pqdst   <inquire default string device data>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.1  ...  number_of_available_workstation_types
+  2.2  ...  list_of_available_workstation_types
+  2.2.1  ...  workstation_type
+  4  ...  phigs_state_list
+  4.1  ...  set_of_open_workstations
+  4.1.1  ...  workstation_identifier
+  6  ...  workstation_description_table
+  6.1  ...  workstation_type
+  6.2  ...  workstation_category
+ 
+
+
+PROGRAM 1: Error indicator = 52
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 253,255-262,265,266,269,270,273,274,276,277,280,281,283-286
+with a workstation type not recognized by the implementation to test if
+the functions set number 52 to the error indicator: Ignoring function, the
+specified workstation type is not recognized by the implementaion.
+
+Use <inquire list of availalble workstation types> to determine all available
+    workstation types
+wktype = one integer different from all available workstation types
+
+<Inquire workstation category> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire workstation category> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire display space size> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire display space size> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire hlhsr facilities> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire hlhsr facilities> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire view facilities> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire view facilities> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire predefined view representation> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire predefined view representation> is called and the
+       workstation type is not recognized by the implementation, it should
+       return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire workstation classification> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire workstation classification> is called and the
+       workstation type is not recognized by the implementation, it should
+       return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire dynamics of workstation attributes> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire dynamics of workstation attributes> is called and the
+       workstation type is not recognized by the implementation, it should
+       return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inqurie default display update state> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire default display update state> is called and the
+       workstation type is not recognized by the implementation, it should
+       return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inqurie polyline facilities> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire polyline facilities> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire predefined polymarker representation> with workstation type=wktype
+TEST: #SR 2
+      "If <inquire predefined polymarker representation> is called and
+       the workstation type is not recognized by the implementation, it
+       should return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire text facilities> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire text facilities> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire text extent> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire text extent> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire interior facilities> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire interior facilities> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire predefined edge representation> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire predefined edge representation> is called and the
+       workstation type is not recognized by the implementation, it should
+       return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire pattern facilities> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire pattern facilities> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire colour model facilities> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire colour model facilities> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire colour facilities> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire colour facilities> is called and the workstation type
+       is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire list of available generalized drawing primitives> with workstation
+     type = wktype
+TEST: #SR 2
+      "If <inquire list of available generalized drawing primitives> is
+       called and the workstation type is not recognized by the
+       implementation, it should return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire generalized drawing primitive 3> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire generalized drawing primitive 3> is called and the
+       workstation type is not recognized by the implementation, it should
+       return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inqurie list of available generalized structure elements> with workstation
+     type = wktype
+TEST: #SR 2
+      "If <inquire list of available generalized structure elements> is
+       called and the workstation type is not recognized by the
+       implementation, it should return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire number of display priorities supported> with workstation
+     type = wktype
+TEST: #SR 2
+      "If <inquire number of display priorities supported> is called
+       and the workstation type is not recognized by the implementation,
+       it should return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire workstation state table lengths> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire workstation state table lengths> is called and the
+       workstation type is not recognized by the implementation, it should
+       return error indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+<inquire dynamics of structures> with workstation type = wktype
+TEST: #SR 2
+      "If <inquire dynamics of structures> is called and the workstation
+       type is not recognized by the implementation, it should return error
+       indicator = 052."
+pass/fail depending on (returned error indicator = 52)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error indicator = 54
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Not open workstation to test if functions 216,218,220,222,225,226,229
+232,233,234,235,237,239 set 54 to error indicator. Then open workstation
+with wkid and call functions 217,219,221,223,224,227,228,230,231,236,238,240
+with wkid+1 to test if they set 54 to error indicator: ignoring function,
+the specified workstation is not open.
+
+<inquire workstation connection and type> with wkid
+TEST: #SR 3
+      "If <inquire workstation connection and type> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire view representation> with wkid
+TEST: #SR 3
+      "If <inquire view representation> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire posted structures> with wkid
+TEST: #SR 3
+      "If <inquire posted structures> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire list of polyline indices> with wkid
+TEST: #SR 3
+      "If <inquire list of polyline indices> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire polymarker representation> with wkid
+TEST: #SR 3
+      "If <inquire polymarker representation> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire list of text indices> with wkid
+TEST: #SR 3
+      "If <inquire list of text indices> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inqurie interior representation> with wkid
+TEST: #SR 3
+      "If <inquire interior representation> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire list of pattern indices> with wkid
+TEST: #SR 3
+      "If <inquire list of pattern indices> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire pattern representation> with wkid
+TEST: #SR 3
+      "If <inquire pattern representation> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire colour model> with wkid
+TEST: #SR 3
+      "If <inquire colour model> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire list of colour indices> with wkid
+TEST: #SR 3
+      "If <inquire list of colour indices> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire highlighting filter> with wkid
+TEST: #SR 3
+      "If <inquire highlighting filter> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire workstation transformation 3> with wkid
+TEST: #SR 3
+      "If <inquire workstation transformation 3> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054 or 003."
+pass/fall depending on (returned error indicator = 54)
+
+<open workstation> with wkid
+wkid1 = wkid+1
+
+<inquire list of view indices> with wkid1
+TEST: #SR 3
+      "If <inquire list of view indices> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inqurie hlhsr mode> with wkid1
+TEST: #SR 3
+      "If <inquire hlhsr mode> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inqurie display update state> witk wkid1
+TEST: #SR 3
+      "If <inquire display update state> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire polyline representation> with wkid1
+TEST: #SR 3
+      "If <inquire polyline representation> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire list of polymarker indices> with wkid1
+TEST: #SR 3
+      "If <inquire list of polymarker indices> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire polymarker representation> with wkid1
+TEST: #SR 3
+      "If <inquire polymarker representation> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire list of interior indices> with wkid1
+TEST: #SR 3
+      "If <inquire list of interior indices> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire list of edge indices> with wkid1
+TEST: #SR 3
+      "If <inquire list of edge indices> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire edge representation> with wkid1
+TEST: #SR 3
+      "If <inquire edge representation> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire colour representation> with wkid1
+TEST: #SR 3
+      "If <inquire colour representation> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire invisibility filter> with wkid1
+TEST: #SR 3
+      "If <inquire invisibility filter> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+<inquire workstation transformation> with wkid1
+TEST: #SR 3
+      "If <inquire workstation transformation> is called and the
+       specified workstation is not open, it should return error indicator
+       = 054."
+pass/fall depending on (returned error indicator = 54)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Error indicator = 57
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Check the category of all accessible workstations. For all workstations
+with category of MI, test if functions 217-219,239,240,254-259 generate
+error 57: ignoring function, the specified workstation is
+of category MI. If there is no workstation with the category of MI,
+skip the test.
+
+get number of workstations with category MI: nwkmi
+if (nwkmi = 0)
+     informational message: There is no workstation with category MI,
+                 this test is skipped.
+     return
+endif
+
+ix = (nwkmi+1)/2
+get workstation identifier: owkid(ix)
+   connection identifier:  oconid(ix)
+   workstation type:       owtype(ix)
+
+<open workstation> with owkid(ix),  oconid(ix), owtype(ix)
+
+<inquire list of view indices> with owkid(ix)
+TEST: #SR 4
+      "If <inquire list of view indices> is called and the specified
+       workstation is of category MI, it should return error indicator =
+       057."
+pass/fail depending on (returned error indicator = 57)
+
+<inquire view representation> with owkid(ix)
+TEST: #SR 4
+      "If <inquire view representation> is called and the specified
+       workstation is of category MI, it should return error indicator =
+       057."
+pass/fail depending on (returned error indicator = 57)
+
+<inquire hlhsr mode> with owkid(ix)
+TEST: #SR 4
+      "If <inquire hlhsr mode> is called and the specified workstation is
+       of category MI, it should return error indicator = 057."
+pass/fail depending on (returned error indicator = 57)
+
+<inquire workstation transformation 3> with owkid(ix)
+TEST: #SR 4
+      "If <inquire workstation transformation 3> is called and the specified
+       workstation is of category MI, it should return error indicator =
+       057."
+pass/fail depending on (returned error indicator = 57)
+
+<inquire workstation transformation 3> with owkid(ix)
+TEST: #SR 4
+      "If <inquire workstation transformation> is called and the specified
+       workstation is of category MI, it should return error indicator =
+       057."
+pass/fail depending on (returned error indicator = 57)
+
+<inquire display space size 3> with owkid(ix)
+TEST: #SR 4
+      "If <inquire display space size 3> is called and the specified
+       workstation is of category MI, it should return error indicator =
+       057."
+pass/fail depending on (returned error indicator = 57)
+
+<inquire display space size> with owkid(ix)
+TEST: #SR 4
+      "If <inquire display space size> is called and the specified
+       workstation is of category MI, it should return error indicator =
+       057."
+pass/fail depending on (returned error indicator = 57)
+
+<inquire hlhsr facilities> with owkid(ix)
+TEST: #SR 4
+      "If <inquire hlhsr facilities> is called and the specified
+       workstation is of category MI, it should return error indicator =
+       057."
+pass/fail depending on (returned error indicator = 57)
+
+<inquire view facilities> with owkid(ix)
+TEST: #SR 4
+      "If <inquire view facilities> is called and the specified
+       workstation is of category MI, it should return error indicator =
+       057."
+pass/fail depending on (returned error indicator = 57)
+
+<inquire predefined view representation> with owkid(ix)
+TEST: #SR 4
+      "If <inquire predefined view representation> is called and the specified
+       workstation is of category MI, it should return error indicator =
+       057."
+pass/fail depending on (returned error indicator = 57)
+
+<close workstation> with owkid(ix)
+
+next ix
+
+END PROGRAM 3
+
+
+PROGRAM 4: Error indicator = 59
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Check the category of all accessible workstations. For all workstations
+with category of neither OUTPUT, OUTIN nor MO, test if functions 220-222,
+225-227, 229,230,232,234,236,238,259,261,262,265,266,268,270,273,274,
+276,277,279,282-286 generate error 59: ignoring function, the specified
+workstation does not have output capability. If there is no workstation
+with the category of neither OUTPUT, OUTIN nor MO, skip the test.
+
+get number of workstations with no output capability: nwkno
+if (nwkno = 0) then
+     call INMSG('There is no workstation with no output capabilities,
+                 this test is skipped.')
+     return
+else
+     for ix = 1, nwkno
+         get  workstation identifier: owkid(ix)
+              connection identifier:  oconid(ix)
+              workstation type:       owtype(ix)
+     next ix
+endif
+
+for ix = 1, nwkno
+
+<open workstation> with owkid(ix),  oconid(ix), owtype(ix)
+
+<inquire posted structures> with owkid(ix)
+TEST: #SR 5
+      "If <inquire posted structures> is called and the specified workstation
+       does not have output capabilities, it should return error indicator =
+       059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire display update state> with owkid(ix)
+TEST: #SR 5
+      "If <inquire display update state> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire list of polyline indices> with owkid(ix)
+TEST: #SR 5
+      "If <inquire list of polyline indices> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire polymarker representation> with owkid(ix)
+TEST: #SR 5
+      "If <inquire polymarker representation> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire list of text indices> with owkid(ix)
+TEST: #SR 5
+      "If <inquire list of text indices> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire text representation> with owkid(ix)
+TEST: #SR 5
+      "If <inquire text representation> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire interior representation> with owkid(ix)
+TEST: #SR 5
+      "If <inquire interior representation> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire list of edge indices> with owkid(ix)
+TEST: #SR 5
+      "If <inquire list of edge indices> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inqurie list of pattern representation> with owkid(ix)
+TEST: #SR 5
+      "If <inquire list of pattern indices> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire colour model> with owkid(ix)
+TEST: #SR 5
+      "If <inquire colour model> is called and the specified workstation
+       does not have output capabilities, it should return error indicator =
+       059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire colour representation> with owkid(ix)
+TEST: #SR 5
+      "If <inquire colour representation> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire invisibility filter> with owkid(id)
+TEST: #SR 5
+      "If <inquire invisibility filter> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire workstation classification> with owkid(ix)
+TEST: #SR 5
+      "If <inquire workstation classification> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire default display update state> with owkid(ix)
+TEST: #SR 5
+      "If <inquire default display update state> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire polyline facilities> with owkid(ix)
+TEST: #SR 5
+      "If <inquire polyline facilities> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire predefined polymarker representation> with owkid(ix)
+TEST: #SR 5
+      "If <inquire predefined polymarker representation> is called and
+       the specified workstation does not have output capabilities, it
+       should return error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inqurie text facilities> with owkid(ix)
+TEST: #SR 5
+      "If <inquire text facilities> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire annotation facilities> with owkid(ix)
+TEST: #SR 5
+      "If <inquire annotation facilities> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire interior facilities> with owkid(ix)
+TEST: #SR 5
+      "If <inquire interior facilities> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire predefined edge representation> with owkid(ix)
+TEST: #SR 5
+      "If <inquire predefined edge representation> is called and the
+       specified workstation does not have output capabilities, it should
+       return error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire colour model facilities> with owkid(ix)
+TEST: #SR 5
+      "If <inquire colour model facilities> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire colour facilities> with owkid(ix)
+TEST: #SR 5
+      "If <inquire colour facilities> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire list of available generalized drawing primitives 3> with owkid(ix)
+TEST: #SR 5
+      "If <inquire list of available generalized drawing primitives 3> is
+       called and the specified workstation does not have output
+       capabilities, it should return error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire generalized drawing primitives> with owkid(ix)
+TEST: #SR 5
+      "If <inquire generalized drawing primitive> is called and the specified
+       workstation does not have output capabilities, it should return
+       error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire list of available generalized structure elements> with owkid(ix)
+TEST: #SR 5
+      "If <inquire list of available generalized structure elements> is
+       called and the specified workstation does not have output capabilities,
+       it should return error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire number of display priorities supported> with owkid(ix)
+TEST: #SR 5
+      "If <inquire number of display priorities supported> is called and
+       the specified workstation does not have output capabilities, it
+       should return error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire workstation state table lengths> with owkid(ix)
+TEST: #SR 5
+      "If <inquire workstation state table lengths> is called and the
+       specified workstation does not have output capabilities, it should
+       return error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<inquire dynamics of structures> with owkid(ix)
+TEST: #SR 5
+      "If <inquire dynamics of structures> is called and the
+       specified workstation does not have output capabilities, it should
+       return error indicator = 059."
+pass/fail depending on (returned error indicator = 59)
+
+<close workstation> owkod(ix)
+
+next ix
+
+END PROGRAM 4
+
+
+

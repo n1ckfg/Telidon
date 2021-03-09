@@ -1,0 +1,301 @@
+TITLE: Characterization of workstations
+
+
+MODULE#: 05.01.02
+
+
+DESCRIPTION: This module tests the functions which may be used to
+determine the essential characteristics of workstations.
+Workstation parameters (e.g., number of accessible workstations,
+workstation identifier, connection identifier, and workstation
+type) are taken from the PVT configuration file.
+
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  If a generic workstation type is used to inquire data from
+a Workstation Description Table, then either the requested data
+or error 51 is returned.
+#F 253-299
+#D 2.2.1 6
+#S 4.6.1/67/2 4.6.2/68/7
+#T P01/2
+
+SR2.  The valid categories for any workstation type are: OUTPUT,
+INPUT, OUTIN, MO, or MI.
+#F 253
+#D 2.2.1 5.3 6.1 6.2
+#S 4.6.1/68/1
+#T P01/2 P01/7 P01/9
+
+SR3.  <Inquire workstation category> returns the workstation
+category.
+#F 253
+#D 6.2
+#S n
+#T P01/2 P01/7 P01/9
+
+SR4.  There must be at least one workstation of category OUTIN.
+#F 204 253
+#D 2.2.1 6.2
+#S 4.14/114/2
+#T P01/9
+
+SR5.  <Inquire list of available workstation types> returns the
+'list of available workstation types'.
+#F 204
+#D 2.2
+#S n
+#T P01/1 P01/2 P01/3 P01/4
+
+SR6.  The 'list of available workstation types' contains all
+supported generic workstation types and nothing else.
+#F 3 204
+#D 2.2 6.1
+#S 4.6.2/68/7
+#T P01/3 P01/4
+#C These types must be generic, since they are used to open
+workstations.
+
+SR7.  The number of available workstation types is at least one.
+#F 204
+#D 2.1
+#S 6.3/309/1
+#T P01/1
+
+SR8.  <Inquire workstation connection and type> returns the
+connection identifier and workstation type of the specific
+device.
+#F 216
+#D 5.2 5.3
+#S n
+#T P01/4 P01/5 P01/6
+
+SR9.  <Inquire workstation classification> returns the
+workstation classification as either VECTOR, RASTER, or OTHER.
+#F 259
+#D 6.7
+#S n
+#T P01/8
+
+SR10.  Each workstation of category OUTPUT or OUTIN has a
+workstation classification.
+#F 253 259
+#D 6.2 6.7
+#S n
+#T P01/8
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+  204: pqewk   <inquire list of available workstation types>
+  216: pqwkc   <inquire workstation connection and type>
+  253: pqwkca  <inquire workstation category>
+  254: pqdsp3  <inquire display space size 3>
+  255: pqdsp   <inquire display space size>
+  256: pqhrif  <inquire hlhsr facilities>
+  257: pqvwf   <inquire view facilities>
+  258: pqpvwr  <inquire predefined view representation>
+  259: pqwkcl  <inquire workstation classification>
+  260: pqdswa  <inquire dynamics of workstation attributes>
+  261: pqddus  <inquire default display update state>
+  262: pqplf   <inquire polyline facilities>
+  263: pqpplr  <inquire predefined polyline representation>
+  264: pqpmf   <inquire polymarker facilities>
+  265: pqppmr  <inquire predefined polymarker representation>
+  266: pqtxf   <inquire text facilities>
+  267: pqptxr  <inquire predefined text representation>
+  268: pqanf   <inquire annotation facilities>
+  269: pqtxx   <inquire text extent>
+  270: pqif    <inquire interior facilities>
+  271: pqpir   <inquire predefined interior representation>
+  272: pqedf   <inquire edge facilities>
+  273: pqpedr  <inquire predefined edge representation>
+  274: pqpaf   <inquire pattern facilities>
+  275: pqppar  <inquire predefined pattern representation>
+  276: pqcmdf  <inquire colour model facilities>
+  277: pqcf    <inquire colour facilities>
+  278: pqpcr   <inquire predefined colour representation>
+  279: pqegd3  <inquire list of available generalized drawing primitives 3>
+  280: pqegdp  <inquire list of available generalized drawing primitives>
+  281: pqgdp3  <inquire generalized drawing primitive 3>
+  282: pqgdp   <inquire generalized drawing primitive>
+  283: pqegse  <inquire list of available generalized structure elements>
+  284: pqdp    <inquire number of display priorities supported>
+  285: pqwksl  <inquire workstation state table lengths>
+  286: pqdstr  <inquire dynamics of structures>
+  287: pqli    <inquire number of available logical input devices>
+  288: pqdlc3  <inquire default locator device data 3>
+  289: pqdlc   <inquire default locator device data>
+  290: pqdsk3  <inquire default stroke device data 3>
+  291: pqdsk   <inquire default stroke device data>
+  292: pqdvl3  <inquire default valuator device data 3>
+  293: pqdvl   <inquire default valuator device data>
+  294: pqdch3  <inquire default choice device data 3>
+  295: pqdch   <inquire default choice device data>
+  296: pqdpk3  <inquire default pick device data 3>
+  297: pqdpk   <inquire default pick device data>
+  298: pqdst3  <inquire default string device data 3>
+  299: pqdst   <inquire default string device data>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.1  ...  number_of_available_workstation_types
+  2.2  ...  list_of_available_workstation_types
+  2.2.1  ...  workstation_type
+  5  ...  workstation_state_list
+  5.2  ...  connection_identifier
+  5.3  ...  workstation_type
+  6  ...  workstation_description_table
+  6.1  ...  workstation_type
+  6.2  ...  workstation_category
+  6.7  ...  workstation_classification
+ 
+SEMANTIC CROSS-REFERENCES:
+  04.02.05.03/SR24 04.02.05.03/SR25
+ 
+
+
+PROGRAM 1: Characteristics of workstations
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 5 7
+      "The number of available workstation types should be
+       reported as at least 1."
+
+<inquire list of available workstation types> to determine
+   laty   = list of available types
+if (inquire is in error or laty is empty) then
+   fail
+   goto end_gtype
+else
+   pass
+endif
+
+TEST: #SR 1 2 3 5
+      "The result of <inquire workstation category> using a
+       generic workstation type should be either a valid category
+       or error 51."
+for each gtype = generic type in laty
+    <inquire workstation category> using gtype to determine
+       wkcat = workstation category
+    if ((errind = 51) or
+        (errind = 0 and wkcat = OUTPUT or INPUT or OUTIN or MO or MI)) then
+       OK so far - do nothing
+    else
+       fail
+       msg about bad gtype
+       goto end_gtype
+    endif
+next gtype
+pass
+
+end_gtype:
+
+laccwk = list of accessible workstations
+   owkid  = workstation identifier for iwk'th workstation in laccwk
+   oconid = connection identifier for iwk'th workstation in laccwk
+   owtype = workstation type for iwk'th workstation in laccwk
+
+typeok = true  = list of available workstation types
+                 contains all generic types
+gnonly = true  = list of available workstation types
+                 contains only generic types
+conok  = true  = connection identifiers ok
+catok  = true  = <inquire workstation category> returns a
+                 valid category
+inqok  = true  = <inquire workstation connection and type>
+                 works
+clasok = true  = workstation classifications ok
+gotone = false = got one OUTIN workstation
+
+for each iwk in laccwk
+   if (owtype(iwk) not in laty) then
+      typeok = false
+   endif
+
+   <open workstation> owkid(iwk)
+
+   <inquire workstation connection and type> to determine
+      specon = connection identifier
+      specwt = specific workstation type
+
+   if (inquire does not report error) then
+      if (specon not= oconid(iwk)) then
+         conok = false
+         message about operator supplied oconid(iwk) not= specon
+      endif
+
+      if (specwt contained in laty) then
+         gnonly = false
+      endif
+   else
+      inqok = false
+   endif
+
+   <inquire workstation category> using specwt to determine
+      specat = workstation category
+   if (inquire reports error or
+       specat not one of OUTPUT, INPUT, OUTIN, MO, or MI) then
+      catok = false
+   endif
+
+   if (specat = OUTPUT or OUTIN) then
+      <inquire workstation classification> to determine
+         wclass = workstation classification
+      if (inquire reports error or
+          wclass not one of VECTOR, RASTER, or OTHER) then
+         clasok = false
+      endif
+   endif
+
+   if (specat = OUTIN) then
+      gotone = true
+   endif
+
+   <close workstation> owkid(iwk)
+next iwk
+
+TEST: #SR 5 6
+      "The generic workstation type of each accessible workstation
+       should be in the list of available workstation types."
+pass/fail depending on (typeok)
+
+TEST: #SR 5 6 8
+      "The list of available workstation types should contain
+       only generic types."
+pass/fail depending on (gnonly)
+
+TEST: #SR 8
+      "<Inquire workstation connection and type> should report the
+       same connection identifier as used in <open workstation>."
+pass/fail depending on (conok)
+
+TEST: #SR 8
+      "<Inquire workstation connection and type> should report a
+       connection identifier and specific type for any open
+       workstation."
+pass/fail depending on (inqok)
+
+TEST: #SR 2 3
+      "The reported category for any workstation type should be
+       either OUTPUT, INPUT, OUTIN, MO, or MI."
+pass/fail depending on (catok)
+
+TEST: #SR 9 10
+      "The reported workstation classification for workstations of
+       category OUTPUT or OUTIN should be either VECTOR, RASTER, or
+       OTHER."
+pass/fail depending on (clasok)
+
+TEST: #SR 2 3 4
+      "There should be at least one workstation of category OUTIN."
+pass/fail depending on (gotone)
+
+END PROGRAM 1

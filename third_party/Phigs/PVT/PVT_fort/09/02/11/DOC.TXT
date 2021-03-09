@@ -1,0 +1,647 @@
+TITLE: C binding specific error indicators
+
+MODULE#: 09.02.11
+
+DESCRIPTION: This module tests if some functions generate C binding
+specific error indicators under certain incorrect conditions.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  If functions <inquire list of available workstation types>-<inquire
+modelling clipping facilities>,<inquire set of open workstation>,<inquire
+structure identifiers>,<inquire all conflicting structures>,<inquire
+conflictiing structures in network>,<inquire list of view indices>,<inquire
+posted structures>, <inquire list of polyline indices>,<inquire list of
+polymarker indices>,<inquire list of text indices>,<inquire list of interior
+indices>,<inquire list of edge indices>,<inquire list of pattern indices>,
+<inquire list of colour indices>,<inquire hlhsr identifier facilities>,
+<inquire hlhsr mode facilities>,<inquire polyline facilities>,<inquire
+polymarker facilities>,<inquire text facilities>,<inquire annotation
+facilities>,<inquire interior facilities>,<inquire edge facilities>,<inquire
+colour model facilties>,<inquire list of available generalized drawing
+primitives 3>,<inquire list of available generalized drawing primitives>,
+<inquire list of available generalized structure elements>,<inquire set of
+workstations to which posted>,<incremental spatial search 3>,<incremental
+spatial search> are called, and the specified start index is less than zero
+or larger than the last element in the implementation list, then error 2200
+is generated and the function is ignored.
+#F 204-207 209 210 213 214 217 220 222 224 226 228 230 232 235 256 262
+#F 264 266 268 270 272 276 279 280 283 300 311 312
+#D
+#S C/3.11.3/8/1 4.11/108/1 5.12.1/232/1
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P01/18 P01/19 P01/20
+
+SR2.  If functions <inquire list of available workstation types>-<inquire
+modelling clipping facilities>,<inquire set of open workstation>,<inquire
+structure identifiers>,<inquire all conflicting structures>,<inquire
+conflictiing structures in network>,<inquire list of view indices>,<inquire
+posted structures>, <inquire list of polyline indices>,<inquire list of
+polymarker indices>,<inquire list of text indices>,<inquire list of interior
+indices>,<inquire list of edge indices>,<inquire list of pattern indices>,
+<inquire list of colour indices>,<inquire hlhsr identifier facilities>,
+<inquire hlhsr mode facilities>,<inquire polyline facilities>,<inquire
+polymarker facilities>,<inquire text facilities>,<inquire annotation
+facilities>,<inquire interior facilities>,<inquire edge facilities>,<inquire
+colour model facilties>,<inquire list of available generalized drawing
+primitives 3>,<inquire list of available generalized drawing primitives>,
+<inquire list of available generalized structure elements>,<inquire set of
+workstations to which posted>,<incremental spatial search 3>,<incremental
+spatial search> are called, and the specified length of application's list
+is negative, then error 2201 is generated and the function is ignored.
+#F 204-207 209 210 213 214 217 220 222 224 226 228 230 232 235 256 262
+#F 264 266 268 270 272 276 279 280 283 300 311 312
+#D
+#S C/3.11.3/8/1 4.11/108/1 5.12.1/232/1
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11
+   P02/12 P02/13 P02/14 P02/15 P02/16
+
+SR3.  If functions <inquire conflicting structures in network>, <inquire
+view representation>, <inquire polyline representation>, <inquire polymarker
+representation>, <inquire text representation>, <inquire interior
+representation>, <inquire edge representation>, <inquire pattern
+representation>, <inqurie colour representation>, <inquire locator device state
+3>, <inquire locator device state>, <inqurie stroke device state 3>, <inquire
+stroke device state>, <inquire pick device state 3>, <inquire pick device
+state>, <inquire text extent>, <inquire paths to ancestors>-<incremental
+spatial search> are called, and enumeration type is out of range, then error
+indicator is set to 2202.
+#F 214 218 223 225 227 229 231 233 236 241 242 243 244 249 250 269 308-312
+#D
+#S C/3.11.3/8/1 4.11/108/1 5.12.1/232/1
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  204: pqewk   <inquire list of available workstation types>
+  205: pqphf   <inquire phigs facilities>
+  206: pqgsef  <inquire generalized structure element facilities>
+  207: pqmclf  <inquire modelling clipping facilities>
+  209: pqopwk  <inquire set of open workstations>
+  210: pqsid   <inquire structure identifiers>
+  213: pqcst   <inquire all conflicting structures>
+  214: pqcstn  <inquire conflicting structures in network>
+  217: pqevwi  <inquire list of view indices>
+  218: pqvwr   <inquire view representation>
+  220: pqpost  <inquire posted structures>
+  222: pqepli  <inquire list of polyline indices>
+  223: pqplr   <inquire polyline representation>
+  224: pqepmi  <inquire list of polymarker indices>
+  225: pqpmr   <inquire polymarker representation>
+  226: pqetxi  <inquire list of text indices>
+  227: pqtxr   <inquire text representation>
+  228: pqeii   <inquire list of interior indices>
+  229: pqir    <inquire interior representation>
+  230: pqeedi  <inquire list of edge indices>
+  231: pqedr   <inquire edge representation>
+  232: pqepai  <inquire list of pattern indices>
+  233: pqpar   <inquire pattern representation>
+  235: pqeci   <inquire list of colour indices>
+  236: pqcr    <inquire colour representation>
+  241: pqlcs3  <inquire locator device state 3>
+  242: pqlcs   <inquire locator device state>
+  243: pqsks3  <inquire stroke device state 3>
+  244: pqsks   <inquire stroke device state>
+  249: pqpks3  <inquire pick device state 3>
+  250: pqpks   <inquire pick device state>
+  256: pqhrif  <inquire hlhsr facilities>
+  262: pqplf   <inquire polyline facilities>
+  264: pqpmf   <inquire polymarker facilities>
+  266: pqtxf   <inquire text facilities>
+  268: pqanf   <inquire annotation facilities>
+  269: pqtxx   <inquire text extent>
+  270: pqif    <inquire interior facilities>
+  272: pqedf   <inquire edge facilities>
+  276: pqcmdf  <inquire colour model facilities>
+  279: pqegd3  <inquire list of available generalized drawing primitives 3>
+  280: pqegdp  <inquire list of available generalized drawing primitives>
+  283: pqegse  <inquire list of available generalized structure elements>
+  300: pqwkpo  <inquire set of workstations to which posted>
+  308: pqpan   <inquire paths to ancestors>
+  309: pqpde   <inquire paths to descendants>
+  310: pels    <element search>
+  311: piss3   <incremental spatial search 3>
+  312: piss    <incremental spatial search>
+ 
+  Data Structures ---
+ 
+
+
+PROGRAM 1: Error indicator = 2200
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+<open workstation>
+
+Use <inquire list of available workstation types> to get:
+   number = number of available workstation types
+if (number <> 0) then
+<inquire list of available workstation types> with start index = number
+TEST: #SR 1
+      "If <inquire list of available workstation types> is called and start
+       index is out of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire phigs facilities> to get:
+   number = number of available character sets
+if (number <> 0) then
+<inquire phigs facilities> with start index = -1
+TEST: #SR 1
+      "If <inquire phigs facilities> is called and start index is out of
+       range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire modelling clipping facilities> to get:
+   number = number of modelling clipping operators
+if (number <> 0) then
+<inquire modelling clipping facilities> with start index = number
+TEST: #SR 1
+      "If <inquire modelling clipping facilities> is called and start index
+       is out of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+<inquire set of open workstations> with start index = -1
+TEST: #SR 1
+      "If <inquire set of open workstations> is called and start index
+       is out of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+
+<open structure> 100
+<text>
+<execute structure> 101
+<close structure>
+<open structure> 101
+<text>
+<close structure>
+<inquire structure identifiers> with start index = 3
+TEST: #SR 1
+      "If <inquire structure identifiers> is called and start index is
+       out of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+
+<open archive file> 11
+
+<archive all structures>
+Use <inquire all conflicting structures> to get:
+    number = number of structure identifiers in list
+if (number <> 0) then
+<inquire all conflicting structures> with start index requested = number
+TEST: #SR 1
+      "If <inquire all conflicting structures> is called and start index
+       is out of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+<close archive file> 11
+
+Use <inquire list of view indices> to get:
+    number = number of view bundle table entries
+if (number <> 0) then
+<inqurie list of view indices> with start index = number
+TEST: #SR 1
+      "If <inquire list of view indices> is called and start index is out
+       of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+<post structure> 100
+<inquire posted structures> with start index = 1
+TEST: #SR 1
+      "If <inquire posted structures> is called and start index is out of
+       range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+
+Use <inquire list of polyline indices> to get:
+    number = number of polyline bundle table entries
+if (number <> 0) then
+<inqurie list of polyline indices> with start index = number
+TEST: #SR 1
+      "If <inquire list of polyline indices> is called and start index
+       is out of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire list of text indices> to get:
+    number = number of text bundle table entries
+if (number <> 0) then
+<inquire list of text indices> with start index = number
+TEST: #SR 1
+      "If <inquire list of text indices> is called and start index is out
+       of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire list of edge indices> to get:
+    number = number of edge bundle table entries
+if (number <> 0) then
+<inquire list of edge indices> with start index = -2
+TEST: #SR 1
+      "If <inquire list of edge indices> is called and start index is out
+       of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire list of colour indices> to get:
+    number = number of colour bundle table entries
+if (number <> 0) then
+<inquire list of colour indices> with start index = number
+TEST: #SR 1
+      "If <inquire list of colour indices> is called and start index is out
+       of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire hlhsr (identifier) facilities> to get:
+    number = number of HLHSR identifiers
+if (number <> 0) then
+<inquire hlhsr (identifier) facilities> with start index = number
+TEST: #SR 1
+      "If <inquire hlhsr facilities> is called and start index
+       is out of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire polyline facilities> to get:
+    number = number of available linetypes
+if (number <> 0) then
+<inquire polyline facilities> with start index = -1
+TEST: #SR 1
+      "If <inquire polyline facilities> is called and start index is out
+       of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire annotation facilities> to get:
+    number = number of available annotation styles
+if (number <> 0) then
+<inquire annotation facilities> with start index = number
+TEST: #SR 1
+      "If <inquire annotation facilities> is called and start index is
+       out of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire interior facilities> to get:
+    number = number of available hatch styles
+if (number <> 0) then
+<inquire interior facilties> with start index = -1
+TEST: #SR 1
+      "If <inquire interior facilities> is called and start index is out
+       of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire colour model facilities> to get:
+    number = number of available colour models
+if (number <> 0) then
+<inquire colour model facilities> with start index = number
+TEST: #SR 1
+      "If <inquire colour model facilities> is called and start index
+       is out of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire list of available generalized drawing primitives> to get:
+    number = number of available generalized drawing primitives
+if (number <> 0 ) then
+<inquire list of available generalized drawing primitives>
+    with start index = number
+TEST: #SR 1
+      "If <inquire list of available generalized drawing primitives> is called and
+       start index is out of range, it should return error indicator =
+       <2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <inquire set of workstations to which posted> to get:
+    number = number of workstations to which the structure is posted
+if (number <> 0) then
+<inquire set of workstations to which posted> with start index = number
+TEST: #SR 1
+      "If <inquire set of workstations to which posted> is called and start
+       index is out of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+endif
+
+Use <incremental spatial search> to get:
+   number = number of found paths
+if (number <> 0) then
+<incremental spatial search> with start index = number
+TEST: #SR 1
+      "If <incremental spatial search> is called and start index is out
+       of range, it should return error indicator = 2200."
+pass/fail depending on (returned error indicator = 2200)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error indicator = 2201
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+<open workstation>
+
+Use <inquire list of available workstation types> to get:
+    number = number of available workstation types
+If (number <> 0) then
+<inquire list of available workstation types>
+    with length of application list = -1
+TEST: #SR 2
+      "If <inquire list of available workstation types> is called and length
+       of application list is negative, it should return error indicator
+       = 2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire phigs facilities> to get:
+    number = number of available character sets
+If (number <> 0) then
+<inquire phigs facilities> with length of application list = -2
+TEST: #SR 2
+      "If <inquire phigs facilities> is called and length of application
+       list is negative, it should return error indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire generalized structure element facilities> to get:
+    number = number of available GSEs
+If (number  <> 0) then
+<inquire generalized structure element facilities>
+    with length of application list = -1
+TEST: #SR 2
+      "If <inquire generalized structure element facilities> is called and
+       length of application list is negative,
+       it should return error indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire set of open workstation> to get:
+    number = number of open workstations
+If (number <> 0) then
+<inquire set of open workstations> with length of application list = -3
+TEST: #SR 2
+      "If <inquire set of open workstations> is called and
+       length of application list is negative, it should return error
+       indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+<open structure> 100
+<text>
+<execute structure> 101
+<close structure>
+<open structure> 101
+<text>
+<close structure>
+<inquire structure identifiers> with length of application list = -10
+TEST: #SR 2
+      "If <inquire structure identifiers> is called and length of application
+       list is negative, it should return error indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+
+<open archive file> 11
+<archive all structure>
+<inquire conflicting structures in network>
+    with length of application list = -1
+TEST: #SR 2
+      "If <inquire conflicting structures in network> is called and length of
+       application list is negative,
+       it should return error indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+
+<close archive file> 11
+
+Use <inquire list of polymarker indices> to get:
+    number = number of polymarker bundle table entries
+If (number <> 0) then
+<inqurie list of polymarker indices> with length of application list = -1
+TEST: #SR 2
+      "If <inquire list of polymarker indices> is called and length of
+       application list is negative, it should return error indicator =
+       <2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire list of interior indices> to get:
+    number = number of interior bundle table entries
+If (number <> 0) then
+<inquire list of interior indices> with length of application list = -1
+TEST: #SR 2
+      "If <inquire list of interior indices> is called and length of
+       application list is negative, it should return error indicator =
+       <2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire list of pattern indices> to get:
+    number = number of pattern table entries
+If (number <> 0) then
+<inquire list of pattern indices> with length of application list = -1
+TEST: #SR 2
+      "If <inquire list of pattern indices> is called and length of
+       application list is negative, it should return error indicator =
+       <2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire list of colour indices> to get:
+    number = number of colour table entries
+If (number <> 0) then
+<inquire list of colour indices> with length of application list = -1
+TEST: #SR 2
+      "If <inquire list of colour indices> is called and length of
+       application list is negative, it should return error indicator =
+       <2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire polyline facilities> to get:
+    number = number of available linetypes
+If (number <> 0) then
+<inquire polyline facilities> with length of application list = -6
+TEST: #SR 2
+      "If <inquire polyline facilities> is called and length of application
+       list is negative, it should return error indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire text facilities> to get:
+    number = number of text font and precision pairs
+If (number <> 0) then
+<inquire text facilities> with length of application list = -1
+TEST: #SR 2
+      "If <inquire text facilities> is called and length of application
+       list is negative, it should return error indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire edge facilities> to get:
+    number = number of available edgetypes
+If <number <> 0) then
+<inquire edge facilities> with length of application list = -2
+TEST: #SR 2
+      "If <inquire edge facilities> is called and length of application
+       list is negative, it should return error indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire list of available generalized drawing primitives 3> to get:
+    number of number of available 3D generalized drawing primitives
+If (number <> 0 ) then
+<inquire list of available generalized drawing primitives 3>
+    with length of application list = -1
+TEST: #SR 2
+      "If <inquire list of available generalized drawing primitives 3>
+       is called and length of application list is negative, it should
+       return error indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+Use <inquire list of available generalized structure elements> to get:
+    number = number of sets of attributes used
+If (number <> 0) then
+<inquire list of available generalized structure elements>
+    with length of application list = -1
+TEST: #SR 2
+      "If <inquire list of available generalized structure elements> is called
+       and length of application list is negative, it should return error
+       indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+endif
+
+<open structure> 301
+<text>
+<execute structure> 302
+<close structure>
+<open structure>
+<ppm> with x,y,z cooridates=1.0,1.0,1.0
+<close structure>
+
+<incremental spatial search> with length of application list = -1,
+                                  reference point=(0.9,0.9,0.9), distance=0.15
+TEST: #SR 2
+      "If <incremental spatial search> is called and length of application
+       list is negative, it should return error indicator = 2201."
+pass/fail depending on (returned error indicator = 2201)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Error indicator = 2202
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+<open workstation>
+
+<open archive file> 11
+<open structure> 100
+<text>
+<execute structure> 101
+<close structure>
+<open structure> 101
+<text>
+<close structure>
+
+<inquire conflicting structures in network> with structure network source=2
+TEST: #SR 3
+      "If <inquire conflicting structures in network> is called and specified
+       enumeration type is out of range, it should return error indicator
+       = 2202."
+pass/fail depending on (returned error indicator = 2202)
+
+<inquire polyline representation> with type of returned values = 2
+TEST: #SR 3
+      "If <inquire polyline representation> is called and specified
+       enumeration type is out of range, it should return error indicator
+       = 2202."
+pass/fail depending on (returned error indicator = 2202)
+
+<inquie edge representation> with type of returned values = -1
+TEST: #SR 3
+      "If <inquire edge representation> is called and specified
+       enumeration type is out of range, it should return error indicator
+       = 2202."
+pass/fail depending on (returned error indicator = 2202)
+
+<inquire text extent> with text path = 4
+TEST: #SR 3
+      "If <inquire text extent> is called and specified
+       enumeration type is out of range, it should return error indicator
+       = 2202."
+pass/fail depending on (returned error indicator = 2202)
+
+<inquire text extent> with text alignment horizontal = 4
+TEST: #SR 3
+      "If <inquire text extent> is called and specified
+       enumeration type is out of range, it should return error indicator
+       = 2202."
+pass/fail depending on (returned error indicator = 2202)
+
+<inquire text extent> with text alignment vertical =  6
+TEST: #SR 3
+      "If <inquire text extent> is called and specified
+       enumeration type is out of range, it should return error indicator
+       = 2202."
+pass/fail depending on (returned error indicator = 2202)
+
+
+<open structure> 200
+<text>
+<execute structure> 201
+<close structure>
+<open structure> 201
+<text>
+<execute structure> 202
+<close sturcture>
+<open structure> 202
+<text>
+<close structure>
+
+<inquire paths to descendants> with path order = 2
+TEST: #SR 3
+      "If <inquire paths to descendants> is called and specified
+       enumeration type is out of range, it should return error indicator
+       = 2202."
+pass/fail depending on (returned error indicator = 2202)
+
+<element search> with search direction = 2
+TEST: #SR 3
+      "If <element search> is called and specified
+       enumeration type is out of range, it should return error indicator
+       = 2202."
+pass/fail depending on (returned error indicator = 2202)
+
+<open structure> 301
+<execute structure> 302
+<close structure>
+<open structure> 302
+<text>
+<close structure>
+
+<incremental spatial search 3> with modelling clip flag = 2
+TEST: #SR 3
+      "If <incremental spatial search 3> is called and specified
+       enumeration type is out of range, it should return error indicator
+       = 2202."
+pass/fail depending on (returned error indicator = 2202
+
+<close archive file>
+
+END PROGRAM 3
+

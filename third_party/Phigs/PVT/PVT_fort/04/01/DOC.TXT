@@ -1,0 +1,153 @@
+TITLE: Primitives
+
+MODULE#: 04.01
+
+DESCRIPTION: This module tests that simple 2D polymarkers are
+located correctly with respect to the display surface.  This is
+done so that these polymarkers can be used to measure the correct
+placement of the other primitives in the tests of other modules.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  The physical (DC) location of a <polymarker> primitive is
+determined by the following: workstation transformation x
+selected viewing transformation x composite modelling
+transformation x modelling coordinates of the primitive.
+#F 12
+#D 3.9 3.12.1 3.12.2 5.4.2 5.6
+#S 4.5.1/34/1 4.5.2/40/1 4.5.13/64/4 4.7.2/77/3 4.7.3/80/1
+#T P01/1 P01/2
+#S 4.7.6/90/5ff
+
+SR2.  Primitives may appear anywhere within the display space,
+and nowhere outside it.
+#F 255
+#D 6.4.1
+#S 4.6.1/67/2 4.6.1/67/3
+#T P01/2
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   12: ppm     <polymarker>
+  255: pqdsp   <inquire display space size>
+ 
+  Data Structures ---
+  3  ...  phigs_traversal_state_list
+  3.9  ...  current_view_identifier
+  3.12 ...  current_modelling_attributes
+  3.12.1  ...  current_global_modelling_transformation
+  3.12.2  ...  current_local_modelling_transformation
+  5  ...  workstation_state_list
+  5.4  ...  view_table
+  5.4.2  ...  view_table_ordered_by_input_priority
+  5.6  ...  workstation_transformation_entry
+  6  ...  workstation_description_table
+  6.4  ...  maximum_display_space_size
+  6.4.1  ...  in_device_coordinates
+ 
+
+
+PROGRAM 1: 2D polymarker and display space
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+LOCATION OF 2D POLYMARKER: The five polymarker types are
+displayed, one at a time.  For each, measure and report the
+distance in centimeters from the left and top edges of the
+display space to the polymarker.
+
+SIZE OF DISPLAY SPACE: There should be several polymarkers
+displayed very close to each of the four edges of the entire
+display space.  If the display space is not correctly delineated,
+enter zero and explain the problem.   If the display space
+appears to be correctly delineated, enter a list of four numbers
+indicating how many markers are visible along its left, right,
+bottom, and top edges, respectively.
+
+DESIGN:
+
+For all test cases:
+set polymarker size to 1.0mm.
+set view for entire display space
+
+TEST: #SR 1
+      "The location of 2D polymarkers should be determined by
+       their associated modelling coordinates as modified by the
+       transformation pipeline."
+
+1,syxrat = x,y WC coordinates of right,top side of
+           entire display space
+draw outline of display space using polyline
+
+rside = WC coordinate of right side of empty display space
+if (dialogue area at right) then
+   rside = left edge of dialogue area
+else
+   rside = 1
+endif
+
+bside = WC coordinate of bottom side of empty display space
+if (dialogue area at bottom) then
+   bside = top edge of dialogue area
+else
+   bside = 0
+endif
+
+lside = WC coordinate of left side of empty display space = 0
+tside = WC coordinate of top side of empty display space = syxrat
+
+for ix = all 5 polymarker types
+    xloc = random from 0.1 to 0.9 between lside and rside
+    yloc = random from 0.1 to 0.9 between bside and tside
+    draw marker of type ix at xloc,yloc
+    OPQA/LOCATION OF 2D POLYMARKER: Enter the distance, in
+       centimeters, from the left edge of the display space to
+       the center of the polymarker.
+    xop = operator response
+    OPQA/LOCATION OF 2D POLYMARKER: Enter the distance, in
+       centimeters, from the top edge of the display space to
+       the center of the polymarker.
+    yop = operator response
+
+    if (xop,yop app= xloc,yloc (in cm.)) then
+       OK so far
+    else
+       fail
+       goto end_loc
+    endif
+next ix
+pass
+
+end_loc:
+
+TEST: #SR 1 2
+      "All polymarkers drawn within the display space should be
+       visible, and all others should not be visible."
+
+set marker type to asterisk
+set polymarker color to 2 for enhanced visibility
+ran4 = ensure each side has a different number of markers
+     = set of 4 random numbers between 3 and 8
+
+for ix = left,right,bottom,top
+   ran12 = randomize 12 locations along each edge
+   nmark = number of markers to be drawn = ran4(ix)
+   for jx = 1 to 12
+      if (jx <= nmark) then
+         draw marker just inside edge #ix at ran12(jx)
+      else
+         draw marker just outside edge #ix at ran12(jx)
+      endif
+   next jx
+next side
+
+OPQA/SIZE OF DISPLAY SPACE: Enter four numbers indicating how many
+  markers are visible along the left, right, bottom, and top edges
+  respectively of the entire display space.
+pass/fail depending on
+  (operator returns the four correct nmark values for each side)
+
+END PROGRAM 1

@@ -1,0 +1,655 @@
+TITLE: FORTRAN binding specific error indicators
+
+MODULE#: 09.02.10
+
+DESCRIPTION: This module tests if some functions generate FORTRAN binding
+specific error indicators under certain conditions.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  If functions <inquire conflicting structures in network>,
+<inquire view representation>, <inquire polyline representation>,
+<inquire polymarker representation>, <inquire text representation>,
+<inquire interior representation>, <inquire edge representation>,
+<inquire pattern representation>, <inqurie colour representation>,
+<inquire locator device state 3>, <inquire locator device state>,
+<inqurie stroke device state 3>, <inquire stroke device state>,
+<inquire pick device state 3>, <inquire pick device state>, <inquire
+text extent>, <inquire paths to ancestors>-<incremental spatial
+search> are called, and enumeration type is out of range, then error
+indicator is set to 2000.
+#F 214 218 223 225 227 229 231 233 236 241 242 251 252 249 250 269 308-312
+#D
+#S 4.11/108/1 5.12.1/232/1
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10
+
+SR2.  If functions <inquire pattern representation>, <inquire colour
+representation>-<inquire invisibility filter>, <inquire locator device
+state 3>-<inquire string device state>, <inquire predefined pattern
+representation>, <inquire predefined colour representation>, <inquire
+default locator device data 3>-<inquire default string device data>,
+<inquire current element content>, <inqurie element content>, <inquire
+paths to ancestors>-<incremental spatial search> are called, and the
+output parameter size is insufficient - the FORTRAN array or string
+being passed as an output paremeter is too small to contain the
+returned information, then the error indicatore is set to 2001.
+#F 233 236-238 241-252 275 278 288-299 304 306 308-312
+#D
+#S 4.11/108/1 5.12.1/232/1
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7
+
+SR3.  If functions <inquire list of available workstation
+types>-<inquire modelling clipping facilities>, <inquire set of open
+workstation>-<inquire archive files>, <inquire all conflicting
+structures>, <inquire conflicting structures in network>, <inquire
+list of view indices>, <inquire posted structures>, <inquire list of
+polyline indices>, <inquire list of polymarker indices>, <inquire list
+of text indices>, <inquire list of interior indices>, <inquire list of
+pattern indices>, <inquire list of colour indices>, <inquire hlhsr
+(identifier) facilities>, <inquire hlhsr (mode) facilities>, <inquire
+polyline facilities>,<inquire polymarker facilities>,<inquire text
+facilities>,<inquire annotation facilities>,<inquire interior
+facilities>, <inquire edge facilities>,<inquire colour model
+facilities>, <inquire list of available generalized drawing primitives
+3>, <inquire list of available generalized drawing primitives>,
+<inquire list of available generalized elements>, <inquire default
+locator device data 3>- <inquire default string device data>, <inquire
+set of workstation to which posted>, <inquire paths to ancestors>,
+<inqurie paths to descendants> are called, and the list or set element
+is not available - for a non-empty list or set, a value less than zero
+or greater than the size of a list or set was passed as the requested
+list or set element in an inquire routine, then the error indicator is
+set to 2002.
+#F 204-207 209 210 211 213 214 217 220 222 224 226 228 230 232 235 256 262
+#F 264 266 268 270 272 276 279 280 283 288-299 300 308 309
+#D
+#S 4.11/108/1 5.12.1/232/1
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9 P03/10 P03/11
+   P03/12 P03/13 P03/14 P03/15 P03/16 P03/17 P03/18 P03/19 P03/20
+   P03/21 P03/22 P03/23
+
+SR4.  If functions <element search>, <incremental spatial search 3>,
+<incremental spatial search> are called, and input parameter size is
+out of range - the INTEGER passed as an input parameter defining the
+size of FORTRAN array parameters is negative or greater than an
+absolute maximum, then the error indicator is set to 2004.
+#F 310 311 312
+#D
+#S 4.11/108/1 5.12.1/232/1
+#T P04/1 P04/2 P04/3 P04/4
+
+SR5.  If functions <incremental spatial search 3>, <incremental
+spatial search> are called, and the list of filters is invalid -
+FLN<1, then the error indicator is set to 2006.
+#F 311 312
+#D
+#S 4.11/108/1 5.12.1/232/1
+#T P05/1 P05/2
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  204: pqewk   <inquire list of available workstation types>
+  205: pqphf   <inquire phigs facilities>
+  206: pqgsef  <inquire generalized structure element facilities>
+  207: pqmclf  <inquire modelling clipping facilities>
+  209: pqopwk  <inquire set of open workstations>
+  210: pqsid   <inquire structure identifiers>
+  211: pqarf   <inquire archive files>
+  213: pqcst   <inquire all conflicting structures>
+  214: pqcstn  <inquire conflicting structures in network>
+  217: pqevwi  <inquire list of view indices>
+  218: pqvwr   <inquire view representation>
+  220: pqpost  <inquire posted structures>
+  222: pqepli  <inquire list of polyline indices>
+  223: pqplr   <inquire polyline representation>
+  224: pqepmi  <inquire list of polymarker indices>
+  225: pqpmr   <inquire polymarker representation>
+  226: pqetxi  <inquire list of text indices>
+  227: pqtxr   <inquire text representation>
+  228: pqeii   <inquire list of interior indices>
+  229: pqir    <inquire interior representation>
+  230: pqeedi  <inquire list of edge indices>
+  231: pqedr   <inquire edge representation>
+  232: pqepai  <inquire list of pattern indices>
+  233: pqpar   <inquire pattern representation>
+  235: pqeci   <inquire list of colour indices>
+  236: pqcr    <inquire colour representation>
+  237: pqhlft  <inquire highlighting filter>
+  238: pqivft  <inquire invisibility filter>
+  241: pqlcs3  <inquire locator device state 3>
+  242: pqlcs   <inquire locator device state>
+  243: pqsks3  <inquire stroke device state 3>
+  244: pqsks   <inquire stroke device state>
+  245: pqvls3  <inquire valuator device state 3>
+  246: pqvls   <inquire valuator device state>
+  247: pqchs3  <inquire choice device state 3>
+  248: pqchs   <inquire choice device state>
+  249: pqpks3  <inquire pick device state 3>
+  250: pqpks   <inquire pick device state>
+  251: pqsts3  <inquire string device state 3>
+  252: pqsts   <inquire string device state>
+  256: pqhrif  <inquire hlhsr facilities>
+  262: pqplf   <inquire polyline facilities>
+  264: pqpmf   <inquire polymarker facilities>
+  266: pqtxf   <inquire text facilities>
+  268: pqanf   <inquire annotation facilities>
+  269: pqtxx   <inquire text extent>
+  270: pqif    <inquire interior facilities>
+  272: pqedf   <inquire edge facilities>
+  275: pqppar  <inquire predefined pattern representation>
+  276: pqcmdf  <inquire colour model facilities>
+  278: pqpcr   <inquire predefined colour representation>
+  279: pqegd3  <inquire list of available generalized drawing primitives 3>
+  280: pqegdp  <inquire list of available generalized drawing primitives>
+  283: pqegse  <inquire list of available generalized structure elements>
+  288: pqdlc3  <inquire default locator device data 3>
+  289: pqdlc   <inquire default locator device data>
+  290: pqdsk3  <inquire default stroke device data 3>
+  291: pqdsk   <inquire default stroke device data>
+  292: pqdvl3  <inquire default valuator device data 3>
+  293: pqdvl   <inquire default valuator device data>
+  294: pqdch3  <inquire default choice device data 3>
+  295: pqdch   <inquire default choice device data>
+  296: pqdpk3  <inquire default pick device data 3>
+  297: pqdpk   <inquire default pick device data>
+  298: pqdst3  <inquire default string device data 3>
+  299: pqdst   <inquire default string device data>
+  300: pqwkpo  <inquire set of workstations to which posted>
+  304: pqceco  <inquire current element content>
+  306: pqeco   <inquire element content>
+  308: pqpan   <inquire paths to ancestors>
+  309: pqpde   <inquire paths to descendants>
+  310: pels    <element search>
+  311: piss3   <incremental spatial search 3>
+  312: piss    <incremental spatial search>
+ 
+  Data Structures ---
+ 
+
+
+PROGRAM 1: Error indicator = 2000
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+<open workstation>
+<open archive file> 11
+<open structure> 100
+<text>
+<execute structure> 101
+<close structure>
+<open structure> 101
+<text>
+<close structure>
+
+<inquire conflicting structures in network> with structure network source=2
+TEST: #SR 1
+      "If <inquire conflicting structures in network> is called and
+       enumeration type is out of range, it should return error indicator
+       = 2000."
+pass/fail depending on (returned error indicator = 2000)
+
+<inquire polyline representation> with type of returned values = 2
+TEST: #SR 1
+      "If <inquire polyline representation> is called and enumeration
+       type is out of range, it should return error indicator = 2000."
+pass/fail depending on (returned error indicator = 2000)
+
+<inquie edge representation> with type of returned values = -1
+TEST: #SR 1
+      "If <inquire edge representation> is called and enumeration type
+       is out of range, it should return error indicator = 2000."
+pass/fail depending on (returned error indicator = 2000)
+
+<inquire text extent> with text path = 4
+TEST: #SR 1
+      "If <inquire text extent> is called and enumeration type is out
+       of range, it should return error indicator = 2000."
+pass/fail depending on (returned error indicator = 2000)
+
+<inquire text extent> with text alignment horizontal = 4
+TEST: #SR 1
+      "If <inquire text extent> is called and enumeration type is out
+       of range, it should return error indicator = 2000."
+pass/fail depending on (returned error indicator = 2000)
+
+<inquire text extent> with text alignment vertical =  6
+TEST: #SR 1
+      "If <inquire text extent> is called and enumeration type is out
+       of range, it should return error indicator = 2000."
+pass/fail depending on (returned error indicator = 2000)
+
+<open structure> 200
+<text>
+<execute structure> 201
+<close structure>
+<open structure> 201
+<text>
+<execute structure> 202
+<close sturcture>
+<open structure> 202
+<text>
+<close structure>
+
+<inquire paths to descendants> with path order = 2
+TEST: #SR 1
+      "If <inquire paths to descendants> is called and enumeration
+       type is out of range, it should return error indicator = 2000."
+pass/fail depending on (returned error indicator = 2000)
+
+<element search> with search direction = 2
+TEST: #SR 1
+      "If <element search> is called and enumeration type is out of
+       range, it should return error indicator = 2000."
+pass/fail depending on (returned error indicator = 2000)
+
+<element search> with exclusion set element = -1
+TEST: #SR 1
+      "If <element search> is called and enumeration type is out of
+       range, it should return error indicator = 2000."
+pass/fail depending on (returned error indicator = 2000)
+
+<open structure> 301
+<execute structure> 302
+<close structure>
+<open structure> 302
+<text>
+<close structure>
+
+<incremental spatial search 3> with modelling clip flag = 2
+TEST: #SR 1
+      "If <incremental spatial search 3> is called and enumeration
+       type is out of range, it should return error indicator = 2000."
+pass/fail depending on (returned error indicator = 2000)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error indicator = 2001
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+<open workstation>
+
+colia(3,3) = (0,1,1,0,0,1,1,1,0)
+
+if (pattern style supported) then
+   <set pattern representation> with index =1, colia
+   <inquire pattern representation> with index = 1, pattern array
+        dimensions=2,2
+   TEST: #SR 2
+         "If <inquire pattern representation> is called and output
+          parameter size is insufficient, it should return error
+          indicator = 2001."
+pass/fail depending on (returned error indicator = 2001).
+endif
+
+cspec(3) = (0.,1.,0.)
+<set colour representation> with index = 1, cspec
+<inquire colour representation> with index = 1, colour component buffer size=2:
+TEST: #SR 2
+      "If <inquire colour representation> is called and output
+       parameter size is insufficient, it should return error
+       indicator = 2001."
+pass/fail depending on (returned error indicator = 2001).
+
+inclusive set = (1,2,3,4,5)
+exclusive set = (2,4,6,8,9)
+<set highlighting filter> with inclusive set and exclusive set
+<inquire highlighting filter> with buffer size = 4,4
+TEST: #SR 2
+      "If <inquire highlighting filter> is called and output parameter
+       size is insufficient, it should return error indicator = 2001."
+pass/fail depending on (returned error indicator = 2001).
+
+<open structure> 100
+<text>
+<execute structure> 101
+<close structure>
+<open structure> 101
+<text>
+<execute structure> 102
+<close structure>
+<open structure> 102
+<text>
+<close structure>
+
+<inquire element content> with structure id=100,element position = 1,
+    dimension of real array = 1: error indicator = 2001
+TEST: #SR 2
+      "If <inquire element content> is called and output parameter
+       size is insufficient, it should return error indicator = 2001."
+pass/fail depending on (returned error indicator = 2001).
+<inquire paths to descendents> with structure id=100, size of path buffer=1
+TEST: #SR 2
+      "If <inquire element content> is called and output parameter
+       size is insufficient, it should return error indicator = 2001."
+pass/fail depending on (returned error indicator = 2001).
+
+<inquire paths to descendants> with size of path buffer = 1 (3 needed)
+TEST: #SR 2
+      "If <inquire paths to descendants> is called and output parameter
+       size is insufficient, it should return error indicator = 2001."
+pass/fail depending on (returned error indicator = 2001).
+
+<open structure> 201
+<text>
+<excute structure> 202
+<close structure>
+<open structure> 202
+<ppm>
+<close structure>
+
+<incremental spatial search 3> with size of found array = 1:
+    error indicator = 2001
+TEST: #SR 2
+      "If <incremental spatial search 3> is called and output parameter
+       size is insufficient, it should return error indicator = 2001."
+pass/fail depending on (returned error indicator = 2001).
+
+END PROGRAM 2
+
+
+PROGRAM 3: Error indicator = 2002
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+<open workstation>
+
+Use <inquire list of available workstation types> to get:
+   number = number of workstation types
+<inquire list of available workstation types> with requested element=number+1
+TEST: #SR 3
+      "If <inquire list of available workstation types> is called and
+       list or set element is not available, it should return error
+       indicator = 2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire phigs facilities> to get:
+   number = number of available character sets
+<inquire phigs facilities> with requested character set = -1
+TEST: #SR 3
+      "If <inquire phigs facilities> is called and list or set element
+       is not available, it should return error indicator = 2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire modelling clipping facilities> to get:
+   number = number of modelling clipping operators
+<inquire modelling clipping facilities> with requested list element=number+10
+TEST: #SR 3
+      "If <inquire modelling clipping facilities> is called and list
+       or set element is not available, it should return error
+       indicator = 2002."
+pass/fail depending on (returned error indicator = 2002)
+
+<inquire set of open workstations> with requested set member = -1
+TEST: #SR 3
+      "If <inquire set of open workstations> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+<open structure> 100
+<text>
+<execute structure> 101
+<close structure>
+<open structure> 101
+<text>
+<close structure>
+<inquire structure identifiers> with requested list element = 3
+TEST: #SR 3
+      "If <inquire structure identifiers> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+<open archive file> 11
+<inquire archive file> with requested list element = -1
+TEST: #SR 3
+      "If <inquire archive files> is called and list or set element is
+       not available, it should return error indicator = 2002."
+pass/fail depending on (returned error indicator = 2002)
+
+<archive all structures>
+Use <inquire all conflicting structures> to get:
+    number = number of structure identifiers in list
+<inquire all conflicting structures> with requested list elemet = number+1
+TEST: #SR 3
+      "If <inquire all conflicting structures> is called and list or
+       set element is not available, it should return error indicator
+       = 2002."
+pass/fail depending on (returned error indicator = 2002)
+
+<close archive file> 11
+
+Use <inquire list of view indices> to get:
+    number = number of view bundle table entries
+<inqurie list of view indices> with requested list element = number+1
+TEST: #SR 3
+      "If <inquire list of view indices> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+<post structure> 100
+<inquire posted structures> with requested list element = 2
+TEST: #SR 3
+      "If <inquire posted structures> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire list of polyline indices> to get:
+    number = number of polyline bundle table entries
+<inqurie list of polyline indices> with requested list element = number+1
+TEST: #SR 3
+      "If <inquire list of polyline indices> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire list of text indices> to get:
+    number = number of text bundle table entries
+<inquire list of text indices> with requested list element = number +1
+TEST: #SR 3
+      "If <inquire list of text indices> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+<inquire list of edge indices> with requested list element = -2
+TEST: #SR 3
+      "If <inquire list of edge indices> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire list of colour indices> to get:
+    number = number of colour bundle table entries
+<inquire list of colour indices> with requested list element = number +1
+TEST: #SR 3
+      "If <inquire list of colour indices> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire hlhsr (identifier) facilities> to get:
+    number = number of HLHSR identifiers
+<inquire hlhsr (identifier) facilities> with sequence number = number +1
+TEST: #SR 3
+      "If <inquire hlhsr facilities> is called and list
+       or set element is not available, it should return error
+       indicator = 2002."
+pass/fail depending on (returned error indicator = 2002)
+
+<inquire hlhsr (mode) facilities> with sequence number = -1
+TEST: #SR 3
+      "If <inquire hlhsr facilities> is called and list
+       or set element is not available, it should return error
+       indicator = 2002."
+pass/fail depending on (returned error indicator = 2002)
+
+<inquire polymarker facilities> with requested list element = -1
+TEST: #SR 3
+      "If <inquire polymarker facilities> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire annotation facilities> to get:
+    number = number of available annotation styles
+<inquire annotation facilities> with requested list element = number +1
+TEST: #SR 3
+      "If <inquire annotation facilities> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire interior facilities> to get:
+    number = number of available interior styles
+    numhat = number of available hatch styles
+<inquire interior facilties> with requested interior style list element = -1
+TEST: #SR 3
+      "If <inquire interior facilities> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+<inquire interior facilties> with requested hatch style list element = numhat+1
+TEST: #SR 3
+      "If <inquire interior facilities> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire colour model facilities> to get:
+    number = number of available colour models
+<inquire colour model facilities> with requested list element=number +1
+TEST: #SR 3
+      "If <inquire colour model facilities> is called and list or
+       set element is not available, it should return error indicator
+       = 2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire list of available generalized drawing primitives> to get:
+    number = number of available generalized drawing primitives
+if (number > 0) then
+   <inquire list of available generalized drawing primitives>
+       with requested list element = number +1
+   TEST: #SR 3
+         "If <inquire list of available generalized drawing
+          primitives> is called and list or set element is not
+          available, it should return error indicator = 2002."
+   pass/fail depending on (returned error indicator = 2002)
+endif
+
+Use <inquire set of workstations to which posted> to get:
+    number = number of workstations to which the structure is posted
+<inquire set of workstations to which posted>
+    with requested list element = number +1
+TEST: #SR 3
+      "If <inquire set of workstations to which posted> is called and
+       list or set element is not available, it should return error
+       indicator = 2002."
+pass/fail depending on (returned error indicator = 2002)
+
+Use <inquire paths to descendants> to get:
+    number = number of paths available
+<inquire paths to descendants> with requested list element = number +1
+TEST: #SR 3
+      "If <inquire paths to descendants> is called and list or set
+       element is not available, it should return error indicator =
+       2002."
+pass/fail depending on (returned error indicator = 2002)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Error indicator = 2004
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+<open structure> 100
+<text>
+<execute structure>
+<close structure>
+<open structure> 101
+<ppm>
+<close structure>
+inclusive set = (1,3,8)
+exclusive set = (2,4)
+<element search> with number of elements in element inclusive set = -1
+TEST: #SR 4
+      "If <element search> is called and input parameter size is out
+       of range, it should return error indicator = 2004."
+pass/fail depending on (returned error indicator = 2004)
+
+<element search> with number of elements in element exclusive set = -1
+TEST: #SR 4
+      "If <element search> is called and input parameter size
+       is out of range, it should return error indicator = 2004."
+pass/fail depending on (returned error indicator = 2004)
+
+start path = (100,1)
+<incremental spatial search 3> with number of elements in starting path=-1
+TEST: #SR 4
+      "If <incremental spatial search 3> is called and input parameter
+       size is out of range, it should return error indicator = 2004."
+pass/fail depending on (returned error indicator = 2004)
+
+<open workstation> wkid
+<inquire colour representation> with size of colour spec = -1
+TEST: #SR 4
+      "If <inquire colour representation> is called and input parameter
+       size is out of range, it should return error indicator = 2004."
+pass/fail depending on (returned error indicator = 2004)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Error indicator = 2006
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+<open structure> 100
+<text>
+<execute structure>
+<close structure>
+<open structure> 101
+<text>
+<close structure>
+
+start path = (100,1)
+<incremental spatial search 3> with number of "normal filters" = 0
+TEST: #SR 5
+      "If <incremental spatial search 3> is called and list of filters
+       is invalid, it should return error indicator = 2006."
+pass/fail depending on (returned error indicator = 2006)
+
+<incremental spatial search 3> with number of "inverted filters" = -1
+TEST: #SR 5
+      "If <incremental spatial search 3> is called and list of filters
+       is invalid, it should return error indicator = 2006."
+pass/fail depending on (returned error indicator = 2006)
+
+END PROGRAM 5
+

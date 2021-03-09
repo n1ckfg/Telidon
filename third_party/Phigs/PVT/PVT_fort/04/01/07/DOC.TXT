@@ -1,0 +1,601 @@
+TITLE: Cell array
+
+MODULE#: 04.01.07
+
+DESCRIPTION: This module tests that cell arrays are rendered
+correctly and that a program can set up a cell array element in the
+CSS, which will create a primitive upon traversal.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** ***   <Cell array 3>   *** *** *** *** ***
+
+SR1.  <Cell array 3> creates a cell array 3 element in the CSS.
+#F 21
+#D 7.3.1.13
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/1 P01/2 P01/5 P01/6
+
+SR2.  If current element is cell array 3 then <inquire current
+element type and size> returns the element type as cell array 3 and
+the appropriate element size.
+#F 303
+#D 7.3.1.13
+#S 4.4.4/29/5
+#T P01/1 P01/5
+
+SR3.  If current element is cell array 3 then <inquire current
+element content> returns the appropriate data for cell array 3.
+#F 304
+#D 7.3.1.13
+#S 4.4.4/29/5
+#T P01/2 P01/6
+
+SR4. A <cell array 3> primitive is a parallelogram whose corners
+are specified by the 3D points P, Q, R and (QX+RX-PX, QY+RY-PY,
+QZ+RZ-PZ), expressed in modelling coordinates (MC).
+#F 21
+#D 7.3.1.13
+#S 4.5.1/36/3
+#T P02/1 P02/3
+
+SR5. The cell array 3 parallelogram is divided into a 2D grid
+of four-sided cells numbered from 1 to DX in first dimension (P
+to Q) and 1 to DY in second dimension (P to R).  DX and DY are
+the sizes of the first and second dimensions, respectively, of
+the specified color index array.  The sides of the cells are
+parallel (in MC) to the sides of the enclosing parallelogram.
+#F 21
+#D 7.3.1.13
+#S 4.5.1/36/3
+#T P02/3
+
+*** *** *** *** ***   <Cell array>   *** *** *** *** ***
+
+SR6.  <Cell array> creates a cell array element in the CSS.
+#F 22
+#D 7.3.1.14
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/3 P01/4 P01/7 P01/8
+
+SR7.  If current element is cell array then <inquire current
+element type and size> returns the element type as cell array and
+the appropriate element size.
+#F 303
+#D 7.3.1.14
+#S 4.4.4/29/5
+#T P01/3 P01/7
+
+SR8.  If current element is cell array then <inquire current
+element content> returns the appropriate data for cell array.
+#F 304
+#D 7.3.1.14
+#S 4.4.4/29/5
+#T P01/4 P01/8
+
+SR9. A <cell array> primitive is a rectangle in the z=0 plane,
+whose corners are specified by the 2D points (PX,PY), (PX,QY),
+(QX,QY), and (QX,PY) expressed in modelling coordinates (MC).
+#F 22
+#D 7.3.1.14
+#S 4.5.1/37/2
+#T P02/2 P02/3
+
+SR10. The cell array rectangle is divided into a 2D grid of
+four-sided cells numbered from 1 to DX in first dimension (from
+PX,PY to QX,PY) and 1 to DY in second dimension (from PX,PY to
+PX,QY).  DX and DY are the sizes of the first and second
+dimensions, respectively, of the specified color index array.
+The sides of the cells are parallel (in MC) to the sides of the
+enclosing rectangle.
+#F 22
+#D 7.3.1.14
+#S 4.5.1/37/2
+#T P02/3
+
+*** *** *** *** ***   Rendering   *** *** *** *** ***
+
+SR11.  Every cell of a given cell array and cell array 3
+primitive has the same size and shape in modelling coordinates.
+#F 21 22
+#D 7.3.1.13 7.3.1.14
+#S 4.5.1/36/3 4.5.1/37/2
+#T P02/3
+#C It follows that for cell array 3, the lengths of the sides in
+the 1st and 2nd dimension are distance(PQ) / DX and distance(PR)
+/ DY.  For cell array, the lengths are abs(PX-QX) / DX and
+abs(PY-QY) / DY.
+
+SR12.  Nominally, cells are rendered as solidly colored areas.
+The colour of each cell of a cell array or cell array 3 is
+determined by taking the corresponding array element as its color
+index.
+#F 21 22
+#D 7.3.1.13 7.3.1.14
+#S 4.5.1/36/6 4.5.1/37/2 4.5.1/38/1
+#T P02/3 P02/4
+#C This is the preferred method of display.  Some implementations
+or workstations may be incapable of such filling, see SR14 below.
+
+SR13.  For a cell of a cell array or cell array 3 primitive, if
+its colour index is not defined in the colour table for the
+workstation, then the index 1 is used.
+#F 21 22
+#D 7.3.1.13 7.3.1.14
+#S 4.5.1/36/6 4.5.1/37/2
+#T P02/4
+#C This applies to negative color indices as well; see defect
+9592-1/065.
+
+SR14.  The minimal simulation for a cell array or cell array 3
+primitive is a line drawn around the extent of the primitive.
+#F 21 22
+#D 7.3.1.13 7.3.1.14
+#S 4.5.1/36/6 4.5.1/37/2 4.5.16/65/5
+#T P02/1 P02/2
+#C The attributes of the line used for drawing the cell array
+boundary are implementation-defined, including its color.
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   21: pca3    <cell array 3>
+   22: pca     <cell array>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.13 ...  cell_array_3
+  7.3.1.14 ...  cell_array
+ 
+
+
+PROGRAM 1: Cell array element
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> throughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+*** *** *** ***   Normal cell array 3   *** *** *** ***
+
+<cell array 3>, using:
+
+   parallelogram points:
+         P      Q     R
+   x = 55.55 -99.99  3.2e5
+   y =  0.0    3.   -3.2e-15
+   z =  4.44   0.0   0.00023
+
+   cell array index values:
+
+    |    --> 1st dimension
+    |    0  2  9  3  7  2  3
+    V    7  2  8  6  3  8  7
+   2nd   1  0  2  3  9  3  8
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       cell array 3 as the type of the created element and
+       the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = cell array 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for cell array 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and
+            language binding)
+
+*** *** *** ***   Normal cell array   *** *** *** ***
+
+<cell array> using:
+
+   rectangle points:
+         P      Q
+   x = 55.55 -99.99
+   y =  0.0    3.
+
+   cell array index values:
+
+    |    --> 1st dimension
+    |    0  2  9  3  7  2  3
+    V    7  2  8  6  3  8  7
+   2nd   1  0  2  3  9  3  8
+
+TEST: #SR 6 7
+      "<Inquire current element type and size> should return
+       cell array as the type of the created element and the
+       appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = cell array and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 6 8
+      "<Inquire current element content> should return the standard
+       representation for cell array."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+*** *** *** ***   Degenerate cell array 3   *** *** *** ***
+
+degenerate <cell array 3>, using:
+
+         P     Q     R
+   x =  1.0   1.0   1.0
+   y =  2.0   2.0   2.0
+   z =  2.0   3.0   5.0
+
+   cell array index values:
+
+    |    --> 1st dimension
+    |    9  3
+    V    8  6
+   2nd   1  0
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       cell array 3 as the type of the created element and the
+       appropriate element size for a degenerate element."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = cell array 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for a degenerate cell array 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+*** *** *** ***   Degenerate cell array   *** *** *** ***
+
+degenerate <cell array>, using:
+
+         P     Q
+   x =  1.0   3.0
+   y =  2.0   2.0
+
+   cell array index values:
+
+    |    --> 1st dimension
+    |    9  3
+    V    8  6
+   2nd   1  0
+
+TEST: #SR 6 7
+      "<Inquire current element type and size> should return
+       cell array as the type of the created element and the
+       appropriate element size for a degenerate element."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = cell array and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 6 8
+      "<Inquire current element content> should return the standard
+       representation for a degenerate cell array."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and
+            language binding)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Appearance of cell arrays
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+OPQA/INDIVIDUAL CELL COLORS: Minimal simulations of cell array
+need only draw the correct cell array boundary in an arbitrary
+color and style.  If this workstation, however, uses the color
+index array to render each cell (either to fill each cell, or
+outline it in the specified color) answer "Y", otherwise "N".
+
+MINIMAL SIMULATION OF 3D CELL ARRAYS: Several 3D cell arrays are
+drawn. For all but one of these, the four vertices should be
+accurately circled by a polymarker.  Identify the cell array which
+is not accurately marked.
+
+MINIMAL SIMULATION OF 2D CELL ARRAYS: Same as MINIMAL SIMULATION
+OF 3D CELL ARRAYS, above.
+
+CELL ARRAY COLORING: Several cell arrays are displayed.  In all
+but one, the correct color for each cell is illustrated by
+diagonal line segments of that color.  For solidly colored cells,
+therefore, these lines will be invisibile.  For outlined cells,
+the diagonals should match the cell boundary in color.  Identify
+the cell array whose diagonals do not match the cell color.
+
+UNDEFINED CELL COLOUR INDICES: Several cell arrays are displayed.
+All but one should contain a simple two-color checkerboard
+pattern. Identify the cell array which differs from the others.
+
+DESIGN:
+
+OPQA/INDIVIDUAL CELL COLORS: Are the cells of a cell array on
+  this workstation displayed using the color index from the
+  specified array (y/n)?
+solidc = (response = yes) true/false
+
+divide screen into 6 square labelled areas for all tests
+
+TEST: #SR 4 14
+      "A <cell array 3> should be rendered as a parallelogram
+       with the specified points P, Q, and R as vertices."
+
+ngca = no-good cell array = random from 1 to 6
+colia = 5x5 checkerboard 2D array, using 0 and 1 only.
+radcir = radius of circle for cell array corners = 0.4
+
+for ix = 1 to 6
+   set transform from 0:1,0:1 into square #ix
+
+   randomize geometry:
+   ang = random angle from 0 to 360 degrees
+   px = .5 + radcir * cos(ang)
+   py = .5 + radcir * sin(ang)
+   offset = + or - 1, randomly
+   qang = ang + offset * random(75 to 105 degrees)
+   rang = ang - offset * random(75 to 105 degrees)
+   qx = .5 + radcir * cos(qang)
+   qy = .5 + radcir * sin(qang)
+   rx = .5 + radcir * cos(rang)
+   ry = .5 + radcir * sin(rang)
+
+pick_z3d:
+   pz = random real from 0 to 1
+   qz = random real from 0 to 1
+   rz = random real from 0 to 1
+   if (qz+rz-pz < 0 or > 1) goto pick_z3d
+
+   draw cell array 3, using
+      P,Q,R = (px,py,pz), (qx,qy,qz), (rx,ry,rz)
+      colia(1:5, 1:5)
+
+   compute correct position of cell array vertices
+   if (ix = ngca) then
+      distort vertex positions
+   endif
+
+   mark cell array vertices, using 2D circle polymarkers
+next ix
+
+OPQA/MINIMAL SIMULATION OF 3D CELL ARRAYS: For which cell array
+  are the vertices NOT accurately marked by a circle?
+pass/fail depending on (operator chooses #ngca)
+
+TEST: #SR 9 14
+      "A <cell array> should be rendered as a rectangle (in MC)
+       with the specified points P and Q as opposite vertices."
+
+ngca = no-good cell array = random from 1 to 6
+colia = 5x5 checkerboard 2D array, using 0 and 1 only.
+radcir = radius of circle for cell array corners = 0.4
+
+for ix = 1 to 6
+   set transform from 0:1,0:1 into square #ix,
+       shift to z = 0.5 plane
+       rotate 30 degrees around x and y axis
+
+   randomize geometry:
+   if (random from 0 to 1 < 0.5) then
+      px = 0.15; qx = 0.85
+   else
+      px = 0.75; qx = 0.25
+   endif
+   if (random from 0 to 1 < 0.5) then
+      py = 0.25; qy = 0.85
+   else
+      py = 0.75; qy = 0.15
+   endif
+
+   draw cell array, using
+      P,Q = (px,py), (qx,qy)
+      colia(1:5, 1:5)
+
+   compute correct position of cell array vertices
+   if (ix = ngca) then
+      distort vertex positions
+   endif
+
+   mark cell array vertices, using 2D circle polymarkers
+next ix
+
+OPQA/MINIMAL SIMULATION OF 2D CELL ARRAYS: For which cell array
+  are the vertices NOT accurately marked by a circle?
+pass/fail depending on (operator chooses #ngca)
+
+if (not solidc) then
+   informative message: this workstation does not support
+      coloring of the cells of a cell array.
+   goto end_coltest
+endif
+
+call DISCOL, requesting 5 distinct foreground colors.
+fcol = number of available foreground colors
+if (fcol > 1) then
+   colia = 5x5 array of color indices, using 0 thru fcol
+   when filling try to avoid adjacent cells of same color:
+   for row = 1 to 5
+   for col = 1 to 5
+      liscol = list of colors from 0 to fcol
+      if (row > 1) then
+         delete color of row-1, col from liscol
+      endif
+      if (col > 1) then
+         delete color of row, col-1 from liscol
+      endif
+      if (liscol empty) then
+         cell row,col = random color from 0 to fcol
+      else
+         cell row,col = random color from liscol
+      endif
+   next col
+   next row
+else
+   leave colia as 0,1 checkerboard
+endif
+
+TEST: #SR 4 5 9 10 11 12
+      "The color index of the cells of a <cell array 3> and <cell
+       array> should be determined by the corresponding element
+       of the specified color index array."
+
+ngca = no-good cell array = random from 1 to 6
+
+for ix = 1 to 6
+   set transform from 0:1,0:1 into square #ix
+
+   dx = size of 1st dimension = random from 2 to 4
+   dy = size of 2nd dimension = random from 2 to 4
+
+   randomize geometry:
+
+   if (ix > 3) then
+      ang = random angle from 0 to 360 degrees
+      px = .5 + radcir * cos(ang)
+      py = .5 + radcir * sin(ang)
+      offset = + or - 1, randomly
+      qang = ang + offset * random(75 to 105 degrees)
+      rang = ang - offset * random(75 to 105 degrees)
+      qx = .5 + radcir * cos(qang)
+      qy = .5 + radcir * sin(qang)
+      rx = .5 + radcir * cos(rang)
+      ry = .5 + radcir * sin(rang)
+
+      z-values between 0 and 0.5 - behind diagonals
+      pz = random between 0.3 and 0.4
+      qz = random between 0.3 and 0.4
+      rz = random between 0.3 and 0.4
+      draw cell array 3, using
+         P,Q,R = (px,py,pz), (qx,qy,qz), (rx,ry,rz)
+         colia(1:dx, 1:dy)
+   else
+      if (random from 0 to 1 < 0.5) then
+         px = 0.15; qx = 0.85
+      else
+         px = 0.75; qx = 0.25
+      endif
+      if (random from 0 to 1 < 0.5) then
+         py = 0.25; qy = 0.85
+      else
+         py = 0.75; qy = 0.15
+      endif
+      draw cell array, using
+         P,Q = (px,py), (qx,qy)
+         colia(1:dx, 1:dy)
+   endif
+
+   compute correct cell boundary positions and color
+   if (ix = ngca) then
+      change some cell colors
+   endif
+
+   for each cell of this cell array, draw in diagonals of
+      the computed color.
+   diagonals are drawn in the z=1.0 plane so that they always
+      appear in front of the cell array in case HLHSR is
+      in effect by default.
+next ix
+
+OPQA/CELL ARRAY COLORING: For which cell array do the cell diagonals
+   NOT match the cell color?
+pass/fail depending on (operator chooses #ngca)
+
+TEST: #SR 12 13
+      "An index which is undefined in the color table should cause
+       entry number 1 to be used as the color of a cell which is
+       specified by that index."
+
+set entry #1 in color table opposite from BCKCOL
+set entry #1 different from FORCOL - make sure undefined index
+  defaults to *current* color-rep of #1, not just a predefined color.
+
+set up three undefined indices
+u1 = maximum defined entry in color table + 1
+u2 = -1
+u3 = maximum defined entry in color table + 100
+
+perm = random order for 1-6
+
+dx = size of 1st dimension = 3
+dy = size of 2nd dimension = 3
+
+px = 0.2
+py = 0.2
+
+for ix = 1 to 6
+   colia = 1 0 1
+           0 1 0
+           1 0 1
+
+   this = perm(ix)
+   set transform from 0:1,0:1 into square #this
+
+   if (this >= 2) then
+      colia(1,1) = u1
+   endif
+   if (this >= 3) then
+      colia(3,3) = u2
+   endif
+   if (this >= 4) then
+      colia(1,3) = u3
+   endif
+   if (this >= 5) then
+      colia(2,2) = u1
+   endif
+   if (this = 6) then
+      colia (3,1) = 0
+      ngca = ix
+   endif
+
+   if (ix > 3) then
+      qx = 0.8
+      qy = 0.2
+      rx = 0.2
+      ry = 0.8
+
+      pz = 0.5
+      qz = 0.5
+      rz = 0.5
+      draw cell array 3, using
+         P,Q,R = (px,py,pz), (qx,qy,qz), (rx,ry,rz)
+         colia(1:dx, 1:dy)
+   else
+      qx = 0.8
+      qy = 0.8
+      draw cell array, using
+         P,Q = (px,py), (qx,qy)
+         colia(1:dx, 1:dy)
+   endif
+next ix
+
+OPQA/UNDEFINED CELL COLOUR INDICES: Which cell array is
+  different?
+pass/fail depending on (operator chooses #ngca)
+
+end_coltest:
+
+END PROGRAM 2

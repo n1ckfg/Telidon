@@ -1,0 +1,278 @@
+TITLE: Opening and closing structures
+
+MODULE#: 02.02.01
+
+DESCRIPTION: This module tests the ability of the programmer to
+open and close an existing structure, associated inquire
+functions, and correct initialization of the element pointer.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Open structure> opens the existing specified structure.
+#F 111
+#D 4.2
+#S 4.4.4/28/5
+#T P01/6 P02/1
+
+SR2.   For a non-empty structure, <open structure> positions the `element
+pointer' at the last element in the structure.
+#F 111
+#D 4.3
+#S 4.4.4/28/5
+#T P02/3
+
+SR3.   If the existing open structure is empty, the `element pointer'
+is set to position 0.
+#F 111
+#D 4.3
+#S 4.4.4/28/6
+#T P01/8
+
+SR4.   <Close structure> closes the open structure.
+#F 112
+#D 4.2
+#S 4.4.4/28/5
+#T P01/10
+
+SR5.   If a structure is open <inquire open structure> returns an OPEN
+structure status and the structure identifier of the open structure.
+#F 301
+#D 4.2 4.5.1
+#S 4.4.4/28/5
+#T P01/6 P02/1
+
+SR6.   If no structure is open <inquire open structure> returns a NONE
+structure status and an undefined structure identifier.
+#F 301
+#D 4.2 4.5.1
+#S 4.4.4/28/5
+#T P01/3 P01/10
+
+SR7.   <Inquire structure status> returns the appropriate
+structure status as NON-EXISTENT, EMPTY, or NOTEMPTY.
+#F 307
+#D 4.5 7.1 7.3
+#S n
+#T P01/4 P01/7 P01/11 P02/2 P02/4
+
+SR8.  <Inquire element pointer> returns the appropriate `element
+pointer' position of the open structure.
+#F 302
+#D 4.3
+#S 4.4.4/28/6
+#T P01/8 P02/3
+
+SR9.  <Inquire structure state> returns the structure state value
+as OPEN if an open structure exists in the CSS;  otherwise it
+returns CLOSED.
+#F 202
+#D 1.3 4.2
+#S 4.10/107/4 4.10/107/6
+#T P01/1 P01/2 P01/5 P01/9 P01/12
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  111: popst   <open structure>
+  112: pclst   <close structure>
+  202: pqstrs  <inquire structure state value>
+  301: pqopst  <inquire open structure>
+  302: pqep    <inquire element pointer>
+  307: pqstst  <inquire structure status>
+ 
+  Data Structures ---
+  1  ...  operating_state
+  1.3  ...  structure_state
+  4  ...  phigs_state_list
+  4.2  ...  name_of_open_structure
+  4.3  ...  element_pointer
+  4.5  ...  list_of_structure_identifiers
+  4.5.1  ...  structure_identifier
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.3  ...  list_of_structure_elements
+ 
+SEMANTIC CROSS-REFERENCES:
+  02.01.01/SR01
+ 
+
+PROGRAM 1: Opening and closing an empty existing structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire open structure> throughout to determine:
+    opstst = open structure status
+    strid = structure identifier
+
+Use <inquire structure state value> thoughout to determine:
+    strsta = structure state value open or closed
+
+Use <inquire structure status> throughout to determine:
+    ststin = structure status indicator
+
+Use <inquire element pointer> throughout to determine:
+    elepos = element position
+
+TEST: #SR 9
+      "Before opening PHIGS, <inquire structure state value> should
+       return the structure state value as CLOSED."
+<inquire structure state value>
+pass/fail depending on (strsta = CLOSED)
+
+<open phigs>
+strid = 50
+
+TEST: #SR 9
+      "<Inquire structure state value> should return the structure state
+       value as CLOSED when the CSS is empty after opening PHIGS."
+<inquire structure state value>
+pass/fail depending on (strsta = CLOSED)
+
+TEST: #SR 6
+      "If no structures exist, <inquire open structure> should
+       return a NONE structure status and the structure identifier
+       is undefined."
+<inquire open structure> to set opstst, rstrid
+pass/fail depending on
+  (opstst = NONE)
+
+<inquire structure status> for strid to set ststin
+TEST: #SR 7
+      "<Inquire structure status> should return the appropriate structure
+       status as NONEXISTENT for a non-existent structure."
+pass/fail depending on
+  (ststin = NONEXISTENT)
+
+<Open structure> with strid
+
+TEST: #SR 9
+      "<Inquire structure state value> should return the structure state
+       value as OPEN when an open structure exists in the CSS."
+<inquire structure state value>
+pass/fail depending on (strsta = OPEN)
+
+<inquire open structure> to set opstst, rstrid
+TEST: #SR 1 5
+      "If an empty structure is open <inquire open structure> should return
+       an OPEN structure status and the structure identifier of the open
+       structure."
+pass/fail depending on
+  (opstst = OPEN and
+   rstrid = strid)
+
+<inquire structure status> for strid to set ststin
+TEST: #SR 7
+      "<Inquire structure status> should return the appropriate structure
+       status as EMPTY for an empty structure when the structure is open."
+pass/fail depending on
+  (ststin = EMPTY)
+
+<inquire element pointer> to set elepos
+TEST: #SR 3 8
+      "<Inquire element pointer> should return zero as the element pointer
+       position of an empty structure."
+pass/fail depending on
+  (elepos = 0)
+
+<Close structure>
+
+TEST: #SR 9
+      "<Inquire structure state value> should return the structure state
+       value as CLOSED when a closed structure exists in the CSS."
+<inquire structure state value>
+pass/fail depending on (strsta = CLOSED)
+
+<inquire open structure> to set opstst, rstrid
+TEST: #SR 4 6
+      "If a structure exists, but none is open, <inquire open
+       structure> should return a NONE structure status and the
+       structure identifier is undefined."
+pass/fail depending on
+  (opstst = NONE)
+
+<inquire structure status> for strid to set ststin
+TEST: #SR 7
+      "<Inquire structure status> should return the appropriate structure
+       status as EMPTY for an empty structure when the structure is closed."
+pass/fail depending on
+  (ststin = EMPTY)
+
+<close phigs>
+
+TEST: #SR 9
+      "After closing PHIGS, <inquire structure state value> should
+       return the structure state value as CLOSED."
+<inquire structure state value>
+pass/fail depending on (strsta = CLOSED)
+
+END PROGRAM 1
+
+PROGRAM 2: Opening and closing a non-empty existing structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire open structure> throughout to determine:
+    opstst = open structure status
+    strid = structure identifier
+
+Use <inquire structure status> throughout to determine:
+    ststin = structure status indicator
+
+Use <inquire element pointer> throughout to determine:
+    elepos = element position
+
+strid = 40
+
+<Open structure> with strid
+
+Fill open structure with elements:
+<Label>
+<Label>
+
+<inquire open structure> to set opstst, rstrid
+TEST: #SR 1 5
+      "If a non-empty structure is open <inquire open structure> should
+       return an OPEN structure status and the structure identifier of
+       the open structure."
+pass/fail depending on
+  (opstst = OPEN and
+   rstrid = strid)
+
+<inquire structure status> for strid to set ststin
+TEST: #SR 7
+      "<Inquire structure status> should return the appropriate structure
+       status as NOTEMPTY for a non-empty structure when the structure is
+       open."
+pass/fail depending on
+  (ststin = NOTEMPTY)
+
+<set element pointer> to 1
+<close structure>
+<open structure>
+
+<inquire element pointer> to set elepos
+TEST: #SR 2 8
+      "<Inquire element pointer> should return the element pointer
+       position as the last element after opening a non-empty structure."
+pass/fail depending on
+  (elepos = 2)
+
+<close structure>
+
+<inquire structure status> for strid to set ststin
+TEST: #SR 7
+      "<Inquire structure status> should return the appropriate structure
+       status as NOTEMPTY for a non-empty structure when the structure is
+       closed."
+pass/fail depending on
+  (ststin = NOTEMPTY)
+
+END PROGRAM 2

@@ -1,0 +1,19 @@
+ Parameters to be passed to OPEN PHIGS:
+    Error-file number =  21
+    Memory units =  -1
+ Recorded number of accessible workstations =  1
+ Parameters to be passed to OPEN WORKSTATION for wkst # 1:
+    Workstation identifier =  3
+    Connection identifier =  0
+    Workstation type =  0
+ Random generator seed = 1.633                         
+ Interactive output to operator via Fortran print  
+ Maximum characters per line in interactive messages =  65
+ Interactive input from operator via Fortran read         
+ Meters per DC unit =   .0003058
+ Always generate success messages.               
+ Message destination: operator, individual-file               
+ Individual file unit number =  22
+ Maximum characters per line in messages =  65
+ Error file may be explicitly opened and named.
+ Identifying string for error messages: "SunPHIGS error"

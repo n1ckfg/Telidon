@@ -1,0 +1,1100 @@
+TITLE: Archiving and retrieving structures
+
+
+MODULE#: 03.03
+
+
+DESCRIPTION: This module tests the various ways in which
+structures may be archived to and retrieved from external files.
+In particular, the programs test the effect of various ways of
+specifying the set of affected structures and the effect of the
+conflict resolution flags.
+
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  For <archive structures>, the set of structures to be
+archived in the specified archive file contains exactly those
+whose identifiers are in the specified list.
+#F 137
+#D
+#S 4.4.7/32/3
+#T P01/1 P02/1 P03/3 P03/4 P03/8 P07/1 P08/1
+#C Note that archiving a structure, but not its descendants, can
+create a "partial" network in the archive file, i.e. one in which
+there are references to structures which do not exist in the
+archive file.
+
+SR2.  For <archive structure networks>, the set of structures to
+be archived in the specified archive file contains those whose
+identifiers are in the specified list, and all their descendants
+in the CSS.
+#F 138
+#D 7.1 7.3.4
+#S 4.4.7/32/3
+#T P02/2 P03/2 P03/5 P03/6 P03/7 P03/9 P03/10 P03/13 P03/14
+
+SR3.  For <archive all structures>, the set of structures to be
+archived in the specified archive file contains all those
+currently in the CSS.
+#F 139
+#D 7.1
+#S 4.4.7/32/3
+#T P02/3 P03/1 P03/11 P03/12
+
+***  Logic of archival conflict resolution,
+***  for each specified structure S:
+***
+***     if (S in CSS) then
+***        if (S already in archive) then
+***           if     (archival-flag = UPDATE)   then
+***              overwrite S from CSS to archive       [SR6]
+***           elseif (archival-flag = MAINTAIN) then
+***              no action                             [SR7]
+***           elseif (archival-flag = ABANDON)  then
+***              abort, signal error 405               [SR8]
+***           endif
+***        else (S not in archive)
+***           copy S from CSS to archive               [SR4]
+***        endif
+***     else (S not in CSS)
+***        no action - signal warning 200              [SR5]
+***     endif
+
+SR4.  If a structure S is in the specified set of an archive
+operation and S exists in the CSS but not in the archive file,
+then S is copied from the CSS to the archive file.
+#F 137 138 139
+#D 7.1 9.1.1
+#S 4.4.7/32/4
+#T P01/1 P02/1 P02/2 P02/3 P03/1 P03/2 P03/3 P03/5 P03/6 P03/8 P03/9
+   P07/1 P08/1
+
+SR5.  If a structure S is in the specified set of an archive
+operation and S does not exist in the CSS, then S error 200 is
+signalled and no other action is taken for that structure.
+#F 137 138 139
+#D 7.1 9.1.1
+#S n
+#T P03/3 P03/4 P03/6 P03/7 P03/9 P03/10 P03/14
+
+SR6.  If a structure S is in the specified set of an archive
+operation and S exists in both the CSS and the archive file, and
+the archival conflict resolution flag is UPDATE, then S is copied
+from the CSS to the archive file, replacing the old structure
+with the same identifier.
+#F 137 138 139
+#D 4.7 7.1 9.1.1
+#S 4.4.7/32/7 4.4.7/33/1
+#T P03/5 P03/6
+
+SR7.  If a structure S is in the specified set of an archive
+operation and S exists in both the CSS and the archive file, and
+the archival conflict resolution flag is MAINTAIN, then no action
+is taken for S.
+#F 137 138 139
+#D 4.7 7.1 9.1.1
+#S 4.4.7/32/7 4.4.7/33/1
+#T P03/1 P03/2 P03/3
+
+SR8.  If a structure S is in the specified set of an archive
+operation and S exists in both the CSS and the archive file, and
+the archival conflict resolution flag is ABANDON, then the
+archive file is left in the same state as it was before the
+operation and error 405 is signalled.
+#F 137 138 139
+#D 4.7 7.1 9.1.1
+#S 4.4.7/32/7 4.4.7/33/1
+#T P03/11 P03/12 P03/13 P03/14
+
+
+*** *** *** *** ***   Retrieving structures   *** *** *** *** ***
+
+SR9.  For <retrieve structures>, the set of structures to be
+retrieved from the specified archive file contains exactly those
+whose identifiers are in the specified list.
+#F 142
+#D
+#S 4.4.7/32/3
+#T P01/1 P04/1 P05/3 P05/4 P05/8 P06/2 P07/2 P07/3
+
+SR10.  For <retrieve structure networks>, the set of structures
+to be retrieved from the specified archive file contains those
+whose identifiers are in the specified list, and all their
+descendants in the archive file.
+#F 143
+#D 9.1.1 9.1.2.4
+#S 4.4.7/32/3
+#T P04/2 P05/1 P05/5 P05/6 P05/7 P05/9 P05/10 P05/13 P05/14 P05/15
+   P05/16 P06/3
+
+SR11.  For <retrieve all structures>, the set of structures to be
+retrieved from the specified archive file contains all those
+currently in that file.
+#F 144
+#D 9.1.1
+#S 4.4.7/32/3
+#T P04/3 P05/2 P05/11 P05/12 P06/1 P08/2
+
+***  Logic of retrieval conflict resolution,
+***  for each specified structure S:
+***
+***     if (S in CSS) then
+***        if     (retrieval-flag = MAINTAIN) then
+***           no action                                   [SR14]
+***        elseif (retrieval-flag = ABANDON)  then
+***           abort, signal error 405                     [SR15]
+***        elseif (retrieval-flag = UPDATE)   then
+***           if (S in archive)
+***              overwrite into CSS                       [SR16]
+***           else (S not in archive)
+***              overwrite empty S into CSS, warning 408  [SR17]
+***           endif
+***        endif
+***     else (S not in CSS)
+***        if (S in archive) then
+***           copy S from archive to CSS                  [SR12]
+***        else (S not in archive, nor in CSS)
+***           create empty S in CSS, warning 408          [SR13]
+***        endif
+***     endif
+
+SR12.  If a structure S is in the specified set of a retrieve
+operation and S exists in the archive file but not in the CSS,
+then S is copied from the archive file to the CSS.
+#F 142 143 144
+#D 7.1 9.1.1
+#S 4.4.7/32/3
+#T P01/1 P04/1 P04/2 P04/3 P05/1 P05/2 P05/3 P05/5 P05/6 P05/8 P05/9
+   P07/2 P07/3 P08/2
+
+SR13.  If a structure S is in the specified set of a retrieve
+operation and S exists in neither the archive file nor in the
+CSS, then an empty structure with identifier S is created in the
+CSS and warning 408 is signalled.
+#F 142 143 144
+#D 7.1 9.1.1
+#S n
+#T P05/3 P05/4 P05/9 P05/10 P05/14 P05/16
+
+SR14.  If a structure S is in the specified set of a retrieve
+operation and S exists in the CSS and the retrieval conflict
+resolution flag is MAINTAIN, then no action is taken for S.
+#F 142 143 144
+#D 4.8 7.1 9.1.1
+#S 4.4.7/33/1
+#T P05/1 P05/2 P05/3
+#C This rule applies regardless of whether S exists in archive.
+
+SR15.  If a structure S is in the specified set of a retrieve
+operation and S exists in the CSS and the retrieval conflict
+resolution flag is ABANDON, then the CSS is left in the same
+state as it was before the operation and error 405 is signalled.
+#F 142 143 144
+#D 4.8 7.1 9.1.1
+#S 4.4.7/33/1
+#T P05/11 P05/12 P05/13 P05/14 P05/15 P05/16
+#C This rule applies regardless of whether S exists in archive.
+
+SR16.  If a structure S is in the specified set of a retrieve
+operation and S exists in both the CSS and the archive file, and
+the retrieval conflict resolution flag is UPDATE, then S is
+copied from the archive file to the CSS, replacing the old
+structure with the same identifier.
+#F 142 143 144
+#D 4.8 7.1 9.1.1
+#S 4.4.7/33/1
+#T P05/5 P05/6 P06/1 P06/3
+
+SR17.  If a structure S is in the specified set of a retrieve
+operation and S exists in the CSS and but not in the archive
+file, and the retrieval conflict resolution flag is UPDATE, then
+an empty structure with identifier S is created in the CSS
+replacing the old structure with the same identifier and warning
+408 is signalled.
+#F 142 143 144
+#D 4.8 7.1 9.1.1
+#S 4.4.7/33/1
+#T P05/6 P05/7 P06/2
+
+SR18.  Whenever an open CSS structure is to be overwritten by a
+retrieve operation, it is first closed, overwritten, and then
+re-opened, implying that the element pointer indicates the last
+element of the structure.
+#F 142 143 144
+#D 4.3 7.1
+#S n
+#T P06/1 P06/2 P06/3
+
+SR19.  Whenever a completed retrieve operation has introduced
+into the CSS a reference to a non-existent structure, then an
+empty structure is created with the corresponding identifier.
+#F 142 143 144
+#D 7.1 7.3.4
+#S 4.4.2/25/2
+#T P07/2 P07/3
+
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  137: parst   <archive structures>
+  138: parsn   <archive structure networks>
+  139: parast  <archive all structures>
+  142: prest   <retrieve structures>
+  143: presn   <retrieve structure networks>
+  144: prast   <retrieve all structures>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.3  ...  element_pointer
+  4.7  ...  archival_conflict_resolution_flag
+  4.8  ...  retrieval_conflict_resolution_flag
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.3  ...  list_of_structure_elements
+  7.3.4  ...  execute_structure
+  9  ...  archive
+  9.1  ...  archive_file
+  9.1.1  ...  structure_identifier
+  9.1.2  ...  list_of_structure_elements
+  9.1.2.4  ...  execute_structure
+ 
+LOCAL SUBROUTINES:
+
+AVARNM returns an available name for a new archive file.
+
+CSSIDS checks the actual set of structure identifiers in the CSS
+against an expected list, encoded as a string.  If equal, it
+returns true, else false.
+
+RETOPN checks that the state of the open structure is as expected
+and issues pass or fail as a result.  If there is an open
+structure, it is closed by RETOPN
+
+
+PROGRAM 1: Preservation of structure contents
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+set up values for polymarker and GDP:
+xvals =  2.2,      3.3e22,  4.4e-33, -5.5
+yvals = -1.2e-22, -2.3e33, -3.4,      0.0
+
+set up parameters for text:
+xpos = 9.8, ypos = 7.6
+
+set up parameters for name-set:
+nmvals = 2,3,5,8,13,63,0
+
+set up additional parameters for GDP:
+numrls = 3 = number of reals to be passed
+gdpid  = 33
+datrec = "1st GDP string","Second string passed to GDP"
+
+struid = 101
+<open structure>    with struid
+<polymarker>        with xvals,yvals
+<text>              with xpos, ypos, "Text string."
+<add names to set>  with nmvals
+<generalized drawing primitive>  with
+   xvals,yvals, gdpid, datrec
+<close structure>
+
+find empty archive file, named arnm
+
+arid = 10
+<open archive file>   with arid,arnm
+<archive structures>  with arid, struid
+<delete structure>    with struid
+<retrieve structures> with arid, struid
+<close archive file>  with arid
+
+TEST: #SR 1 4 9 12
+      "When a structure is archived and retrieved, all the
+       structure elements and all the parameter values therein
+       should be accurately restored."
+
+conok = true
+
+for elemno = 1 to 4
+   msg = "OK"
+   <inquire element type and size> with struid,elemno
+      to determine eltype, elsize
+   if (element doesn't exist) then
+      conok = false
+      message about non-existent elemno
+      goto end_tests
+   endif
+   if (eltype incorrect) then
+      msg = "element type."
+      goto skip_contents
+   endif
+   if (elsize incorrect) then
+      msg = "element size."
+      goto skip_contents
+   endif
+
+   <inquire element contents> with struid,elemno
+      to determine elcont
+
+   if     (elemno = 1) then
+      if (elcont not = <polymarker> with xvals,yvals) then
+         msg = "contents for polymarker."
+      endif
+   elseif (elemno = 2) then
+      if (elcont not = <text> with xpos, ypos, "Text string.") then
+         msg = "contents for text."
+      endif
+   elseif (elemno = 3) then
+      if (elcont not = <add names to set> with nmvals) then
+         msg = "contents for add names to set."
+      endif
+   elseif (elemno = 4) then
+      if (elcont not = <generalized drawing primitive> with
+                       xvals,yvals, gdpid, datrec) then
+         msg = "contents for generalized drawing primitive."
+      endif
+   else
+      abort
+   endif
+
+skip_contents:
+   if (msg = "OK") then
+      do nothing
+   else
+      conok = false
+      informative message: "Incorrect " + msg
+   endif
+next elemno
+
+<inquire element type and size> with struid, elemno = 5
+   to determine eltype, elsize
+
+if (element exists) then
+   conok = false
+   informative message: "Extra element found at end of retrieved structure."
+endif
+
+end_tests:
+pass/fail depending on (conok)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Selection of structures for archiving
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+set up standard networks in CSS
+open new archive file, with arid = archive identifier
+
+<delete all structures from archive> to ensure empty file
+expstr = expected structures = 114,102,100,140,107
+<archive structures> with expstr, arid
+TEST: #SR 1 4
+      "Exactly those structures explicitly listed in the input
+       parameter of <archive structures> should be reported as
+       existing in a previously empty archive file."
+<retrieve structure identifiers> with arid
+  to determine: actstr = actual list of structures
+pass/fail depending on (actstr contains same identifiers as expstr)
+
+<delete all structures from archive> to ensure empty file
+spcstr = specified structures = 107,114,105
+expstr = expected structures = 105,110,114,108,111,115,107,113
+<archive structure networks> with spcstr, arid
+TEST: #SR 2 4
+      "The structures explicitly listed in the input parameter of
+       <archive structure networks> and all their descendants in
+       the CSS should be reported as existing in a previously
+       empty archive file."
+<retrieve structure identifiers> with arid
+  to determine: actstr = actual list of structures
+pass/fail depending on (actstr contains same identifiers as expstr)
+
+<delete all structures from archive> to ensure empty file
+expstr = expected structures = 100,101,102,103,104,105,106,107,108,109,
+                               110,111,113,114,115,120,130,140,142
+<archive all structures> with arid
+TEST: #SR 3 4
+      "<Archive all structures> should cause all structures
+       currently in the CSS to be reported as existing in a
+       previously empty archive file."
+<retrieve structure identifiers> with arid
+  to determine: actstr = actual list of structures
+pass/fail depending on (actstr contains same identifiers as expstr)
+
+<close archive file> with arid
+
+END PROGRAM 2
+
+
+PROGRAM 3: Archival conflict resolution
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+When structures with the same identifiers are set up for testing,
+the contents of those in the CSS differ from those in the
+archive, so that the two versions are distinguishable. This is
+noted by following the structure identifier with a "C" (for CSS)
+or "A" (for archive).
+
+open archive file = arid
+
+*** *** ***   archiving with MAINTAIN   *** *** ***
+
+set archival conflict resolution flag = MAINTAIN
+
+***  archive existing structures
+
+set up structures:
+   archive : 102-A, 104-A
+   CSS     : 101-C, 104-C
+
+<archive all structures> to arid
+
+TEST: #SR 3 4 7
+      "When the archival resolution flag is MAINTAIN, <archive
+       all structures> should insert new structures into the
+       archive file, but not replace existing structures."
+clear CSS
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 101-C, 102-A, 104-A)
+
+set up structures:
+   archive : 102-A, 104-A
+   CSS     : 101-C, 104-C, with 101-C invoking 104-C
+
+<archive structure networks> 101
+
+TEST: #SR 2 4 7
+      "When the archival resolution flag is MAINTAIN, <archive
+       structure networks> should insert new structures into the
+       archive file, but not replace existing structures."
+clear CSS
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 101-C, 102-A, 104-A)
+
+
+***  archive with some non-existent structures
+
+set up structures:
+   archive : 102-A, 104-A
+   CSS     : 101-C, 104-C
+
+<archive structures> 101,102,103,104
+
+TEST: #SR 1 4 5 7
+      "When the archival resolution flag is MAINTAIN and some of
+       the specified structures do not exist in the CSS, <archive
+       structures> should take no action for the non-existent
+       structures, add new structures to the archive file, but
+       not replace existing archive structures."
+clear CSS
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 101-C, 102-A, 104-A)
+
+TEST: #SR 1 5
+      "When the archival resolution flag is MAINTAIN and some of
+       the specified structures do not exist in the CSS, <archive
+       structures> should signal error 200."
+pass/fail depending on (Error 200 signalled from <archive
+                        structures>)
+
+
+*** *** ***   archiving with UPDATE   *** *** ***
+
+set archival conflict resolution flag = UPDATE
+
+***  archive existing structures
+
+set up structures:
+   archive : 102-A, 104-A
+   CSS     : 101-C, 104-C, with 101-C invoking 104-C
+
+<archive structure networks> 101
+
+TEST: #SR 2 4 6
+      "When the archival resolution flag is UPDATE and all of the
+       specified structures exist, <archive structure networks>
+       should insert new structures into the archive file, and
+       replace existing structures."
+clear CSS
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 101-C, 102-A, 104-C)
+
+***  archive with some non-existent structures
+
+set up structures:
+   archive : 102-A, 104-A
+   CSS     : 101-C, 104-C
+
+<archive structure networks> 101,102,103,104
+
+TEST: #SR 2 4 5 6
+      "When the archival resolution flag is UPDATE and some of
+       the specified structures do not exist in the CSS, <archive
+       structure networks> should take no action for the
+       non-existent structures, add new structures to the archive
+       file, and replace existing archive structures."
+clear CSS
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 101-C, 102-A, 104-C)
+
+TEST: #SR 2 5
+      "When the archival resolution flag is UPDATE and some of
+       the specified structures do not exist in the CSS, <archive
+       structure networks> should signal error 200."
+pass/fail depending on (Error 200 signalled from <archive
+                        structure networks>)
+
+
+*** *** ***   archiving with ABANDON   *** *** ***
+
+set archival conflict resolution flag = ABANDON
+
+***  archive existing structures
+
+set up structures:
+   archive : 102-A, 104-A
+   CSS     : 101-C, 104-C, with 101-C invoking 104-C
+
+<archive structures> 101
+
+TEST: #SR 1 4
+      "When the archival resolution flag is ABANDON and all of
+       the specified structures exist in the CSS but not in the
+       archive file, <archive structures> should insert the new
+       structures into the archive file."
+clear CSS
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 101-C, 102-A, 104-A)
+
+***  archive with some non-existent structures
+
+set up structures:
+   archive : 102-A, 104-A
+   CSS     : 101-C, 104-C
+
+<archive structure networks> 101,102,103
+
+TEST: #SR 2 4 5
+      "When the archival resolution flag is ABANDON and some of
+       the specified structures do not exist in the CSS, <archive
+       structure networks> should take no action for the
+       non-existent structures and add new structures to the
+       archive file."
+clear CSS
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 101-C, 102-A, 104-A)
+
+TEST: #SR 2 5
+      "When the archival resolution flag is ABANDON and some of
+       the specified structures do not exist in the CSS, <archive
+       structure networks> should signal error 200."
+pass/fail depending on (Error 200 signalled from <archive
+                        structure networks>)
+
+
+***  archive with duplicate structures to trigger ABANDON
+
+set up structures:
+   archive : 102-A, 104-A
+   CSS     : 101-C, 104-C
+
+<archive all structures>
+
+TEST: #SR 3 8
+      "When the archival resolution flag is ABANDON and some of
+       the specified structures are already in the archive file,
+       <archive all structures> should leave the archive file
+       unchanged."
+clear CSS
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 102-A, 104-A)
+
+TEST: #SR 3 8
+      "When the archival resolution flag is ABANDON and some of
+       the specified structures are already in the archive file,
+       <archive all structures> should signal error 405."
+pass/fail depending on (Error 405 signalled from <archive all
+                        structures>)
+
+
+***  archive with duplicate structures to trigger ABANDON and
+***  non-existent structures
+
+set up structures:
+   archive : 102-A, 104-A
+   CSS     : 101-C, 104-C, with 101-C invoking 104-C
+
+<archive structure networks> 101,103,102
+
+TEST: #SR 2 8
+      "When the archival resolution flag is ABANDON and some of
+       the specified structures do not exist in the CSS and some
+       are already in the archive file, <archive structure
+       networks> should leave the archive file unchanged."
+clear CSS
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 102-A, 104-A)
+
+TEST: #SR 2 5 8
+      "When the archival resolution flag is ABANDON and some of
+       the specified structures are already in the archive file
+       and others do not exist in the CSS, then <archive
+       structure networks> should signal error 200 or 405."
+pass/fail depending on (Error 200 or 405 signalled from <archive
+                        all structures>)
+
+close archive file = arid
+
+END PROGRAM 3
+
+
+PROGRAM 4: Selection of structures for retrieving
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+open new archive file, with arid = archive identifier
+set up standard networks in archive = arid
+
+<delete all structures> to ensure empty CSS
+spcstr = specified structures = 114,111,115,109,140,142
+<retrieve structures> with arid, spcstr
+TEST: #SR 9 12
+      "When no references to non-existent structures are created,
+       then exactly those structures explicitly listed in the
+       input parameter of <retrieve structures> should be
+       reported as existing in a previously empty CSS."
+pass/fail depending on (actual list of structures contains same
+                        identifiers as spcstr)
+
+<delete all structures> to ensure empty CSS
+spcstr = specified structures = 107,114,105
+<retrieve structure networks> with arid, spcstr
+TEST: #SR 10 12
+      "The structures explicitly listed in the input parameter of
+       <retrieve structure networks> and all their descendants in
+       the archive file should be reported as existing in a
+       previously empty CSS."
+pass/fail depending on (actual list of structures contains
+                        105,110,114,108,111,115,107,113)
+
+<delete all structures> to ensure empty CSS
+<retrieve all structures> with arid
+TEST: #SR 11 12
+      "<Retrieve all structures> should cause all structures
+       currently in the archive file to be reported as existing
+       in a previously empty CSS."
+pass/fail depending on (actual list of structures contains
+                        100,101,102,103,104,105,106,107,108,109,
+                        110,111,113,114,115,120,130,140,142)
+
+<close archive file> with arid
+
+END PROGRAM 4
+
+
+PROGRAM 5: Retrieval conflict resolution
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+When structures with the same identifiers are set up for testing,
+the contents of those in the CSS differ from those in the
+archive, so that the two versions are distinguishable. This is
+noted by following the structure identifier with a "C" (for CSS),
+"A" (for archive), or "E" (for empty).
+
+open archive file = arid
+
+*** *** ***   retrieving with MAINTAIN   *** *** ***
+
+set retrieval conflict resolution flag = MAINTAIN
+
+***  retrieve existing structures
+
+set up structures:
+   archive : 102-A, 104-A, 105-A,
+      with 102-A invoking 104-A, and 104-A invoking 105-A
+   CSS:      101-C, 104-C
+
+TEST: #SR 10 12 14
+      "When the retrieval resolution flag is MAINTAIN, <retrieve
+       structure networks> should insert new structures into the
+       CSS, but not replace existing structures."
+<retrieve structure networks> 102
+pass/fail depending on (CSS = 101-C, 102-A, 104-C, 105-A)
+
+
+set up structures:
+   archive : 102-A, 104-A, with 102-A invoking 104-A
+   CSS:      101-C, 104-C
+
+TEST: #SR 11 12 14
+      "When the retrieval resolution flag is MAINTAIN, <retrieve
+       all structures> should insert new structures into the
+       CSS, but not replace existing structures."
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 101-C, 102-A, 104-C)
+
+
+***  retrieve with some non-existing structures
+
+set up CSS: 101-C, 104-C
+
+TEST: #SR 9 12 13 14
+      "When the retrieval resolution flag is MAINTAIN and some of
+       the specified structures do not exist in the archive,
+       <retrieve structures> should insert existing structures
+       into the CSS and create empty structures for those not
+       existing, but not replace existing CSS structures."
+<retrieve structures> 101,102,103,104
+pass/fail depending on (CSS = 101-C, 102-A, 103-E, 104-C)
+
+TEST: #SR 9 13
+      "When the retrieval resolution flag is MAINTAIN and some of
+       the specified structures do not exist in the archive,
+       <retrieve structures> should signal error 408."
+pass/fail depending on (Error 408 signalled from <retrieve
+                        structures>)
+
+
+*** *** ***   retrieving with UPDATE   *** *** ***
+
+set retrieval conflict resolution flag = UPDATE
+
+***  retrieve existing structures
+
+set up CSS: 101-C, 104-C
+
+TEST: #SR 10 12 16
+      "When the retrieval resolution flag is UPDATE, <retrieve
+       structure networks> should insert new structures into the
+       CSS, and replace existing structures."
+<retrieve structure networks> 102
+pass/fail depending on (CSS = 101-C, 102-A, 104-A)
+
+***  retrieve with some non-existing structures
+
+set up CSS: 101-C, 104-C
+
+TEST: #SR 10 12 16 17
+      "When the retrieval resolution flag is UPDATE and some of
+       the specified structures do not exist in the archive,
+       <retrieve structure networks> should insert existing
+       structures into the CSS, create empty structures for those
+       not existing, and replace existing CSS structures, even if
+       the replacement did not exist in the archive."
+<retrieve structure networks> 101,102,104
+pass/fail depending on (CSS = 101-E, 102-A, 104-A)
+
+TEST: #SR 10 17
+      "When the retrieval resolution flag is UPDATE and some of
+       the specified structures do not exist in the archive,
+       <retrieve structure networks> should signal error 408."
+pass/fail depending on (Error 408 signalled from <retrieve
+                        structure networks>)
+
+
+*** *** ***   retrieving with ABANDON   *** *** ***
+
+set retrieval conflict resolution flag = ABANDON
+
+***  retrieve existing structures
+
+set up CSS: 101-C, 104-C
+
+TEST: #SR 9 12
+      "When the retrieval resolution flag is ABANDON and all of
+       the specified structures exist in the archive file but not
+       in the CSS, <retrieve structures> should insert the new
+       structures into the CSS."
+<retrieve structures> 102
+pass/fail depending on (CSS = 101-C, 102-A, 104-C)
+
+***  retrieve with some non-existing structures
+
+set up CSS: 101-C
+
+TEST: #SR 10 12 13
+      "When the retrieval resolution flag is ABANDON and some of
+       the specified structures do not exist in the archive,
+       <retrieve structure networks> should insert existing
+       structures into the CSS and create empty structures for
+       those not existing."
+<retrieve structure networks> 102,103
+pass/fail depending on (CSS = 101-C, 102-A, 103-E, 104-A)
+
+TEST: #SR 10 13
+      "When the retrieval resolution flag is ABANDON and some of
+       the specified structures do not exist in the archive,
+       <retrieve structure networks> should signal error 408."
+pass/fail depending on (Error 408 signalled from <retrieve
+                        structure networks>)
+
+
+***  retrieve with duplicate structures to trigger ABANDON
+
+set up CSS: 101-C, 104-C
+
+TEST: #SR 11 15
+      "When the retrieval resolution flag is ABANDON and some of
+       the specified structures are already in the CSS, <retrieve
+       all structures> should leave the CSS unchanged."
+<retrieve all structures> from arid
+pass/fail depending on (CSS = 101-C, 104-C)
+
+TEST: #SR 11 15
+      "When the retrieval resolution flag is ABANDON and some of
+       the specified structures are already in the CSS, <retrieve
+       all structures> should signal error 405."
+pass/fail depending on (Error 405 signalled from <retrieve all
+                        structures>)
+
+
+***  retrieve with duplicate structures to trigger ABANDON and
+***  non-existent structures
+
+set up CSS: 101-C, 104-C
+
+TEST: #SR 10 15
+      "When the retrieval resolution flag is ABANDON and some of
+       the specified structures exist in the archive and also in
+       the CSS, <retrieve structure networks> should leave the
+       CSS unchanged."
+<retrieve structure networks> 103, 102
+pass/fail depending on (CSS = 101-C, 104-C)
+
+TEST: #SR 10 13 15
+      "When the retrieval resolution flag is ABANDON and some of
+       the specified structures are already in the CSS, and
+       others do not exist in the archive file, then <retrieve
+       structure networks> should signal error 405 or 408."
+pass/fail depending on (Error 405 or 408 signalled from <retrieve
+                        structure networks>)
+
+
+set up CSS: 101-C, 104-C
+
+TEST: #SR 10 15
+      "When the retrieval resolution flag is ABANDON and a
+       specified structure is already in the CSS, <retrieve
+       structures> should leave the CSS unchanged even if the
+       structure does not exist in the archive."
+<retrieve structures> 102, 101
+pass/fail depending on (CSS = 101-C, 104-C)
+
+TEST: #SR 10 13 15
+      "When the retrieval resolution flag is ABANDON and a
+       specified non-existent structure is already in the CSS,
+       then <retrieve structures> should signal error 405 or 408."
+pass/fail depending on (Error 405 or 408 signalled from <retrieve
+                        structures>)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Retrieving open structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+set retrieval conflict resolution flag = UPDATE
+
+set up structures:
+   archive : 102-A, 104-A (3 elements), with 102-A invoking 104-A
+   CSS     : 101-C, 104-C (4 elements)
+
+<open structure> 104
+<retrieve all structures>
+
+TEST: #SR 11 16 18
+      "When <retrieve all structures> causes a structure in the
+       archive to replace the open CSS structure, the structure
+       should remain open, with the element pointer indicating
+       the last element."
+pass/fail depending on (104-A is open structure and
+                        element pointer = 3)
+
+if (a structure is open) then
+   close structure
+endif
+
+set up structures:
+   CSS     : 101-C, 104-C (4 elements)
+
+<open structure> 101
+<retrieve structures> 102, 101
+
+TEST: #SR 9 17 18
+      "When <retrieve structures> specifies a non-existent archive
+       structure to replace the open CSS structure, the structure
+       should become empty but remain open, with the element
+       pointer indicating zero."
+pass/fail depending on (101-E is open structure and
+                        element pointer = 0)
+
+if (a structure is open) then
+   close structure
+endif
+
+set up structures:
+   CSS     : 101-C, 104-C (2 elements)
+
+<open structure> 104
+<retrieve structure networks> 102
+
+TEST: #SR 10 16 18
+      "When <retrieve structure networks> causes an implicitly
+       specified structure in the archive to replace the open CSS
+       structure, the structure should remain open, with the
+       element pointer indicating the last element."
+pass/fail depending on (104-A is open structure and
+                        element pointer = 3)
+
+if (a structure is open) then
+   close structure
+endif
+
+END PROGRAM 6
+
+
+PROGRAM 7: Partial networks in archive
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+*** *** ***   partial archive networks   *** *** ***
+
+set up structures:
+   CSS     : 101-C, 104-C, with 101-C invoking 104-C
+
+<archive structures> 101
+
+TEST: #SR 1 4
+      "When <archive structures> specifies a referring structure,
+       but not the structure to which it refers, only the
+       specified structure should be archived."
+<retrieve structure identifiers> to determine:
+   actstr = actual list of structures
+pass/fail depending on (actstr = [101])
+
+*** *** ***   completing CSS networks   *** *** ***
+
+clear CSS
+<retrieve structures> 101
+
+TEST: #SR 9 12 19
+      "If <retrieve structures> specifies a referring structure
+       but not the structure to which it refers, and no structure
+       with the referred identifier exists in the CSS, then an
+       empty structure should be created in the CSS with the
+       corresponding identifier when the referring structure is
+       retrieved."
+pass/fail depending on (CSS = 101-C, 104-E)
+
+set up structures:
+   archive : 101-C, 104-C, with 101-C invoking 104-C
+
+clear CSS
+<retrieve structures> 101
+
+TEST: #SR 9 12 19
+      "If <retrieve structures> specifies a referring structure
+       but not the structure to which it refers, and no structure
+       with the referred identifier exists in the CSS, then an
+       empty structure should be created in the CSS with the
+       corresponding identifier when the referring structure is
+       retrieved, even if the referred structure exists in the
+       archive."
+pass/fail depending on (CSS = 101-C, 104-E)
+
+END PROGRAM 7
+
+
+PROGRAM 8: Archiving and retrieving with multiple files
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire phigs facilities> to determine
+   mxarno = maximum number of simultaneously open archive files
+if (mxarno <= 1) then
+   informative message: skippping tests, can't open multiple
+      archive files
+   goto done
+endif
+
+set up standard networks in CSS
+open 1st archive file, with arid1 = archive identifier
+open 2nd archive file, with arid2 = archive identifier
+
+spcst1 = 111,114,115
+spcst2 = 109,113
+
+<archive structures> spcst1 into arid1
+<archive structures> spcst2 into arid2
+
+<retrieve structure identifiers> with arid1
+   to determine actst1 = structures in file arid1
+<retrieve structure identifiers> with arid2
+   to determine actst2 = structures in file arid2
+
+TEST: #SR 1 4
+      "If more than one archive file is open, <archive
+       structures> should affect only the open archive file
+       specified in its parameter list."
+pass/fail depending on (actst1 = spcst1 and actst2 = spcst2)
+
+clear CSS
+<retrieve all structures> from arid1
+ar1ok = (structures in CSS same as spcst1)
+
+clear CSS
+<retrieve all structures> from arid2
+ar2ok = (structures in CSS same as spcst2)
+
+TEST: #SR 11 12
+      "If more than one archive file is open, <retrieve all
+       structures> should affect only the open archive file
+       specified in its parameter list."
+pass/fail depending on (ar1ok and ar2ok)
+
+<close archive file> with arid1
+<close archive file> with arid2
+
+done:
+
+END PROGRAM 8

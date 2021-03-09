@@ -1,0 +1,72 @@
+      SUBROUTINE E05207 (USEPRM)
+
+C   E05207 tests the handling of error 207.
+
+      COMMON /GLOBNU/ CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT, DUMRL
+      INTEGER         CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT(20), ERRIND
+      REAL    DUMRL(20)
+
+      COMMON /ERRINF/ ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR,
+     1                USRERR, ERRSAV,      FUNSAV,      FILSAV,
+     2                EFCNT, EFID
+      INTEGER         ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR(10),
+     1                USRERR, ERRSAV(200), FUNSAV(200), FILSAV(200),
+     2                EFCNT, EFID(100)
+      COMMON /ERRCHR/ CURCON,     ERRSRS,    ERRMRK,    ERFLNM,
+     1                CONTAB
+      CHARACTER       CURCON*200, ERRSRS*40, ERRMRK*20, ERFLNM*80,
+     1                CONTAB(40)*150
+
+C   path order
+      INTEGER      PPOTOP,      PPOBOT
+      PARAMETER   (PPOTOP=0,    PPOBOT=1)
+
+      INTEGER   USEPRM, IDUM1, PATHOD, PATHDP, OL, PATH(2,10)
+      INTEGER   ARF, ARNM, NST, STRID
+      LOGICAL   STREQ
+
+      CURCON = 'the specified path depth is less than zero'
+      CALL SETVS ('207', EXPERR, EXPSIZ)
+      ERRSRS = '5'
+      CALL ESETUP (USEPRM)
+
+      ARF = 11
+      CALL AVARNM (ARNM)
+      CALL POPARF (ARF, ARNM)
+
+      CALL CREST
+
+      CALL PARAST (ARF)
+      CALL PDAS
+      CALL POPST (103)
+
+      PATHOD = PPOBOT
+      PATHDP = -1
+      CALL RREPAN (ARF,100,PATHOD,PATHDP,10,0,OL,IDUM1,PATH)
+
+C  check that state of CSS is unchanged
+      CALL PQSID (1,ERRIND,NST,STRID)
+      CALL CHKINQ ('pqsid', ERRIND)
+      CALL TSTIGN (STREQ('O**O') .AND. NST.EQ.1 .AND. STRID.EQ.103)
+
+      PATHOD = PPOTOP
+      PATHDP = -100
+      CALL RREPDE (ARF,101,PATHOD,PATHDP,10,0,OL,IDUM1,PATH)
+
+C  check that state of CSS is unchanged
+      CALL PQSID (1,ERRIND,NST,STRID)
+      CALL CHKINQ ('pqsid', ERRIND)
+      CALL TSTIGN (STREQ('O**O') .AND. NST.EQ.1 .AND. STRID.EQ.103)
+
+      CALL PCLARF (ARF)
+      CALL PCLST
+
+      CALL ENDERR
+
+      END

@@ -1,0 +1,89 @@
+      SUBROUTINE E04157 (USEPRM)
+
+C   E04157 tests the handling of error 157.
+
+      COMMON /GLOBNU/ CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT, DUMRL
+      INTEGER         CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT(20), ERRIND
+      REAL    DUMRL(20)
+
+      COMMON /ERRINF/ ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR,
+     1                USRERR, ERRSAV,      FUNSAV,      FILSAV,
+     2                EFCNT, EFID
+      INTEGER         ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR(10),
+     1                USRERR, ERRSAV(200), FUNSAV(200), FILSAV(200),
+     2                EFCNT, EFID(100)
+      COMMON /ERRCHR/ CURCON,     ERRSRS,    ERRMRK,    ERFLNM,
+     1                CONTAB
+      CHARACTER       CURCON*200, ERRSRS*40, ERRMRK*20, ERFLNM*80,
+     1                CONTAB(40)*150
+
+      INTEGER    SPECWT, USEPRM, IDUM1, IDUM2, IDUM3, IDUM4
+      REAL       DX3,DY3,DZ3,DX2,DY2,XX,YY,ZZ,RDUMA(6),RDUMB(6)
+      REAL       RDUMC(6),RDUMD(4),RDUME(4),RDUMF(4)
+      REAL       WKVP0(6),WKVP1(6),WKVP(6),WKVP4(4)
+      LOGICAL    STREQ, APPEQ, RAREQ
+
+      CURCON = 'the specified workstation viewport is not within '//
+     1         'display space'
+      CALL SETVS ('157', EXPERR, EXPSIZ)
+      ERRSRS = '7'
+      CALL ESETUP (USEPRM)
+
+      CALL POPWK (WKID, CONID, WTYPE)
+      CALL PQWKC (WKID, ERRIND, CONID, SPECWT)
+      CALL CHKINQ ('pqwkc', ERRIND)
+
+      CALL PQDSP3 (SPECWT,ERRIND,IDUM1,DX3,DY3,DZ3,IDUM2,IDUM3,IDUM4)
+      CALL CHKINQ ('pqdsp3', ERRIND)
+      CALL PQDSP  (SPECWT,ERRIND,IDUM1,DX2,DY2,IDUM2,IDUM3)
+      CALL CHKINQ ('pqdsp', ERRIND)
+
+      XX = DX3/2.
+      YY = DY3/2.
+      ZZ = DZ3/2.
+
+C 3D
+      CALL DS3 (0.,XX,0.,YY,0.,ZZ,WKVP0)
+      CALL PSWKV3 (WKID, WKVP0)
+
+      CALL DS3 (-0.1,DX3,0.,DY3,0.,DZ3,WKVP)
+      CALL RSWKV3 (WKID, WKVP)
+
+      CALL DS3 (0.,DX3,0.,DY3+0.1,0.,DZ3,WKVP)
+      CALL RSWKV3 (WKID, WKVP)
+
+      CALL DS3 (0.,DX3,0.,DY3,-0.1,DZ3+0.1, WKVP)
+      CALL RSWKV3 (WKID, WKVP)
+
+      CALL PQWKT3 (WKID,ERRIND,IDUM1,RDUMA,RDUMB,WKVP1,RDUMC)
+      CALL CHKINQ ('pqwkt3', ERRIND)
+      CALL TSTIGN (STREQ('OO**') .AND. RAREQ(6,WKVP1,WKVP0,0.01,0.01))
+
+C 2D
+      XX = DX2/2.
+      YY = DY2/2.
+      CALL PSWKV (WKID, 0.,XX,0.,YY)
+
+      CALL RSWKV (WKID, -0.1,DX2,0.,DY2)
+      CALL RSWKV (WKID, 0.,DX2,0.,DY2+0.1)
+      CALL RSWKV (WKID, -0.1,DX2,0.,DY2+0.1)
+
+      CALL PQWKT (WKID,ERRIND,IDUM1,RDUMD,RDUME,WKVP4,RDUMF)
+      CALL CHKINQ ('pqwkt',ERRIND)
+      CALL TSTIGN (STREQ('OO**')                .AND.
+     1             APPEQ(WKVP4(1),0.,0.01,0.01) .AND.
+     2             APPEQ(WKVP4(2),XX,0.01,0.01) .AND.
+     3             APPEQ(WKVP4(3),0.,0.01,0.01) .AND.
+     4             APPEQ(WKVP4(4),YY,0.01,0.01))
+
+      CALL PCLWK (WKID)
+
+      CALL ENDERR
+
+      END

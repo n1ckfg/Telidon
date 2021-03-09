@@ -1,0 +1,480 @@
+TITLE: Individual structure creation
+
+MODULE#: 02.01.01
+
+DESCRIPTION:  This module tests the various methods available to
+create a new empty structure in the CSS.  Structure creation via
+retrieval from an archive is tested under 03.03.  This module's
+test cases directly use <inquire structure identifiers>, which is
+tested explicitly in 02.01.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  <Open structure> for a non-existent structure creates a new
+empty structure.
+#F 111
+#D 7.1 4.5
+#S 4.4.2/25/2 4.4.4/28/5
+#T P01/2 P01/3
+#X 02.02.01
+
+SR2.  <Empty structure> for a non-existent structure creates a
+new empty structure.
+#F 125
+#D 7.1 4.5
+#S 4.4.2/25/2 4.4.4/29/4
+#T P02/1 P02/2
+#X 02.02.04
+
+SR3.  <Execute structure> for a non-existent structure creates a
+new empty structure.
+#F 113
+#D 7.1 4.5
+#S 4.4.2/25/2
+#T P03/1 P03/2
+
+SR4.  <Post structure> for a non-existent structure creates a new
+empty structure.
+#F 132
+#D 7.1 4.5
+#S 4.4.2/25/2 4.4.3/25/5
+#T P04/1 P04/2
+#X 05.03
+
+SR5.  <Change structure identifier> causes a new empty structure
+to be created when the new structure identifier refers to a
+non-existent structure.
+#F 129
+#D 7.1 4.5
+#S 4.4.2/25/2 4.4.5/30/1
+#T P05/1 P05/2 P06/1 P06/2
+#X 02.01.03.01
+
+SR6.  <Change structure references> causes a new empty structure
+to be created when the new structure identifier refers to a
+non-existent structure and references to the original structure
+exist.
+#F 130
+#D 7.1 4.5
+#S 4.4.2/25/2
+#T P07/1 P07/2
+#X 02.01.03.02
+
+SR7.  <Change structure identifier and references> causes a new
+empty structure to be created when the new structure identifier
+refers to a non-existent structure.
+#F 131
+#D 7.1 4.5
+#S 4.4.2/25/2 4.4.5/30/1
+#T P08/1 P08/2 P09/1 P09/2
+#X 02.01.03.03
+
+SR8.  Upon opening PHIGS the initial state of the CSS is empty,
+i.e. no structures exist.
+#F 1
+#D 7 4.5
+#S 4.4.2/25/2 4.10/107/8 6.5/314/1
+#T P01/1 P01/4
+
+SR9.  The CSS has the capacity to hold multiple structures.
+#F 111 125 113 132 129 130 131 210
+#D 7.1
+#S 4.4.1/22/1 4.4.5/30/2 6.5/314/1
+#T P10/1
+
+SR10. Each structure contained in the CSS has a unique
+identifier.
+#F 111 125 113 132 129 130 131
+#D 7.1 4.5
+#S 4.4.2/25/2
+#T P10/1
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    1: popph   <open phigs>
+  111: popst   <open structure>
+  113: pexst   <execute structure>
+  125: pemst   <empty structure>
+  129: pcstid  <change structure identifier>
+  130: pcstrf  <change structure references>
+  131: pcstir  <change structure identifier and references>
+  132: ppost   <post structure>
+  210: pqsid   <inquire structure identifiers>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.5  ...  list_of_structure_identifiers
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+ 
+PROGRAM 1: Structure creation by opening a non-existent structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+<open phigs>
+TEST: #SR 8
+      "The CSS should be empty upon first opening PHIGS."
+
+Use <inquire structure identifiers> to determine
+    nstid = number of structure identifiers
+pass/fail depending on (nstid = 0)
+
+TEST: #SR 1
+      "Opening a non-existent structure should create one new
+       structure with the specified identifier in the CSS."
+
+<open structure> strid
+Use <inquire structure identifiers> to determine:
+  nstid = number of structure identifiers
+  nstr  = a structure identifier
+
+pass/fail depending on (nstid = 1 and nstr = strid)
+
+TEST: #SR 1
+      "Opening a non-existent structure should create an empty
+       structure with the specified identifier in the CSS."
+
+Use <inquire structure status> on strid to determine
+     strsti = structure status identifier
+pass/fail depending on (strsti = empty)
+
+TEST: #SR 8
+      "The CSS should be empty after closing and re-opening PHIGS."
+<close phigs>
+<open phigs>
+Use <inquire structure identifiers> to determine
+    nstid = number of structure identifiers
+pass/fail depending on (nstid = 0)
+<close phigs>
+
+END PROGRAM 1
+
+
+PROGRAM 2: Structure creation by emptying a non-existent structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+TEST: #SR 2
+      "Emptying a non-existent structure should create one new
+       structure with the specified identifier in the CSS."
+
+<empty structure> strid
+Use <inquire structure identifiers> to determine:
+  nstid = number of structure identifiers
+  nstr  = a structure identifier
+pass/fail depending on (nstid = 1 and nstr = strid)
+
+TEST: #SR 2
+      "Emptying a non-existent structure should create an empty
+       structure with the specified identifier in the CSS."
+
+Use <inquire structure status> on strid to determine
+     strsti = structure status identifier
+pass/fail depending on (strsti = empty)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Structure creation by executing a non-existent structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+TEST: #SR 3
+      "Executing a non-existent structure should create a new
+       structure with the specified identifier in the CSS."
+
+<open structure> rstrid
+<execute structure> strid
+Use <inquire structure identifiers> to determine:
+  nstid = number of structure identifiers
+
+if nstid <> 2 then
+   fail
+   goto end_test_both
+endif
+
+Use <inquire structure identifiers> to determine:
+  nstr1 = structure id#1
+  nstr2 = structure id#2
+
+pass/fail depending on (nstr1 = strid or nstr2 = strid)
+
+end_test_both:
+
+TEST: #SR 3
+      "Executing a non-existent structure should create an empty
+       structure with the specified identifier in the CSS."
+
+Use <inquire structure status> on strid to determine
+     strsti = structure status identifier
+pass/fail depending on (strsti = empty)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Structure creation by posting a non-existent structure
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+TEST: #SR 4
+      "Posting a non-existent structure should create a new
+       structure with the specified identifier in the CSS."
+
+<post structure> strid
+Use <inquire structure identifiers> to determine:
+  nstid = number of structure identifiers
+  nstr  = a structure identifier
+pass/fail depending on (nstid = 1 and nstr = strid)
+
+TEST: #SR 4
+      "Posting a non-existent structure should create an empty
+       structure with the specified identifier in the CSS."
+
+Use <inquire structure status> on strid to determine
+     strsti = structure status identifier
+pass/fail depending on (strsti = empty)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Structure creation by changing the structure identifier
+           to a different value
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+TEST: #SR 5
+      "Changing a structure identifier with the original
+       identifier having a different value than the resulting
+       identifier should create one new structure with the
+       resulting identifier in the CSS."
+
+nwstid = new structure
+<change structure identifier> strid nwstid
+Use <inquire structure identifiers> to determine:
+  nstid = number of structure identifiers
+  nstr  = a structure identifier
+pass/fail depending on (nstid = 1 and nstr = nwstid)
+
+TEST: #SR 5
+      "Changing a structure identifier with the original
+       identifier having a different value than the resulting
+       identifier should create an empty structure with the
+       resulting identifier in the CSS."
+
+Use <inquire structure status> on nwstid to determine
+     strsti = structure status identifier
+pass/fail depending on (strsti = empty)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Structure creation by changing the structure identifier
+           to the same value
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+TEST: #SR 5
+      "Changing a structure identifier with the original
+       identifier having the same value as the resulting identifier
+       should create one new structure with the resulting
+       identifier in the CSS."
+
+<change structure identifier> strid strid
+Use <inquire structure identifiers> to determine:
+  nstid = number of structure identifiers
+  nstr  = a structure identifier
+pass/fail depending on (nstid = 1 and nstr = strid )
+
+TEST: #SR 5
+      "Changing a structure identifier with the original
+       identifier having the same value as the resulting identifier
+       should create an empty structure with the resulting
+       identifier in the CSS."
+
+Use <inquire structure status> on strid to determine
+     strsti = structure status identifier
+pass/fail depending on (strsti = empty)
+
+END PROGRAM 6
+
+
+PROGRAM 7: Structure creation by changing structure references
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+TEST: #SR 6
+      "Changing structure references should create one new
+       structure with the new identifier in the CSS when the new
+       identifier refers to a non-existent structure and references
+       to the original structure exist."
+
+<open structure> strid
+<execute structure> strid1
+<change structure references> strid1 nwstid
+Use <inquire structure identifiers> to determine:
+  nstid = number of structure identifiers
+
+if nstid <> 3 then
+   fail
+   goto test_empty
+endif
+
+do i = 1,nstid
+   Use <inquire structure identifiers> to determine:
+       nstr = ith structure identifier
+   if nstr = nwstid then
+      pass
+      goto test_empty
+   endif
+loop
+fail
+
+test_empty:
+
+TEST: #SR 6
+      "Changing structure references should create an empty
+       structure with the new identifier in the CSS when the new
+       identifier refers to a non-existent structure and references
+       to the original structure exist."
+
+Use <inquire structure status> on nwstid to determine
+     strsti = structure status identifier
+pass/fail depending on (strsti = empty)
+
+END PROGRAM 7
+
+
+PROGRAM 8: Structure creation by changing structure identifier
+           and references to a different value
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+TEST: #SR 7
+      "Changing structure identifier and references with the
+       original identifier having a different value than the
+       resulting identifier should create one new structure with
+       the resulting identifier in the CSS."
+
+<change structure identifier and references> strid nwstid
+Use <inquire structure identifiers> to determine:
+  nstid = number of structure identifiers
+  nstr  = a structure identifier
+pass/fail depending on (nstid = 1 and nstr = nwstid)
+
+TEST: #SR 7
+      "Changing structure identifier and references with the
+       original identifier having a different value than the
+       resulting identifier should create an empty structure with
+       the resulting identifier in the CSS."
+
+Use <inquire structure status> on nwstid to determine
+     strsti = structure status identifier
+pass/fail depending on (strsti = empty)
+
+END PROGRAM 8
+
+
+PROGRAM 9: Structure creation by changing structure identifier
+           and references to the same value
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+TEST: #SR 7
+      "Changing structure identifier and references with the
+       original identifier having the same value as the resulting
+       identifier should create one new structure with the
+       resulting identifier in the CSS."
+
+<change structure identifier and references> strid strid
+Use <inquire structure identifiers> to determine:
+  nstid = number of structure identifiers
+  nstr  = a structure identifier
+pass/fail depending on (strid = 1 and nstr = strid )
+
+TEST: #SR 7
+      "Changing structure identifier and references with the
+       original identifier having the same value as the resulting
+       identifier should create an empty structure with the
+       resulting identifier in the CSS."
+
+Use <inquire structure status> on strid to determine
+     strsti = structure status identifier
+pass/fail depending on (strsti = empty)
+
+END PROGRAM 9
+
+
+PROGRAM 10: Multiple structure creation
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+starr = array of structure identifiers
+
+strid = 1
+do idst = 1, 5
+    starr(idst) = strid
+    strid = strid + 3
+loop
+
+<empty structure>                   starr(1)
+<change structure identifiers>  100 starr(2)
+<post structure>                    starr(3)
+<open structure>                    starr(4)
+<execute structure>                 starr(5)
+
+TEST: #SR 9 10
+      "The CSS should be able to hold multiple structures."
+
+Use <inquire structure identifiers> to determine:
+  nstid = number of structure identifiers
+  nstr  = a structure identifier
+if nstid = 5  then
+   loop to get actual = list of reported strid's
+   pass/fail depending on (actual = starr)
+else
+   fail
+endif
+
+END PROGRAM 10

@@ -1,0 +1,12 @@
+      LOGICAL FUNCTION SURFOK (WKID, EXPSUR)
+
+C  SURFOK: true iff display surface flag equals expected value.
+
+      INTEGER   WKID, EXPSUR, ERRIND, ACTSUR
+      INTEGER   IDUM1, IDUM2, IDUM3
+
+      CALL PQDUS (WKID, ERRIND, IDUM1, IDUM2, ACTSUR, IDUM3)
+      CALL CHKINQ ('pqdus', ERRIND)
+      SURFOK = ACTSUR .EQ. EXPSUR
+
+      END

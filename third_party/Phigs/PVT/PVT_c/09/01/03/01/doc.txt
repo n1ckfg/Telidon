@@ -1,0 +1,1497 @@
+TITLE: Output attribute errors handled by user
+
+MODULE#: 09.01.03.01
+
+DESCRIPTION: This module tests that functions related to output
+attributes generate the specified output attribute error messages if
+they are executed in an incorrect condition. The error is handled by a
+user defined error handling subroutine. Also, this module tests the
+requirement that no side effects are generated.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  If functions <set polyline index>-<set edge index>, <set
+polyline representation>-<set edge representation> are called and the
+bundle index value is less than 1, then error 100 is generated and the
+function is ignored.
+#F 25-29 63-67
+#D 5.9.2.1 5.10.2.1 5.11.2.1 5.12.2.1 5.13.2.1 8.1
+#S 4.12/109/6
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8
+
+SR2.  If function <set view transformation input priority> is called
+and the specified representation has not been defined, then error 101
+is generated and the function is ignored.
+#F 86
+#D 5.4.2.1 8.1
+#S 4.12/109/6
+#T P02/1 P02/2 P02/3 P02/4
+
+SR3.  If functions <set polyline representation>-<set colour
+representation> are called and setting this bundle table entry would
+exceed the maximum number of entries allowed in the workstation bundle
+table, then error 103 is generated and the function is ignored.
+#F 63-69
+#D 6.21.1 6.21.2 6.21.3 6.21.4 6.21.5 6.21.6 6.21.7 8.1
+#S 4.12/109/6
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+
+SR4.  If function <set polyline representation> is called and the
+specified linetype is not available on the specified workstation, then
+error 104 is generated and the function is ignored.
+#F 63
+#D 6.10.1.2.1 8.1
+#S 4.12/109/6
+#T P04/1 P04/2
+
+SR5.  If function <set polymarker representation> is called and the
+specified marker type is not available on the specified workstation,
+then error 105 is generated and the function is ignored.
+#F 64
+#D 6.11.1.2.1 8.1
+#S 4.12/109/6
+#T P05/1 P05/2
+
+SR6.  If function <set text representation> is called and the
+specified font is not available for the requested text precision on
+the specified workstation, then error 106 is generated and the functin
+is ignored.
+#F 65
+#D 6.12.1.2.1 8.1
+#S 4.12/109/6
+#T P06/1 P06/2
+
+SR7.  If function <set edge representation> is called and the
+specified edge type is not available on the specified workstation,
+then error 107 is generated and the function is ignored.
+#F 67
+#D 6.15.1.2.1 8.1
+#S 4.12/109/6
+#T P07/1 P07/2
+
+SR8.  If function <set interior representation> is called and the
+specified interior style is not available on the specified
+workstation, then error 108 is generated and the function is ignored.
+#F 66
+#D 6.14.1.2.1 8.1
+#S 4.12/109/6
+#T P08/1 P08/2
+
+SR9.  If function <set colour model> is called and the specified
+colour model is not available on the specified workstation, then error
+110 is generated and the function is ignored.
+#F 72
+#D 6.17.1.2.1 8.1
+#S 4.12/109/6
+#T P09/1 P09/2
+
+SR10.  If function <set hlhsr model> is called and the specified HLHSR
+model is not available on the specified workstation, then error 111 is
+generated and the function is ignored.
+#F 74
+#D 6.5.4.1 8.1
+#S 4.12/109/6
+#T P10/1 P10/2
+
+SR11.  If functions <set interior representation>, <set pattern
+representation> are called and the pattern index value is less than
+one, then error 112 is generated and the function is ignored.
+#F 66 68
+#D 5.12.2.1 5.14.2.1 8.1
+#S 4.12/109/6
+#T P11/1 P11/2 P11/3
+
+SR12.  If functions <set polyline colour index>, <set polymarker
+colour index>, <set text colour index>, <set interior colour index>,
+<set edge colour index>, <set polyline representation>-<set colour
+representation> are called and the colour index value is less than
+zero, then error 113 is generated and the function is ignored.
+#F 32 35 40 52 56 63-69
+#D 5.9.2.4 5.10.2.4 5.11.2.6 5.12.2.4 5.13.2.5 5.15.3.1 8.1
+#S 4.12/109/6
+#T P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P12/7 P12/8 P12/9 P12/10 P12/11
+
+SR13.  If functions <set view index>, <set view transformation input
+priority>, <initialize locator 3>-<initialize stroke> are called and
+the view index value is less than zero, then error 114 is generated
+and the function is ignored.
+#F 83 86 152-155
+#D 4.9.5.1 4.9.6.1 5.4.2.1 8.1
+#S 4.12/109/6
+#T P13/1 P13/2 P13/3 P13/4
+
+SR14.  If functions <set view representation 3>, <set view
+representation> are called and the view index value is less than one,
+then error 115 is generated and the function is ignored.
+#F 84 85
+#D 5.4.2.1 8.1
+#S 4.12/109/6
+#T P14/1 P14/2 P14/3
+
+SR15.  If function <set pattern representation> is called and one of
+the dimensions of pattern colour index array is less than one, then
+error 116 is generated and the function is ignored.
+#F 68
+#D 5.14.2.2 8.1
+#S 4.12/109/6
+#T P15/1 P15/2 P15/3
+
+SR16.  If functions <cell array 3>, <cell array> are called and one of
+the dimensions of the colour index array is less than one, then error
+117 is generated and the function is ignored.
+#F 21 22
+#D 7.3.1.13 7.3.1.14 5.15.3.1 8.1
+#S 4.12/109/6
+#T P16/1 P16/2 P16/3 P16/4 P16/5 P16/6 P16/7 P16/8
+#C See defect 9592-1/062.  Also, note that this SR applies to the
+dimensions of the actual array of values to be used to fill in the
+cell array.  The Fortran binding allows the program to extract this
+actual array from a larger array.  If the dimensions of the larger
+array are invalid, the appropriate error is 2004 (unique to Fortran).
+
+SR17.  If function <set colour representation> is called and one of
+the components of the colour specification is out of range for the
+current colour model, then error 118 is generated and the function is
+ignored.
+#F 69
+#D 5.15.3.2 8.1
+#S 4.12/109/6
+#T P17/1 P17/2 P17/3 P17/4
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   21: pca3    <cell array 3>
+   22: pca     <cell array>
+   25: pspli   <set polyline index>
+   26: pspmi   <set polymarker index>
+   27: pstxi   <set text index>
+   28: psii    <set interior index>
+   29: psedi   <set edge index>
+   32: psplci  <set polyline colour index>
+   35: pspmci  <set polymarker colour index>
+   40: pstxci  <set text colour index>
+   52: psici   <set interior colour index>
+   56: psedci  <set edge colour index>
+   63: psplr   <set polyline representation>
+   64: pspmr   <set polymarker representation>
+   65: pstxr   <set text representation>
+   66: psir    <set interior representation>
+   67: psedr   <set edge representation>
+   68: pspar   <set pattern representation>
+   69: pscr    <set colour representation>
+   72: pscmd   <set colour model>
+   74: pshrm   <set hlhsr mode>
+   83: psvwi   <set view index>
+   84: psvwr3  <set view representation 3>
+   85: psvwr   <set view representation>
+   86: psvtip  <set view transformation input priority>
+  152: pinlc3  <initialize locator 3>
+  153: pinlc   <initialize locator>
+  154: pinsk3  <initialize stroke 3>
+  155: pinsk   <initialize stroke>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.9  ...  input_queue
+  4.9.5  ...  locator_entry
+  4.9.5.1  ...  view_index
+  4.9.6  ...  stroke_entry
+  4.9.6.1  ...  view_index
+  5  ...  workstation_state_list
+  5.4  ...  view_table
+  5.4.2  ...  view_table_ordered_by_input_priority
+  5.4.2.1  ...  view_index
+  5.9  ...  polyline_entry
+  5.9.2  ...  polyline_bundle_table
+  5.9.2.1  ...  polyline_index
+  5.9.2.4  ...  polyline_colour_index
+  5.10 ...  polymarker_entry
+  5.10.2  ...  polymarker_bundle_table
+  5.10.2.1  ...  polymarker_index
+  5.10.2.4  ...  polymarker_colour_index
+  5.11  ...  text_entry
+  5.11.2  ...  text_bundle_table
+  5.11.2.1  ...  text_index
+  5.11.2.6  ...  text_colour_index
+  5.12  ...  interior_entry
+  5.12.2  ...  interior_bundle_table
+  5.12.2.1  ...  interior_index
+  5.12.2.4  ...  interior_colour_index
+  5.13  ...  edge_entry
+  5.13.2  ...  edge_bundle_table
+  5.13.2.1  ...  edge_index
+  5.13.2.5  ...  edge_colour_index
+  5.14  ...  pattern_entry
+  5.14.2  ...  pattern_table
+  5.14.2.1  ...  pattern_index
+  5.14.2.2  ...  pattern_colour_index_array
+  5.15  ...  colour_entry
+  5.15.3  ...  colour_table
+  5.15.3.1  ...  colour_index
+  5.15.3.2  ...  colour_specification
+  6  ...  workstation_description_table
+  6.5  ...  hlhsr_entry
+  6.5.4  ...  list_of_available_hlhsr_modes
+  6.5.4.1  ...  hlhsr_mode
+  6.10 ...  polyline_entry
+  6.10.1  ...  polyline_facilities
+  6.10.1.2  ...  list_of_available_linetypes
+  6.10.1.2.1  ...  available_linetype
+  6.11  ...  polymarker_entry
+  6.11.1  ...  polymarker_facilities
+  6.11.1.2  ...  list_of_available_marker_types
+  6.11.1.2.1  ...  available_marker_type
+  6.12  ...  text_entry
+  6.12.1  ...  text_facilities
+  6.12.1.2  ...  list_of_text_font_and_precision_pairs
+  6.12.1.2.1  ...  text_font_and_precision_pair
+  6.14  ...  interior_entry
+  6.14.1  ...  interior_facilities
+  6.14.1.2  ...  list_of_available_interior_styles
+  6.14.1.2.1  ...  interior_style
+  6.15  ...  edge_entry
+  6.15.1  ...  edge_facilities
+  6.15.1.2  ...  list_of_available_edgetypes
+  6.15.1.2.1  ...  edgetype
+  6.17  ...  colour_entry
+  6.17.1  ...  colour_model_facilities
+  6.17.1.2  ...  list_of_available_colour_models
+  6.17.1.2.1  ...  colour_model
+  6.21  ...  maximum_table_lengths
+  6.21.1  ...  maximum_number_of_polyline_bundle_table_entries
+  6.21.2  ...  maximum_number_of_polymarker_bundle_table_entries
+  6.21.3  ...  maximum_number_of_text_bundle_table_entries
+  6.21.4  ...  maximum_number_of_interior_bundle_table_entries
+  6.21.5  ...  maximum_number_of_edge_bundle_table_entries
+  6.21.6  ...  maximum_number_of_pattern_indices
+  6.21.7  ...  maximum_number_of_colour_indices
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.13 ...  cell_array_3
+  7.3.1.14 ...  cell_array
+  8  ...  phigs_error_state_list
+  8.1  ...  error_state
+ 
+
+
+PROGRAM 1: Error 100 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+This is a passive test, but take care to invoke it so as to link
+in the standard PVT user-defined error handler.  Since this is the mode in
+which the non-error-handling tests are executed, this program should be
+invoked in the normal way.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Open structure first. Set bundle index to -1 or 0 to test if functions
+25,27,29 generate error 100. Then close structure, open workstation,
+set bundle index to -1 or 0 to test if functions 64,66,67 generate
+error 100: ignoring function, the bundle index value is less than one.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open structure> 101
+<set polyline index> with index=0: signals error
+TEST: #SR 1
+      "If <set polyline index> signals an error because the bundle
+       index value is less than one, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = open)
+
+<set text index> with index=-1: signals error
+
+<set edge index> with index=0: signals error
+<close structure>
+
+<open workstation> wkid
+<set polymarker representation> with index = 0: signals error
+TEST: #SR 1
+      "If <set polymarker representation> signals an error because
+       the bundle index value is less than one, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open )
+
+<set interior representation> with index = -1: signals error
+
+<set edge representation> with index = 0: signals error
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 1
+      "If <set polyline index> is called and the bundle index value is
+       less than one, it should return error code  100, function
+       identifier  024, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 1
+      "If <set text index> is called and the bundle index value is less
+       than one, it should return error code  100, function identifier  026,
+       and the current error file identifier to the user defined
+       error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 1
+      "If <set edge index> is called and the bundle index value is less
+       than one, it should return error code  100, function identifier  028,
+       and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 1
+      "If <set polymarker representation> is called and the bundle index
+       value is less than one, it should return error code  100, function
+       identifier  063, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 1
+      "If <set interior representation> is called and the bundle index
+       value is less than one, it should return error code  100, function
+       identifier  065, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 1
+      "If <set edge representation> is called and the bundle index value is
+       less than one, it should return error code  100, function
+       identifier  066, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 1
+
+
+
+PROGRAM 2: Error 101 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Call <set view transformation input priority> with undefined view index,
+undefined reference view index, or undefined view index and undefined
+reference view index to test if function 86 generates error 101: ignoring
+function, the specified representation has not been defined.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+Use <inquire list of view index> to determine:
+   numvdx = number of view representations
+
+if (numvdx = 0) then
+  set rotmat to identity matrix
+  set mapmat to identity matrix
+  set cplimt to {0.,1.,0.,1.}
+  <set view representation> with wkid, index=1, rotmat, mapmat, cplimt, clip
+  v1 = 2
+  v11 = 3
+  v2 = 1
+else
+  <inquire list of view index> to get all the available index: vdx(1:numvdx)
+  v1 = maximum of vdi(1:numvdx)
+  v11 = v1 + 10
+  v2 = vdx(1)
+endif
+
+<set view transformation input priority> with view index=v1,
+     reference view index = v11: signals error
+
+<set view transformation input priority> with view index = v1,
+     reference view index = v2: signals error
+TEST: #SR 2
+      "If <set view transformation input priority> signals an error because
+       the specified representation has not been defined, it should not cause
+       any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open)
+
+<set view transformation input priority> with index = v2,
+     reference view index = v1: signals error
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 2
+      "If <set view transformation input priority> is called and the specified
+       representation has not been defined, it should return error code  101,
+       function identifier  085, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <set view transformation input priority> is called and the specified
+       representation has not been defined, it should return error code  101,
+       function identifier  085, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <set view transformation input priority> is called and the specified
+       representation has not been defined, it should return error code  101,
+       function identifier  085, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Error 103 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Set maximum number of bundle table entries allowed by the workstation
+bundle table. Then set one more bundle entry to test if functions 63,65,
+67,69 generate error 103: ignoring function, setting this bundle table entry
+would exceed the maximum number of entries allowed in the workstation bundle
+table.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+Use <inquire workstation state table lengths> to determine:
+   mxply1 = maximum number of polyline bundle table entries
+   mxtxt1 = maximum number of text bundle table entries
+   mxedg1 = maximum number of edge bundle table entries
+   mxcol1 = maximum number of colour indices
+
+for ix = 1 to mxply1
+   <set polyline representation> with index=ix
+next ix
+<set polyline representation> with index=maxply+1 : signals error
+TEST: #SR 3
+      "If <set polyline representation> signals an error because setting
+       this bundle table entry would exceed the maximum number of
+       entries allowed in the workstation bundle table, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open)
+
+for  ix = 1 to  mxtxt1
+     <set text representation> with index=ix
+next ix
+<set text representation> with index=mxtxt1+1 : signals error
+
+for ix = 1 to  mxedg1
+     <set edge representation> with index=ix
+next ix
+<set edge representation> with index=mxedg1+1 : signals error
+
+for ix = 1 to  mxedg1
+     <set colour representation> with index=ix
+next ix
+
+<set colour representation> with index=mxcol1+1 : signals error
+
+TEST: #SR 3
+      "If <set colour representation> signals an error because setting this
+       bundle table entry would exceed the maximum number of entries
+       allowed in the workstation bundle table,
+       it should not cause any other effect."
+pass/fail depending on (system state = PHIGS_on and
+                        workstation state = open )
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 3
+      "If <set polyline representation> is called and setting this
+       bundle table entry would exceed the maximum number of entries
+       allowed in the workstation bundle table, it
+       should return error code  103, function identifier 062, and the current
+       error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set text representation> is called and setting this
+       bundle table entry would exceed the maximum number of entries
+       allowed in the workstation bundle table, it
+       should return error code  103, function identifier 064, and the current
+       error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set edge representation> is called and setting this
+       bundle table entry would exceed the maximum number of entries
+       allowed in the workstation bundle table, it
+       should return error code  103, function identifier 066, and the current
+       error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set colour representation> is called and setting this
+       bundle table entry would exceed the maximum number of entries
+       allowed in the workstation bundle table, it
+       should return error code  103, function identifier 068, and the current
+       error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Error 104 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Call <set polyline representation> with an unavailable linetype to test if it
+generates error 104: ignoring function, the specified linetype is not
+available on the specified workstation.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+Use <inquire polyline facility> to determine:
+   nltyp1 = number of available line type
+   ltype(1:nltyp1) = list of available linetype
+
+Determine an integer different from all the elements of ltype: untype
+
+<set polyline representation> with wkid, index=1, linetype=ltype(1),1.0,0
+<set polyline representation> with wkid, index=1, linetype=untype,0.5,1:
+      signals error
+Use <inquire polyline representation> with index=1 to determine:
+   linety = linetype
+   linesc = linewidth scale factor
+   linecl = polyline colour index
+TEST: #SR 4
+      "If <set polyline representation> signals an error because the specified
+       linetype is not available on the specified workstation, it should
+       not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        linety = 1, linesc = 1.0, linecl = 0)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 4
+      "If <set polyline representation> is called and the specified
+       linetype is not available on the specified workstation, it should return
+       error code  104, function identifier  062, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Error 105 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Call <set polymarker representation> with an unavailable marker type to
+test if it generates error 105: ignoring function, the specified marker
+type  is not available on the specified workstation.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> with wkid, conid, wtype
+Use <inquire polymarker facility> to determine:
+   nmtyp1 = number of available marker type
+   mtype(1:nmtyp1) = list of available marker type
+
+Determine an integer different from all the elements of mtype: untype
+
+<set polymarker representation> wkid, index=1, marker type=mtype(1),1.0,0
+<set polymarker representation> wkid, index=1, marker type=untype, 0.5,1:
+   signals error
+Use <inquire polymarker representation> with index=1 to determine:
+   markty = marker type
+   marksc = marker size scale factor
+   markcl = polymarker colour index
+TEST: #SR 5
+      "If <set polymarker representation> signals an error because the specified
+       marker type is not available on the specified workstation, it should
+       not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        markty = 1, marksc = 1.0, markcl = 0)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 5
+      "If <set polymarker representation> is called and the specified marker
+       type is not available on the specified workstation, it should return
+       error code  105, function identifier  063, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 5
+
+
+
+PROGRAM 6: Error 106 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+<set text representation> with an unavailable font for the requested text
+precision on the specified workstation to test if it generates error 106:
+ignoring function, the specified font is not available for the requested
+text precision on the specified workstation.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+Use <inquire text facility> to determine:
+   npair = number of text font and precision pairs
+   txtfnt(1:npair) = list of text font
+   txtprc(1:npair) = list of text precision
+
+<set text representation> wkid, index=1, fone=txtfnt(1), precision=txtprc(1),
+                          1.,1., 0
+for ip = strike to string step -1
+    ii = 0
+    for ir = 1, npair
+       if (txtprc(ir)=ip) then
+          ii=ii+1
+          fontip(ii) = txtfnt(ir)
+       endif
+    next ir
+    if (ii=0) goto next ip
+    Determine an integer different from all the elements of fontip: unfont
+    unprec = ip
+    goto exec
+next ip
+
+exec:
+<set text representation> wkid, index=1, unfont,unprec,0.5,0.5,0:
+           signals error
+Use <inquire text representation> with index=1 to determine:
+         font1, prec1, expan1, space1, color1
+TEST: #SR 6
+      "If <set text representation> signals an error because the specified
+       font is not available for the requested text precision on the
+       specified workstation, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        font1=txtfnt(1) and prec1=txtprc(1) and
+                        expan1=1. and space1=1. and color1=0)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 6
+      "If <set text representation> is called and the specified font is
+       not available for the requested text precision on the specified
+       workstation, it should return error code  106, function
+       identifier  064, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 6
+
+
+PROGRAM 7: Error 107 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+<set edge representation> with an unavailable edgetype on the specified
+workstation to test if it generates error 107: ignoring function, the
+specified edgetype is not available on the specified workstation.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+Use <inquire edge facility> to determine:
+   nedtyp = number of availabel edge type
+   edtype(1:nedtyp) = list of available edge types
+
+Determine an integer different from all the elements of edtype: untype
+
+<set edge representation> wkid, index=1, edgetype=edtype(1), 1.0, 0
+<set edge representation> wkid, index=1, edgetype=untype,    0.5,1:
+    signals error
+Use <inquire edge representation> with index=1 to determine:
+   edgety = edge type
+   edgesc = edge width scale factor
+   edgecl = edge colour index
+TEST: #SR 7
+      "If <set edge representation> signals an error because the specified
+       edgetype is not available on the specified workstation, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        edgety = 1, edgesc= 1.0, edgecl= 0)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 7
+      "If <set edge representation> is called and the specified edgetype
+       is not available on the specified workstation, it should return
+       error code  107, function identifier  066, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 7
+
+
+
+PROGRAM 8: Error 108 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+<set interior representation> with an unavailable interior style on the
+specified workstation to test if it generates error 108: ignoring function, the
+specified interior style is not available on the specified workstation.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+Use <inquire interior facility> to determine:
+   nistyp = number of availabel interior style
+   istype(1:nistyp) = list of available interior styles
+
+Determine an integer different from all the elements of istype: untype
+
+<set interior representation> wkid, index=1, interior style=hollow, 1, 0
+<set interior representation> wkid, index=1, interior style=untype, 1,1:
+   signals error
+Use <inquire interior representation> with index=1 to determine:
+   istyle = interior style
+   isindx = interior style index
+   iscolo = interior colour index
+TEST: #SR 8
+      "If <set interior representation> signals an error because the specified
+       interior style is not available on the specified workstation, it should
+       not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        istyle=hollow, isindx=1, iscolo=0)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 8
+      "If <set interior representation> is called and the specified interior
+       style is not available on the specified workstation, it should return
+       error code  108, function identifier  065, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 8
+
+
+PROGRAM 9: Error 110 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+<set colour model> with an unavailable color model on the specified workstation
+to test if it generates error 110: ignoring function, the specified colour
+model is not available on the specified workstation.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+Use <inquire colour model facility> to determine:
+   ncolmd = number of availabel colour model
+   colmd(1:ncolmd) = list of available colour models
+
+Determine an integer different from all the elements of colmd: untype
+
+<set colour model> to RGB
+<set colour model>  wkid, colour model=untype: signals error
+Use <inquire colour model> to get :
+      colmod = colour model
+TEST: #SR 9
+      "If <set colour model> signals an error because the specified colour
+       model is not available on the workstation, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        colmod = RGB)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 9
+      "If <set colour model> is called and the specified colour model
+       is not available on the workstation, it should return
+       error code  110, function identifier  071, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 9
+
+
+PROGRAM 10: Error 111 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+<set hlhsr mode> with an unavailable hlhsr mode on the specified workstation
+to test if it generates error 110: ignoring function, the specified hlhsr
+mode is not available on the specified workstation.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+Use <inquire hlhsr (mode) facility> to determine:
+   nhlhmd = number of available hlhsr modes
+   hlhmd(1:nhlhmd) = list of available hlhsr modes
+
+Determine an integer different from all the elements of hlhmd: untype
+
+<set hlhsr mode> wkid, hlhsr mode=hlhmd(1)
+<set hlhsr mode> wkid, hlhsr mode=untype: signals error
+Use <inquire hlhsr mode> to get:
+     chhmod = current hlhsr mode
+TEST: #SR 10
+      "If <set hlhsr mode> signals an error because the specified hlhsr mode
+       is not available on the specified workstation, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        chhmod = hlhmd(1))
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 10
+      "If <set hlhsr mode> is called and the specified hlhsr mode
+       is not available on the specified workstation, it should return
+       error code  111, function identifier  073, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 10
+
+
+PROGRAM 11: Error 112 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Set pattern index value to -1 or 0 to test if functions 66,68 generate error
+112: ignoring function, the pattern index value is less than one.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+
+<set interior representation> wkid,1, pattern, pattern index=0, 0: signals error
+TEST: #SR 11
+      "If <set interior representation> signals an error because the
+       pattern index value is less than one, it should not cause any other
+       effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open )
+
+pcary(2,2) = {0,1,0,1}  : pattern colour index array
+<set pattern representation>  wkid, pattern index=-1, pcary: signals error
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 11
+      "If <set interior representation> is called and the pattern index
+       value is less than one, it should return error code  112 and/or  108,
+       function identifier  065, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 11
+      "If <set pattern representation> is called and the pattern index value
+       is less than one, it should return error code  112 and/or  108, function
+       identifier  067, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 11
+
+
+PROGRAM 12: Error 113 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Set colour index to -1 to test if functions 32,40,56,64,66,68,69
+generate error 113: ignoring function, the colour index value is less than
+zero.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open structure> 101
+
+<set polyline colour index> with index=-1: signals error
+TEST: #SR 12
+      "If <set polyline colour index> signals an error because the
+       colour index value is less than zero, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = open)
+
+<set text colour index> with index=-1: signals error
+
+<set edge colour index> with index=-1: signals error
+TEST: #SR 12
+      "If <set edge colour index> signals an error because the
+       colour index value is less than zero, it should not
+       cause any other effect."
+
+<close structure>
+
+<open workstation> wkid
+
+<set polymarker representation> wkid,2,1,0.5,1
+<set polymarker representation> wkid,2,2,1.0,-1: signals error
+Use <inquire polymarker representation> with index=2 to get:
+    mktype = marker type
+    mkscal = marker size scale factor
+    mkcolo = marker colour index
+TEST: #SR 12
+      "If <set polymarker representation> signals an error because the
+       colour index value is less than zero, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        mktype=1 and mkscal=0.5 and mkcolo=1)
+
+<set interior representation> with colour index=-1: signals error
+
+if (pattern style available) then
+   <set pattern representation> with colour index=-1: signals error
+endif
+
+<set colour representation> with colour index=-1: signals error
+TEST: #SR 12
+      "If <set colour representation> signals an error because the
+       colour index value is less than zero, it should not cause any other
+       effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open)
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 12
+      "If <set polyline colour index> is called and the colour index
+       value is less than zero, it should return error code  113,
+       function identifier  031, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 12
+      "If <set text colour index> is called and the colour index
+       value is less than zero, it should return error code  113,
+       function identifier  039, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 12
+      "If <set edge colour index> is called and the colour index
+       value is less than zero, it should return error code  113,
+       function identifier  055, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 12
+      "If <set polymarker representation> is called and the colour index
+       value is less than zero, it should return error code  113,
+       function identifier  063, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 12
+      "If <set interior representation> is called and the colour index
+       value is less than zero, it should return error code  113,
+       function identifier  065, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+if (pattern style available) then
+   TEST: #SR 12
+         "If <set pattern representation> is called and the colour index
+          value is less than zero, it should return error code  113,
+          function identifier  067, and the current error file identifier
+          to the user defined error handler."
+   pass/fail depending on (next entry in error table = expected values)
+endif
+
+TEST: #SR 12
+      "If <set colour representation> is called and the colour index
+       value is less than zero, it should return error code  113,
+       function identifier  068, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 12
+
+
+PROGRAM 13: Error 114 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Set view index value to -1 to test if functions 83,86 generate error
+114: ignoring function, the view index value is less than zero.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open structure> 101
+<label> 801
+<set view index> with view index=-1: signals error
+TEST: #SR 13
+      "If <set view index> signals an error because the view index value is
+       less than zero, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = open    and
+                        structure 101 contains label 801)
+<close structure>
+
+<open workstation> with wkid
+
+rotmat(3,3) = identity matrix
+mapmat(3,3) = identity matrix
+limit(4) = {0.,0.5,0.,0.5}
+<set view representation> with index=2, rotmat,mapmat,limit,clip
+<set view transformation input priority> with view index=-1,2,higher:
+      signals error
+
+TEST: #SR 13
+      "If <set view transformation input priority> signals an error
+       because the view index value is less than zero, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open    and
+                        size of view index table unchanged)
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 13
+      "If <set view index> is called and the view index value is less than
+       zero, it should return error code  114, function identifier  082,
+       and the current error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 13
+      "If <set view transformation input priority> is called and the view
+       index value is less than zero, it should return error code  114,
+       function identifier  085, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 13
+
+
+
+PROGRAM 14: Error 115 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Set view index value to -1 or 0 to test if functions 84,85 generate error
+115: ignoring function, the view index value is less than one.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+rotmt3(3,3) = identity matrix
+mapmt3(3,3) = identity matrix
+cplmt3 = {0.,1.,0.,1.}
+<set view representation> with view index=-1,rotmt3,mapmt3,cplmt3,clip:
+    signals error
+
+rotmt4(4,4) = identity matrix
+mapmt4(4,4) = identity matrix
+cplmt4 = {0.,1.,0.,1.,0.,1.}
+<set view representation 3> with view index=0, rotmt4, mapmt4, cplmt4,
+   clip, clip, clip:  signals error
+TEST: #SR 14
+      "If <set view representation 3> signals an error because the view index
+       value is less than one, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open )
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 14
+      "If <set view representation> is called and the view index value is
+       less than one, it should return error code  115, function
+       identifier  084, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 14
+      "If <set view representation 3> is called and the view index value is
+       less than one, it should return error code  115, function
+       identifier  083, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 14
+
+
+PROGRAM 15: Error 116 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Set one of the dimensions of pattern colour index array to 0 or -1 to test
+if function 68 generates error 116: ignoring function, one of the dimensions
+of pattern colour index array is less than one.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+
+if (size of pattern table < 1) then
+   informational message: Skipping test for invalid pattern because
+       workstation pattern table size is zero.
+   quit
+endif
+
+col(2,3)={0,1,1,1,0,1}
+<set pattern representation> wkid, index=1, 2,3,col
+dx = 0
+dy = 2
+colia = {1,0,0,0,1,0}
+<set pattern representation> wkid, index=1, dx, dy, colia: signals error
+Use <inquire pattern representation> with index=1 to get:
+     dx1, dy1 = pattern colour index array dimensions
+     colia1(dx1, dy1) = pattern colour index array
+TEST: #SR 15
+      "If <set pattern representation> signals an error because one of the
+       dimensions of pattern colour index array is less than one, it should
+       not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        dx1=2 and dy1=3 and colia1=colia)
+
+dx=2
+dy=0
+<set pattern representation> wkid, index=1, dx, dy,colia: signals error
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 15
+      "If <set pattern representation> is called and one of the dimensions
+       of pattern colour index array is less than one, it should return
+       error code  116, function identifier  067, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 15
+      "If <set pattern representation> is called and one of the dimensions
+       of pattern colour index array is less than one, it should return
+       error code  116, function identifier  067, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 15
+
+
+PROGRAM 16: Error 117 handled by user
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Set one of the dimensions of colour index array to 0 or -1 test
+if functions 21,22 generate error 117: ignoring function, one of the
+dimensions of colour index array is less than one.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open structure> 100
+<label> 801
+Define a parallelogram with three points: cpxa(3), cpya(3), cpza(3)
+colia = {1,1,1,0,0,1}
+dx=-1
+dy=3
+<cell array 3> with cpxa, cpya, cpza,dx,dy,colia: signals error
+TEST: #SR 16
+      "If <cell array 3> signals an error because one of the dimensions
+       of the colour index array is less than one, it should not cause
+       any other effect."
+pass/fail depending on (system state = PHIGS open and
+                        structure state = open and
+                        structure 101 contains label 801)
+
+dx=3
+dy=0
+<cell array 3> with cpxa, cpya, cpza,dx,dy,colia: signals error
+
+Define a rectangular with two points: (px,py), (qx,qy)
+dx=0
+dy=3
+<cell array> with px,py,qx,qy,dx,dy,colia: signals error
+
+dx=2
+dy=-2
+<cell array> with px,py,qx,qy,dx,dy,colia: signals error
+
+<cell array> with actual (not allocated) size of array to be used = 0,3
+<cell array 3> with actual (not allocated) size of array to be used = 2,0
+
+TEST: #SR 16
+      "If <cell array 3> signals an error because one of the dimensions
+       of the colour index array is less than one, it should not cause
+       any other effect."
+pass/fail depending on (system state = PHIGS open and
+                        structure state = open and
+                        structure 101 contains label 801)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 16
+      "If <cell array 3> is called and one of the dimensions of the
+       colour index array is less than one, it should return error
+       code  117, function identifier  020, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 16
+      "If <cell array 3> is called and one of the dimensions of the
+       colour index array is less than one, it should return error
+       code  117, function identifier  020, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 16
+      "If <cell array> is called and one of the dimensions of the
+       colour index array is less than one, it should return error
+       code  117, function identifier  021, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 16
+      "If <cell array> is called and one of the dimensions of the
+       colour index array is less than one, it should return error
+       code  117, function identifier  021, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 16
+      "If <cell array> is called and one of the dimensions of the
+       colour index array is less than one, it should return error
+       code  117, function identifier  021, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 16
+      "If <cell array 3> is called and one of the dimensions of the
+       colour index array is less than one, it should return error
+       code  117, function identifier  020, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 16
+
+
+PROGRAM 17: Error 118 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Set one of the components of the colour specification out of range for every
+valid colour model to test if function 69 generates error 118: ignoring
+function, one of the components of the colour specification is out of range.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+Use <inquire colour model facilities> to determine:
+   nclmod = number of colour models
+   lclmod(1:nclmod) = list of available colour models
+
+for ix = 1 to nclmod
+   <set colour model> to lclmod(ix)
+   spec1 = {0.5,0.5,0.5}
+   <set colour representation> with wkid,index=2,spec1
+   col = {-0.5,0.,1.}
+   <set colour representation> wkid, index=2, col: signals error
+   Use <inquire colour specification> with index=2 to get:
+      spec2 = components of colour specification
+TEST: #SR 17
+      "If <set colour representation> signals an error because one of the
+       components of the colour specification is out of range, it should
+       not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        spec1 = spec2)
+
+   <set colour representation> wkid, 2, 0., 1.5, 0.5: signals error
+
+   <set colour representation> wkid, 2, 0., 0.5,  -1.: signals error
+
+next ix
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+for ix = 1 to nclmod
+
+TEST: #SR 17
+      "If <set colour representation> is called and one of the components of
+       the colour specification is out of range, it should return error
+       code  118, function identifier  068, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 17
+      "If <set colour representation> is called and one of the components of
+       the colour specification is out of range, it should return error
+       code  118, function identifier  068, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 17
+      "If <set colour representation> is called and one of the components of
+       the colour specification is out of range, it should return error
+       code  118, function identifier  068, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+next ix
+
+END PROGRAM 17
+
+

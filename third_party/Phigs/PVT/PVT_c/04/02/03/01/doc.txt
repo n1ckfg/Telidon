@@ -1,0 +1,3286 @@
+TITLE: Text  - individual attributes
+
+MODULE#: 04.02.03.01
+
+DESCRIPTION: This module tests the individual text attributes.
+These values control the appearance of text primitives when they
+are under individual (as opposed to bundled) control.  In order
+to explain clearly the effect of text aspects, some of the SRs
+are worded in terms of the order of their application.  E.g. text
+alignment and character up vector are described as if applied in
+that order.  It is only the final appearance of the text
+primitive, however, which is subject to test.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** ***   Text Local Coordinates   *** *** ***
+
+SR1.  The Text Local Coordinate (TLC) system represents a
+unit-scaled rotation and shift within the Modelling Coordinate
+(MC) system, such that the TLC origin coincides with the MC text
+position, the TLC positive X-axis is parallel to the first text
+direction vector and the TLC positive Y-axis a) lies in the text
+plane, b) is perpendicular to the TLC X-axis, and c) has a
+positive dot product when multiplied by the second text direction
+vector.
+#F 13 14
+#D 7.3.1.5 7.3.1.6
+#S 4.5.5/44/6 4.5.5/44/7
+#T P03/7 P11/1 P11/2
+#X 04.01.03
+
+SR2. The text plane within MC is the plane that contains the text
+position and is perpendicular to the cross product of the first
+and second text direction vectors.
+#F 13 14
+#D 7.3.1.5 7.3.1.6
+#S 4.5.1/35/1 4.5.5/44/6 4.5.5/44/7
+#T P11/1 P11/2
+#X 04.01.03
+
+*** *** ***   Text in Device Coordinates   *** *** ***
+
+SR3.  For horizontal text paths (LEFT or RIGHT), the requested DC
+character height for a character within a displayed text string is
+the distance along the (vertical) leading edge of its character
+body between the baseline and capline, after transformation from
+TLC to DC.
+#F 41
+#D 3.3.12
+#S 4.5.5/48/3 4.5.5/48/7 4.5.5/49/5
+#T P04/4
+
+SR4.  For horizontal text paths, the requested DC character width
+for a character within a displayed text string is the distance along
+its baseline between the left and right edges of the character
+body, after transformation from TLC to DC.
+#F
+#D
+#S 4.5.5/48/3 4.5.5/48/7 4.5.5/49/5
+#T P04/4
+#C This is because the width vector is evaluated "at the leading
+edge" of a character.
+
+SR5.  For horizontal text paths, the (vertical) leading edge of a
+character body in a text string is its left or right edge,
+whichever is closest (in TLC) to the text position, after
+application of text alignment.  If they are equidistant, it is
+the left edge.
+#F
+#D
+#S 4.5.5/48/4
+#T P04/4
+#C Since the text position is always aligned at the TLC origin,
+the leading edge is the one with the smallest magnitude TLC
+x-coordinate before rotation due to the character up vector.
+
+SR6.  For vertical text paths (UP or DOWN), the requested DC
+character width for a character within a displayed text string is
+the distance along the (horizontal) leading edge of its character
+body between the left and right edges, after transformation from
+TLC to DC.
+#F
+#D 3.3.14
+#S 4.5.5/48/3 4.5.5/48/7 4.5.5/49/5
+#T P04/4
+
+SR7.  For vertical text paths, the requested DC character height
+for a character within a displayed text string is the distance along
+its centreline between the baseline and capline of the character
+body, after transformation from TLC to DC.
+#F
+#D
+#S 4.5.5/48/3 4.5.5/48/7 4.5.5/49/5
+#T P04/4
+#C This is because the height vector is evaluated "at the leading
+edge" of a character.
+
+SR8.  For vertical text paths, the (horizontal) leading edge of a
+character body in a text string is its top or bottom edge,
+whichever is closest (in TLC) to the text position, after
+application of text alignment.  If they are equidistant, it is
+the top edge.
+#F
+#D
+#S 4.5.5/48/4
+#T P04/4
+#C Since the text position is always aligned at the TLC origin,
+the leading edge is the one with the smallest magnitude TLC
+y-coordinate before rotation due to the character up vector.
+
+*** *** ***   Text attribute inquiry   *** *** ***
+
+SR9.  If current element is text font, text precision, character
+expansion factor, character spacing, text colour index, character
+height, text path, text alignment, or character up vector, then
+<inquire current element type and size> returns the appropriate
+element type and size.
+#F 303
+#D 7.3.2.4.1 7.3.2.4.2 7.3.2.4.3 7.3.2.4.4 7.3.2.4.5
+#D 7.3.2.4.6 7.3.2.4.7 7.3.2.4.8 7.3.2.4.9
+#S 4.4.4/29/5
+#T P01/1 P01/3 P01/5 P01/7 P01/9 P01/11 P01/13 P01/15 P01/17
+
+SR10.  If current element is text font, text precision, character
+expansion factor, character spacing, text colour index, character
+height, text path, text alignment, or character up vector, then
+<inquire current element content> returns the associated value
+for that element.
+#F 304
+#D 7.3.2.4.1 7.3.2.4.2 7.3.2.4.3 7.3.2.4.4 7.3.2.4.5
+#D 7.3.2.4.6 7.3.2.4.7 7.3.2.4.8 7.3.2.4.9
+#S 4.4.4/29/5
+#T P01/2 P01/4 P01/6 P01/8 P01/10 P01/12 P01/14 P01/16 P01/18
+
+*** *** ***   Text attribute traversal binding  *** *** ***
+
+SR11.  Upon traversal of a "text" or "text 3" element, the
+current text font, text precision, character expansion factor,
+character spacing, text colour index, character height, text
+path, text alignment, and character up vector in the PTSL are
+bound to the resulting primitive.
+#F 36-44
+#D 3.3.2 3.3.3 3.3.4 3.3.5 3.3.6
+#D 3.3.12 3.3.13 3.3.16 3.3.17 3.3.18 7.3.1.5 7.3.1.6
+#S 4.5.2/38/3 4.5.2/40/3
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P03/1 P03/2 P03/3 P03/4 P03/6
+   P03/7 P03/9 P04/5 P05/1 P05/2 P05/3 P06/1 P06/2 P06/3 P06/4 P06/5
+   P07/1 P07/2 P10/1 P10/2 P10/3 P11/1 P11/2
+
+*** *** ***   Text font: element creation   *** *** ***
+
+SR12.  <Set text font> creates a "set text font" element (in the
+open structure), whose associated value is taken from the
+function's parameter.
+#F 36
+#D 7.3.2.4.1
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/1 P01/2
+
+*** ***   Text font: effect during traversal   *** ***
+
+SR13.  Upon traversal of a "set text font" element, the current
+text font entry in the PHIGS traversal state list (PTSL) is set
+to the element's associated value.
+#F 36
+#D 3.3.2 7.3.2.4.1
+#S 4.5.2/38/3
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P03/1 P03/2 P03/3 P03/4 P03/6
+   P03/8 P03/9 P05/1
+
+SR14. Text fonts 1 and 2 both contain all the ASCII characters,
+i.e. those defined within ANSI X3.4-1986.
+#F
+#D 2.7
+#S 4.5.5/47/4 4.5.5/48/5
+#T P02/1 P02/2 P02/3 P02/4 P03/7 P03/8 P04/5 P06/1
+
+SR15. Text fonts 1 and 2 are visually distinguishable.
+#F
+#D
+#S 4.5.5/47/4 4.5.5/48/5
+#T P02/5 P03/9
+
+SR16. For all text fonts, a character body in TLC, before
+application of character up vector, is a rectangle generally
+surrounding the character, aligned such that the top, cap, half,
+base, and bottom lines are all parallel to the TLC x-axis and the
+left, centre, and right lines are all parallel to the TLC y-axis.
+#F
+#D
+#S 4.5.5/48/6 4.5.5/48/7
+#T P02/6 P03/6 P03/7 P08/1 P08/2 P08/3 P08/4 P09/1 P09/2
+#C A small part of a kerned character may lie slightly outside
+its character body.
+
+SR17.  All text fonts are either monospaced or proportionately
+spaced.  All character bodies within a monospaced font have the
+same font nominal height and the same font nominal width.  All
+character bodies within a proportionately spaced font have the
+same font nominal height.
+#F
+#D
+#S 4.5.5/48/6
+#T P02/6 P03/6 P03/7
+#C In monospaced fonts, the nominal height need not equal the
+nominal width.  Font nominal height and width is the size, in
+TLC, of the character bodies of a given font as set by the
+character height and width aspects, before the application of
+other text aspects and before the effect of the transformation
+pipeline.
+
+SR18. Text font 1 is monospaced.
+#F
+#D
+#S 4.5.5/48/5 4.14/113/3
+#T P02/6 P06/2 P06/3
+
+SR19. A text font identifier denotes the same text font for all
+workstation types within a PHIGS implementation.
+#F
+#D 2.2 6.12.1.1 6.12.1.2
+#S 4.5.5/48/5
+#T P03/1 P03/2 P03/3 P03/4
+#C While the same text font, such as Helvetica or Cyrillic, must
+appear on all workstations, the aspect ratios of corresponding
+characters may differ somewhat, according to 4.5.7/56/7.
+
+SR20. If a requested character in a text primitive is not
+available within the font, an implementation dependent
+representation is generated to so indicate.
+#F
+#D
+#S 4.5.5/47/4
+#T P03/8
+
+SR21.  When a text primitive is displayed, if its bound text font
+and text precision are available on the workstation and its bound
+text font and text precision ASFs are INDIVIDUAL, then the
+appearance of the text font agrees with the implementor
+documentation and, if the text font is greater than 2, with the
+ISO register.
+#F 36 266
+#D 3.3.2 3.3.3 3.3.7 3.3.8 6.12.1.1 6.12.1.2
+#S 4.1.1/15/1 4.1.2/15/2 4.5.2/39/7 4.5.5/44/10 4.5.5/47/4 4.5.5/48/6
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2 P03/3 P03/4 P03/5 P05/1
+#C For registered fonts, the details of character shapes may be
+set by the implementor, even though the basic character set is
+specified.
+
+SR22.  When a text primitive is displayed, if its bound text font
+and text precision are not both available on the workstation and
+its bound text font and text precision ASFs are INDIVIDUAL, then
+text font 1 (as documented by the implementor) and text precision
+STRING are used to display the text.
+#F 36 266
+#D 3.3.2 3.3.3 3.3.7 3.3.8 6.12.1.1 6.12.1.2
+#S 4.5.2/39/7 4.5.2/43/3 4.5.5/44/10
+#T P03/9
+
+*** *** ***   Text font: network traversal   *** *** ***
+
+SR23.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current text font of the PTSL is set to 1.
+#F
+#D 2.12.2 3.3.2
+#S 4.4.3/26/2 4.4.3/28/1 6.3/309/1
+#T P05/1
+
+SR24.  As part of the PTSL, the current text font is saved (but
+not changed) by execute structure and then, upon completion of
+the sub-traversal of the invoked network, restored to the saved
+value.
+#F 113
+#D 3.3.2
+#S 4.4.3/28/1
+#T P05/1
+
+*** ***   Text precision: element creation   *** ***
+
+SR25.  <Set text precision> creates a "set text precision"
+element (in the open structure), whose associated value is taken
+from the function's parameter.
+#F 37
+#D 7.3.2.4.2
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/3 P01/4
+
+SR26.  The valid values for text precision in <set text
+precision> are STRING, CHAR, and STROKE.
+#F 37
+#D 7.3.2.4.2
+#S 4.5.5/47/5
+#T P01/4 P02/1 P02/2 P02/3 P02/4 P02/5
+
+*** ***   Text precision: effect during traversal   *** ***
+
+SR27.  Upon traversal of a "set text precision" element, the
+current text precision entry in the PHIGS traversal state list
+(PTSL) is set to the element's associated value.
+#F 37
+#D 3.3.3 7.3.2.4.2
+#S 4.5.2/38/3
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P03/9 P05/1 P06/2 P06/3 P06/4 P06/5
+   P08/1 P08/2 P08/3 P08/4 P09/1 P09/2 P11/1 P11/2
+
+SR28.  When a text primitive is displayed, if its bound text font
+and text precision are available on the workstation and its bound
+text font and text precision ASFs are INDIVIDUAL, then the
+appearance of the text primitive meets or exceeds the
+requirements of the bound text precision.
+#F 37 266
+#D 3.3.2 3.3.3 3.3.7 3.3.8 6.12.1.1 6.12.1.2
+#S 4.5.2/39/7 4.5.5/44/10 4.5.5/48/5
+#T P04/4 P05/1 P11/1 P11/2
+#C A workstation may use a higher text precision for displaying
+text than the one requested.  SR22 above describes the effect of
+unavailable font or precision.
+
+SR29. For text precision = STRING, the text string as a whole is
+displayed with the appropriate text font and the nearest DC
+character height and character expansion factor available on the
+workstation, based on the first character in the text string.
+#F 37
+#D 6.12.1.3 6.12.1.4 6.12.1.5 6.12.1.6 6.12.1.7 6.12.1.8
+#S 4.5.5/47/5 4.5.5/48/3 4.5.5/49/5
+#T P03/2 P03/4 P04/4
+#C In the case where STRING is used as a result of coercion from
+an unavailable font and precision, then the actual font (1) may
+differ from the requested font.  See SRs below for details of
+coercion of character height and expansion factor.
+
+SR30. For text precision = CHAR, each character of the text is
+displayed with the requested text font and the nearest DC
+character height and character expansion factor available on the
+workstation.  Character spacing and text alignment aspects are
+applied exactly.
+#F 37
+#D 6.12.1.3 6.12.1.4 6.12.1.5 6.12.1.6 6.12.1.7 6.12.1.8
+#S 4.5.5/47/5 4.5.5/48/3 4.5.5/49/5
+#T P03/2 P03/4 P04/4
+#C See SRs below for details of coercion of character height and
+expansion factor.
+
+SR31. For text precision = STROKE, text is displayed with all
+text aspects applied exactly.
+#F 37
+#D
+#S 4.5.5/48/1 4.5.5/49/5
+#T P02/6 P03/6 P03/7 P06/1 P06/2 P06/3 P06/4 P06/5 P08/1 P08/2 P08/3
+   P08/4 P09/1 P09/2 P11/1 P11/2
+
+*** *** ***   Text precision: network traversal   *** *** ***
+
+SR32.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current text precision of the PTSL is set to STRING.
+#F
+#D 2.12.3 3.3.3
+#S 4.4.3/26/2 4.4.3/28/1 6.3/309/1
+#T P05/1
+
+SR33.  As part of the PTSL, the current text precision is saved
+(but not changed) by execute structure and then, upon completion
+of the sub-traversal of the invoked network, restored to the
+saved value.
+#F 113
+#D 3.3.3
+#S 4.4.3/28/1
+#T P05/1
+
+*** ***   Character expansion: element creation   *** ***
+
+SR34.  <Set character expansion> creates a "set character
+expansion" element (in the open structure), whose associated
+value is taken from the function's parameter.
+#F 38
+#D 7.3.2.4.3
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/5 P01/6 P04/5
+
+*** ***   Character expansion: effect during traversal   *** ***
+
+SR35.  Upon traversal of a "set character expansion factor"
+element, the current character expansion factor entry in the
+PHIGS traversal state list (PTSL) is set to the element's
+associated value.
+#F 38
+#D 3.3.4 7.3.2.4.3
+#S 4.5.2/38/3
+#T P04/5 P05/2 P06/2 P06/3 P06/4 P06/5 P11/1 P11/2
+
+SR36. The magnitude of the character expansion factor attribute
+specifies the amount by which the font nominal width/height ratio
+of individual TLC character bodies is multiplied to yield the
+actual TLC width/height ratio.
+#F 269
+#D
+#S 4.5.5/45/2 4.5.5/45/4 5.4.2/138/6
+#T P02/6 P03/6 P04/4 P04/5 P05/2 P06/2 P06/3 P06/4 P06/5 P11/1 P11/2
+
+SR37.  When a text primitive is displayed, if its bound character
+expansion factor ASF is INDIVIDUAL, then the actual DC character
+expansion factor used when displaying the text is the nearest
+available to the requested DC character expansion factor
+resulting from its bound TLC character expansion factor (after
+undergoing modelling, viewing and workstation transformations).
+The requested DC character expansion factor equals the requested
+DC width to height ratio times the character's font nominal
+height to width ratio.
+#F 38 266
+#D 3.3.4 3.3.9 6.12.1.6 6.12.1.7 6.12.1.8
+#S 4.5.2/39/7 4.5.5/44/10 4.5.5/47/5 4.5.5/49/2 4.5.5/49/4 5.4.2/138/6
+#T P04/4 P06/2 P06/3 P06/4 P06/5
+#C See SRs above for derivation of requested DC character height
+and width.  Character expansion factor may be approximated only
+for STRING or CHAR text precision; STROKE precision implies exact
+realization.  See the SRs on text precision, above.  Of course,
+by the above rule, if a requested expansion factor is available
+on the workstation, then the result is exact for any precision.
+Note also that requested DC expansion factor may well differ from
+nominal TLC expansion factor, since it reflects both that nominal
+factor and the effects of modelling and viewing transformation.
+For instance, in the case of a horizontal text string, if the
+nominal factor is 2.0 and a modelling transformation scales X
+(but not Y) by 3.0, the effective requested DC expansion factor
+will be 6.0.
+
+*** *** ***   Character expansion: network traversal   *** *** ***
+
+SR38.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current character expansion factor of the PTSL is set to 1.0.
+#F
+#D 2.12.4 3.3.4
+#S 4.4.3/26/2 4.4.3/28/1 6.3/309/1
+#T P05/2
+
+SR39.  As part of the PTSL, the current character expansion
+factor is saved (but not changed) by execute structure and then,
+upon completion of the sub-traversal of the invoked network,
+restored to the saved value.
+#F 113
+#D 3.3.4
+#S 4.4.3/28/1
+#T P05/2
+
+*** ***   Character spacing: element creation   *** ***
+
+SR40. <Set character spacing> creates a "set character spacing"
+element (in the open structure), whose associated value is taken
+from the function's parameter.
+#F 39
+#D 7.3.2.4.4
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/7 P01/8
+
+*** ***   Character spacing: effect during traversal   *** ***
+
+SR41.  Upon traversal of a "set character spacing" element, the
+current character spacing entry in the PHIGS traversal state list
+(PTSL) is set to the element's associated value.
+#F 39
+#D 3.3.5 7.3.2.4.4
+#S 4.5.2/38/3
+#T P05/2 P06/2 P06/3 P06/4 P06/5 P11/1 P11/2
+
+SR42. Character spacing specifies the TLC distance (positive) or
+overlap (negative) between adjacent character bodies, expressed
+in units of the font nominal character height.
+#F 269
+#D
+#S 4.5.5/45/3
+#T P02/6 P03/6 P05/2 P06/2 P06/3 P06/4 P06/5 P11/1 P11/2
+
+SR43.  When a text primitive is displayed and its bound character
+spacing ASF is INDIVIDUAL, then the bound character spacing is
+used when displaying the text.
+#F 39
+#D 3.3.5 3.3.10
+#S 4.5.2/39/7 4.5.5/44/10
+#T P06/2 P06/3 P06/4 P06/5
+#C Character spacing may be approximated only for STRING text
+precision; CHAR or STROKE precision implies exact realization.
+See the SRs on text precision, above.
+
+*** *** ***   Character spacing: network traversal   *** *** ***
+
+SR44.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current character spacing of the PTSL is set to 0.0.
+#F
+#D 2.12.5 3.3.5
+#S 4.4.3/26/2 4.4.3/28/1 6.3/309/1
+#T P05/2
+
+SR45.  As part of the PTSL, the current character spacing is
+saved (but not changed) by execute structure and then, upon
+completion of the sub-traversal of the invoked network, restored
+to the saved value.
+#F 113
+#D 3.3.5
+#S 4.4.3/28/1
+#T P05/2
+
+***   Text colour index: element creation   ***
+
+SR46. <Set text colour index> creates a "set text colour index"
+element (in the open structure), whose associated value is taken
+from the function's parameter.
+#F 40
+#D 7.3.2.4.5
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/9 P01/10 P07/1 P07/2
+
+*** ***   Text colour index: effect during traversal   *** ***
+
+SR47.  Upon traversal of a "set text colour index" element, the
+current text colour index entry in the PHIGS traversal state list
+(PTSL) is set to the element's associated value.
+#F 40
+#D 3.3.6 7.3.2.4.5
+#S 4.5.2/38/3
+#T P05/3 P07/1 P07/2
+
+SR48.  When text is displayed, if its bound text colour index is
+defined on the workstation and its bound text colour index ASF is
+INDIVIDUAL, then the text colour index is realized as itself.
+#F 40
+#D 3.3.6 3.3.11 5.15.3.1 5.15.3.2
+#S 4.5.2/39/7 4.5.5/44/10 4.5.12/63/4
+#T P05/3 P07/1
+
+SR49.  When text is displayed, if its bound text colour index is not
+defined on the workstation and its bound text colour index ASF is
+INDIVIDUAL, then the text colour index is realized as number 1.
+#F 40
+#D 3.3.6 3.3.11 5.15.3.1 5.15.3.2
+#S 4.5.2/39/7 4.5.2/43/3 4.5.5/44/10
+#T P07/2
+
+*** ***   Text colour index: network traversal   *** ***
+
+SR50.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current text colour index of the PTSL is set to 1.
+#F
+#D 2.12.6 3.3.6
+#S 4.4.3/26/2 4.4.3/28/1 6.3/309/1
+#T P05/3
+
+SR51.  As part of the PTSL, the current text colour index is
+saved (but not changed) by execute structure and then, upon
+completion of the sub-traversal of the invoked network, restored
+to the saved value.
+#F 113
+#D 3.3.6
+#S 4.4.3/28/1
+#T P05/3
+
+*** ***   Character height: element creation   *** ***
+
+SR52. <Set character height> creates a "set character height"
+element (in the open structure), whose associated value is taken
+from the function's parameter.
+#F 41
+#D 7.3.2.4.6
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/11 P01/12 P04/5
+
+*** *** ***   Character Height Support   *** *** ***
+
+SR53.  <Inquire text facilities> describes the realizable
+character heights for a specified workstation type, via the
+number of available character heights, minimum character height
+and maximum character height.
+#F 266
+#D 6.12.1.6 6.12.1.7 6.12.1.8
+#S n
+#T P04/1 P04/2 P04/3
+
+SR54.  The minimum character height and maximum character height
+are both positive.
+#F 266
+#D 6.12.1.7 6.12.1.8
+#S 6.7/322/1
+#T P04/2
+
+SR55.  All workstation types support at least one character
+height for STRING and CHAR precisions.
+#F 266
+#D 6.12.1.6
+#S 4.14/114/2 6.7/322/1
+#T P04/3
+
+SR56.  The range of character heights returned by <Inquire text
+facilities> is for font 1.
+#F 266
+#D 6.12.1.7 6.12.1.8
+#S n
+#T P04/4
+
+SR57.  The workstation supports a continuous range of character
+heights for CHAR and STRING precision, if the number of available
+character heights is 0.
+#F 266
+#D 6.12.1.6
+#S 6.7/322/1
+#T P04/3 P04/4
+
+*** ***   Character height: effect during traversal   *** ***
+
+SR58.  Upon traversal of a "set character height" element, the
+current character height entry in the PHIGS traversal state list
+(PTSL) is set to magnitude of the element's associated value.
+#F 41
+#D 3.3.12 7.3.2.4.6
+#S 4.5.2/38/3
+#T P03/7 P04/5 P06/2 P06/3 P06/4 P06/5 P10/1 P11/1 P11/2
+
+SR59. The magnitude of the character height attribute specifies,
+in TLC, the font nominal height (from baseline to capline) of a
+capital letter.
+#F 269
+#D
+#S 4.5.5/45/2 4.5.5/46/1 4.5.5/48/7 5.4.2/140/1
+#T P02/6 P03/6 P03/7 P04/4 P04/5 P06/2 P06/3 P06/4 P06/5 P11/1 P11/2
+#C Character height is measured in TLC, along the character up
+vector.  Since TLC is unscaled from modelling coordinates, the
+magnitude of character height may also be treated as if in MC.
+
+SR60.  The font nominal width in TLC of a character within a text
+primitive is given by the font's intrinsic width to height ratio
+for that character times the magnitude of the character height.
+#F
+#D
+#S 4.5.5/44/9 4.5.5/45/2 5.4.2/140/1
+#T P02/6 P06/2 P06/3 P06/4 P06/5 P11/1 P11/2
+#C Since <set character height> also sets the character width
+attribute, character height is in effect a scaling factor for the
+entire character.
+
+SR61.  When a text primitive is displayed, the actual DC character
+height is the nearest available to the requested DC character
+height resulting from its TLC bound character height (after
+undergoing modelling, viewing and workstation transformations).
+#F 41 266
+#D 3.3.12 6.12.1.3 6.12.1.4 6.12.1.5
+#S 4.5.5/45/2 4.5.5/47/5 4.5.5/49/2 5.4.2/140/1
+#T P04/4 P06/2 P06/3 P06/4 P06/5
+#C See SRs above for derivation of requested DC character height
+and width.  Character height may be approximated only for STRING
+or CHAR text precision; STROKE precision implies exact
+realization, as stated in the SRs on text precision, above.  Of
+course, by the above rule, if a requested height is available on
+the workstation, then the result is exact for any precision.
+
+*** *** ***   Character height: network traversal   *** *** ***
+
+SR62.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current character height and width of the PTSL are set to 0.01.
+#F
+#D 2.12.12 3.3.12
+#S 4.4.3/26/2 4.4.3/28/1 4.5.5/47/2 6.3/309/1
+#T P10/1
+
+SR63.  As part of the PTSL, the current character height and
+width are saved (but not changed) by execute structure and then,
+upon completion of the sub-traversal of the invoked network,
+restored to the saved value.
+#F 113
+#D 3.3.12
+#S 4.4.3/28/1
+#T P10/1
+
+*** ***   Text path: element creation   *** ***
+
+SR64. <Set text path> creates a "set text path" element (in the
+open structure), whose associated value is taken from the
+function's parameter.
+#F 43
+#D 7.3.2.4.8
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/15 P01/16 P06/1
+
+SR65.  The valid values for text path in <set text path> are
+RIGHT, LEFT, UP, and DOWN.
+#F 43
+#D 7.3.2.4.8
+#S 4.5.5/45/2
+#T P01/16 P06/1 P08/1 P08/3
+
+*** ***   Text path: effect during traversal   *** ***
+
+SR66.  Upon traversal of a "set text path" element, the current
+text path entry in the PHIGS traversal state list (PTSL) is set
+to the element's associated value.
+#F 43
+#D 3.3.16 7.3.2.4.8
+#S 4.5.2/38/3
+#T P06/1 P06/2 P06/3 P06/4 P06/5 P08/1 P08/2 P08/3 P08/4 P09/1 P09/2
+   P10/3 P11/1 P11/2
+
+SR67. The text path specifies the writing direction within the
+TLC text plane for the text string before application of the
+character up vector attribute (i.e. the direction in which
+successive characters are appended) as follows: RIGHT: positive
+x-axis. LEFT: negative x-axis. UP: positive y-axis. DOWN:
+negative x-axis.
+#F 43
+#D
+#S 4.5.5/45/2
+#T P06/1 P06/2 P06/3 P06/4 P06/5 P08/1 P08/2 P08/3 P08/4 P09/1 P09/2
+   P10/3 P11/1 P11/2
+#C Only STROKE precision implies exact realization of text path.
+See the SRs on text precision, above.
+
+SR68. For vertical text paths (UP or DOWN), the centrelines of
+the character bodies are aligned vertically within the text
+string before application of the character up vector attribute.
+#F 43
+#D
+#S 4.5.5/45/2
+#T P06/3 P06/5 P09/2 P11/1 P11/2
+
+SR69. For horizontal text paths (LEFT or RIGHT), the baselines of
+the character bodies are aligned horizontally within the text
+string before application of the character up vector attribute.
+#F 43
+#D
+#S 4.5.5/45/2
+#T P06/2 P06/4 P09/1 P11/1 P11/2
+
+*** *** ***   Text path: network traversal   *** *** ***
+
+SR70.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current text path of the PTSL is set to RIGHT.
+#F
+#D 2.12.16 3.3.16
+#S 4.4.3/26/2 4.4.3/28/1 4.5.5/47/2 6.3/309/1
+#T P10/3
+
+SR71.  As part of the PTSL, the current text path is saved (but
+not changed) by execute structure and then, upon completion of
+the sub-traversal of the invoked network, restored to the saved
+value.
+#F 113
+#D 3.3.16
+#S 4.4.3/28/1
+#T P10/3
+
+*** ***   Text alignment: element creation   *** ***
+
+SR72. <Set text alignment> creates a "set text alignment" element
+(in the open structure), whose associated value is taken from the
+function's parameter.
+#F 44
+#D 7.3.2.4.9
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/17 P01/18 P08/1 P08/2 P08/3 P08/4
+
+SR73.  The valid values in <set text alignment> for horizontal
+text alignment are NORMAL, LEFT, CENTRE, and RIGHT; for vertical
+text alignment, NORMAL, TOP, CAP, HALF, BASE, and BOTTOM.
+#F 44
+#D 7.3.2.4.9
+#S 4.5.5/45/6 4.5.5/46/1
+#T P01/18 P08/1 P08/2 P08/3 P08/4
+
+*** ***   Text alignment: effect during traversal   *** ***
+
+SR74.  Upon traversal of a "set text alignment" element, the
+current text alignment entry in the PHIGS traversal state list
+(PTSL) is set to the element's associated value.
+#F 44
+#D 3.3.17 3.3.18 7.3.2.4.9
+#S 4.5.2/38/3
+#T P08/1 P08/2 P08/3 P08/4 P09/1 P09/2 P10/2 P11/1 P11/2
+
+SR75. The text alignment specifies which horizontal and vertical
+location within the text rectangle is to coincide with the TLC
+origin by shifting the text rectangle within the text plane. For
+all text paths, alignments LEFT, RIGHT, BOTTOM, and TOP refer to
+the left, right, bottom, and top edges of the rectangle, and
+CENTRE refers to the horizontal location midway between the left
+and right edges.  For horizontal text paths, CAP, HALF, and BASE
+refer to the capline, halfline, and baseline of the whole text
+string.  For vertical text paths, CAP refers to the capline of
+the topmost character, BASE refers to the baseline of the
+bottommost character, and HALF refers to the vertical location
+midway between the halflines of the topmost and bottommost
+characters.
+#F 44
+#D
+#S 4.5.5/45/4 4.5.5/45/6 4.5.5/46/1
+#T P03/7 P08/1 P08/2 P08/3 P08/4 P09/1 P09/2 P10/2 P11/1 P11/2
+#C Only CHAR and STROKE precision imply exact realization of text
+alignment.  See the SRs on text precision, above.  Recall that
+the TLC origin is the text position in MC.  Also, note the
+implication that for a given font the relative placement of the
+baseline, halfline, and capline of the same for all character
+bodies.
+
+SR76. The effect of NORMAL as the horizontal or vertical
+component of text alignment is equivalent to one of the other
+defined values for text alignment and depends on text path as
+follows:
+text path  |  (horizontal, vertical)
+-----------+------------------------
+RIGHT      |  (LEFT,       BASE)
+LEFT       |  (RIGHT,      BASE)
+UP         |  (CENTRE,     BASE)
+DOWN       |  (CENTRE,     TOP)
+#F 44
+#D
+#S 4.5.5/46/3 4.5.5/47/1
+#T P08/2 P08/4
+
+*** *** ***   Text alignment: network traversal   *** *** ***
+
+SR77.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current text alignment of the PTSL is set to (NORMAL, NORMAL).
+#F
+#D 2.12.17 2.12.18 3.3.17 3.3.18
+#S 4.4.3/26/2 4.4.3/28/1 4.5.5/47/2 6.3/309/1
+#T P10/2
+
+SR78.  As part of the PTSL, the current text alignment is saved
+(but not changed) by execute structure and then, upon completion
+of the sub-traversal of the invoked network, restored to the
+saved value.
+#F 113
+#D 3.3.17 3.3.18
+#S 4.4.3/28/1
+#T P10/2
+
+*** ***   Character up vector: element creation   *** ***
+
+SR79. <Set character up vector> creates a "set character up
+vector" element (in the open structure), whose associated value
+is taken from the function's parameter.
+#F 42
+#D 7.3.2.4.7
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/13 P01/14 P06/1
+
+*** ***   Character up vector: effect during traversal   *** ***
+
+SR80.  Upon traversal of a "set character up vector" element, the
+current character up vector entry in the PHIGS traversal state
+list (PTSL) is set to the element's associated value.
+#F 42
+#D 3.3.13 7.3.2.4.7
+#S 4.5.2/38/3
+#T P06/1 P09/1 P09/2 P10/3 P11/1 P11/2
+
+SR81. The character up vector aspect (specified in TLC) causes
+the text rectangle that has been formed in the text plane by
+application of text font, character height, character expansion
+factor, character spacing, text path, and text alignment to be
+rotated within the text plane about the TLC origin such that the
+up direction of the characters is the same as that of the vector.
+#F 42
+#D
+#S 4.5.5/45/2 4.5.5/45/5
+#T P06/1 P09/1 P09/2 P10/3 P11/1 P11/2
+#C Only STROKE precision implies exact realization of character
+up vector.  See the SRs on text precision, above.
+
+*** *** ***   Character up vector: network traversal   *** *** ***
+
+SR82.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current character up vector of the PTSL is set to (0,1).
+#F
+#D 2.12.13 3.3.13
+#S 4.4.3/26/2 4.4.3/28/1 4.5.5/47/2 6.3/309/1
+#T P10/3
+
+SR83.  As part of the PTSL, the current character up vector is
+saved (but not changed) by execute structure and then, upon
+completion of the sub-traversal of the invoked network, restored
+to the saved value.
+#F 113
+#D 3.3.13
+#S 4.4.3/28/1
+#T P10/3
+
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   13: ptx3    <text 3>
+   14: ptx     <text>
+   36: pstxfn  <set text font>
+   37: pstxpr  <set text precision>
+   38: pschxp  <set character expansion factor>
+   39: pschsp  <set character spacing>
+   40: pstxci  <set text colour index>
+   41: pschh   <set character height>
+   42: pschup  <set character up vector>
+   43: pstxp   <set text path>
+   44: pstxal  <set text alignment>
+  113: pexst   <execute structure>
+  266: pqtxf   <inquire text facilities>
+  269: pqtxx   <inquire text extent>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.2  ...  list_of_available_workstation_types
+  2.7  ...  list_of_available_character_sets
+  2.12 ...  default_text_attributes
+  2.12.2  ...  default_text_font
+  2.12.3  ...  default_text_precision
+  2.12.4  ...  default_character_expansion_factor
+  2.12.5  ...  default_character_spacing
+  2.12.6  ...  default_text_colour_index
+  2.12.12 ...  default_character_height
+  2.12.13 ...  default_character_up_vector
+  2.12.16 ...  default_text_path
+  2.12.17 ...  default_text_alignment_horizontal
+  2.12.18 ...  default_text_alignment_vertical
+  3  ...  phigs_traversal_state_list
+  3.3  ...  current_text_attributes
+  3.3.2  ...  current_text_font
+  3.3.3  ...  current_text_precision
+  3.3.4  ...  current_character_expansion_factor
+  3.3.5  ...  current_character_spacing
+  3.3.6  ...  current_text_colour_index
+  3.3.7  ...  current_text_font_asf
+  3.3.8  ...  current_text_precision_asf
+  3.3.9  ...  current_character_expansion_factor_asf
+  3.3.10 ...  current_character_spacing_asf
+  3.3.11 ...  current_text_colour_index_asf
+  3.3.12 ...  current_character_height
+  3.3.13 ...  current_character_up_vector
+  3.3.14 ...  current_character_width
+  3.3.16 ...  current_text_path
+  3.3.17 ...  current_text_alignment_horizontal
+  3.3.18 ...  current_text_alignment_vertical
+  5  ...  workstation_state_list
+  5.15  ...  colour_entry
+  5.15.3  ...  colour_table
+  5.15.3.1  ...  colour_index
+  5.15.3.2  ...  colour_specification
+  6  ...  workstation_description_table
+  6.12  ...  text_entry
+  6.12.1  ...  text_facilities
+  6.12.1.1  ...  number_of_text_font_and_precision_pairs
+  6.12.1.2  ...  list_of_text_font_and_precision_pairs
+  6.12.1.3  ...  number_of_available_character_heights
+  6.12.1.4  ...  minimum_character_height
+  6.12.1.5  ...  maximum_character_height
+  6.12.1.6  ...  number_of_available_character_expansion_factors
+  6.12.1.7  ...  minimum_character_expansion_factor
+  6.12.1.8  ...  maximum_character_expansion_factor
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.5  ...  text_3
+  7.3.1.6  ...  text
+  7.3.2  ...  primitive_attributes
+  7.3.2.4  ...  text_attributes
+  7.3.2.4.1  ...  text_font
+  7.3.2.4.2  ...  text_precision
+  7.3.2.4.3  ...  character_expansion_factor
+  7.3.2.4.4  ...  character_spacing
+  7.3.2.4.5  ...  text_colour_index
+  7.3.2.4.6  ...  character_height
+  7.3.2.4.7  ...  character_up_vector
+  7.3.2.4.8  ...  text_path
+  7.3.2.4.9  ...  text_alignment
+ 
+SEMANTIC CROSS-REFERENCES:
+  04.01.03/SR09 04.01.03/SR10 04.01.03/SR11
+ 
+LOCAL SUBROUTINES:
+
+TSTASC accepts a prompt and a test string whose leading character
+is NOT a member of the set being tested.  The rest of the string
+has characters in the expected set.  The characters are displayed
+in random order and the operator must identify the one which
+doesn't belong to the set.
+
+Logical function FPAVL determines whether a given font and
+precision will be realized exactly as such on the workstation
+type.  If a requested font is realized in a higher precision, it
+is not considered to be directly available.
+
+CHKFNT accepts a list of fonts and precisions, and randomly picks
+some of them to be illustrated using the specified character
+string.
+
+UNREP displays some unrepresentable character codes in the
+requested font and then reports whether these were correctly
+identified by the operator.
+
+TXEXAL returns not only the size of the nominal text extent
+rectangle, but also the location within it of the various text
+alignment positions.
+
+TSCHUP draws a text string with various values for character up
+and for text alignment.  The text strings are displayed along
+radii of a circle and are enclosed by a text extent rectangle
+(except for one which is deliberately drawn incorrectly).
+
+LOCTXT draws a text string at the real y-location corresponding
+to the integer index given in YLOC.
+
+LOCTX1 draws a text string at the real y-location corresponding
+to the integer index given in YLOC, scaled down by SCF.
+
+LOCTX2 draws a text string at the real y-location corresponding
+to the integer index given in YLOC, and puts a polymarker at the
+text position.
+
+INOUTL builds outlines for nominal text string "ELF" in
+structures 201,202,203. The lower left corner of the character is
+at 0,0 and its height and width = 1.  Note that height of
+character *body* (from topline to bottomline) is usually greater
+than height of character (from capline to baseline).
+
+GEOTXT generates a display of several text primitives, whose
+geometric aspects have been highly randomized.  It then outlines
+their expected position, except for the one in line #NGLINE.
+
+
+PROGRAM 1: Element creation and inquiring
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element content> throughout to determine:
+    celval = current element value as set by program
+    recval = auxiliary element values implied by the standard's
+             representation conventions.
+
+Use <inquire current element type and size> throughout to determine:
+    celsiz = current element size
+
+*** *** *** *** ***   Text font   *** *** *** *** ***
+<set text font>:
+    text_font = 33
+
+TEST: #SR 9 12
+      "<Inquire current element type and size> should return
+       text font as the type of the created element and
+       the appropriate element size."
+
+<inquire current element type and size> for current element type and
+appropriate size
+pass/fail depending on
+  (current_element_type = text font and
+    celsiz = values specified by the standard)
+
+TEST: #SR 10 12
+      "<Inquire current element content> should return the standard
+       representation for the text font value."
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 33 and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** *** ***   Text precision   *** *** *** *** ***
+<set text precision>:
+    text_precision = STROKE
+
+TEST: #SR 9 25
+      "<Inquire current element type and size> should return
+       text precision as the type of the created element
+       and the appropriate element size."
+
+<inquire current element type and size> for current element type and
+appropriate size
+pass/fail depending on
+  (current_element_type = text precision and
+    celsiz = values specified by the standard)
+
+TEST: #SR 10 25 26
+      "<Inquire current element content> should return the standard
+       representation for all valid text precision values."
+
+for txprec = STRING, CHAR, and STROKE
+   <set text precision> with text_precision = txprec
+   <inquire current element content> for current element representation
+   if (celval = txprec and
+       recval = auxiliary values specified by the standard)
+       OK so far
+   else
+      fail
+      informative message on txprec
+      goto doneprec
+   endif
+next txprec
+
+pass
+
+doneprec:
+
+*** *** *** *** ***   Character expansion   *** *** *** *** ***
+<set character expansion>:
+    character_expansion = 0.40
+
+TEST: #SR 9 34
+      "<Inquire current element type and size> should return
+       character expansion as the type of the created element
+       and the appropriate element size."
+
+<inquire current element type and size> for current element type and
+appropriate size
+pass/fail depending on
+  (current_element_type = character expansion and
+    celsiz = values specified by the standard)
+
+TEST: #SR 10 34
+      "<Inquire current element content> should return the standard
+       representation for the character expansion value."
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 0.40 and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** *** ***   Character spacing   *** *** *** *** ***
+<set character spacing>:
+    character_spacing = 0.25
+
+TEST: #SR 9 40
+      "<Inquire current element type and size> should return
+       character spacing as the type of the created element
+       and the appropriate element size."
+
+<inquire current element type and size> for current element type and
+appropriate size
+pass/fail depending on
+  (current_element_type = character spacing and
+    celsiz = values specified by the standard)
+
+TEST: #SR 10 40
+      "<Inquire current element content> should return the standard
+       representation for the character spacing value."
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 0.25 and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** *** ***   Text colour index   *** *** *** *** ***
+<set text colour index>:
+    text_colour_index = 2
+
+TEST: #SR 9 46
+      "<Inquire current element type and size> should return
+       text colour index as the type of the created element
+       and the appropriate element size."
+
+<inquire current element type and size> for current element type and
+appropriate size
+pass/fail depending on
+  (current_element_type = text colour index and
+    celsiz = values specified by the standard)
+
+TEST: #SR 10 46
+      "<Inquire current element content> should return the standard
+       representation for the text colour index value."
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 2 and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** *** ***   Character height   *** *** *** *** ***
+<set character height>:
+    character_height = 0.35
+
+TEST: #SR 9 52
+      "<Inquire current element type and size> should return
+       character height as the type of the created element
+       and the appropriate element size."
+
+<inquire current element type and size> for current element type and
+appropriate size
+pass/fail depending on
+  (current_element_type = character height and
+    celsiz = values specified by the standard)
+
+TEST: #SR 10 52
+      "<Inquire current element content> should return the standard
+       representation for the character height value."
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 0.35 and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** *** ***   Character up vector   *** *** *** *** ***
+<set character up vector>:
+    character_up_vector_x_component = 0.25
+    character_up_vector_y_component = 0.13
+
+TEST: #SR 9 79
+      "<Inquire current element type and size> should return
+       character up vector as the type of the created element
+       and the appropriate element size."
+
+<inquire current element type and size> for current element type and
+appropriate size
+pass/fail depending on
+  (current_element_type = character up vector and
+    celsiz = values specified by the standard)
+
+TEST: #SR 10 79
+      "<Inquire current element content> should return the standard
+       representation for the character up vector value."
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = (0.25, 0.13) and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** *** ***   Text path   *** *** *** *** ***
+<set text path>:
+    text_path = LEFT
+
+TEST: #SR 9 64
+      "<Inquire current element type and size> should return
+       text path as the type of the created element and
+       the appropriate element size."
+
+<inquire current element type and size> for current element type and
+appropriate size
+pass/fail depending on
+  (current_element_type = text path and
+    celsiz = values specified by the standard)
+
+TEST: #SR 10 64 65
+      "<Inquire current element content> should return the standard
+       representation for all valid text path values."
+
+for txpath = RIGHT, LEFT, UP, and DOWN
+   <set text path> with text_path = txpath
+   <inquire current element content> for current element representation
+   if (celval = txpath and
+       recval = auxiliary values specified by the standard)
+       OK so far
+   else
+      fail
+      informative message on txpath
+      goto donepath
+   endif
+next txpath
+
+pass
+
+donepath:
+
+*** *** *** *** ***   Text alignment   *** *** *** *** ***
+<set text alignment>:
+    horizonal_text_alignment = CENTRE
+    vertical_text_alignment  = BASE
+TEST: #SR 9 72
+      "<Inquire current element type and size> should return
+       text alignment as the type of the created element and
+       the appropriate element size."
+
+<inquire current element type and size> for current element type and
+appropriate size
+pass/fail depending on
+  (current_element_type = text alignment and
+    celsiz = values specified by the standard)
+
+TEST: #SR 10 72 73
+      "<Inquire current element content> should return the standard
+       representation for all valid text alignment values."
+
+for txhor = NORMAL, LEFT, CENTRE, and RIGHT
+for txver = NORMAL, TOP, CAP, HALF, BASE, and BOTTOM
+
+   <set text alignment> with horizonal_text_alignment = txhor
+                             vertical_text_alignment  = txver
+   <inquire current element content> for current element representation
+   if (celval = (txhor, txver) and
+       recval = auxiliary values specified by the standard)
+       OK so far
+   else
+      fail
+      informative message on (txhor, txver)
+      goto donealign
+   endif
+next txver
+next txhor
+
+pass
+
+donealign:
+
+END PROGRAM 1
+
+
+PROGRAM 2: Appearance of text fonts 1 and 2
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+ASCII SPECIAL CHARACTERS: Each numbered character should be
+recognizable from its name in the prompt.  Respond by entering
+a list of numeric labels, in the same order as requested by the
+prompt. For instance if the screen shows:
+   1: (
+   2: *
+   3: &
+and the prompt asks for <asterisk>, <ampersand>, <opening
+parenthesis>, the correct response is 2,3,1.  All 33 special
+characters are checked for all three precisions in fonts 1 and 2,
+so there will be several prompts for this heading.
+
+ASCII UPPERCASE LETTERS: All 26 uppercase letters and one
+lowercase letter should be displayed.  Identify the position of
+the lowercase letter.  Character positions are displayed to the
+left of each of the strings.  For example, in this line:
+   9-16: DTSRFkCB
+the lowercase "k" is in position 14.  As above, this test is
+executed for all three precisions in fonts 1 and 2.
+
+ASCII LOWERCASE LETTERS: All 26 lowercase letters and one
+uppercase letter should be displayed.  Identify the position of
+the uppercase letter.  Character positions are displayed to the
+left of each of the strings.  As above, this test is executed for
+all three precisions in fonts 1 and 2.
+
+ASCII DIGITS: All 10 digits and one non-digit should be
+displayed.  Identify the position of the non-digit. Character
+positions are displayed to the left of each of the strings.  As
+above, this test is executed for all three precisions in fonts 1
+and 2.
+
+DISTINGUISHABILITY OF FONTS 1 AND 2: For each of the three
+precisions, five lines are displayed, four in one font (1 or 2)
+and one in the other font.  Identify the line in the distinctive
+font.
+
+FONT 1 MONOSPACED: Each line has a character string with some
+leading potentially narrow characters and trailing potentially
+wide characters.  In every string but one, each of its characters
+should line up between the vertical lines.  Identify the one
+string where this is not so.
+
+DESIGN:
+
+set up array for ASCII characters and names:
+ascch = all special characters =  !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+
+ascnm = names of all special characters
+      = space, exclamation point, double quote, pound sign,
+   dollar sign, percent sign, ampersand, apostrophe, left
+   parenthesis, right parenthesis, asterisk, plus sign, comma, dash,
+   period, slash, colon, semi-colon, less-than sign, equals,
+   greater-than sign, question mark, at sign, left bracket, back
+   slash, right bracket, carat, underline, single opening quote,
+   left curly brace, vertical bar, right curly brace, tilde
+
+TEST: #SR 11 13 14 21 26 27
+      "Fonts 1 and 2 should both contain all the ASCII special
+       characters, in any precision."
+
+grpsiz = how many characters to display at a time = 6
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_spec
+    set text font to font
+    set text precision to prec
+    perm = array to randomize order of the 33 characters
+    for ix = 0 to 32 by grpsiz
+       display next grpsiz randomly ordered characters starting
+          from ascch(perm(ix+1))
+       OPQA/ASCII SPECIAL CHARACTERS: Identify, in order, the following
+          characters: ascnm(perm(ix+1)) to ascnm(perm(ix+grpsiz))
+       if (operator response incorrect) then
+          fail
+          goto end_ascii_special
+       endif
+    next ix
+end_fp_spec:
+next prec
+next font
+
+pass
+
+end_ascii_special:
+
+upper  = uppercase characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+noncap = a lowercase letter randomly chosen from "bdfhkt"
+tststr = test string = noncap + upper
+
+TEST: #SR 11 13 14 21 26 27
+      "Fonts 1 and 2 should both contain all the ASCII uppercase
+       letters, in any precision."
+
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_upper
+    set text font to font
+    set text precision to prec
+    perm = array to randomize order of the 27 characters
+    display tststr in random order
+    OPQA/ASCII UPPERCASE LETTERS: which character is NOT an
+      uppercase letter?
+    if (operator fails to identify noncap) then
+       fail
+       goto end_ascii_upper
+    endif
+end_fp_upper:
+next prec
+next font
+
+pass
+
+end_ascii_upper:
+
+lower  = lowercase characters = 'abcdefghijklmnopqrstuvwxyz'
+nonlow = an uppercase letter randomly chosen from upper
+tststr = test string = nonlow + lower
+
+TEST: #SR 11 13 14 21 26 27
+      "Fonts 1 and 2 should both contain all the ASCII lowercase
+       letters, in any precision."
+
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_lower
+    set text font to font
+    set text precision to prec
+    perm = array to randomize order of the 27 characters
+    display tststr in random order
+    OPQA/ASCII LOWERCASE LETTERS: which character is NOT a
+      lowercase letter?
+    if (operator fails to identify nonlow) then
+       fail
+       goto end_ascii_lower
+    endif
+end_fp_lower:
+next prec
+next font
+
+pass
+
+end_ascii_lower:
+
+digit  = digit characters = '0123456789'
+nondig = one non-digit randomly chosen from "CEISZ"
+tststr = test string = nondig + digit
+
+TEST: #SR 11 13 14 21 26 27
+      "Fonts 1 and 2 should both contain all the ASCII digit
+       characters, in any precision."
+
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_digit
+    set text font to font
+    set text precision to prec
+    perm = array to randomize order of the 11 characters
+    display tststr in random order
+    OPQA/ASCII DIGITS: which character is NOT a digit?
+    if (operator fails to identify nondig) then
+       fail
+       goto end_ascii_digit
+    endif
+end_fp_digit:
+next prec
+next font
+
+pass
+
+end_ascii_digit:
+
+TEST: #SR 11 13 15 21 26 27
+      "Text fonts 1 and 2 should be visually distinguishable
+       in any precision."
+
+fonta = random integer, 1 or 2
+fontb = 3 - fonta
+
+for prec = STRING, CHAR, STROKE
+    set text precision to prec
+    perm = array to randomize order of 5 entries
+    fonta = 3 - fonta
+    fontb = 3 - fontb
+    set text font to fonta
+    for ix = 1 to 5
+        if (ix = 5) set text font to fontb
+        display "Test" at location perm(ix)
+    next ix
+    OPQA/DISTINGUISHABILITY OF FONTS 1 AND 2: Which line has a
+       different font?
+    if operator response does not indicate location perm(5) then
+       fail
+       goto end_distin
+    endif
+next prec
+
+pass
+
+end_distin:
+
+TEST: #SR 11 13 16 17 18 31 36 42 59 60
+      "In text font 1, all character bodies affected by the same
+       character height, character expansion factor, and
+       character spacing should have the same width."
+
+set text font = 1
+set text precision = STROKE
+set character spacing = chsp = 0.2
+set text alignment = LEFT,BASE
+
+Use <inquire text extent> to determine
+  ncwh = nominal character width/height ratio for font 1
+
+numlin = number of lines to display = 6
+ngline = incorrect line = random number from 1 to numlin
+
+display labels for all numlin lines to be shown
+
+chsp = 0.2
+for ix = 1 to numlin
+  chht   = random value from .2/numlin to .6/numlin
+  chexp  = random value from .3 to 3
+  chsiz  = horizontal distance per character
+         = chht * (ncwh*chexp + chsp)
+  numch  = number of characters this string = .6 / chsiz
+  make sure numch between 4 and 25, else pick new values
+  numnar = number of narrow characters = numch/2
+  distrg = display string = numnar narrow characters
+    followed by (numch-numnar) wide characters
+  set character height = chht
+  set character expansion = chexp
+  display distrg at location ix
+  if (ix = ngline) then
+     offact = offset factor = .80 or 1.20
+  else
+     offact = offset factor = 1.00
+  endif
+
+  draw vertical lines between characters, assuming that chht,
+    chsp, and chexp are in effect, distorted by offact
+next ix
+
+OPQA/FONT 1 MONOSPACED: In which line are the characters NOT
+  located between the separators?
+pass/fail depending on (operator indicates location ngline)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Appearance of all text fonts
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+NON-MANDATORY REGISTERED TEXT FONTS: These screens display a
+sample of supported registered text fonts (at most 8).  For each
+displayed line, look up its text font identifier in the ISO
+register and verify that the actual appearance of the text agrees
+with the ISO specification.
+
+IMPLEMENTOR DEFINED TEXT FONTS: These screens display a sample of
+implementor defined text fonts (at most 8).  For each displayed
+line, look up its text font identifier in the implementor's
+documentation and verify that the actual appearance of the text
+agrees with the specification.  Also verify that font identifiers
+are described in a workstation independent way, i.e. the same
+identifier must not specify different fonts for different
+workstation types.
+
+COMPLETE DOCUMENTATION FOR IMPLEMENTOR TEXT FONTS: No associated
+picture.  Verify that all the entries in the list of available
+text fonts for this workstation type are documented by the
+implementor.  The list may be a subset of the documented text
+fonts.
+
+UNIFORM HEIGHT FOR CHARACTER BODIES: Each column has a character
+string composed of some short characters followed by some tall
+characters.  In every string but one, each of its characters
+should line up between the horizontal lines.  Identify the one
+string where this is not so.
+
+CHARACTER HEIGHT FOR SIZE OF CAPITAL LETTERS: First, report all
+alphabetic stroke fonts to be tested, other than 1 or 2.  The
+screen will then show several lines of boxed text primitives.  In
+all lines but one, the capital letters should just fit between
+the displayed capline (dashed) and baseline (dotted).  Identify
+the line in which the letters are too tall or too short.
+
+IDENTIFY UNREPRESENTED CHARACTER CODES: You must enter a list of
+integers for which font 1 or 2 has no graphic representation.  If
+this is an ASCII machine, values between 0 and 31 may qualify.
+Any entries beyond the first 6 are ignored.  If all values
+are representable, indicate the null list by entering "n".
+Since the entered character codes will be used by the program
+to generate a text primitive, do not enter any codes which will
+cause the implementation to take some special action.
+
+APPEARANCE OF UNREPRESENTED CHARACTER CODES:  The implementation
+must provide a special representation or symbol to indicate the
+presence of character codes within a text string for which the
+font has no normal representation.  Identify all and only the
+positions in the displayed text string which contain this
+distinctive symbol.  There may be different symbols for different
+non-representable codes.
+
+UNSUPPORTED TEXT FONT AND PRECISION PAIRS: All lines but one should
+be identical, having defaulted or been explicitly set to font=1,
+precision=STRING.  One line, written with font=2, precision=STRING,
+should therefore be distinct and is the line to be indicated.
+
+DESIGN:
+
+use <inquire text facilities> to determine
+  lposfn = list of positive fonts and highest available precision
+           for each, other than fonts 1 and 2
+  lnegfn = list of non-positive fonts and highest available precision
+           for each
+  lstrk  = list of fonts available in STROKE precision
+
+chstr = character string = AaZz09$;^}
+lcc = list of character codes = codes for chstr
+
+if (lposfn empty)
+   informative message: no non-mandatory text fonts
+   goto end_pos
+endif
+
+TEST: #SR 11 13 19 21
+      "All positive text fonts should appear as specified in the
+       ISO register."
+
+informational message: SR 19 is indirectly confirmed in the
+following test case since this test must be run against all
+workstation types, and the ISO register documentation must be
+correct for all of them.
+
+ldisp = list of fonts to be displayed
+if (number of entries in lposfn > 8) then
+   ldisp = 8 randomly chosen from lposfn
+else
+   ldisp = all of lposfn
+endif
+
+display lcc
+display chstr for each font in ldisp, using that
+  font's associated precision
+label each chstr
+
+OPQA/NON-MANDATORY REGISTERED TEXT FONTS: do all displayed,
+  labelled text fonts agree with the corresponding description in
+  the ISO register?
+pass/fail depending on (operator responds "yes")
+
+TEST: #SR 11 13 19 21 29 30
+      "All positive text fonts should appear as specified in the
+       ISO register, even when less precision is requested than
+       is available for the font."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lposfn > 8) then
+   ldisp = 8 randomly chosen from lposfn
+else
+   ldisp = all of lposfn
+endif
+
+display lcc
+display chstr for each font in ldisp, using a precision
+  less than that font's associated precision (or equal if STRING)
+label each chstr
+
+OPQA/NON-MANDATORY REGISTERED TEXT FONTS: do all displayed,
+  labelled text fonts agree with the corresponding description in
+  the ISO register?
+pass/fail depending on (operator responds "yes")
+
+end_pos:
+
+if (lnegfn empty)
+   informative message: no non-mandatory text fonts
+   goto end_font_id
+endif
+
+TEST: #SR 11 13 19 21
+      "All non-positive text fonts should be workstation independent
+       and appear as specified in the implementor's documentation."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lnegfn > 8) then
+   ldisp = 8 randomly chosen from lnegfn
+else
+   ldisp = lnegfn
+endif
+
+display lcc
+display chstr for each font in ldisp, using that
+  font's associated precision
+label each chstr
+
+OPQA/IMPLEMENTOR DEFINED TEXT FONTS: Answer y if both are true,
+  otherwise n: 1) the implementor provides accurate documentation
+  for all these fonts, and 2) the documentation indicates that a
+  font identifier denotes the same font for all workstation types.
+pass/fail depending on (operator responds "yes")
+
+TEST: #SR 11 13 19 21 29 30
+      "All non-positive text fonts should be workstation independent
+       and appear as specified in the implementor's documentation,
+       even when less precision is requested than is available
+       for the font."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lnegfn > 8) then
+   ldisp = 8 randomly chosen from lnegfn
+else
+   ldisp = lnegfn
+endif
+
+display lcc
+display chstr for each font in ldisp, using a precision
+  less than that font's associated precision (or equal if STRING)
+label each chstr
+
+OPQA/IMPLEMENTOR DEFINED TEXT FONTS: Answer y if both are true,
+  otherwise n: 1) the implementor provides accurate documentation
+  for all these fonts, and 2) the documentation indicates that a
+  font identifier denotes the same font for all workstation types.
+pass/fail depending on (operator responds "yes")
+
+if (ldisp = all of lnegfn)
+   all negative fonts displayed already
+   goto end_font_id
+endif
+
+TEST: #SR 21
+      "All reported implementor-defined text fonts available for
+       a given workstation type should be documented by the
+       implementor."
+
+list all reported implementor-defined text fonts in lnegfn
+
+OPQA/COMPLETE DOCUMENTATION FOR IMPLEMENTOR TEXT FONTS: are all
+  these fonts documented by the implementor?
+
+pass/fail depending on (operator responds "yes")
+
+end_font_id:
+
+TEST: #SR 11 13 16 17 31 36 42 59
+      "In each text font, all character bodies affected by the
+       same character height, character expansion factor, and
+       character spacing should have the same height."
+
+set text precision = STROKE
+set character spacing = chsp = 0.4
+set text alignment = LEFT,TOP
+set text path = DOWN
+
+numcol = number of columns to display = 6
+ngcol  = incorrect column = random number from 1 to numcol
+
+display labels for all numcol columns to be shown
+
+for ix = 1 to numcol
+  txfnt  = random value from lstrk
+  Use <inquire text extent> to determine
+    ncsh = nominal vertical character body size /
+           requested character height
+           for txfnt
+  chht   = random value from .2/numcol to .6/numcol
+  chexp  = random value from .3 to 3
+  chsiz  = vertical distance per character
+         = chht * (ncsh + chsp)
+  numch  = number of characters this string = vert-space / chsiz
+  make sure numch between 4 and 25, else pick new values
+
+  numsht = number of short characters = numch/2
+  distrg = display string = numsht short characters
+    followed by (numch-numsht) tall characters
+  set text font = txfnt
+  set character height = chht
+  set character expansion = chexp
+  display distrg in column ix
+  if (ix = ngcol) then
+     offact = offset factor = .80 or 1.20
+  else
+     offact = offset factor = 1.00
+  endif
+
+  draw horizontal lines between characters, assuming that chht,
+    chsp, and chexp are in effect, distorted by offact
+next ix
+
+OPQA/UNIFORM HEIGHT FOR CHARACTER BODIES: In which column are the
+  characters NOT aligned between the separators?
+pass/fail depending on (operator indicates location ngcol)
+
+TEST: #SR 1 11 14 16 17 31 58 59 75
+      "Character height magnitude should specify the nominal height,
+       in TLC, from baseline to capline, of all capital letters
+       within a font."
+
+OPQA/CHARACTER HEIGHT FOR SIZE OF CAPITAL LETTERS: Enter list of
+  font identifiers available in stroke precision, other than 1
+  and 2, which support alphabetic characters.
+alfont = list of alphabetic fonts from operator
+alfont = alfont + 1,2
+
+numlin = 6
+ngline = random integer between 1 and numlin
+for ix = 1,numlin
+   str = 3 random capital letters
+   chht = random value between (0.2 and 0.8) * line-increment
+   compute correct location of base, cap lines
+   if (ix = ngline) then
+      draw incorrect base, cap lines
+      if (chht < 0.5 * line-increment) then
+         draw lines 25% too far apart
+      else
+         draw lines 25% too close
+      endif
+   else
+      draw correct base, cap lines
+   endif
+   curfnt = random pick from alfont
+   display str, using + or - chht and curfnt
+   label str
+next ix
+
+OPQA/CHARACTER HEIGHT FOR SIZE OF CAPITAL LETTERS: In which line
+   are the upper-case letters NOT aligned between the dashed
+   baseline and the dotted capline?
+pass/fail depending on (operator picks location ngline)
+
+OPQA/IDENTIFY UNREPRESENTED CHARACTER CODES: Enter list of 6 or
+fewer character codes for which font 1 has no representation (n
+if none).
+
+unr1ls = operator response
+
+OPQA/IDENTIFY UNREPRESENTED CHARACTER CODES: Enter list of 6 or
+fewer character codes for which font 2 has no representation (n
+if none).
+
+unr2ls = operator response
+
+if (unr1ls and unr2ls empty) then
+   informative message: cannot test SR20, no unrepresentable
+      character codes in fonts 1 or 2
+   goto end_unrep
+endif
+
+TEST: #SR 13 14 20
+      "There should be a implementation dependent way to depict a
+       character code for which a font has no graphic
+       representation."
+
+if (unr1ls empty) then
+   goto do_f2
+endif
+
+for all three precisions:
+   str = random mix of ASCII and unrepresented character codes
+   display str in font 1
+
+   OPQA/APPEARANCE OF UNREPRESENTED CHARACTER CODES: The
+   implementation has a special symbol to indicate the
+   presence of non-representable character codes within
+   a text string.  List, in order, all the character positions
+   containing this special symbol.
+
+   if (operator response incorrect) then
+      fail
+      goto end_unrep
+   endif
+next precision
+
+if (unr2ls empty) then
+   pass
+   goto end_unrep
+endif
+
+do_f2:
+for all three precisions:
+   str = random mix of ASCII and unrepresented character codes
+   display str in font 2
+
+   OPQA/APPEARANCE OF UNREPRESENTED CHARACTER CODES: The
+   implementation has a special symbol to indicate the
+   presence of non-representable character codes within
+   a text string.  List, in order, all the character positions
+   containing this special symbol.
+
+   if (operator response incorrect) then
+      fail
+      goto end_unrep
+   endif
+next precision
+pass
+
+end_unrep:
+
+TEST: #SR 11 13 15 22 27
+      "If text display is requested with an unavailable font or
+       precision, font=1 and precision=STRING should be used."
+
+lunsfn,lunspr = list of unsupported font,precision pairs
+
+within lposfn, find at most 2 fonts in non-STROKE precision.
+for each such add entry to list: font and lowest unavailable
+  precision.
+
+within lnegfn, find at most 2 fonts in non-STROKE precision.
+for each such add entry to list: font and lowest unavailable
+  precision.
+
+(minstr, maxstr) = (minimum, maximum) font identifier in lstrk
+add to list of unsupported:
+minstr -   1, STRING
+minstr - 100, STROKE
+
+maxstr +   1, STROKE
+maxstr + 100, STRING
+
+add (1,STRING) to lunsup
+as last entry add (2,STRING) to lunsup
+numlin = size of lunsup
+perm = array to randomize order of lunsup
+
+label all lines from 1 to numlin
+do ix = 1 to numlin
+   display text using lunsfn(perm(ix)), lunspr(perm(ix)) on line ix
+next ix
+
+OPQA/UNSUPPORTED TEXT FONT AND PRECISION PAIRS: which line is
+  different?
+pass/fail depending on (operator picks text written with (2,STRING))
+
+END PROGRAM 3
+
+
+PROGRAM 4: Character height and expansion factor
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+NEGATIVE CHARACTER HEIGHT AND EXPANSION FACTOR: All lines but one
+should contain normal text - i.e. the characters should be
+right-side up and not reversed left to right (mirror image).
+Identify the line whose text is not normal.
+
+DESIGN:
+
+<inquire text facilities> to determine
+naht = # available character heights
+minht = minimum character height
+maxht = maximum character height
+
+TEST: #SR 53
+      "Maximum character height should not be less than the
+       minimum character height."
+pass/fail depending on (maxht >= minht)
+
+TEST: #SR 53 54
+      "The minimum and maximum character heights should be
+       positive."
+pass/fail depending on (minht and maxht > 0)
+
+TEST: #SR 53 55 57
+      "The reported number of available character heights
+       should be at least 0."
+pass/fail depending on (naht >= 0)
+
+TEST: #SR 3 4 5 6 7 8 28 29 30 36 37 56 57 59 61
+      "Test cases for the visual effect of approximated text
+       attributes (character height and character expansion
+       factor) in STRING and CHAR precision are not yet
+       available."
+pass
+
+TEST: #SR 11 14 34 35 36 52 58 59
+      "Only the magnitude of character expansion factor and
+       character height should affect the text primitive."
+
+perm = permute 1 thru 5
+chmag = magnitude of character height
+cxmag = magnitude of character expansion factor
+chstr = some non-symmetric characters = "2P4Q5R7"
+label text lines
+do ix = 1 to 5
+   this = perm(ix)
+   if (this < 3) then
+      chht = -chmag
+   else
+      chht = +chmag
+   endif
+
+   if (mod(this,2) = 0) then
+      chxp = -cxmag
+   else
+      chxp = +cxmag
+   endif
+
+   if (this = 5) then
+      yup = -1 (reverse up and down)
+   else
+      yup = 1
+   endif
+
+   set character height    = chht
+   set character expansion = chxp
+   set character up        = 0,yup
+   draw text chstr on line #ix
+next ix
+
+OPQA/NEGATIVE CHARACTER HEIGHT AND EXPANSION FACTOR: Which line
+  does NOT have normally oriented characters?
+pass/fail depending on (operator indicates line with reversed text)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Network inheritance and initialization for non-geometric
+           text attributes
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR TEXT FONT AND PRECISION:
+This screen displays several left-right pairs of text primitives.
+Make sure that all pairs except one have matching text fonts and
+precisions.  Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR CHARACTER EXPANSION AND
+SPACING: This screen displays several left-right pairs of text
+primitives.  Make sure that all pairs except one have matching
+character expansion and spacing attributes.  Identify the
+non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR TEXT COLOUR INDEX: This screen
+displays several left-right pairs of text primitives.  Make sure
+that all pairs except one have matching colors.  Identify the
+non-matching pair.
+
+DESIGN:
+
+*** *** *** ***   text font and precision   *** *** *** ***
+
+ldisfn,ldispr = list of 5 distinct font,precision pairs
+ldisfn(1), ldispr(1) = 1,CHAR
+ldisfn(2), ldispr(2) = 2,STROKE
+ldisfn(3), ldispr(3) = 1,STRING
+ldisfn(4), ldispr(4) = 2,CHAR
+ldisfn(5), ldispr(5) = 1,STROKE
+
+use <inquire text facilities> to find three other available
+fonts, if any, and use them in ldisfn(3, 4, and 5).
+
+set up PERM to randomize position of text primitives
+
+set up CSS:
+
+Structure network #101 draws actual results in random order on
+left side of picture.  Structure #105 draws expected results in
+same random order on right side of picture, except for text
+14 which is deliberately drawn with incorrect attributes. This
+should be the only non-matching pair in the picture.
+
+structure #101
+text 1 (order within traversal)
+execute 102
+text 9
+change-attributes: use ldisfn(2),ldispr(2)
+text 10
+set local transformation to make lines 11,12 distinguishable
+  from 5,6
+execute 104
+re-set local transformation to identity
+text 13
+text 14
+execute 105
+
+structure #102
+text 2
+change-attributes: use ldisfn(3),ldispr(3)
+execute 103
+text 8
+
+structure #103
+text 3
+change-attributes: use ldisfn(4),ldispr(4)
+text 4
+execute 104
+text 7
+
+structure #104
+text 5 / 11
+change-attributes: use ldisfn(5),ldispr(5)
+text 6 / 12
+
+Expected attributes (except #14, whose actual entry should be 2):
+
+structure #105
+text   list entry                 text   list entry
+       (indexes ldisfn,ldispr)           (indexes ldisfn,ldispr)
+----   -----------------------    ----   -----------------------
+01       1                        08       3
+02       1                        09       1
+03       3                        10       2
+04       4                        11       2
+05       4                        12       5
+06       5                        13       2
+07       4                        14       3
+
+TEST: #SR 11 13 21 23 24 27 28 32 33
+      "The text font and precision attributes for the text
+       primitive should be saved and restored by <execute
+       structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR TEXT FONT AND PRECISION:
+  which pair of text primitives does NOT match?
+pass/fail depending on response = position of text #14
+
+*** *** ***   character expansion and spacing   *** *** ***
+
+ldisxp,ldissp = list of 5 distinct expansion and spacing values
+ldisxp(1),ldissp(1) = 1.0,  0.0
+ldisxp(2),ldissp(2) = 0.4,  1.4
+ldisxp(3),ldissp(3) = 0.7,  1.1
+ldisxp(4),ldissp(4) = 1.3,  0.5
+ldisxp(5),ldissp(5) = 1.7, -0.3
+
+set up PERM to randomize position of text primitives
+
+set up CSS:
+
+Structure network #101 draws actual results in random order on
+left side of picture.  Structure #105 draws expected results in
+same random order on right side of picture, except for text
+14 which is deliberately drawn with incorrect attributes. This
+should be the only non-matching pair in the picture.
+
+structure #101
+text 1 (order within traversal)
+execute 102
+text 9
+change-attributes: use ldisxp(2),ldissp(2)
+text 10
+set local transformation to make lines 11,12 distinguishable
+  from 5,6
+execute 104
+re-set local transformation to identity
+text 13
+text 14
+execute 105
+
+structure #102
+text 2
+change-attributes: use ldisxp(3),ldissp(3)
+execute 103
+text 8
+
+structure #103
+text 3
+change-attributes: use ldisxp(4),ldissp(4)
+text 4
+execute 104
+text 7
+
+structure #104
+text 5 / 11
+change-attributes: use ldisxp(5),ldissp(5)
+text 6 / 12
+
+Expected attributes (except #14, whose actual entry should be 2):
+
+structure #105
+text   list entry                 text   list entry
+       (indexes ldisxp,ldissp)           (indexes ldisxp,ldissp)
+----   -----------------------    ----   -----------------------
+01       1                        08       3
+02       1                        09       1
+03       3                        10       2
+04       4                        11       2
+05       4                        12       5
+06       5                        13       2
+07       4                        14       3
+
+TEST: #SR 11 35 36 38 39 41 42 44 45
+      "The character expansion factor and character spacing
+       attributes for the text primitive should be saved and
+       restored by <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR CHARACTER EXPANSION AND
+  SPACING: which pair of text primitives does NOT match?
+pass/fail depending on response = position of text #14
+
+*** *** *** ***   text colour index   *** *** *** ***
+
+call DISCOL to try to get 5 distinct foreground colors,
+  returning fcol = actual number of foreground colors
+if fcol = 1 (monochrome) then
+   fcol = 2
+   colind[0..1] = circular list of indices = [1,0]
+else
+   colind[0..fcol-1] = circular list of indices = [1,..,fcol]
+endif
+set up PERM to randomize position of texts
+cbase = 0
+
+set up CSS:
+
+Structure network #101 draws actual results in random order on
+left side of picture.  Structure #105 draws expected results in
+same random order on right side of picture, except for text 14
+which is deliberately drawn with different (i.e. incorrect)
+attributes. This should be the only non-matching pair in the
+picture.
+
+structure #101
+set other text attributes to reasonable values
+text 1 (order within traversal)
+execute 102
+text 9
+increment cbase
+change-attributes: use colind(cbase mod fcol) for next color index
+text 10
+set local transformation to make markers 11,12 distinguishable
+  from 5,6
+execute 104
+re-set local transformation to identity
+text 13
+text 14
+execute 105
+
+structure #102
+text 2
+increment cbase
+change-attributes: use colind(cbase mod fcol) for next color index
+execute 103
+text 8
+
+structure #103
+text 3
+increment cbase
+change-attributes: use colind(cbase mod fcol) for next color index
+text 4
+execute 104
+text 7
+
+structure #104
+text 5 / 11
+increment cbase
+change-attributes: use colind(cbase mod fcol) for next color index
+text 6 / 12
+
+Expected attributes (except #14, whose actual color should be
+same as #13):
+color index = colind(cbase mod fcol)
+
+structure #105
+text    cbase           text    cbase
+----    -----           ----    -----
+01      0               08      2
+02      0               09      0
+03      2               10      1
+04      3               11      1
+05      3               12      4
+06      4               13      1
+07      3               14      2
+
+TEST: #SR 11 47 48 50 51
+      "The text color index attribute for the text primitive
+       should be saved and restored by <execute structure> during
+       traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR TEXT COLOUR INDEX:
+  which pair of text primitives does NOT match?
+pass/fail depending on response = position of text #14
+
+END PROGRAM 5
+
+
+PROGRAM 6: Text path and character height, expansion factor,
+           spacing, and up vector
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+TEXT PATH AND CHARACTER UP: A short text string should be
+visible.  First, indicate whether the entire string is laid out
+horizontally or vertically.  Next, indicate the up direction of
+the individual characters.  Finally, type in the leftmost (for a
+horizontal string) or topmost (for a vertical string) character.
+
+CHARACTER HEIGHT, EXPANSION, AND SPACING IN HORIZONTAL TEXT:
+Several horizontal lines containing a text string are drawn with
+various values for the character attributes.  The expected
+character body positions are outlined with a dotted line and a
+dashed baseline is drawn, usually of different colors than the
+text itself.  Identify the single line in which the characters
+either do NOT fall within the dotted boxes or are NOT aligned on
+the baseline.  Since the boxes are character bodies, they are
+bounded by the topline and bottomline, and thus may be somewhat
+larger vertically than the enclosed character.  In the case of
+overlapping characters due to negative character spacing,
+half-boxes are drawn, so that the boxes themselves don't overlap.
+
+CHARACTER HEIGHT, EXPANSION, AND SPACING IN VERTICAL TEXT:
+Same as above, except that the text choices are vertical columns, not
+horizontal lines.  Note that the expected position is aligned on the
+vertical centerline (not left- or right-justified); the actual
+characters, therefore, must not appear to the left or right of the
+expected box, i.e. they must generally be centered within the
+character body, although this centering need not be precise.
+
+DESIGN:
+
+TEST: #SR 11 14 31 64 65 66 67 79 80 81
+      "Text path should specify the direction in which successive
+       characters are generated and character up vector should
+       rotate the resulting primitive."
+
+set text font = 2
+set text precision = STROKE
+chstr = mostly non-symmetrical characters = "SPQR"
+for txp = RIGHT,LEFT,UP,DOWN
+   set text path = txp
+   rot = rotation amount = random 0,90,180,270 degrees
+   set character up vector = rot
+   draw chstr as a text primitive
+
+   OPQA/TEXT PATH AND CHARACTER UP: Is text string as a whole
+      oriented horizontally (1) or vertically (2)?
+   opans = operator response
+   if ((txp = LEFT or RIGHT) and (rot =  0 or 180)) or
+      ((txp = UP   or DOWN)  and (rot = 90 or 270)) then
+      truans = 1
+   else
+      truans = 2
+   endif
+   if (truans not= opans) then
+      fail
+      goto end_text_path
+   endif
+
+   OPQA/TEXT PATH AND CHARACTER UP: Is the character up direction
+     to the left (1), top (2), right (3), or bottom (4)?
+   opans = operator response
+   if (opans does not match rot) then
+      fail
+      goto end_text_path
+   endif
+
+   OPQA/TEXT PATH AND CHARACTER UP: Identify the character to the
+      left/top of the screen.
+   if (operator response incorrect) then
+      fail
+      goto end_text_path
+   endif
+
+next txp
+pass
+
+end_text_path:
+
+use <inquire text extent> with
+  text font                  = 1
+  character height           = 1
+  character spacing          = 0
+  character expansion factor = 1
+  text string                = "WWiig!"
+to determine
+  ncbht = nominal character body height
+  ncbwd = nominal character body width
+
+set text path = RIGHT
+set text font = 1
+set text precision = STROKE
+numlin = number of lines = 6
+ngline = random number from 1 to numlin
+for ix = 1 to numlin
+   randomly select a character height, expansion factor, and
+      spacing, to fit on one line
+   display text "WWiig!" on line ix
+   calculate expected character boxes
+   if (ix = ngline) then
+      distort character boxes
+   endif
+   draw in character boxes, using dotted line style, color #2
+next ix
+
+TEST: #SR 11 18 27 31 35 36 37 41 42 43 58 59 60 61 66 67 69
+      "The size and shape of a text string displayed with STROKE
+       precision in a monospaced font on a horizontal text path
+       should conform exactly to the character height, expansion
+       factor, and spacing in effect."
+
+OPQA/CHARACTER HEIGHT, EXPANSION, AND SPACING IN HORIZONTAL TEXT:
+  In which line are the characters of the text string NOT aligned
+  within dotted character boxes and on the dashed baseline?
+pass/fail depending on (operator picks location ngline)
+
+set text path = DOWN
+set text font = 1
+set text precision = STROKE
+numcol = number of columns = 6
+ngcol  = random number from 1 to numcol
+for ix = 1 to numcol
+   randomly select a character height, expansion factor, and
+      spacing, to fit in one column
+   display text "WWiig!" in column ix
+   calculate expected character boxes
+   if (ix = ngcol) then
+      distort character boxes
+   endif
+   draw in character boxes, using dotted line style, color #2
+next ix
+
+TEST: #SR 11 18 27 31 35 36 37 41 42 43 58 59 60 61 66 67 68
+      "The size and shape of a text string displayed with STROKE
+       precision in a monospaced font on a vertical text path
+       should conform exactly to the character height, expansion
+       factor, and spacing in effect."
+
+OPQA/CHARACTER HEIGHT, EXPANSION, AND SPACING IN VERTICAL TEXT:
+  In which column are the characters of the text string NOT
+  aligned within dotted character boxes and on the dashed
+  centerline?
+pass/fail depending on (operator picks location ngcol)
+
+bestfn = a stroke text font other than 1, preferably not #2 and
+         not monospaced
+
+bestsc = best score so far for font properties = -1
+bestfn = best font so far = -1
+for ix = each available non-#1 stroke font
+   thisfn = ixth font from <inquire text facilities>
+   use <inquire text extent> with
+     text font                  = thisfn
+     character height           = 1
+     character spacing          = 0
+     character expansion factor = 1
+     text string                = "WWW"
+   to determine
+     tcbhtw = nominal character body height for W
+     tcbwdw = nominal character body width for W
+
+   use <inquire text extent> with
+     text font                  = thisfn
+     character height           = 1
+     character spacing          = 0
+     character expansion factor = 1
+     text string                = "iii"
+   to determine
+     tcbhti = nominal character body height for i
+     tcbwdi = nominal character body width for i
+
+   if (thisfn = 2) then
+      fnscor = score for this font = 0
+   else
+      fnscor = score for this font = 1
+   endif
+
+   if (ncbwdi approx= ncbwdw) then
+      do nothing
+   else
+      add 2 to fnscor
+   endif
+
+   if (fnscor > bestsc) then
+      best font so far:
+      bestsc = fnscor
+      bestfn = thisfn
+      ncbhtw = tcbhtw
+      ncbwdw = tcbwdw
+      ncbhti = tcbhti
+      ncbwdi = tcbwdi
+      if (fnscor .ge. 3) then
+         got a non-2, non-monospaced font: goto got_font
+      endif
+   endif
+next stroke font
+
+if (bestsc <= -1) then
+   message: skipping tests for proportionately spaced fonts; none
+            available.
+   goto endit
+endif
+
+got_font:
+
+set text path = LEFT
+set text font = bestfn
+set text precision = STROKE
+numlin = number of lines = 6
+ngline = random number from 1 to numlin
+for ix = 1 to numlin
+   randomly select a character height, expansion factor, and
+      spacing, to fit on one line
+   display text "WWiiiW" on line ix
+   calculate expected character boxes
+   if (ix = ngline) then
+      distort character boxes
+   endif
+   draw in character boxes, using dotted line style, color #2
+next ix
+
+TEST: #SR 11 27 31 35 36 37 41 42 43 58 59 60 61 66 67 69
+      "The size and shape of a text string displayed with STROKE
+       precision in any font on a horizontal text path should
+       conform exactly to the character height, expansion factor,
+       and spacing in effect."
+
+OPQA/CHARACTER HEIGHT, EXPANSION, AND SPACING IN HORIZONTAL TEXT:
+  In which line are the characters of the text string NOT aligned
+  within dotted character boxes and on the dashed baseline?
+pass/fail depending on (operator picks location ngline)
+
+set text path = UP
+set text precision = STROKE
+numcol = number of columns = 6
+ngcol  = random number from 1 to numcol
+for ix = 1 to numcol
+   randomly select a character height, expansion factor, and
+      spacing, to fit in one column
+   display text "WWiiiW" in column ix
+   calculate expected character boxes
+   if (ix = ngcol) then
+      distort character boxes
+   endif
+   draw in character boxes, using dotted line style, color #2
+next ix
+
+TEST: #SR 11 27 31 35 36 37 41 42 43 58 59 60 61 66 67 68
+      "The size and shape of a text string displayed with STROKE
+       precision in any font on a vertical text path should
+       conform exactly to the character height, expansion factor,
+       and spacing in effect."
+
+OPQA/CHARACTER HEIGHT, EXPANSION, AND SPACING IN VERTICAL TEXT:
+  In which column are the characters of the text string NOT
+  aligned within dotted character boxes and on the dashed
+  centerline?
+pass/fail depending on (operator picks location ngcol)
+
+endit:
+
+END PROGRAM 6
+
+
+PROGRAM 7: Text color index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEFINED TEXT COLOR INDICES: All text lines but one are drawn in
+the background color.  Identify the single text line drawn in the
+default foreground color.
+
+UNDEFINED TEXT COLOR INDICES: A star is drawn with several
+horizontal text lines beneath it.  Normally, all of these will be
+the same color as the star.  Count up and report the number of
+text lines that match the star in color.
+
+DESIGN:
+
+TEST: #SR 11 46 47 48
+      "A defined text color index should cause the addressed
+       entry in the color table to be used when rendering a
+       text primitive."
+
+bckcol = background color = realized color spec for entry #0
+forcol = foreground color = realized color spec for entry #1
+
+szcolt = maximum size of color table (including entry #0)
+numlin = number of text lines to be drawn = min(8, szcolt)
+lncol  = random permutation of #0,#1, and numlin-2 random choices
+         from entries #2 to #szcolt-1
+visdx = from lncol, randomly select an entry to be made visible
+        but not the one that contains 0, since this may not be
+        re-settable.
+
+for ix = 1 to numlin
+   set entry lncol(ix) to bckcol
+   randomly pick and set a precision, to ensure no interaction
+   draw text line #ix with text colour index = lncol(ix)
+next ix
+
+set entry lncol(visdx) to forcol
+
+OPQA/DEFINED TEXT COLOR INDICES: which text line is visible?
+pass/fail depending on (response = text line colored by visdx)
+
+end_def_col:
+
+TEST: #SR 11 46 47 49
+      "An undefined text color index should cause entry
+       number 1 in the color table to be used when rendering a
+       text primitive."
+
+set entry #1 in color table opposite from BCKCOL
+set entry #1 different from FORCOL - make sure that the undefined
+  entries default to *current* color-rep of #1, not just a
+  predefined color.
+
+u1,u2,u3 = 3 undefined, positive color indices - all greater
+  than maximum defined entry in color table
+explct = number of explicit text lines of color #1 = random integer
+   from 0 to 4
+
+draw star with color #1
+
+display interleaved:
+  three text lines of color u1,u2,u3,
+  explct text lines of color #1
+
+OPQA/UNDEFINED TEXT COLOR INDICES: how many text lines are the
+  same color as the star?
+pass/fail depending on response = 3+explct
+
+END PROGRAM 7
+
+
+PROGRAM 8: Text alignment
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+EXPLICIT ALIGNMENT FOR HORIZONTAL TEXT: Each of the dotted text
+extent rectangles except one should contain a text primitive,
+aligned on a dashed baseline, filling the rectangle from left to
+right.  Identify the single non-aligned text primitive.
+
+IMPLICIT ALIGNMENT FOR HORIZONTAL TEXT: Same as for EXPLICIT
+ALIGNMENT FOR HORIZONTAL TEXT, above.
+
+EXPLICIT ALIGNMENT FOR VERTICAL TEXT: Same as for EXPLICIT
+ALIGNMENT FOR HORIZONTAL TEXT, above, except that a dashed
+centerline is used to measure alignment.
+
+IMPLICIT ALIGNMENT FOR VERTICAL TEXT: Same as for EXPLICIT
+ALIGNMENT FOR VERTICAL TEXT, above.
+
+DESIGN:
+
+txstr = text string to be used for test = "Widget!?"
+
+use <inquire text extent> on horizontal txstr to determine:
+  ntxwd  = nominal width of text extent rectangle
+  ntxht  = nominal height of text extent rectangle
+
+for each ix = vertical text alignment
+  use <inquire text extent> on horizontal txstr to determine:
+      vtab(ix) = normalized height for this alignment
+next ix
+
+htab(left)   = normalized width of left line = 0
+htab(center) = normalized width of center line = ntxwd/2
+htab(right)  = normalized width of right line = ntxwd
+
+Throughout, use text font = 2
+                text precision = STROKE
+
+table of alignments and paths to be tested:
+
+     hor-align  vert-align  text path
+     algnh      algnv       algntp
+     ---------  ----------  ---------
+  1: left       top         left
+  2: center     cap         right
+  3: right      half        left
+  4: right      base        right
+  5: center     bottom      left
+  6: left       bottom      right
+
+set up PERM to randomize position
+
+draw and label 6 identical horizontal text rectangles,
+  using dotted lines, distinct color, dashed baseline,
+  stacked vertically, and labelled 1-6
+for ix = 1,6
+   set desired y-location based on perm(ix)
+   calculate txpos = text position, so as to fit text
+     into expected box, using values from algnh(ix),algnv(ix)
+   if ix=6 then
+      change txpos to generate incorrect result
+   endif
+   set text alignment = algnh(ix), algnv(ix)
+   set text path = algntp(ix)
+   draw text at txpos
+next ix
+
+TEST: #SR 16 27 31 65 66 67 72 73 74 75
+      "Explicit text alignment attributes should affect the
+       position of a horizontal text rectangle in accordance with
+       the values returned by <inquire text extent>."
+
+OPQA/EXPLICIT ALIGNMENT FOR HORIZONTAL TEXT: Which text primitive
+  is NOT aligned within the dotted text extent rectangle on the
+  dashed baseline?
+
+pass/fail depending on
+  (operator response indicates location of 6th text primitive)
+
+table of expected and requested alignments and paths to be tested:
+
+                requested:             | expected:
+     text path  hor-align  vert-align  | hor-align  vert-align
+     algntp     ralgnh     ralgnv      | ealgnh     ealgnv
+     ---------  ---------  ----------  | ---------  ----------
+  1: left       normal     normal      | right      base
+  2: right      normal     normal      | left       base
+  3: left       center     normal      | center     base
+  4: right      normal     top         | left       top
+  5: left       normal     normal      | right      base
+
+set up PERM to randomize position
+
+draw and label 5 identical horizontal text rectangles,
+  using dotted lines, distinct color, dashed baseline,
+  stacked vertically, and labelled 1-5
+for ix = 1,5
+   set desired y-location based on perm(ix)
+   calculate txpos = text position, so as to fit text
+     into expected box, using values from ealgnh(ix),ealgnv(ix)
+   if ix=5 then
+      change txpos to generate incorrect result
+   endif
+   set text alignment = ralgnh(ix), ralgnv(ix)
+   set text path = algntp(ix)
+   draw text at txpos
+next ix
+
+TEST: #SR 16 27 31 66 67 72 73 74 75 76
+      "Implicit text alignment attributes should affect the
+       position of a horizontal text rectangle in accordance with
+       the values returned by <inquire text extent>."
+
+OPQA/IMPLICIT ALIGNMENT FOR HORIZONTAL TEXT: Which text primitive
+  is NOT aligned within the dotted text extent rectangle on the
+  dashed baseline?
+
+pass/fail depending on
+  (operator response indicates location of 5th text primitive)
+
+use <inquire text extent> on vertical txstr to determine:
+  ntxwd  = nominal width of text extent rectangle
+  ntxht  = nominal height of text extent rectangle
+
+for each ix = vertical text alignment
+  use <inquire text extent> on horizontal txstr to determine:
+      vtab(ix) = normalized height for this alignment
+next ix
+
+htab(left)   = normalized width of left line = 0
+htab(center) = normalized width of center line = ntxwd/2
+htab(right)  = normalized width of right line = ntxwd
+
+table of alignments and paths to be tested:
+
+     hor-align  vert-align  text path
+     algnh      algnv       algntp
+     ---------  ----------  ---------
+  1: right      top         up
+  2: left       cap         down
+  3: center     half        up
+  4: center     base        down
+  5: left       bottom      up
+  6: right      bottom      down
+
+set up PERM to randomize position
+
+draw and label 6 identical vertical text rectangles,
+  using dotted lines, distinct color, dashed centerline,
+  placed adjacent left-to-right and labelled 1-6
+for ix = 1,6
+   set desired x-location based on perm(ix)
+   calculate txpos = text position, so as to fit text
+     into expected box, using values from algnh(ix),algnv(ix)
+   if ix=6 then
+      change txpos to generate incorrect result
+   endif
+   set text alignment = algnh(ix), algnv(ix)
+   set text path = algntp(ix)
+   draw text at txpos
+next ix
+
+TEST: #SR 16 27 31 65 66 67 72 73 74 75
+      "Explicit text alignment attributes should affect the
+       position of a vertical text rectangle in accordance with
+       the values returned by <inquire text extent>."
+
+OPQA/EXPLICIT ALIGNMENT FOR VERTICAL TEXT: Which text primitive
+  is NOT aligned within the dotted text extent rectangle on the
+  dashed centerline?
+
+pass/fail depending on
+  (operator response indicates location of 6th text primitive)
+
+table of expected and requested alignments and paths to be tested:
+
+                requested:             | expected:
+     text path  hor-align  vert-align  | hor-align  vert-align
+     algntp     ralgnh     ralgnv      | ealgnh     ealgnv
+     ---------  ---------  ----------  | ---------  ----------
+  1: up         normal     normal      | center     base
+  2: down       normal     normal      | center     top
+  3: up         right      normal      | right      base
+  4: down       normal     half        | center     half
+  5: up         normal     normal      | center     base
+
+set up PERM to randomize position
+
+draw and label 5 identical vertical text rectangles,
+  using dotted lines, distinct color, dashed centerline,
+  placed adjacent left-to-right and labelled 1-5
+for ix = 1,5
+   set desired x-location based on perm(ix)
+   calculate txpos = text position, so as to fit text
+     into expected box, using values from ealgnh(ix),ealgnv(ix)
+   if ix=5 then
+      change txpos to generate incorrect result
+   endif
+   set text alignment = ralgnh(ix), ralgnv(ix)
+   set text path = algntp(ix)
+   draw text at txpos
+next ix
+
+TEST: #SR 16 27 31 66 67 72 73 74 75 76
+      "Implicit text alignment attributes should affect the
+       position of a vertical text rectangle in accordance with
+       the values returned by <inquire text extent>."
+
+OPQA/IMPLICIT ALIGNMENT FOR VERTICAL TEXT: Which text primitive
+  is NOT aligned within the dotted text extent rectangle on the
+  dashed centerline?
+
+pass/fail depending on
+  (operator response indicates location of 5th text primitive)
+
+END PROGRAM 8
+
+
+PROGRAM 9: Character up vector
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+CHARACTER UP FOR HORIZONTAL TEXT PATH: The display should be a
+set of text primitives arranged as radii of a circle, all but one
+aligned in a dotted text extent rectangle with a dashed baseline.
+Identify the single non-aligned text primitive.
+
+CHARACTER UP FOR VERTICAL TEXT PATH: Same as for CHARACTER UP FOR
+HORIZONTAL TEXT PATH, except the dashed line is a centerline, not
+a baseline.
+
+DESIGN:
+
+throughout, use STROKE precision
+use font#1 for horizontal path
+txstr = "Going up?"
+
+use <inquire text extent> on horizontal txstr to determine:
+  ntxwd  = nominal width of text extent rectangle
+  ntxht  = nominal height of text extent rectangle
+  htab(ix) = normalized widths for horizontal alignments
+  vtab(ix) = normalized heights for vertical alignments
+
+numstr = number of strings to display = 7
+ngstr = incorrect string identifier = random from 1-7
+irad = inner radius of circle for display of text strings
+     = calculate from numstr and ntxht
+orad = outer radius of circle for display of text strings
+     = calculate from irad and ntxwd
+set up transform to fit text circle on screen, centered at
+  origin, with radius orad
+
+text alignments to be used:
+   algnh    algnv
+   ------   ------
+1: center   base
+2: left     cap
+3: right    top
+4: left     bottom
+5: center   half
+6: right    half
+7: left     cap
+
+set text path = RIGHT
+for ix = 1,numstr
+   txang = angle for text string = ix*2*pi / numstr
+   draw and label as #ix a rectangle for expected position of
+      text string, based on txang, irad, orad
+   txpos = requested text position, based on txang,irad, and
+      text alignment to be requested.
+   set text alignment to (algnh(ix), algnv(ix))
+   if (ix = ngstr) txang = txang +or- 0.125*2*pi/numstr
+   chupx = cos(txang); chupy = sin(txang)
+   set character up = chupx,chupy
+   draw txstr at txpos
+next ix
+
+TEST: #SR 16 27 31 66 67 69 74 75 80 81
+      "A text primitive with STROKE precision and a horizontal
+       text path should be rotated according to the character up
+       vector."
+OPQA/CHARACTER UP FOR HORIZONTAL TEXT PATH: Which text primitive
+  is NOT aligned within the dotted text extent rectangle on the
+  dashed baseline?
+pass/fail depending on (operator identifies text #ngstr)
+
+use font#2 for vertical path
+txstr = "Up&@M"
+
+use <inquire text extent> on horizontal txstr to determine:
+  ntxwd  = nominal width of text extent rectangle
+  ntxht  = nominal height of text extent rectangle
+  htab(ix) = normalized widths for horizontal alignments
+  vtab(ix) = normalized heights for vertical alignments
+
+numstr = number of strings to display = 7
+ngstr = incorrect string identifier = random from 1-7
+irad = inner radius of circle for display of text strings
+     = calculate from numstr and ntxwd
+orad = outer radius of circle for display of text strings
+     = calculate from irad and ntxht
+set up transform to fit text circle on screen, centered at
+  origin, with radius orad
+
+text alignments to be used:
+   algnh    algnv
+   ------   ------
+1: center   base
+2: left     cap
+3: right    top
+4: left     bottom
+5: center   half
+6: right    half
+7: left     cap
+
+set text path = DOWN
+for ix = 1,numstr
+   txang = angle for text string = ix*2*pi / numstr
+   draw and label as #ix a rectangle for expected position of
+      text string, based on txang, irad, orad
+   txpos = requested text position, based on txang,irad, and
+      text alignment to be requested.
+   set text alignment to (algnh(ix), algnv(ix))
+   if (ix = ngstr) txang = txang +or- 0.125*2*pi/numstr
+   chupx = cos(txang); chupy = sin(txang)
+   set character up = chupx,chupy
+   draw txstr at txpos
+next ix
+
+TEST: #SR 16 27 31 66 67 68 74 75 80 81
+      "A text primitive with STROKE precision and a vertical
+       text path should be rotated according to the character up
+       vector."
+OPQA/CHARACTER UP FOR VERTICAL TEXT PATH: Which text primitive
+  is NOT aligned within the dotted text extent rectangle on the
+  dashed centerline?
+pass/fail depending on (operator identifies text #ngstr)
+
+END PROGRAM 9
+
+
+PROGRAM 10: Network inheritance and initialization for geometric
+            text attributes
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR CHARACTER HEIGHT: This screen
+displays several left-right pairs of text strings, of varying
+character height.  Make sure that all pairs except one have
+matching heights.  Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR TEXT ALIGNMENT: This screen
+displays several left-right pairs of text strings, each aligned
+differently with respect to the text position, which is
+represented by an asterisk polymarker.  Make sure that all pairs
+except one have matching alignments.  Identify the non-matching
+pair.
+
+STRUCTURE NETWORK INHERITANCE FOR TEXT PATH AND CHARACTER UP:
+This screen displays several left-right pairs of text strings,
+with various text paths and character up vectors.  Make sure that
+all pairs except one match with respect to both these attributes.
+Identify the non-matching pair.
+
+DESIGN:
+
+All test cases use the same basic structure network for testing
+inheritance.  Five (distinct if possible) values for the
+attribute(s) to be tested are set up and propagated throughout
+the network.  The first value is the system default from the PDT.
+Note that structure #104 is executed by both #103 and #101.
+Actual results are displayed on the left, expected results on the
+right, with the 14th deliberately made incorrect.
+
+default = val#1
+  |                  102
+  |                 /  prim 2
+  |               /    attr = val#3   val#3
+  V        val#1/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   attr = val#4
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  attr = val#2                                  prim 7    \ val#4
+  prim 10                                                   \
+  transform             val#2                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        attr = val#5
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+
+*** *** *** ***   character height   *** *** *** ***
+
+lhts = list of 5 distinct character heights
+     = [.010, .012, .006, .008, .014]
+  with 0.010 (default) in 1st position.
+
+randomize location of text strings
+set up CSS as described above; throughout, scale such that char-ht
+  of 0.01 and nearby values are reasonably visible.
+display 14 pairs of text strings with character heights from lhts
+
+TEST: #SR 11 58 62 63
+      "The character height attribute should be saved and
+       restored by <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR CHARACTER HEIGHT: Which
+  pair of text strings does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+
+*** *** *** ***   text alignment   *** *** *** ***
+
+lalgnh, lalgnv = list of 5 distinct text alignments (default in
+                 first position) =
+
+        horizontal  vertical
+        ----------  --------
+   1:   LEFT        BASE
+   2:   CENTER      HALF
+   3:   RIGHT       CAP
+   4:   LEFT        BOTTOM
+   5:   RIGHT       TOP
+
+randomize location of text strings
+set up CSS as described above
+display 14 pairs of text strings with text alignments from lalgnh, lalgnv;
+show alignment point for each with polymarker
+
+TEST: #SR 11 74 75 77 78
+      "The text alignment attribute should be saved and
+       restored by <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR TEXT ALIGNMENT: Which
+  pair of text strings is NOT similarly aligned with respect
+  to the marked text position?
+pass/fail depending on (location of 14th primitive selected)
+
+
+*** *** *** ***   text path and character up   *** *** *** ***
+
+ltxp, lchup = list of 5 distinct text paths and character-ups
+              (default in first position) =
+
+        text path   character up
+        ---------   ------------
+   1:   RIGHT        0, 1
+   2:   UP          -3, 1
+   3:   LEFT         1,-3
+   4:   DOWN        -3,-1
+   5:   LEFT        -1,-3
+
+randomize location of text strings
+set up CSS as described above
+display 14 pairs of text strings with text paths and character ups
+  from ltxp, lchup
+
+TEST: #SR 11 66 67 70 71 80 81 82 83
+      "The text path and character up attributes should be saved
+       and restored by <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR TEXT PATH AND CHARACTER
+  UP: Which pair of text strings does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+END PROGRAM 10
+
+
+PROGRAM 11: Geometric interaction of text attributes
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+GEOMETRY OF TEXT ATTRIBUTES: Several text primitives in font #1 are
+displayed.  The characters of all but one should be similar in size,
+position, and orientation to the outline formed by the dashed
+polylines.  Identify the primitive with an incorrect outline.
+
+GEOMETRY OF NEGATIVE TEXT ATTRIBUTES: Same as for GEOMETRY OF
+TEXT ATTRIBUTES, above.
+
+DESIGN:
+
+Throughout, use font#1 (monospaced), STROKE precision, color #1
+for text, color #2 and dashed lines for outline
+
+Throughout, use text string "ELF", because letters are simple to
+outline, and asymmetric (to reveal reversals).
+chstr = "ELF"
+
+numlin = number of lines to display = 5
+
+TEST: #SR 1 2 11 27 28 31 35 36 41 42 58 59 60 66 67 68 69 74 75 80 81
+      "The transformation effects of text path, text alignment,
+       and character up vector and of various positive values for
+       character expansion factor, character spacing, and
+       character height should work correctly in conjunction with
+       the text direction vectors for a 3D test primitive."
+
+Use <inquire text extent> to determine
+  nomwid = nominal character width for font #1
+  nombht = nominal character body height for font #1
+  vtab   = list of nominal offsets for the various vertical
+           text alignments, relative to BASE.
+nominal quantities are for char-ht=1, char-sp=0, char-xp=1
+
+ngline = random integer from 1 to numlin
+
+set up random order for text paths, alignments - make sure each
+  possible value is chosen at least once
+
+do ix = 1 to numlin
+   pick random values for text path, text alignment,
+       and character up vector
+   pick random positive values for character expansion factor,
+       character spacing, and character height
+   if (ix = ngline) then
+      distort expected outline for ngline:
+      expected position based on chht*1.25
+   endif
+
+   Represent position of text primitive in MC as follows:
+      LLE  : 3D location of lower-left corner (LEFT,BASE) of "E"
+      NXTC : vector to next character
+      UPCH : character up 3D vector (direction and length)
+      RTCH : character right 3D vector (direction and length)
+      COR  : 3D location of (LEFT,BASE) corner of text extent rectangle
+      CLNG : vector from corner along long dimension of rectangle
+      CSHT : vector from corner along short dimension of rectangle
+
+   Calculate expected TLC position of text primitive: apply
+   attributes in this order:
+      1: character expansion, character spacing, and text path
+      2: text alignment
+      3: character up
+      4: character height
+
+   pick random values for text position and direction vectors
+   Calculate xf3d = expected rotation from TLC to MC
+   apply xf3d to vectors: nxtc,upch,rtch,clng,csht
+   Calculate xf3d = expected rotation and shift from TLC to MC
+   apply xf3d to points: lle,cor
+
+   Correct MC values for lle, nxtc, upch, rtch, cor, clng, csht
+     now computed.
+
+   compute and set global modelling transform to re-locate text
+      extent rectangle (MC) to display area for this line (WC).
+
+   re-set local transformation to identity; only global applies to
+     actual text primitive.
+
+   generate text primitive, with chosen attributes and geometry
+
+   calculate and set local transformation to move outline to
+     expected MC location.
+
+   draw outline of expected text.
+next ix
+
+OPQA/GEOMETRY OF TEXT ATTRIBUTES: Which text primitive is NOT similar
+  in size, position, and orientation to the dashed outline?
+pass/fail depending on (primitive #ngline selected)
+
+TEST: #SR 1 2 11 27 28 31 35 36 41 42 58 59 60 66 67 68 69 74 75 80 81
+      "The transformation effects of text path, text alignment,
+       and character up vector and of various negative values for
+       character expansion factor, character spacing, and
+       character height should work correctly in conjunction with
+       the text direction vectors for a 3D test primitive."
+
+Use <inquire text extent> to determine
+  nomwid = nominal character width for font #1
+  nombht = nominal character body height for font #1
+  vtab   = list of nominal offsets for the various vertical
+           text alignments, relative to BASE.
+nominal quantities are for char-ht=1, char-sp=0, char-xp=1
+
+ngline = random integer from 1 to numlin
+
+set up random order for text paths, alignments - make sure each
+  possible value is chosen at least once
+
+do ix = 1 to numlin
+   pick random values for text path, text alignment,
+      and character up vector
+   pick random mostly negative values for character expansion
+      factor, character spacing, and character height
+   if (ix = ngline) then
+      distort expected outline for ngline:
+      expected position based on chht*1.25
+   endif
+
+   Represent position of text primitive in MC as follows:
+      LLE  : 3D location of lower-left corner (LEFT,BASE) of "E"
+      NXTC : vector to next character
+      UPCH : character up 3D vector (direction and length)
+      RTCH : character right 3D vector (direction and length)
+      COR  : 3D location of (LEFT,BASE) corner of text extent rectangle
+      CLNG : vector from corner along long dimension of rectangle
+      CSHT : vector from corner along short dimension of rectangle
+
+   Calculate expected TLC position of text primitive: apply
+   attributes in this order:
+      1: character expansion, character spacing, and text path
+      2: text alignment
+      3: character up
+      4: character height
+
+   pick random values for text position and direction vectors
+   Calculate xf3d = expected rotation from TLC to MC
+   apply xf3d to vectors: nxtc,upch,rtch,clng,csht
+   Calculate xf3d = expected rotation and shift from TLC to MC
+   apply xf3d to points: lle,cor
+
+   Correct MC values for lle, nxtc, upch, rtch, cor, clng, csht
+     now computed.
+
+   compute and set global modelling transform to re-locate text
+      extent rectangle (MC) to display area for this line (WC).
+
+   re-set local transformation to identity; only global applies to
+     actual text primitive.
+
+   generate text primitive, with chosen attributes and geometry
+
+   calculate and set local transformation to move outline to
+     expected MC location.
+
+   draw outline of expected text.
+next ix
+
+OPQA/GEOMETRY OF NEGATIVE TEXT ATTRIBUTES: Which text primitive is NOT
+  similar in size, position, and orientation to the dashed outline?
+pass/fail depending on (primitive #ngline selected)
+
+END PROGRAM 11

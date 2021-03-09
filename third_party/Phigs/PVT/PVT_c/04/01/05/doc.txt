@@ -1,0 +1,493 @@
+TITLE: Fill area
+
+MODULE#: 04.01.05
+
+DESCRIPTION: This module tests that fill areas are rendered
+correctly and that a program can set up a fill area element in the
+CSS, which will create a primitive upon traversal.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** ***   <Fill area 3>   *** *** *** *** ***
+
+SR1.  <Fill area 3> creates a fill area 3 element in the CSS;
+elements with fewer than three vertices are valid.
+#F 17
+#D 7.3.1.9
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/1 P01/2 P01/3 P01/4 P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2
+
+SR2.  If current element is fill area 3 then <inquire current
+element type and size> returns the element type as fill area 3 and
+the appropriate element size.
+#F 303
+#D 7.3.1.9
+#S 4.4.4/29/5
+#T P01/1 P01/3
+
+SR3.  If current element is fill area 3 then <inquire current
+element content> returns the appropriate data for fill area 3.
+#F 304
+#D 7.3.1.9
+#S 4.4.4/29/5
+#T P01/2 P01/4
+
+*** *** *** *** ***   <Fill area>   *** *** *** *** ***
+
+SR4.  <Fill area> creates a fill area element in the CSS; elements
+with fewer than three vertices are valid.
+#F 18
+#D 7.3.1.10
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/5 P01/6 P01/7 P01/8 P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2
+
+SR5.  If current element is fill area then <inquire current
+element type and size> returns the element type as fill area and
+the appropriate element size.
+#F 303
+#D 7.3.1.10
+#S 4.4.4/29/5
+#T P01/5 P01/7
+
+SR6.  If current element is fill area then <inquire current
+element content> returns the appropriate data for fill area.
+#F 304
+#D 7.3.1.10
+#S 4.4.4/29/5
+#T P01/6 P01/8
+
+SR7. <Fill area> and <fill area 3> primitives are specified by an
+ordered list of 2D or 3D points, expressed in modelling
+coordinates (MC).  The primitive is rendered as a single, closed
+polygonal area, whose vertices are the points in the list.
+#F 17 18
+#D 7.3.1.9 7.3.1.10
+#S 4.5.1/34/1
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2
+#C A list containing fewer than three vertices has no area and
+therefore has no visual effect.  The visual effect of degenerate
+fill areas with more than two points, or of non-planar fill areas
+is not specified by the standard.
+
+SR8.  The interior of a fill area is determined by the number of
+intersections between a straight line drawn from a given point to
+infinity and the fill area boundary.  If the number of intersections
+is odd, the point is in the interior, otherwise it is outside.
+#F 17 18
+#D 7.3.1.9 7.3.1.10
+#S 4.5.1/35/6
+#T P03/1 P03/2
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   17: pfa3    <fill area 3>
+   18: pfa     <fill area>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.9  ...  fill_area_3
+  7.3.1.10 ...  fill_area
+ 
+
+
+PROGRAM 1: Fill area element
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> throughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+*** *** *** *** ***   Fill area 3   *** *** *** *** ***
+
+n = 5
+xarr = 2.33 55.55 -4.4   123.0  0.0
+yarr = 0.0  3.2   -99.99 3.2e22 -2.2e-22
+zarr = 4.44 0.0   0.0    5.5    22.22
+
+<fill area 3> with n, xarr, yarr, zarr
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       fill area 3 as the type of the created element and the
+       appropriate element size for a multipoint element."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = fill area 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for a multipoint fill area 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+valets = true = valid current element type and size
+valec = true = valid current element content
+degen = degenerate cases, 1 and 2 point fill area
+for degen =1 to 2
+   <fill area 3> with degen, xarr, yarr, zarr
+   <inquire current element type and size> to set celtyp, celsiz
+   if (celtyp not= fill area 3 or
+       celsiz not= values specified by the standard and language binding)
+       then
+      valets = false
+   endif
+   <inquire current element content> to set celcon
+   if (celcon not= representation as specified by the standard
+       and language binding) then
+      valec = false
+   endif
+next degen
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       fill area 3 as the type of the created element and the
+       appropriate element size for a single or double point
+       element."
+pass/fail depending on (valets)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for a single or double point fill area 3."
+pass/fail depending on (valec)
+
+*** *** *** *** ***   Fill area   *** *** *** *** ***
+
+<fill area> with n, xarr, yarr
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       fill area as the type of the created element and the
+       appropriate element size for a multipoint element."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = fill area and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 4 6
+      "<Inquire current element content> should return the standard
+       representation for a multipoint fill area."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+valets = true = valid current element type and size
+valec = true = valid current element content
+degen = degenerate cases, 1 and 2 point fill area
+for degen =1 to 2
+   <fill area> with degen, xarr, yarr, zarr
+   <inquire current element type and size> to set celtyp, celsiz
+   if (celtyp not= fill area or
+       celsiz not= values specified by the standard and language binding)
+       then
+      valets = false
+   endif
+   <inquire current element content> to set celcon
+   if (celcon not= representation as specified by the standard
+       and language binding) then
+      valec = false
+   endif
+next degen
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       fill area as the type of the created element and the
+       appropriate element size for a single or double point
+       element."
+pass/fail depending on (valets)
+
+TEST: #SR 4 6
+      "<Inquire current element content> should return the standard
+       representation for a single or double point fill area."
+pass/fail depending on (valec)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Appearance of fill areas
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEGENERATE FILL AREAS: Some of the 6 labelled squares contain a
+one- or two-point fill area, others contain a visible primitive
+(including a single dot polymarker).  Identify all the squares
+in which no primitive is visible.
+
+ORDER OF VERTICES: All the squares except one should contain a
+closed regular pentagon.  Identify the square that does not
+contain a pentagon.
+
+FILL AREA CLOSURE: All the squares except one should contain a
+closed regular pentagon.  Some fill areas are explicitly closed,
+others are implicitly closed.  Identify the pentagon which is not
+closed.
+
+GEOMETRY OF 3D FILL AREAS: All the squares should contain a fill
+area with multiple vertices.  All but one should have their
+vertices accurately circled by a polymarker.  Identify the fill
+area which is not accurately marked.
+
+GEOMETRY OF 2D FILL AREAS: Same as GEOMETRY OF 3D FILL AREAS,
+above.
+
+DESIGN:
+
+set polymarker scale factor to reasonable size = 0.02 in WC
+use interior style HOLLOW throughout
+
+Divide screen up into 6 square labelled areas for all tests
+
+sider = list of 6 sides from which cube may be viewed =
+  front,back,left,right,top,bottom
+
+TEST: #SR 1 4 7
+      "A <fill area> or <fill area 3> primitive with fewer than
+       three points should have no visual effect."
+
+ran6 = random order for 1-6
+numemp = number of empty squares = random from 2 to 4
+for ix = 1 to 6
+   this = ran6(ix)
+   if (this > numemp+1) then
+      draw a single dot polymarker in area #ix
+   elseif (this = numemp+1) then
+      draw a single line segment in area #ix
+   elseif (this = numemp) then
+      draw a two-point 2D fill area in area #ix
+   elseif (this = numemp-1)
+      draw a two-point 3D fill area in area #ix
+   else
+      draw a one-point 3D fill area in area #ix
+   endif
+next ix
+
+OPQA/DEGENERATE FILL AREAS: List all the empty squares (caution:
+  some squares may contain a dot-polymarker).
+pass/fail depending on:
+   (operator identifies the squares with one- or two- point fill areas)
+
+TEST: #SR 1 4 7
+      "A <fill area> or <fill area 3> primitive with multiple vertices
+       should be rendered by connecting the points in the order that the
+       points are given in the point list."
+
+ran6 = random order for 1-6
+
+for ix = 1 to 6
+   this = ran6(ix)
+   this:
+       1   - use polylines to draw a 5 point star
+       2   - draw 2D regular pentagon, clockwise
+       3   - draw 2D regular pentagon, counterclockwise
+       4   - draw 3D regular pentagon, clockwise
+       5,6 - draw 3D regular pentagon, counterclockwise
+next ix
+
+OPQA/ORDER OF VERTICES: Which square does NOT contain a closed
+   regular pentagon?
+pass/fail depending on (operator identifies square with the star)
+
+TEST: #SR 1 4 7
+      "A <fill area> or <fill area 3> primitive with a list of more
+       than two points should be rendered as a closed polygonal
+       area."
+
+ran6 = random order for 1-6
+
+for ix = 1 to 6
+   this = ran6(ix)
+   this:
+       1   - draw a pentagon with polyline and leave one side open
+       2   - draw 3D pentagon with 6 points (explicit close, last=first point)
+       3   - draw 2D pentagon with 6 points (explicit close, last=first point)
+       4   - draw 2D pentagon with 5 points (implicit close)
+       5,6 - draw 3D pentagon with 5 points (implicit close)
+next ix
+
+OPQA/FILL AREA CLOSURE: Which pentagon is open?
+pass/fail depending on (operator identifies pentagon with open side)
+
+TEST: #SR 1 4 7
+      "The appearance of a <fill area 3> primitive should reflect
+       its 3D geometry after being transformed."
+
+ngsq = no-good square = random integer from 1 to 6
+generate 3D list of points, visually distinct from any side for
+  3D fill area, with 0 <= x <= y <=1, and z = .5x +.5y
+
+for ix = 1 to 6
+   rotate to view from sider(ix)
+   display the 3D fill area in square #ix
+   calculate expected position of vertices
+   if (ix = ngsq) then
+      distort expected vertices
+   endif
+   use 2D circle polymarker to mark expected vertices
+next ix
+
+OPQA/GEOMETRY OF 3D FILL AREAS: Which fill area does NOT have
+   all its vertices circled?
+pass/fail depending on (operator identifies square #ngsq)
+
+TEST: #SR 1 4 7
+      "The appearance of a <fill area> primitive should reflect
+       its 2D geometry after being transformed."
+
+ngsq = no-good square = random integer from 1 to 6
+generate non-linear 2D list of points distinct from any side for
+  2D fill area
+
+for ix = 1 to 6
+   rotate 45 degrees around x and y axis into unit cube to show
+      z-values
+   rotate to view from sider(ix)
+   display the 2D fill area in square #ix
+   calculate expected position of vertices
+   if (ix = ngsq) then
+      distort expected vertices
+   endif
+   use 2D circle polymarker to mark expected vertices
+next ix
+
+OPQA/GEOMETRY OF 2D FILL AREAS: Which fill area does NOT have
+   all its vertices circled?
+pass/fail depending on (operator identifies square #ngsq)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Appearance of fill area interiors
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+INTERIOR OF SELF-OVERLAPPING FILL AREAS: All the squares should
+contain a multi-point fill area with the interior filled.
+Identify the fill area whose interior is filled differently from
+that of the others.
+
+INTERIOR OF CONCAVE FILL AREAS: Same as INTERIOR OF
+SELF-OVERLAPPING FILL AREAS, above.
+
+DESIGN:
+
+<inquire interior facilities> to determine if
+   solid, hatch, pattern interior style is supported:
+if (SOLID, HATCH, or PATTERN is not available)
+   message: cannot test interior filling algorithm
+   goto end_it_all
+endif
+
+if (HATCH available) then
+   ihat = hatch style picked by operator, preferably dense and
+          diagonal
+endif
+if (PATTERN available) then
+   ipat = 1
+   define pattern #ipat as simple checkerboard pattern
+   set pattern size to reasonable value
+endif
+
+Divide screen up into 6 square labelled areas for all tests
+
+*** *** ***   interior of self-overlapping polygon   *** *** ***
+
+fillok = true
+set up coordinates for overlapping fill area
+
+for each available intsty = SOLID, HATCH, PATTERN
+   ran6 = random order for 1-6
+   set interior style = intsty
+   if (intsty=HATCH) then
+      set interior style index = ihat
+   elseif (intsty=PATTERN) then
+      set interior style index = ipat
+   endif
+   for ix = 1 to 6
+      this = ran6(ix)
+      this:
+          1 - simulate the figure, filling in the wrong interiors
+          2 - simulate the figure, filled correctly
+          3 - generate the overlapping 3D fill area
+          4 - generate the overlapping 3D fill area,
+              reverse order of point list
+          5 - generate the overlapping 2D fill area
+          6 - generate the overlapping 2D fill area,
+              reverse order of point list
+   next ix
+
+   OPQA/INTERIOR OF SELF-OVERLAPPING FILL AREAS: Which figure is
+      different?
+   if (operator selects #1) then
+      OK so far
+   else
+      fillok = false
+      message about failure for intsty
+   endif
+next intsty
+
+TEST: #SR 1 4 7 8
+      "The interior of a self-overlapping fill area should be
+       filled correctly."
+pass/fail depending on (fillok)
+
+*** *** ***   interior of concave spiral polygon   *** *** ***
+
+fillok = true
+set up coordinates for spiral fill area
+for each available intsty = SOLID, HATCH, PATTERN
+   ran6 = random order for 1-6
+   set interior style = intsty
+   if (intsty=HATCH) then
+      set interior style index = ihat
+   elseif (intsty=PATTERN) then
+      set interior style index = ipat
+   endif
+   for ix = 1 to 6
+      this = ran6(ix)
+      this:
+          1 - simulate the figure, filling in the wrong interiors
+          2 - simulate the figure, filled correctly
+          3 - generate the spiral 3D fill area
+          4 - generate the spiral 3D fill area,
+              reverse order of point list
+          5 - generate the spiral 2D fill area
+          6 - generate the spiral 2D fill area,
+              reverse order of point list
+   next ix
+
+   OPQA/INTERIOR OF CONCAVE FILL AREAS: Which figure is
+      different?
+   if (operator selects #1) then
+      OK so far
+   else
+      fillok = false
+      message about failure for intsty
+   endif
+next intsty
+
+TEST: #SR 1 4 7 8
+      "The interior of a concave spiral fill area should be
+       filled correctly."
+pass/fail depending on (fillok)
+
+end_it_all:
+
+END PROGRAM 3

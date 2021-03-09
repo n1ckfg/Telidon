@@ -1,0 +1,70 @@
+      SUBROUTINE E03100 (USEPRM)
+
+C  E03100 tests the handling of error number 100
+
+      COMMON /GLOBNU/ CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT, DUMRL
+      INTEGER         CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT(20)
+      REAL    DUMRL(20)
+
+      COMMON /ERRINF/ ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR,
+     1                USRERR, ERRSAV,      FUNSAV,      FILSAV,
+     2                EFCNT, EFID
+      INTEGER         ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR(10),
+     1                USRERR, ERRSAV(200), FUNSAV(200), FILSAV(200),
+     2                EFCNT, EFID(100)
+      COMMON /ERRCHR/ CURCON,     ERRSRS,    ERRMRK,    ERFLNM,
+     1                CONTAB
+      CHARACTER       CURCON*200, ERRSRS*40, ERRMRK*20, ERFLNM*80,
+     1                CONTAB(40)*150
+
+C  type of returned value
+      INTEGER      PSET,        PREALI
+      PARAMETER   (PSET=0,      PREALI=1)
+
+      INTEGER   USEPRM, RNDINT, INDEX, NENTR1, NENTR2, ERRIND, IDUM1
+      LOGICAL   STREQ
+
+      CURCON = 'the bundle index value is less than one'
+      CALL SETVS ('100', EXPERR, EXPSIZ)
+      ERRSRS = '1'
+      CALL ESETUP (USEPRM)
+
+      CALL POPST (101)
+
+      CALL RSPLI (0)
+      CALL TSTIGN (STREQ('O*O*'))
+
+      CALL RSTXI (-1)
+
+      INDEX = RNDINT(-1, 0)
+      CALL RSEDI (INDEX)
+
+      CALL PCLST
+
+      CALL POPWK (WKID, CONID, WTYPE)
+
+      CALL PQEPMI (WKID, 0, ERRIND, NENTR1, IDUM1)
+      CALL CHKINQ ('pqepmi', ERRIND)
+
+      CALL RSPMR (WKID, 0, 1, 1.0, 0)
+
+      CALL PQEPMI (WKID, 0, ERRIND, NENTR2, IDUM1)
+      CALL CHKINQ ('pqepmi', ERRIND)
+      CALL TSTIGN (STREQ('OO**') .AND. NENTR1.EQ.NENTR2)
+
+      CALL RSIR (WKID, -1, 1,1,0)
+
+      INDEX = RNDINT(-1, 0)
+      CALL RSEDR (WKID, INDEX, 1,1,1.,0)
+
+      CALL PCLWK (WKID)
+
+      CALL ENDERR
+
+      END

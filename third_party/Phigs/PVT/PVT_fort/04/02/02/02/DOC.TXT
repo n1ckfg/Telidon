@@ -1,0 +1,1956 @@
+TITLE: Polymarker  - workstation support
+
+MODULE#: 04.02.02.02
+
+DESCRIPTION: This module tests the bundled entries and other
+workstation facilities for polymarker.  These entries control the
+appearance of polymarkers when they are under bundled (as opposed
+to individual) control.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** ***   Polymarker index inquiry   *** *** ***
+
+SR1.   If current element is polymarker index, then <inquire
+current element type and size> returns the element type as
+polymarker index and the appropriate element size.
+#F 303
+#D 7.3.2.1.2
+#S 4.4.4/29/5
+#T P01/1
+
+SR2.   If current element is polymarker index, then <inquire
+current element content> returns the appropriate data for
+polymarker index.
+#F 304
+#D 7.3.2.1.2
+#S 4.4.4/29/5
+#T P01/2
+
+*** *** ***   Polymarker index traversal binding   *** *** ***
+
+SR3.  Upon traversal of a "polymarker" or "polymarker 3" element,
+the current polymarker index in the PTSL is bound to the
+resulting primitive.
+#F 26
+#D 3.2.1 7.3.1.3 7.3.1.4
+#S 4.5.2/38/3 4.5.2/40/3
+#T P09/1 P09/2 P09/3 P10/1 P10/2 P11/1 P11/2 P11/3 P11/4 P11/5 P11/6
+   P11/7 P11/8 P11/9 P11/10 P12/1
+
+*** ***   Polymarker index element creation   *** ***
+
+SR4.  <Set polymarker index> creates a "set polymarker index"
+element (in the open structure), whose associated value is taken
+from the function's parameter.
+#F 26
+#D 7.3.2.1.2
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/1 P01/2 P10/1 P10/2 P11/1 P11/2 P11/3 P11/4 P11/5 P11/6 P11/7
+   P11/8 P11/9 P11/10
+
+*** ***   Polymarker index: effect during traversal   *** ***
+
+SR5.  Upon traversal of a "set polymarker index" element, the
+current polymarker index entry in the PHIGS traversal state list
+(PTSL) is set to the element's associated value.
+#F 26
+#D 3.2.1 7.3.2.1.2
+#S 4.4.1/23/1 4.5.2/38/3
+#T P10/1 P10/2 P11/1 P11/2 P11/3 P11/4 P11/5 P11/6 P11/7 P11/8 P11/9
+   P11/10 P12/1
+
+SR6.  When a polymarker is displayed, if its bound polymarker index
+is defined on the workstation, then the indicated bundle is the
+source for the bundled aspects of that polymarker.
+#F 26
+#D 3.2.1 5.10.1 5.10.2
+#S 4.5.2/38/7 4.5.2/39/7 4.5.4/43/7
+#T P09/1 P09/2 P09/3 P10/1 P11/1 P11/2 P11/3 P11/4 P11/5 P11/6 P11/7
+   P11/8 P11/9 P11/10 P12/1
+
+SR7.  When a polymarker is displayed, if its bound polymarker index
+is undefined on the workstation, then the bundle number 1 in the
+polymarker bundle table is the source for the bundled aspects of
+that polymarker.
+#F 26
+#D 3.2.1 5.10.1 5.10.2
+#S 4.5.2/38/7 4.5.2/39/7 4.5.2/43/3 4.5.4/43/7
+#T P10/2
+
+*** ***   Polymarker index: network traversal   *** ***
+
+SR8.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current polymarker index of the PTSL is set to 1.
+#F
+#D 2.11.1 3.2.1
+#S 4.4.3/26/2 4.4.3/28/1 6.3/309/1
+#T P12/1
+
+SR9.  As part of the PTSL, the current polymarker index is saved
+(but not changed) by execute structure and then, upon completion
+of the sub-traversal of the invoked network, restored to the
+saved value.
+#F 113
+#D 3.2.1
+#S 4.4.3/28/1
+#T P12/1
+
+*** *** ***   Polymarker representation   *** *** ***
+
+SR10.  <Set polymarker representation> causes an entry to be
+defined.
+#F 64
+#D 5.10.1 5.10.2.1
+#S 4.5.2/42/3 4.5.2/43/2
+#T P02/2 P02/3 P02/6 P02/7 P02/9 P02/10
+
+SR11.  <Set polymarker representation> sets polymarker bundle's
+marker type, marker size scale factor, and colour index.
+#F 64
+#D 5.10.2
+#S 4.5.2/43/2 4.5.2/42/3
+#T P01/3 P02/4 P02/8 P02/11 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10
+
+SR12.  <Inquire list of polymarker indices> returns the list of
+all defined polymarker indices.
+#F 224
+#D 5.10.1 5.10.2.1
+#S n
+#T P02/1 P02/2 P02/3 P02/5 P02/6 P02/7 P02/9 P02/10 P02/12
+
+SR13.  <Inquire polymarker representation> works for all defined
+entries.
+#F 224 225
+#D 5.10.1 5.10.2.1
+#S n
+#T P02/12
+
+SR14.  <Inquire polymarker representation> returns the polymarker
+bundle's marker type, marker size scale factor, and colour index
+as set, when type of returned values specified as SET.
+#F 225
+#D 5.10.2
+#S 4.11/108/1
+#T P01/3 P02/4 P02/8 P02/11
+
+SR15.  <Inquire polymarker representation> returns the polymarker
+bundle's marker type, marker size scale factor, and colour index
+as realized, when type of returned values specified as REALIZED.
+#F 225
+#D 5.10.2
+#S 4.11/108/1
+#T P02/5 P04/5 P06/5 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10 P08/1 P08/3
+
+SR16.  <Inquire polymarker representation> returns the
+representation for bundle number 1, if type of returned values is
+REALIZED, and bundle index is undefined.
+#F 224 225
+#D 5.10.2
+#S n
+#T P02/5
+
+*** *** ***   Maximum size of bundle table   *** *** ***
+
+SR17.  <Inquire workstation state table lengths> returns the
+maximum size of polymarker bundle table.
+#F 285
+#D 6.21.2
+#S n
+#T P03/1 P03/2
+
+SR18.  There must be at least 20 settable entries available in
+the polymarker bundle table.
+#F 64 285
+#D 5.10 6.21.2
+#S 4.14/114/2 6.7/324/1
+#T P03/1
+
+*** *** ***   Predefined bundle facilities   *** *** ***
+
+SR19.  <Inquire polymarker facilities> returns the number of
+predefined polymarker bundle entries.
+#F 264
+#D 6.11.1.7
+#S n
+#T P04/1 P04/6
+
+SR20.  <Inquire predefined polymarker representation> returns the
+marker type, marker size scale factor, and polymarker colour
+index for a predefined polymarker bundle.
+#F 265
+#D 6.11.2
+#S n
+#T P04/1 P04/2 P04/3 P04/4 P04/7 P05/2 P09/1 P09/2 P09/3
+
+SR21.  Every workstation must have at least 5 predefined
+polymarker bundles.
+#F 264 265
+#D 6.11.1.7 6.11.2
+#S 4.14/113/3 4.14/114/2 6.7/321/1
+#T P04/6
+
+SR22.  No two of the first 5 predefined polymarker bundles have
+identical sets of attributes.
+#F 265
+#D 6.11.2
+#S 4.5.2/42/3 4.14/113/3 4.14/114/2 6.7/321/1
+#T P04/7
+
+SR23.  The n predefined polymarker bundles in the Workstation
+Description Table (WDT) are indexed as 1-n.
+#F 265
+#D 6.11.2
+#S 6.7/321/1
+#T P04/1 P05/2
+#C The standard presumes this because in section 6.7 the
+predefined bundles in the WDT do not mention index as a data
+item, nor is there a way to get a list of these indices (<inquire
+polymarker facilities> gives the number of predefined bundles,
+but not a list thereof).
+
+SR24.  Immediately after <open workstation>, for each WDT
+predefined polymarker entry there exists a Workstation State List
+(WSL) polymarker entry with the same attributes, including the
+same polymarker index.
+#F 224 225 265 3
+#D 5.10.2 6.11.2
+#S 4.5.2/42/3 6.6/317/1 6.7/321/1
+#T P05/1 P05/2 P09/1 P09/2
+
+SR25.  Immediately after <open workstation>, the polymarker
+bundle table contains nothing but the entries initialized from
+the WDT predefined polymarker bundle table.
+#F 224 225 264 3
+#D 5.10.2 6.11.2
+#S 4.5.2/42/3 6.6/317/1 6.7/321/1
+#T P05/1
+
+*** *** ***   Validity of predefined bundles   *** *** ***
+
+SR26.  Each predefined polymarker bundle has a marker type within
+the list of available marker types.
+#F 264 265
+#D 6.11.1.2 6.11.2.1
+#S 5.12.1/232/2
+#T P04/2 P04/5
+
+SR27.  Each predefined polymarker bundle has a marker size scale
+factor which generates a marker size within the minimum and
+maximum marker sizes.
+#F 264 265
+#D 6.11.1.4 6.11.1.5 6.11.1.6 6.11.2.2
+#S 5.12.1/232/2
+#T P04/3 P04/5
+
+SR28.  Each predefined polymarker bundle has a colour index
+within range of the predefined colour indices.
+#F 265 277
+#D 6.11.2.3 6.17.2.4
+#S 6.7/321/1
+#T P04/4 P04/5
+
+*** *** ***   marker type support   *** *** ***
+
+SR29.  The absolute value of the number of available marker types
+returned from <inquire polymarker facilities> indicates the
+length of the list of available marker types.
+#F 264
+#D 6.11.1.1 6.11.1.2
+#S 6.7/321/1
+#T P06/1
+
+SR30.  The list of available marker types contains all registered
+types, and includes 1-5.
+#F 264
+#D 6.11.1.2
+#S 4.5.4/44/2 4.14/113/3 4.14/114/2 6.7/321/1
+#T P06/2
+
+SR31.  If the number of available marker types is positive, the
+list of available marker types contains any implementation
+dependent types.
+#F 264
+#D 6.11.1.1 6.11.1.2
+#S n
+#T P06/3
+
+SR32.  If the number of available marker types is negative, the
+list of available marker types does not contain any
+implementation dependent types.
+#F 264
+#D 6.11.1.1 6.11.1.2
+#S n
+#T P06/4
+
+SR33.  All the marker types in the list of available marker types
+are valid and realizable for the workstation.
+#F 64 264
+#D 5.10.2.2 6.11.1.1 6.11.1.2
+#S n
+#T P06/5
+
+SR34.  Positive marker types are standard or registered;
+non-positive marker types are implementation-dependent.
+#F 64 264
+#D 5.10.2.2 6.11.1.2
+#S 4.5.4/44/2
+#T P06/3 P06/4
+
+SR35.  When a polymarker is displayed, if its marker type ASF is
+bundled, then its marker type aspect is taken from the polymarker
+bundle determined by the polymarker index.
+#F 26 62 64
+#D 3.2.1 3.2.5 5.10.2.1 5.10.2.2
+#S 4.5.2/39/7 4.5.4/43/7
+#T P11/1 P11/2 P11/3
+
+SR36.  When available on the workstation to which posted, marker
+types 1 through 5 appear as dot, plus sign, asterisk, circle, and
+diagonal cross, respectively.
+#F
+#D 6.11.1.1 6.11.1.2
+#S 4.5.4/44/2
+#T P11/1
+
+SR37.  When available on the workstation to which posted, marker
+types greater than 5 appear as specified in the ISO register.
+#F
+#D 6.11.1.1 6.11.1.2
+#S 4.1.2/15/2 4.5.4/44/2
+#T P11/2
+
+SR38.  When available on the workstation to which posted, marker
+types less than 1 appear as specified in the implementor
+documentation.
+#F
+#D 6.11.1.1 6.11.1.2
+#S 4.1.1/15/1 4.5.4/44/2
+#T P11/3
+
+*** ***   marker size scale factor support   *** ***
+
+SR39.  <Inquire polymarker facilities> describes the realizable
+marker sizes for a workstation type, via the number of available
+marker sizes, nominal marker size, minimum marker size, and
+maximum marker size.
+#F 264
+#D 6.11.1.3 6.11.1.4 6.11.1.5 6.11.1.6
+#S n
+#T P07/1 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10
+
+SR40.  The nominal marker size, minimum marker size, and maximum
+marker size are all positive.
+#F 264
+#D 6.11.1.4 6.11.1.5 6.11.1.6
+#S 6.7/321/1
+#T P07/2
+
+SR41.  Workstations must support at least one marker size.
+#F 64 264
+#D 5.10.2.3 6.11.1.3 6.11.1.4 6.11.1.5 6.11.1.6
+#S 4.14/114/2 6.7/321/1
+#T P07/3
+
+SR42.  Any marker size scale factor, whether or not resulting in
+a valid marker size for that workstation, may be specified for a
+polymarker bundle when invoking <set polymarker representation>.
+#F 64
+#D 5.10.2.3
+#S n
+#T P07/4 P11/4 P11/5 P11/6 P11/7 P11/8
+
+SR43.  When a polymarker is displayed, if its marker size scale
+factor ASF is bundled, then its logical marker size is equal to
+the marker size scale factor determined by the polymarker index
+times the workstation's nominal marker size.
+#F 26 62 64
+#D 3.2.1 3.2.6 5.10.2.1 5.10.2.3
+#S 4.5.2/39/7 4.5.4/43/7
+#T P11/4 P11/5 P11/6 P11/7 P11/8
+
+SR44.  Except for marker type 1, when a polymarker is displayed, if
+its logical marker size is available on the workstation, then the
+actual marker size agrees with the logical marker size.
+#F 26 62 64
+#D 5.10.2.1 5.10.2.3 6.11.1.3 6.11.1.4 6.11.1.5 6.11.1.6
+#S 4.5.2/39/7 4.5.4/43/7 4.5.4/44/3
+#T P11/4
+
+SR45.  Except for marker type 1, when a polymarker is displayed, if
+its logical marker size is not available on the workstation, then
+the actual marker size is the nearest available to the logical
+marker size.
+#F 26 62 64
+#D 5.10.2.1 5.10.2.3 6.11.1.3 6.11.1.4 6.11.1.5 6.11.1.6
+#S 4.5.2/39/7 4.5.4/43/7 4.5.4/44/3
+#T P11/5 P11/6 P11/7
+
+SR46. For marker type 1, when a polymarker is displayed, its logical
+marker size is ignored and the polymarker is displayed as the
+smallest displayable dot.
+#F 26 62 64
+#D 6.11.1.4 6.11.1.5 6.11.1.6
+#S 4.5.4/44/3
+#T P11/8
+
+*** ***   polymarker colour index support   *** ***
+
+SR47.  Any non-negative polymarker colour index, whether or not
+defined for that workstation, may be specified for a polymarker
+bundle when invoking <set polymarker representation>.
+#F 64
+#D 5.10.2.4
+#S n
+#T P08/2 P11/9 P11/10
+
+SR48.  When a polymarker is displayed, if its polymarker colour
+index ASF is bundled, then its polymarker colour index is taken
+from the polymarker bundle determined by the polymarker index.
+#F 26 62 64
+#D 3.2.1 3.2.7 5.10.2.1 5.10.2.4
+#S 4.5.2/39/7 4.5.4/43/7
+#T P08/1 P08/3 P11/9 P11/10
+
+SR49.  When a polymarker is displayed, if its polymarker colour
+index is available on the workstation, then the polymarker colour
+index is realized as itself.
+#F 225 235
+#D 5.10.2.1 5.10.2.4 5.15.3
+#S 4.5.2/39/7 4.5.2/43/3 4.5.4/43/7 4.5.12/63/4
+#T P08/1 P11/9
+
+SR50.  When a polymarker is displayed, if its polymarker colour
+index is undefined, then the polymarker colour index is realized
+as colour index 1.
+#F 225 235
+#D 5.10.2.1 5.10.2.4 5.15.3
+#S 4.5.2/39/7 4.5.2/43/3 4.5.4/43/7 4.5.12/63/4
+#T P08/3 P11/10
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+   26: pspmi   <set polymarker index>
+   62: psiasf  <set individual asf>
+   64: pspmr   <set polymarker representation>
+  113: pexst   <execute structure>
+  224: pqepmi  <inquire list of polymarker indices>
+  225: pqpmr   <inquire polymarker representation>
+  235: pqeci   <inquire list of colour indices>
+  264: pqpmf   <inquire polymarker facilities>
+  265: pqppmr  <inquire predefined polymarker representation>
+  277: pqcf    <inquire colour facilities>
+  285: pqwksl  <inquire workstation state table lengths>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.11 ...  default_polymarker_attributes
+  2.11.1  ...  default_polymarker_index
+  3  ...  phigs_traversal_state_list
+  3.2  ...  current_polymarker_attributes
+  3.2.1  ...  current_polymarker_index
+  3.2.5  ...  current_marker_type_asf
+  3.2.6  ...  current_marker_size_scale_factor_asf
+  3.2.7  ...  current_polymarker_colour_index_asf
+  5  ...  workstation_state_list
+  5.10 ...  polymarker_entry
+  5.10.1  ...  number_of_polymarker_bundle_table_entries
+  5.10.2  ...  polymarker_bundle_table
+  5.10.2.1  ...  polymarker_index
+  5.10.2.2  ...  marker_type
+  5.10.2.3  ...  marker_size_scale_factor
+  5.10.2.4  ...  polymarker_colour_index
+  5.15  ...  colour_entry
+  5.15.3  ...  colour_table
+  6  ...  workstation_description_table
+  6.11  ...  polymarker_entry
+  6.11.1  ...  polymarker_facilities
+  6.11.1.1  ...  number_of_available_marker_types
+  6.11.1.2  ...  list_of_available_marker_types
+  6.11.1.3  ...  number_of_available_marker_sizes
+  6.11.1.4  ...  nominal_marker_size
+  6.11.1.5  ...  minimum_marker_size
+  6.11.1.6  ...  maximum_marker_size
+  6.11.1.7  ...  number_of_predefined_polymarker_indices
+  6.11.2  ...  predefined_polymarker_bundle_table
+  6.11.2.1  ...  marker_type
+  6.11.2.2  ...  marker_size_scale_factor
+  6.11.2.3  ...  polymarker_colour_index
+  6.17  ...  colour_entry
+  6.17.2  ...  colour_facilities
+  6.17.2.4  ...  number_of_predefined_colour_indices
+  6.21  ...  maximum_table_lengths
+  6.21.2  ...  maximum_number_of_polymarker_bundle_table_entries
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.3  ...  polymarker_3
+  7.3.1.4  ...  polymarker
+  7.3.2  ...  primitive_attributes
+  7.3.2.1  ...  bundle_index_attributes
+  7.3.2.1.2  ...  polymarker_index
+ 
+LOCAL SUBROUTINES:
+
+DISPMB selects a specified number of predefined bundles at random
+from the polymarker bundle table which are distinct in all their
+attributes.  If there are not enough completely distinct bundles,
+DISPMB tries to maximize the number of different attributes.
+
+DRWPMB draws a set of actual polymarkers using the specified bundle
+values, and a set of expected polymarkers, using the attribute
+values returned by <inquire predefined polymarker representation>.
+It draws the expected polymarker incorrectly at a specified
+position.
+
+SHPMBW tests the rendering of a given markerwidth, and returns the
+pass/fail result.
+
+LOCPMI draws a polymarker at specified y-location.
+
+
+PROGRAM 1: Simple setting and inquiring
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element content> throughout to determine:
+    celval = current element value as set by program
+    recval = auxiliary element values implied by the standard's
+             representation conventions.
+
+Use <inquire current element type and size> throughout to determine:
+    celsiz = current element size
+
+*** *** *** *** *** Polymarker index *** *** *** *** ***
+<set polymarker index>:
+    polymarker_index = 8
+
+TEST: #SR 1 4
+      "<Inquire current element type and size> should return
+       polymarker index as the type of the created element and
+       the appropriate element size."
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = polymarker index
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 4
+      "<Inquire current element content> should return the
+       standard representation for the polymarker index value."
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 8 and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** *** polymarker representation set and inquire *** ***
+
+<set polymarker representation>:
+   index       = 4
+   marker_type = 3
+   size_scale  = 0.25
+   color       = 4
+<inquire polymarker representation> for index #4, as set
+
+TEST: #SR 11 14
+      "Polymarker attributes should be returned as set."
+pass/fail depending on
+   (marker_type = 3        and
+    size_scale  = 0.25     and
+    colour      = 4
+
+END PROGRAM 1
+
+
+PROGRAM 2: Setting entries of various kinds
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire workstation state table lengths> to determine maximum
+   number of entries:
+   mne = maximum number of entries
+
+*** *** *** *** ***     initialized entries    *** *** *** *** ***
+
+<inquire list of polymarker indices> to determine initialized entries
+   nie = number of initialized entries
+   aii = an initialized index
+TEST: #SR 12
+      "<Inquire list of polymarker indices> should return
+       initialized indices."
+if (<inquire list of polymarker indices> indicates error) then
+   fail
+   goto undefined_test
+else
+   pass
+endif
+
+<inquire polymarker representation> for index #aii, as set
+establishes:
+   old_marker_type
+   old_size_scale
+   old_colour
+
+if old_marker_type < 5 then
+   new_marker_type  = old_marker_type + 1
+else
+   new_marker_type  = 2
+endif
+new_size_scale   = old_size_scale  * 0.15
+new_colour       = old_colour      + 1
+
+<set polymarker representation> sets:
+   index       = aii
+   marker_type = new_marker_type
+   size_scale  = new_size_scale
+   colour      = new_colour
+
+<inquire list of polymarker indices> returns defined list
+
+TEST: #SR 10 12
+      "Re-defining a system-initialized entry should not change
+       the number of defined entries."
+pass/fail depending on (current number of entries = nie)
+
+TEST: #SR 10 12
+      "Initialized bundle entry should be reported as defined
+       after being set."
+if (defined list includes #aii) then
+   pass
+else
+   fail
+   goto undefined_test
+endif
+
+<inquire polymarker representation> for index #aii as set
+TEST: #SR 11 14
+      "New values should be set for initialized bundle entry."
+pass/fail depending on
+   (marker_type = new_marker_type and
+    size_scale  = new_size_scale  and
+    colour      = new_colour)
+
+*** *** *** *** ***    undefined entries    *** *** *** *** ***
+
+undefined test:
+
+<inquire list of polymarker indices> returns defined list
+determine lowest undefined index (not in defined list) = lui
+determine current number defined entries = cnde
+
+TEST: #SR 12 15 16
+      "<Inquire polymarker representation> should return
+       attributes for bundle #1 when inquiring an undefined entry
+       as REALIZED."
+<inquire polymarker representation> as REALIZED for index #lui
+   to get undefined_bundle.
+<inquire polymarker representation> as REALIZED for index #1
+   to get bundle #1.
+pass/fail depending on (undefined_bundle = bundle #1).
+
+If (number of initialized entries
+    >= max size of bundle table) then
+    skip rest of undefined_test; goto redefined_test
+endif
+
+If (number of initialized entries
+    >= max table size in test program) then
+    skip rest of undefined_test; goto redefined_test
+endif
+
+<set polymarker representation>:
+   index       = lui
+   marker_type = 2
+   size_scale  = 0.25
+   colour      = 4
+
+<inquire list of polymarker indices> to determine
+   listot = total number of entries in list
+
+TEST: #SR 10 12
+      "Defining an undefined entry should increment the number of
+       defined entries."
+pass/fail depending on (listot = cnde + 1)
+
+TEST: #SR 10 12
+      "Undefined bundle entry should be reported as defined after
+       set."
+if (resulting list of indices contains lui) then
+   pass
+else
+   fail
+   goto redefined_test
+endif
+
+<inquire polymarker representation> for index #lui as set
+TEST: #SR 11 14
+      "New values should be set for undefined bundle entry."
+pass/fail depending on
+   (marker_type  = 2    and
+    size_scale   = 0.25 and
+    colour       = 4)
+
+*** *** *** *** ***    redefined entries    *** *** *** *** ***
+
+redefined_test:
+
+dpi  = defined polymarker index
+cnde = current number of defined entries
+
+<set polymarker representation>:
+   index       = dpi
+   marker_type = 4
+   size_scale  = 0.35
+   colour      = 3
+
+new_marker_type = 3
+new_size_scale  = 0.30
+new_colour      = 2
+
+<set polymarker representation>:
+   index       = dpi
+   marker_type = new_marker_type
+   size_scale  = new_size_scale
+   colour      = new_colour
+
+<inquire list of polymarker indices> to determine
+   nnde = new number of defined entries
+
+TEST: #SR 10 12
+      "Re-defining a user-defined entry should not change number
+       of defined entries."
+pass/fail depending on (nnde = cnde)
+
+TEST: #SR 10 12
+      "Redefined bundle entry should be reported as defined after
+       set."
+if (resulting list of indices contains dpi) then
+   pass
+else
+   fail
+   goto end_redefined_test
+endif
+
+<inquire polymarker representation> for index #dpi as set
+TEST: #SR 11 14
+      "New values should be set for redefined bundle entry."
+pass/fail depending on
+   (marker_type = new_marker_type and
+    size_scale  = new_size_scale  and
+    colour      = new_colour)
+
+end_redefined_test:
+
+*** *** *** *** ***    access all defined entries   *** *** *** *** ***
+
+TEST: #SR 12 13
+      "<Inquire list of polymarker indices> and <inquire
+       polymarker representation> should detect all defined
+       entries."
+Use <inquire list of polymarker indices> to get
+   list of defined indices
+if (non-zero error code) then
+   fail
+   goto end_access_all
+endif
+For each defined index, apply <inquire polymarker representation>
+   if (non-zero error code) then
+      fail
+      goto end_access_all
+   endif
+loop to next index
+pass
+
+end_access_all:
+
+END PROGRAM 2
+
+
+PROGRAM 3: Polymarker bundle table length
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire workstation state table lengths> to determine
+   mpbe = maximum polymarker bundle entries
+
+TEST: #SR 17 18
+      "<Inquire workstation state table lengths> should report at
+       least 20 entries as maximum size of polymarker bundle
+       table."
+pass/fail depending on (mpbe >= 20)
+
+Use <inquire list of polymarker indices> to determine
+   nde = number of defined entries and
+   mpmi = maximum defined polymarker index
+nemp = number of empty entries = mpbe - nde
+TEST: #SR 17
+      "The program should be able to define additional polymarker
+       bundle entries, up to the maximum."
+do pmi = mpmi+1, mpmi+nemp
+   set polymarker bundle entry, with index = pmi
+   if error signalled then
+      fail
+      goto done
+   endif
+loop
+
+pass
+
+done:
+
+END PROGRAM 3
+
+PROGRAM 4: Validity of predefined polymarker bundles
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+mpci = maximum predefined color index
+
+Use <inquire polymarker facilities> to determine
+   npe   = number of predefined entries
+   namt  = number of available marker types
+   nomms = nominal marker size
+   minms = minimum marker size
+   maxms = maximum marker size
+
+marerr = false = marker type error found yet
+mserr  = false = marker size error found yet
+colerr = false = color error found yet
+rlzerr = false = realized error found yet
+
+TEST: #SR 19 20 23
+      "<Inquire predefined polymarker representation> should be
+       able to access as many entries as reported by <inquire
+       polymarker facilities>."
+do pmi = 1 to npe
+   <inquire predefined polymarker representation> for pmi to determine
+      mtype = marker type
+      pmssf = predefined marker size scale factor
+      pmci  = polymarker color index
+   if error then
+      fail
+      goto more_tests
+   endif
+
+   if mtype is not in list of available marker types then
+      marerr = true
+      erpmmt = erroneous mtype
+   endif
+
+   genms = pmssf * nomms = generated marker size
+   if genms < minms or > maxms then
+      mserr = true
+      erms  = erroneous pmssf
+   endif
+
+   if pmci < 0 or > mpci then
+      colerr = true
+      erpmci = erroneous pmci
+   endif
+
+   set polymarker representation #3 to mtype, pmssf, pmci
+   inquire polymarker representation #3, as realized
+   if (reported aspects not= mtype, pmssf, pmci) then
+      rlzerr = true
+      erbun  = pmi
+   endif
+
+loop
+pass
+
+TEST: #SR 20 26
+      "All marker types in predefined polymarker bundles should
+       themselves be in the list of available marker types."
+if marerr then
+   fail
+   message about erpmmt
+else
+   pass
+endif
+
+TEST: #SR 20 27
+      "All marker size scale factors in predefined polymarker
+       bundles should generate marker sizes within the minimum
+       and maximum marker sizes."
+if mserr then
+   fail
+   message about erms
+else
+   pass
+endif
+
+TEST: #SR 20 28
+      "All color indices in predefined polymarker bundles should
+       themselves be in the predefined color table."
+if colerr then
+   fail
+   message about erpmci
+else
+   pass
+endif
+
+TEST: #SR 15 26 27 28
+      "All aspects of all predefined polymarker bundles should be
+       reported as realizable by <inquire polymarker representation>."
+if rlzerr then
+   fail
+   message about erbun
+else
+   pass
+endif
+
+more_tests:
+
+TEST: #SR 19 21
+      "<Inquire polymarker facilities> should report at least 5
+       predefined entries."
+if npe < 5 then
+   fail
+   goto done
+else
+   pass
+endif
+
+TEST: #SR 20 22
+      "The first five predefined polymarker bundle entries should
+       all be mutually distinguishable."
+do pmi = 1 to 5
+  <inquire predefined polymarker representation> for index pmi, determine
+    pdmt = predefined marker type
+    pdms = predefined marker size scale factor
+    pdci = predefined polymarker color index
+  do pmi2 = 1 to pmi-1
+     if svpdmt (pmi2) = pdmt  and
+        svpdms (pmi2) = pdms  and
+        svpdci (pmi2) = pdci    then
+          fail
+          message about pmi, pmi2
+          goto done
+     endif
+  loop
+  svpdmt (pmi) = pdmt
+  svpdms (pmi) = pdms
+  svpdci (pmi) = pdci
+loop
+pass
+
+done:
+
+END PROGRAM 4
+
+PROGRAM 5: WSL polymarker bundles initialized properly
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+msgsuf = message suffix = "opening workstation."
+
+check_table:
+
+<open workstation>
+
+<inquire polymarker facilities> to determine
+   npe = number of predefined polymarker entries in WDT
+
+<inquire list of polymarker indices> to determine
+   spbt = size of WSL polymarker bundle table
+TEST: #SR 24 25
+      "WSL polymarker bundle table should be the same size as the
+       predefined polymarker bundle table after " + msgsuf
+if spbt not= npe then
+   fail
+   message about spbt and npe
+else
+   pass
+endif
+
+TEST: #SR 20 23 24
+      "Each WSL polymarker entry should have the same attributes
+       as the corresponding predefined polymarker entry after "
+       + msgsuf
+do pmi = 1 to min(npe,spbt)
+  <inquire predefined polymarker representation> for index pmi, determine
+    pdmt = predefined marker type
+    pdms = predefined marker size scale factor
+    pdci = predefined polymarker color index
+  <inquire polymarker representation> for index pmi, determine
+    dmt = defined marker type
+    dms = defined marker size scale factor
+    dci = defined polymarker color index
+  if dmt = pdmt and
+     dms = pdms and
+     dci = pdci    then
+       OK so far
+  else
+     fail
+     message about pmi
+     goto end_check
+  endif
+loop
+pass
+
+end_check:
+alter bundle table - insert new or different entry
+<close workstation>
+if (msgsuf = "opening workstation.") then
+   msgsuf = "re-opening workstation."
+   goto check_table
+endif
+
+
+END PROGRAM 5
+
+PROGRAM 6: Marker type facilities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire polymarker facilities> to determine
+   namt = number of available marker types
+errcod = false
+stdmt(1 thru 5) = false
+impdep = false
+do mtid = 1 to abs(namt)
+   <inquire polymarker facilities> to determine
+      thismt = nth marker type
+   keep track of non-zero error indicators:
+   if errind not= 0 then
+      errcod = true
+      message about errind and mtid
+      goto loop
+   endif
+   mt(mtid) = thismt
+   keep track of marker types 1-5:
+   if thismt >= 1 and <= 5 then
+      stdmt(thismt) = true
+   endif
+   keep track of implementation-dependent types (non-positives):
+   if thismt < 1 then
+      impdep = true
+   endif
+loop
+
+TEST: #SR 29
+      "All entries within the reported size of the list of
+       available marker types should be accessible."
+pass/fail depending on (NOT errcod)
+
+TEST: #SR 30
+      "The list of available marker types should contain 1 thru 5."
+pass/fail depending on (stdmt(1) and stdmt(2) and stdmt(3) and
+                        stdmt(4) and stdmt(5))
+
+if namt > 0 then (positive number of available marker types)
+   if impdep then
+      no test
+   else
+      TEST: #SR 31 34
+            "When system reports that no implementation-dependent
+             marker types are available, none should be."
+      do impmt = 0 to -3
+         <set polymarker representation>, index #1, marker type = impmt
+         if not rejected as invalid then
+            fail
+            message about impmt
+            goto endimp
+         endif
+      loop
+      pass
+      endimp:
+   endif
+else (namt <= 0)
+   TEST: #SR 32 34
+         "Negative number of available marker types should
+          indicate that list contains no implementation-dependent
+          marker types."
+   pass/fail depending on (NOT impdep)
+endif
+
+TEST: #SR 15 33
+      "All entries within the reported list of available marker
+       types should be realizable and valid."
+do mtid = 1 to abs(namt)
+  thismt = mt(mtid)
+  <set polymarker representation>, index #3, marker type = thismt
+  if rejected as invalid then
+     fail
+     message about thismt
+     goto done
+  endif
+  <inquire polymarker representation>, index #3, as realized to determine
+     rmt = realized marker type
+  if rmt not= thismt then
+     fail
+     message about thismt and rmt
+     goto done
+  endif
+loop
+pass
+
+done:
+
+END PROGRAM 6
+
+PROGRAM 7: Marker size facilities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire polymarker facilities> to determine:
+   nams  = number of available marker sizes
+   nomms = nominal marker size
+   minms = minimum marker size
+   maxms = maximum marker size
+
+Informative message about: nams, nomms, minms, maxms
+
+TEST: #SR 39
+      "Maximum marker size should not be less than minimum."
+pass/fail depending on (maxms >= minms)
+
+TEST: #SR 40
+      "The nominal marker size, minimum marker size, and maximum
+       marker size should all be positive."
+pass/fail depending on (minms and maxms and nomms > 0)
+
+TEST: #SR 41
+      "The reported number of available marker sizes should be at
+       least 0."
+pass/fail depending on (nams >= 0)
+
+minsc = minms/nomms = minimum scale factor
+maxsc = maxms/nomms = maximum scale factor
+
+TEST: #SR 42
+      "All marker size scale factors should be accepted as valid."
+<set polymarker representation>, index #4, scale_factor = minsc/10
+if error signalled then
+   goto errval
+endif
+<set polymarker representation>, index #4, scale_factor = maxsc*10
+if error signalled then
+   goto errval
+endif
+<set polymarker representation>, index #4, scale_factor = -10.0
+if error signalled then
+   goto errval
+endif
+pass
+valok = true
+goto done_valid
+
+errval:
+fail
+valok = false
+message about scale_factor and error code
+
+done_valid:
+
+TEST: #SR 11 15 39
+      "The reported minimum marker size should be realizable."
+<set polymarker representation>, index #4, scale_factor = minsc
+<inquire polymarker representation>, index #4 as realized,
+  to determine rms = realized marker size scale factor
+pass/fail depending on (rms app= minsc)
+
+TEST: #SR 11 15 39
+      "The reported maximum marker size should be realizable."
+<set polymarker representation>, index #4, scale_factor = maxsc
+<inquire polymarker representation>, index #4 as realized,
+  to determine rms = realized marker size scale factor
+pass/fail depending on (rms app= maxsc)
+
+if (not valok) then
+   informative message: skipping coercion tests
+   goto skip_coerce
+endif
+
+TEST: #SR 11 15 39
+      "A marker size scale factor set as less than the minimum
+       should be realized as the reported minimum."
+<set polymarker representation>, index #4, scale_factor = minsc/3
+<inquire polymarker representation>, index #4 as realized,
+  to determine rms = realized marker size scale factor
+pass/fail depending on (rms app= minsc)
+
+TEST: #SR 11 15 39
+      "A marker size scale factor set as greater than the maximum
+       should be realized as the reported maximum."
+<set polymarker representation>, index #4, scale_factor = maxsc*3
+<inquire polymarker representation>, index #4 as realized,
+  to determine rms = realized marker size scale factor
+pass/fail depending on (rms app= maxsc)
+
+TEST: #SR 11 15 39
+      "A marker size scale factor set as less than zero
+       should be realized as the reported minimum."
+<set polymarker representation>, index #4, scale_factor = -abs(maxsc)
+<inquire polymarker representation>, index #4 as realized,
+  to determine rms = realized marker size scale factor
+pass/fail depending on (rms app= minsc)
+
+skip_coerce:
+
+if (nams not= 0) goto done
+
+TEST: #SR 11 15 39
+      "If the reported number of available marker sizes is zero,
+       then all marker sizes between the reported minimum and
+       maximum should be realizable."
+
+incr = (maxsc/minsc) ^ 0.25
+thisc = minsc
+for ix = 1 to 3
+   thisc = thisc * incr
+   <set polymarker representation>, index #4, scale_factor = thisc
+   <inquire polymarker representation>, index #4 as realized,
+      to determine rms = realized marker size scale factor
+   if (rms app= thisc) then
+      OK so far
+   else
+      fail
+      goto done
+   endif
+next ix
+pass
+
+done:
+
+END PROGRAM 7
+
+PROGRAM 8: Polymarker color index
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+loop thru color table to determine:
+  mci = maximum defined color index
+undci = mci + 1 = undefined color index
+
+<set polymarker representation>, index #5, polymarker color index = mci
+
+TEST: #SR 15 48 49
+      "<Inquire polymarker representation> should report a
+       defined polymarker colour index realized as itself."
+<inquire polymarker representation>, index #5 to determine
+   rpmci = realized polymarker color index
+if rpmci = mci then
+   pass
+else
+   fail
+   message about rpmci
+endif
+
+TEST: #SR 47
+      "Any non-negative color index should be accepted as valid."
+<set polymarker representation>, index #5, polymarker color index = undci
+if error signalled then
+   fail
+   message about undci
+else
+   pass
+endif
+
+TEST: #SR 15 48 50
+      "<Inquire polymarker representation> should report an
+       undefined polymarker colour index realized as 1."
+<inquire polymarker representation>, index #5 to determine
+   rpmci = realized polymarker color index
+if rpmci = 1 then
+   pass
+else
+   fail
+   message about rpmci
+endif
+
+END PROGRAM 8
+
+
+PROGRAM 9: Appearance of predefined polymarker bundles
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES 1-5: This
+screen displays 6 pairs (consisting of the first 5, with one
+repeated) of predefined polymarker bundles and individual
+polymarkers.  Identify the pair of polymarkers that is different.
+
+WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES > 5: This
+screen displays several pairs (at most 8) of predefined
+polymarker bundles and individual polymarkers.  Identify the pair
+of polymarkers that is different.
+
+PREDEFINED POLYMARKER BUNDLES: This screen displays a sample (at
+most 8) of predefined polymarker bundles and their bundle values
+for marker type, marker size scale factor, and color index, as
+reported by <inquire predefined polymarker representation>.  For
+each displayed bundle, verify that 1) the actual appearance of
+the polymarker agrees with the aspect values reported on the
+screen and 2) these both agree with any external documentation
+provided by the implementor.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+use <inquire polymarker facilities> to determine:
+  nprei  = number of predefined bundles
+
+*** *** ***   predefined polymarker bundles 1-5
+
+numbun = 6
+bundis = bundles to be displayed (1 to 5, with one repeated)
+bundif = location of repeated bundle identifier (so that all 5
+         may be verified)
+
+TEST: #SR 3 6 20 24
+      "Immediately after <open workstation>, the first five
+       defined polymarker bundles of the WSL should appear as
+       specified in the corresponding predefined polymarker
+       bundles of the WDT."
+
+The actual results (polymarkers drawn from initial state of WSL)
+are drawn on the left side of the picture. The corresponding
+expected results (polymarker with individual attributes taken
+from WDT) are drawn on the right side, except for one
+polymarker which will be different.
+
+display and label actual results from bundis.
+
+set marker type, marker size and color index ASF to individual
+
+for ix = 1, numbun
+   <inquire predefined polymarker representation> on index
+        bundis(ix), determine:
+      pdmt = predefined marker type
+      pdmw = predefined marker size scale factor
+      pdci = predefined polymarker color index
+    if (ix = bundif) then
+       pdmt = (pdmt mod 5) + 1
+       pdmw = pdmw * 1.25
+       pdci = (pdci mod 5) + 1
+    endif
+    draw polymarker with pdmt, pdmw, pdci
+next ix
+
+OPQA/WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES 1-5:
+   Which pair of markers does NOT match?
+pass/fail depending on (operator selects bundif)
+
+*** *** ***   predefined polymarker bundles > 5
+
+if nprei <= 5 then
+   skip to end_comp_tables
+endif
+
+numbun = min (8, nprei-5)
+bundis = distinct bundles to be displayed - randomly chosen
+         from [6,nprei] predefined bundles
+
+TEST: #SR 3 6 20 24
+      "Immediately after <open workstation>, the defined
+       polymarker bundles > 5 of the WSL should appear as
+       specified in the corresponding predefined polymarker
+       bundles of the WDT."
+
+The actual results (polymarkers drawn from initial state of WSL)
+are drawn on the left side of the picture. The corresponding
+expected results (polymarker with individual attributes copied
+from WDT) are drawn on the right side, except for one
+polymarker which will be different.
+
+display and label bundis
+
+bundif = randomly selected bundle from bundis
+set marker type, marker size and color index ASF to individual
+
+for ix = 1, numbun
+   <inquire predefined polymarker representation> on index
+        bundis(ix), determine
+      pdmt = predefined marker type
+      pdmw = predefined marker size scale factor
+      pdci = predefined polymarker color index
+    if (ix = bundif) then
+       pdmt = (pdmt mod 5) + 1
+       pdmw = pdmw * 1.25
+       pdci = (pdci mod 5) + 1
+    endif
+    draw polymarker with pdmt, pdmw, pdci
+next ix
+
+OPQA/WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES > 5:
+   Which pair of markers does NOT match?
+pass/fail depending on (operator selects bundif)
+
+end_comp_tables:
+
+*** ***  predefined bundle descriptions   *** ***
+
+TEST: #SR 3 6 20
+      "The appearance of predefined polymarker bundles should
+       agree with the descriptions supplied by the implementor."
+
+numbun = min(8, nprei)
+bundis = distinct bundles to be displayed, sorted
+
+for ix = 1 to numbun
+   <inquire predefined polymarker representation> for index ix, determine
+      pdmt = marker type
+      pdmw = marker size scale factor
+      pdci = polymarker color index
+   display and label ixth entry in bundis and its pdmt, pdmw, pdci
+next ix
+
+OPQA/PREDEFINED POLYMARKER BUNDLES: Does the appearance of each
+  polymarker agree with the displayed aspect values for that bundle?
+if (operator responds "yes") then
+   OPQA/PREDEFINED POLYMARKER BUNDLES: If the implementor provides
+      external documentation, is it consistent with the polymarker
+      appearance and displayed aspect values for every bundle
+      identifier?
+   pass/fail depending on (operator responds "yes")
+else
+   fail
+endif
+
+END PROGRAM 9
+
+
+PROGRAM 10: Polymarker bundle index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEFINED POLYMARKER INDICES: All markers but one are identical
+(drawn with the same attributes).  Identify the marker that is
+different.
+
+UNDEFINED POLYMARKER INDICES: One marker is drawn above the line
+and several markers beneath it.  Normally, all of these will have
+the same attributes.  Count up and report the number of markers
+below the line which match the marker above the line in marker
+type, marker size, and color.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+<inquire workstation state table lengths> to determine maximum
+   number of entries in polymarker table
+szbt   = maximum size of bundle table
+
+*** *** ***   polymarker index
+
+TEST: #SR 3 4 5 6
+      "A defined polymarker index should cause the addressed
+       entry in the bundle table to be used when rendering a
+       polymarker."
+
+mscf = marker size scale factor = some reasonable value
+bundis = number of bundles to be displayed = min(8, szbt)
+initialize all of bundis to: marker type = 3,
+                             marker size scale factor = mscf
+                             color index = 1
+
+bundif = randomly selected bundle from bundis
+set bundif = marker type   = 2
+             marker size scale factor = 0.5 * mscf
+             color      = 2
+
+Display and label a polymarker for each bundle in bundis
+
+OPQA/DEFINED POLYMARKER INDICES: which marker is different?
+pass/fail depending on (marker with attributes from bundle #bundif
+                        selected)
+
+TEST: #SR 3 4 5 7
+      "An undefined polymarker index should cause bundle number 1
+       in the polymarker bundle table to be used when rendering a
+       polymarker."
+
+set ASFs to individual and draw marker with
+   marker type = 4
+   marker size = mscf
+   color index = 2
+draw a line beneath this marker
+
+reset ASFs to bundled
+
+set index #1 in bundle table to marker type   = 4
+                                marker size   = mscf
+                                marker color  = 2
+
+u1,u2,u3 = 3 undefined, positive indices - all greater than
+  maximum defined index in bundle table (szbt)
+explct = number of explicit markers using bundle #1 = random integer
+   from 0 to 4
+
+display interleaved:
+  three markers using bundle index u1,u2,u3,
+  explct markers using bundle index 1
+
+OPQA/UNDEFINED POLYMARKER INDICES: How many of the markers
+  below the line have the same attributes as the marker above the
+  line?
+pass/fail depending on response = 3+explct
+
+END PROGRAM 10
+
+
+PROGRAM 11: Appearance of bundled attributes
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+MANDATORY MARKER TYPES: This screen should display examples of
+each of the mandatory marker types actually supported by the
+implementation.  You should not consider whether all 5 are
+present, but simply whether each marker type is recognizable from
+the verbal description.  Enter a list of integers which identify
+the marker types in the same order as they appear in the prompt.
+
+NON-MANDATORY REGISTERED MARKER TYPES: This screen displays a
+sample of supported registered marker types (at most 8).  For
+each displayed marker, look up its marker type identifier in the
+ISO register and verify that the actual appearance of the marker
+agrees with the ISO specification.
+
+IMPLEMENTOR DEFINED MARKER TYPES: This screen displays a sample
+of implementor defined marker types (at most 8).  For each
+displayed marker, look up its marker type identifier in the
+implementor's documentation and verify that the actual appearance
+of the marker agrees with the specification.
+
+VARIOUS MARKER SIZE SCALE FACTORS: Normally, several pairs of
+plus signs are drawn.  Identify the pair (only one) where both
+markers (plus sign) are the same size.  In case the marker size
+is too large for several to fit on the screen, only one is drawn
+and its size must fit within the surrounding circle.  Since this
+is centered on the screen it may (validly) overlap the dialog
+area.
+
+POSITIVE MARKER SIZE BELOW MINIMUM: as above, for VARIOUS MARKER
+SIZE SCALE FACTORS.
+
+NEGATIVE MARKER SIZE: as above, for VARIOUS MARKER SIZE SCALE
+FACTORS.
+
+POSITIVE MARKER SIZE ABOVE MAXIMUM: as above, for VARIOUS MARKER
+SIZE SCALE FACTORS.
+
+MARKER SIZE OF MARKER TYPE 1: This screen displays several dots
+to the right of a vertical line and one dot, the reference dot,
+to the left of the line.  Count up and report the number of dots
+(on the right) which are the same size as the reference dot.
+
+DEFINED POLYMARKER COLOR INDICES: All markers but one are drawn
+in the background color.  Identify the single marker drawn in the
+default foreground color.
+
+UNDEFINED POLYMARKER COLOR INDICES: A star is drawn with several
+markers beneath it.  Normally, all of these will be the same
+color as the star.  Count up and report the number of markers
+which match the star in color.
+
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+use <inquire polymarker facilities> to determine:
+  nummt  = number of marker types
+  lavsmt = list of available standard marker types
+  lavrmt = list of available registered (non-mandatory) marker types
+  lavimt = list of available implementor-defined marker types
+           (may be derived directly from marker type value, if
+            reported number of marker types < 0)
+  nummw  = number of available marker-sizes
+  nommw  = nominal marker-size (DC)
+  minmw,maxmw = minimum,maximum marker-size (DC)
+
+use <inquire workstation state table lengths> to determine:
+   szbt = size of polymarker bundle table
+
+*** *** ***   marker type
+
+Use default background color=0, foreground=1
+
+stddx = size of lavsmt
+mscf = marker size scale factor = some reasonable value
+
+for ix = 1, stddx
+  <set polymarker representation>:
+   index           = ix
+   marker type     = ixth entry in lavsmt
+   marker size     = mscf
+   color           = 1
+next ix
+
+Display in random order bundles 1 thru stddx
+
+TEST: #SR 3 4 5 6 35 36
+      "The mandatory marker types (1-5) should be recognizable
+       from their standard description."
+
+OPQA/MANDATORY MARKER TYPES: List in order, the numeric labels for
+  marker types: dot, plus sign, asterisk, circle, diagonal cross.
+
+pass/fail depending on (all displayed marker types correctly identified)
+
+regdx = size of lavrmt
+if regdx < 1 skip to neg_type
+
+numdis = min(regdx, 8, szbt)
+lindis = numdis entries, randomly chosen from lavrmt
+
+for ix = 1, numdis
+   <set polymarker representation>:
+      index        = ix
+      marker type  = ixth entry in lindis
+      marker size  = mscf
+      color        = 1
+next ix
+
+display in order and label bundles 1 thru numdis
+
+TEST: #SR 3 4 5 6 35 37
+      "The registered non-mandatory marker types (> 5) should
+       agree with their registered description."
+
+OPQA/NON-MANDATORY REGISTERED MARKER TYPES: is each marker type
+  depicted according to its numberic identifier's specification
+  in the ISO register?
+
+pass/fail depending on (operator responds "yes")
+
+neg_type:
+
+impdx = size of lavimt
+if impdx < 1 skip to end_marker type
+
+numdis = min(impdx, 8 szbt)
+lindis = numdis entries, randomly chosen from lavimt
+
+for ix = 1, numdis
+   <set polymarker representation>:
+      index        = ix
+      marker type  = ixth entry in lindis
+      marker size  = mscf
+      color        = 1
+next ix
+
+display in order and label all marker types in mardis
+
+TEST: #SR 3 4 5 6 35 38
+      "Implementor-defined marker types (< 1) should agree with
+       the descriptions supplied by the implementor."
+
+OPQA/IMPLEMENTOR DEFINED MARKER TYPES: Is each marker type
+  depicted according to its numeric identifier's specification in
+  the implementor documentation?
+pass/fail depending on (operator responds "yes")
+
+end_marker type:
+
+*** *** ***   marker size scale factor
+
+from dialog common:
+  wcpdc  = WC unit / DC unit
+  qvis   = minimum distinguishable length in DC-units
+
+Are there at least two visually distinguishable marker sizes?
+if (nummw = 1)              or
+   (maxmw <= 1.02 * minmw)  or
+   (maxmw-minmw < qvis)    then
+   only one distinguishable:
+   tstmw1 = first marker size to be tested = maxmw
+   tstmw2 = last marker size to be tested = tstmw1
+   mult = 2
+else
+   tstmw1 = first marker size to be tested = minmw
+   tstmw2 =  last marker size to be tested = maxmw
+   if (nummw = 0) then
+      continuous range of marker sizes available - take 4
+         geometric steps
+      mult = 0.9999 * ((tstmw2/tstmw1) ** 0.25)
+   else
+      discrete set of marker sizes available - test min/max only
+      mult = 0.9999 * (tstmw2/tstmw1)
+   endif
+endif
+
+numpas = 0 = number of tests passed so far
+thismw = tstmw1
+
+loop thru various marker sizes
+next_mw:
+OPQA/VARIOUS MARKER SIZE SCALE FACTORS: invoke SHPMBW subroutine to
+  test bundle with requested marker size = thismw
+                   expected marker size = thismw
+if abort indicated
+   if (numpas < 2) then
+      message about marker size too big for the screen
+      goto min_max_coerce
+   else
+      goto do_test_msg
+   endif
+elseif failure indicated
+   numpas = 0
+   goto do_test_msg
+endif
+
+numpas = numpas+1
+set up for next marker size to be tested:
+thismw = thismw * mult
+if thismw <= tstmw2 goto next_mw
+
+do_test_msg:
+TEST: #SR 3 4 5 6 42 43 44
+      "Available marker size scale factors should control the
+       realized size of a polymarker."
+pass/fail depending on (numpas > 0)
+
+min_max_coerce:
+
+TEST: #SR 3 4 5 6 42 43 45
+      "A requested positive marker size scale factor below the
+       minimum available should be realized as the minimum."
+OPQA/POSITIVE MARKER SIZE BELOW MINIMUM: invoke subroutine SHPMBW
+  to test bundle with requested marker size = minmw/2
+                       expected marker size = minmw
+pass/fail depending on return code from SHPMBW
+
+TEST: #SR 3 4 5 6 42 43 45
+      "A requested negative marker size scale factor should be
+       realized as the minimum."
+OPQA/NEGATIVE MARKER SIZE: invoke subroutine SHPMBW to test
+  bundle with requested marker size = -maxmw-100
+               expected marker size =  minmw
+pass/fail depending on return code from SHPMBW
+
+OPQA/POSITIVE MARKER SIZE ABOVE MAXIMUM: invoke subroutine SHPMBW
+  to test bundle with requested marker size = maxmw*2
+                       expected marker size = maxmw
+if abort indicated
+   message about marker size too big for the screen
+else
+   TEST: #SR 3 4 5 6 42 43 45
+         "A requested marker size scale factor above the maximum
+          available should be realized as the maximum."
+   pass/fail depending on return code from SHPMBW
+endif
+
+*** *** *** marker type 1
+
+nummar = number of markers to be drawn = random integer from 3 to 7
+lmssf = list of marker sizes, contains:
+   minmw/2, maxmw*2, -2.76, (minmw+maxmw)/2, minmw, maxmw, nommw
+
+for ix = 1, nummar
+   <set polymarker representation>:
+      index        = ix
+      marker type  = 1 (dot)
+      marker size  = lmssf(ix)
+      marker color = 1
+next ix
+
+draw reference marker (dot) and vertical line separator
+
+draw bundles 1 thru nummar
+
+TEST: #SR 3 4 5 6 42 43 46
+      "Marker type 1 should be rendered as the smallest
+       displayable dot, regardless of the marker size scale
+       factor value."
+
+OPQA/MARKER SIZE OF MARKER TYPE 1: How many dots to the right of
+  the vertical line are the same size as the dot to the left of the
+  line?
+pass/fail depending on (number of dots = nummar)
+
+*** *** *** polymarker color index
+
+TEST: #SR 3 4 5 6 47 48 49
+      "A defined polymarker color index should cause the
+       addressed entry in the color table to be used when
+       rendering a polymarker."
+
+bckcol = background color = realized color spec for entry #0
+forcol = foreground color = realized color spec for entry #1
+
+szcolt = maximum size of color table (including entry #0)
+numdis = number of markers to be drawn = min(8, szcolt, szbt)
+mkcol  = random permutation of #0,#1, and nummar-2 random choices
+         from entries #2 to #szcolt-1
+visdx = from mkcol, randomly select an entry to be made visible
+        but not the one that contains 0, since this may not be
+        re-settable.
+
+for ix = 1 to numdis
+   set entry mkcol(ix) to bckcol
+   <set polymarker representation>:
+      index        = ix
+      marker type  = 3
+      marker size  = mscf
+      color index  = mkcol(ix)
+next ix
+
+set entry mkcol(visdx) in color table to forcol
+Display bundles 1 thru numdis and label them
+
+OPQA/DEFINED POLYMARKER COLOR INDICES: Which marker is visible?
+pass/fail depending on (response = marker colored by visdx)
+
+end_def_col:
+
+TEST: #SR 3 4 5 6 47 48 50
+      "An undefined polymarker color index should cause entry
+       number 1 in the color table to be used when rendering
+       a polymarker."
+
+set entry #1 in color table opposite from BCKCOL
+set entry #1 different from FORCOL - make sure undefined default
+  to *current* color-rep of #1, not just a predefined color.
+
+expmct = number of explicit markers of color #1 = random integer
+   from 0 to min(4, szbt-3)
+u1,u2,u3 = 3 undefined, positive color indices - all greater
+  than maximum defined entry in color table
+
+draw star with color #1
+
+set up bundles 1 thru 3 to marker type=1, size=mscf, color index= undf(1,2,3)
+set up bundles 4 thru (expmct+3) to marker type=1, size=mscf, color index=1
+
+display in random order bundles #1 thru expmct+3
+
+OPQA/UNDEFINED POLYMARKER COLOR INDICES: How many markers are the
+  same color as the star?
+pass/fail depending on response = 3+expmct
+
+END PROGRAM 11
+
+
+PROGRAM 12: Network inheritance and initialization of polymarker
+            index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR POLYMARKER INDEX: This screen
+displays several left-right pairs of polymarkers.  Make sure that
+all pairs except one have matching marker types, marker size, and
+colors.  Identify the non-matching pair.
+
+DESIGN:
+
+All test cases use same basic structure network for testing
+inheritance.  Five (distinct if possible) values for the
+attribute to be tested are set up and propagated throughout the
+network.  The first value is the system default from the PDT.
+Note that structure #104 is executed by both #103 and #101.
+Actual results are displayed on the left, expected results
+on the right, with the 14th deliberately made incorrect.
+
+default = val#1
+  |                  102
+  |                 /  prim 2
+  |               /    attr = val#3   val#3
+  V        val#1/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   attr = val#4
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  attr = val#2                                  prim 7    \ val#4
+  prim 10                                                   \
+  transform             val#2                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        attr = val#5
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+*** *** ***   inheritance for polymarker index *** *** ***
+
+use <inquire polymarker facilities> to determine:
+  nummt  = number of marker types
+  nummw  = number of available marker sizes
+  nommw  = nominal marker size (DC)
+  minlw,maxlw = minimum,maximum marker size (DC)
+
+get alternative marker size value:
+altmw1 should not exceed .05 (WC) to avoid overlap - distance
+  between markers will be 1/15 = .06666
+
+call DISCOL to try to get 5 distinct foreground colors,
+  returning fcol = actual number of foreground colors
+colind[1..5] = [1,2,3,4,5]
+if (fcol < 5) then
+   copy 1st valid part of list to tail of list
+endif
+
+set up bundles 1-5
+
+   bundle
+   index     marker type marker size  color index
+   ------    --------    ---------    -----------
+     1          1          1.0        colind(1)
+     2          2          altmw1     colind(2)
+     3          3          1.0        colind(3)
+     4          4          altmw1     colind(4)
+     5          5          1.0        colind(5)
+
+randomize location of polymarkers
+set up CSS as described above
+set all ASFs to BUNDLED
+
+display 14 pairs of polymarkers, using bundles 1-5
+
+TEST: #SR 3 5 6 8 9
+      "The polymarker index should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR POLYMARKER INDEX:
+  which pair of markers does NOT match?
+pass/fail depending on response = position of polymarker 14
+
+END PROGRAM 12

@@ -1,0 +1,360 @@
+TITLE: Structure error indicators
+
+MODULE#: 09.02.05
+
+DESCRIPTION: This module tests that the functions related to structures
+set the specified structure error to error indicator if they are executed
+in an incorrect condition.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   If functions <inquire conflicting structures in network>,<inquire set
+of workstations to which posted>,<inquire element type and sizes>,<inquire
+element content>,<inquire paths to ancestors>,<inquire paths to descendants>
+are called, and the specified structure does not exist, then the error
+indicator is set to 201.
+#F 214 300 305 306 308 309 310
+#D 4.5.1
+#S 4.11/109/1 5.12.1/232/1
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8
+
+SR2.   If functions <inquire element type and size>,<inquire element content>
+are called, and the specified element does not exist, then the error
+indicator is set to 202.
+#F 305 306
+#D 7.3
+#S 4.11/109/1 5.12.1/232/1
+#T P02/1 P02/2
+
+SR3.   If functions <incremental spatial search 3>,<incremental spatial
+search> are called, and the specified starting path is not found in CSS,
+then the error indicator is set to 203.
+#F 311 312
+#D 4.5
+#S 4.11/109/1 5.12.1/232/1
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+
+SR4.   If functions <incremental spatial search 3>,<incremental spatial
+search> are called, and the specified search ceiling index is out of
+range, then the error indicator is set to 204.
+#F 311 312
+#D 4.5
+#S 4.11/109/1 5.12.1/232/1
+#T P04/1 P04/2
+
+SR5.  If functions <inquire paths to ancesters>,<inquire paths to
+descendants> are called, and the specified path depth is less than
+zero, then the error indicator is set to 207.
+#F 308 309
+#D 4.5
+#S 4.11/109/1 5.12.1/232/1
+#T P05/1 P05/2
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  214: pqcstn  <inquire conflicting structures in network>
+  300: pqwkpo  <inquire set of workstations to which posted>
+  305: pqets   <inquire element type and size>
+  306: pqeco   <inquire element content>
+  308: pqpan   <inquire paths to ancestors>
+  309: pqpde   <inquire paths to descendants>
+  310: pels    <element search>
+  311: piss3   <incremental spatial search 3>
+  312: piss    <incremental spatial search>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.5  ...  list_of_structure_identifiers
+  4.5.1  ...  structure_identifier
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+ 
+
+
+PROGRAM 1: Error indicator = 201
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 214,300,305,306,308,309,310 with a structure which is
+not exist to test if they set number 201 to the error indicartor: Ignoring
+function, the specified structure does not exist.
+
+<open sturcture> 101
+<execute structure> 102
+<close structure>
+<open structure> 102
+<ppl>
+<close sturcture>
+
+<open archive file> arid, arnm
+<archive all structures>
+
+<inquire conflicting structures in network> with sturcture id=100,
+     structure network source=CSS : error indicator = 201
+TEST: #SR 1
+      "If <inquire conflicting structures in network> is called and the
+       specified structure does not exist, it should return error indicator
+       = 201."
+pass/fail depending on (returned error indicator = 201)
+
+<inquire conflicting structures in network> with structure id=100,
+     structure network source=ARCHIVE : error indicator = 201
+TEST: #SR 1
+      "If <inquire conflicting structures in network> is called and the
+       specified structure does not exist, it should return error indicator
+       = 201."
+pass/fail depending on (returned error indicator = 201)
+
+<close archive file> arid
+
+<open workstation> wkid
+<post structure> 102
+<inquire set of workstations to which posted> with structure id=100 :
+     error indicator = 201
+TEST: #SR 1
+      "If <inquire set of workstations to which posted> is called and the
+       specified structure does not exist, it should return error indicator
+       = 201."
+pass/fail depending on (returned error indicator = 201)
+<close workstation>
+
+<inquire element type and size> with structure id=100
+TEST: #SR 1
+      "If <inquire element type and size> is called and the specified
+       structure does not exist, it should return error indicator = 201."
+pass/fail depending on (returned error indicator = 201)
+
+<inquire element content> with structure id=100
+TEST: #SR 1
+      "If <inquire element content> is called and the specified structure
+       does not exist, it should return error indicator = 201."
+pass/fail depending on (returned error indicator = 201)
+
+<inquire paths to ancestors> with structure id=100
+TEST: #SR 1
+      "If <inquire paths to ancestors> is called and the specified structure
+       does not exist, it should return error indicator = 201."
+pass/fail depending on (returned error indicator = 201)
+
+<iqnuire paths to descendants> with structure id=100
+TEST: #SR 1
+      "If <inquire paths to descendants> is called and the specified
+       structure does not exist, it should return error indicator = 201."
+pass/fail depending on (returned error indicator = 201)
+
+<element search> with structure id=100
+TEST: #SR 1
+      "If <element search> is called and the specified
+       structure does not exist, it should return error indicator = 201."
+pass/fail depending on (returned error indicator = 201)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error indicator = 202
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 305, 306 with a specified element which does not exist
+to test if they set number 202 to the error indicator: ignoring function,
+the specified element does not exist.
+
+<open structure> 100
+<ppl>
+<close structure>
+
+<inquire element type and size>
+TEST: #SR 2
+      "If <inquire element type and size> is called and the specified
+       element does not exist, it should return error indicator = 202."
+pass/fail depending on (returned error indicator = 202)
+
+<inquire element content> with element position=2
+TEST: #SR 2
+      "If <inquire element content> is called and the specified element
+       does not exist, it should return error indicator = 202."
+pass/fail depending on (returned error indicator = 202)
+
+END PROGRAM 2
+
+
+
+PROGRAM 3: Error indicator = 203
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 311, 312 with a starting path which does not exist in CSS
+to test if they set 203 to error indicator: ignoring function, specified
+starting path is not found in CSS.
+
+<open structure> 101
+<execute structure> 102
+<close structure>
+
+<open structure> 102
+<polymrker 3> at (1.,1.,1.)
+<close structure>
+
+SRP = (1.,1.,1.)
+search distance = 0.1
+search ceiling = 1
+cliping flag = OFF
+
+starting path = (101, 2)
+<incremental spatial search 3>
+TEST: #SR 3
+      "If <incremental spatial search 3> is called and the specified
+       starting path is not found in CSS, it should return error indicator
+       = 203."
+pass/fail depending on (returned error indicator = 203)
+
+starting path = (102, 2)
+<incremental spatial search 3>
+TEST: #SR 3
+      "If <incremental spatial search 3> is called and the specified
+       starting path is not found in CSS, it should return error indicator
+       = 203."
+pass/fail depending on (returned error indicator = 203)
+
+starting path = (103, 1)
+<incremental spatial search 3>
+TEST: #SR 3
+      "If <incremental spatial search 3> is called and the specified
+       starting path is not found in CSS, it should return error indicator
+       = 203."
+pass/fail depending on (returned error indicator = 203)
+
+Change structure 102:
+<open structure> 102
+<polymarker> at (1.,1.)
+<close structure>
+
+SRP = (1.,1.)
+
+starting path = (101, 2)
+<incremental spatial search>
+TEST: #SR 3
+      "If <incremental spatial search> is called and the specified
+       starting path is not found in CSS, it should return error indicator
+       = 203."
+pass/fail depending on (returned error indicator = 203)
+
+starting path = (102, 2)
+<incremental spatial search>
+TEST: #SR 3
+      "If <incremental spatial search> is called and the specified
+       starting path is not found in CSS, it should return error indicator
+       = 203."
+pass/fail depending on (returned error indicator = 203)
+
+starting path = (103, 1)
+<incremental spatial search>
+TEST: #SR 3
+      "If <incremental spatial search> is called and the specified
+       starting path is not found in CSS, it should return error indicator
+       = 203."
+pass/fail depending on (returned error indicator = 203)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Error indicator = 204
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 311,312 with the search ceiling index out of range to test if
+they set number 204 to the error indicator: ignoring function, specified
+search ceiling index out of range.
+
+<open structure> 101
+<execute structure> 102
+<close structure>
+
+<open structure> 102
+<polymrker 3> at (1.,1.,1.)
+<close structure>
+
+SRP = (1.,1.,1.)
+search distance = 0.1
+starting path = (101, 1)
+cliping flag = OFF
+
+search ceiling index = 2
+<incremental spatial search 3>
+TEST: #SR 4
+      "If <incremental spatial search 3> is called and the specified search
+       ceiling index is out of range, it should return error indicator
+       = 204."
+pass/fail depending on (returned error indicator = 204)
+
+Change structure 102:
+<open structure> 102
+<polymarker> at (1.,1.)
+<close structure>
+
+SRP = (1.,1.)
+
+search ceiling index = 2
+<incremental spatial search>
+TEST: #SR 4
+      "If <incremental spatial search> is called and the specified search
+       ceiling index is out of range, it should return error indicator
+       = 204."
+pass/fail depending on (returned error indicator = 204)
+
+END PROGRAM 4
+
+
+
+PROGRAM 5: Error indicator = 207
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 308,309 with a path depth less than zero to test if they
+set number 207 to the error indicator: ignoring function, the specified
+path depth is less than zero.
+
+<open structure> 101
+<execute structure> 102
+<close structure>
+
+<open structure> 102
+<polymarker> at (2., 2.)
+<close structure>
+
+<inquire paths to ancestors> with path depth = -1
+TEST: #SR 5
+      "If <inquire paths to ancestors> is called and the specified path depth
+       is less than zero, it should return error indicator = 207."
+pass/fail depending on (returned error indicator = 207)
+
+<inquire paths to descendants> with path depth = -5
+TEST: #SR 5
+      "If <inquire paths to descendants> is called and the specified path
+       depth is less than zero, it should return error indicator = 207."
+pass/fail depending on (returned error indicator = 207)
+
+END PROGRAM 5
+
+

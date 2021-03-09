@@ -1,0 +1,87 @@
+      SUBROUTINE E03113 (USEPRM)
+
+C  E03113 tests the handling of error 113.
+
+      COMMON /GLOBNU/ CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT, DUMRL
+      INTEGER         CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT(20), ERRIND
+      REAL    DUMRL(20)
+
+      COMMON /ERRINF/ ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR,
+     1                USRERR, ERRSAV,      FUNSAV,      FILSAV,
+     2                EFCNT, EFID
+      INTEGER         ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR(10),
+     1                USRERR, ERRSAV(200), FUNSAV(200), FILSAV(200),
+     2                EFCNT, EFID(100)
+      COMMON /ERRCHR/ CURCON,     ERRSRS,    ERRMRK,    ERFLNM,
+     1                CONTAB
+      CHARACTER       CURCON*200, ERRSRS*40, ERRMRK*20, ERFLNM*80,
+     1                CONTAB(40)*150
+
+C  interior styles
+      INTEGER      PHOLLO,   PSOLID,    PPATTR,    PHATCH,   PISEMP
+      PARAMETER   (PHOLLO=0, PSOLID=1,  PPATTR=2,  PHATCH=3, PISEMP=4)
+C  type of return value
+      INTEGER      PSET,     PREALI
+      PARAMETER   (PSET=0,   PREALI=1)
+
+      INTEGER   SIZB4,SIZAFT, USEPRM, COL(1,1), ISIZ,MKTYPE,MKCOLO
+      INTEGER   SPECWT, IDUM1
+      REAL      CSPEC(3), MKSCAL
+      LOGICAL   STREQ, STRCON, APPEQ, INTSTY
+
+      CURCON = 'the colour index value is less than zero'
+      CALL SETVS ('113', EXPERR, EXPSIZ)
+      ERRSRS = '12'
+      CALL ESETUP (USEPRM)
+
+      CALL POPST (101)
+      CALL PLB   (801)
+      CALL RSPLCI (-1)
+      CALL TSTIGN (STREQ('O*O*') .AND. STRCON(101, '67,801'))
+
+      CALL RSTXCI (-1)
+
+      CALL RSEDCI (-1)
+      CALL TSTIGN (STREQ('O*O*') .AND. STRCON(101, '67,801'))
+
+      CALL PCLST
+
+      CALL POPWK (WKID, CONID, WTYPE)
+      CALL PQWKC (WKID, ERRIND, CONID, SPECWT)
+      CALL CHKINQ ('pqwkc', ERRIND)
+
+      CALL PSPMR (WKID, 2, 1,  .5,  1)
+      CALL RSPMR (WKID, 2, 2, 1.0, -1)
+      CALL PQPMR (WKID, 2,PSET,ERRIND,MKTYPE,MKSCAL,MKCOLO)
+      CALL CHKINQ ('pqpmr', ERRIND)
+      CALL TSTIGN (STREQ('OO**')               .AND.
+     1             MKTYPE.EQ.1                 .AND.
+     2             APPEQ(MKSCAL,0.5,0.01,0.01) .AND.
+     3             MKCOLO.EQ.1)
+
+      CALL RSIR (WKID, 1, PHOLLO, 1, -1)
+
+      COL(1,1) = -1
+      IF (INTSTY (SPECWT, PPATTR)) THEN
+         CALL RSPAR (WKID, 1, 1,1,1,1,1,1, COL)
+      ENDIF
+
+      CALL PQECI (WKID, 0, ERRIND, SIZB4, IDUM1)
+      CALL CHKINQ ('pqeci', ERRIND)
+      CALL SETRVS ('0.5,0.5,0.5', CSPEC,ISIZ)
+      CALL RSCR (WKID, -1, 3, CSPEC)
+      CALL PQECI (WKID, 0, ERRIND, SIZAFT, IDUM1)
+      CALL CHKINQ ('pqeci', ERRIND)
+      CALL TSTIGN (STREQ('OO**') .AND. SIZB4.EQ.SIZAFT)
+
+      CALL PCLWK (WKID)
+
+      CALL ENDERR
+
+      END

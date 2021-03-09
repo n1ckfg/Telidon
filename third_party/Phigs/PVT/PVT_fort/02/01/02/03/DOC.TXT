@@ -1,0 +1,156 @@
+TITLE: Global structure deletion
+
+MODULE#: 02.01.02.03
+
+DESCRIPTION: This module tests the global deletion of structures using
+<delete all structures>.
+
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Delete all structures> removes all closed structures from the CSS.
+#F 128
+#D 7.1 4.5
+#S 4.4.5/29/7
+#T P01/1 P02/1
+
+SR2.   <Delete all structures> with an open structure causes the structure
+to exist as an open, empty structure in the CSS.
+#F 128
+#D 7.1 4.2 4.5
+#S 4.4.5/29/7
+#T P02/2 P02/3
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  128: pdas    <delete all structures>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.2  ...  name_of_open_structure
+  4.5  ...  list_of_structure_identifiers
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+ 
+PROGRAM 1: Deletion of all closed structures
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+
+               100
+               / \
+             1/   \2
+             /     \
+          103       104     102
+         / \          \     / \
+       1/   \2        1\  1/   \2
+       /     \          \ /     \
+     105     105        106     109
+                        / \     / \
+                      1/   \2 1/   \2
+                      /     \ /     \
+                    107     108     110
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-2) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 1
+      "<Delete all structures> should remove all the closed structures
+       contained in the CSS."
+
+<delete all structures>
+
+Use <inquire structure identifiers> to determine
+    nstid = number of structure identifiers
+
+<inquire structure identifiers> nstid
+pass/fail depending on (nstid = 0)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Deletion of all structures with an open structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+
+               100
+               / \
+             1/   \2
+             /     \
+          103       104     102
+         / \          \     / \
+       1/   \2        1\  1/   \2
+       /     \          \ /     \
+     105     105        106     109
+                        / \     / \
+                      1/   \2 1/   \2
+                      /     \ /     \
+                    107     108     110
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-2) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 1
+      "<Delete all structures> with an open structure should
+       remove all closed structures from the CSS."
+
+strid = 106
+<open structure> strid
+<delete all structures>
+
+Use <inquire structure identifiers> to determine
+    nstid = number of structure identifiers
+    nstr  = nth structure identifier
+
+<inquire structure identifiers> nstid, nstr
+pass/fail depending on (nstid = 1 and nstr = 106)
+
+TEST: #SR 2
+      "<Delete all structures> with an open structure should cause
+       that structure to exist in the CSS as an open structure."
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strref = structure id
+
+if (stype <> open  or
+    strid <> strref) then
+    fail
+else
+    pass
+    <close structure>
+endif
+
+TEST: #SR 2
+      "<Delete all structures> with an open structure should cause
+       that structure to exist in the CSS as an empty structure."
+
+use <inquire structure status> on strid to determine
+    strsti = structure status idenitifier
+
+pass/fail depending on (strsti = empty)
+
+
+END PROGRAM 2
+

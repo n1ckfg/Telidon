@@ -1,0 +1,346 @@
+TITLE: Annotation text relative
+
+MODULE#: 04.01.04
+
+DESCRIPTION: This module tests that annotation text relative primitives
+are rendered correctly and that a program can set up an annotation text
+relative element in the CSS, which will create a primitive upon traversal.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** ***   <Annotation text relative 3 element>   *** *** ***
+
+SR1.   <Annotation text relative 3> creates an annotation text
+relative 3 element in the CSS.
+#F 15
+#D 7.3.1.7
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/1 P01/2
+
+SR2.   If current element is annotation text relative 3 then
+<inquire current element type and size> returns the element type
+as annotation text relative 3 and the appropriate element size.
+#F 303
+#D 7.3.1.7
+#S 4.4.4/29/5
+#T P01/1
+
+SR3.   If current element is annotation text relative 3 then
+<inquire current element content> returns the appropriate data
+for annotation text relative 3.
+#F 304
+#D 7.3.1.7
+#S 4.4.4/29/5
+#T P01/2
+
+*** *** ***   <Annotation text relative element>   *** *** ***
+
+SR4.   <Annotation text relative> creates an annotation text
+relative element in the CSS.
+#F 16
+#D 7.3.1.8
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/3 P01/4
+
+SR5.   If current element is annotation text relative then
+<inquire current element type and size> returns the element type
+as annotation text relative and the appropriate element size.
+#F 303
+#D 7.3.1.8
+#S 4.4.4/29/5
+#T P01/3
+
+SR6.   If current element is annotation text relative then
+<inquire current element content> returns the appropriate data
+for annotation text relative.
+#F 304
+#D 7.3.1.8
+#S 4.4.4/29/5
+#T P01/4
+
+*** *** ***   Display of annotation text primitives   *** *** ***
+
+SR7.   The <annotation text relative> and <annotation text
+relative 3> primitives are rendered by displaying the specified
+character string at the annotation point in the containing X-Y
+plane in NPC.
+#F 15 16
+#D 7.3.1.7 7.3.1.8
+#S 4.5.1/34/1 4.5.6/55/1
+#T P02/1 P02/2 P02/3 P02/4
+#X 04.02.04.01
+
+SR8.   For the <annotation text relative> primitive, the z
+coordinates of both the reference point and annotation offset
+equal zero.
+#F 16
+#D 7.3.1.8
+#S 4.5.1/34/1
+#T P02/2 P02/3 P02/4
+#X 04.02.04.01
+
+SR9.   The NPC annotation point is calculated as the transformed
+(from MC to NPC) reference point plus the annotation offset.
+#F 15 16
+#D 7.3.1.7 7.3.1.8
+#S 4.5.1/34/1 4.5.6/55/1
+#T P02/2 P02/3 P02/4
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   15: patr3   <annotation text relative 3>
+   16: patr    <annotation text relative>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.7  ...  annotation_text_relative_3
+  7.3.1.8  ...  annotation_text_relative
+ 
+
+
+PROGRAM 1: Annotation text relative element
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> throughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+*** *** ***   Annotation text relative 3 element  *** *** ***
+
+annotation reference point:
+xrefpt = 2.33
+yrefpt = 0.0
+zrefpt = 4e-4
+annotation offset:
+xannpt = -4.4
+yannpt = -99.99
+zannpt = 0.0001
+chastr = '*#Testing#* ..123'
+
+<annotation text relative 3> with xrefpt, yrefpt, zrefpt, xannpt, yannpt,
+                                  zannpt, chastr
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       annotation text relative 3 as the type of the created
+       element and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = annotation text relative 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for annotation text relative 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+*** *** ***   Annotation text relative element  *** *** ***
+
+<annotation text relative> with xrefpt, yrefpt, xannpt, yannpt, chastr
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       annotation text relative as the type of the created
+       element and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = annotation text relative and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 4 6
+      "<Inquire current element content> should return the standard
+       representation for annotation text relative."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Appearance of annotation text primitives
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+CHARACTER CONTENT: Two alphabetic annotation text primitives are
+displayed successively.  The operator must identify the sequence
+of characters in each.
+
+EFFECT OF REFERENCE POINT:  The screen displays six squares, each
+containing an annotation text primitive.  All but one of these
+should be outlined in a rectangle.  Identify the one not
+accurately outlined.
+
+EFFECT OF ANNOTATION OFFSET: same as EFFECT OF REFERENCE POINT,
+above.
+
+DESIGN:
+
+default attributes:
+font = 1
+precision = STROKE
+annotation text alignment = CENTER,HALF
+annotation text path = RIGHT
+annotation text style = 1 (no visual link between reference point and
+                           annotation point)
+annotation character height = 0.05
+polyline stype = solid
+polyline color = 3
+
+*** *** *** *** ***  character content  *** *** *** *** ***
+
+TEST: #SR 7
+      "A displayed annotation text primitive should contain
+       the specified character string."
+
+set annotation character height = 0.08
+set text font = 2
+chstr = string of 5 randomly chosen upper-case letters.
+
+display <annotation text relative 3> consisting of chstr:
+  reference position = 0.5, 0.5, 0.5
+  offset = 0., 0., 0.0
+
+OPQA/CHARACTER CONTENT: Enter the displayed character string.
+
+if (operator response not = chstr) then
+   fail
+   goto end_char
+endif
+
+set annotation character height = 0.08
+set text font = 1
+chstr = string of 5 randomly chosen lower-case letters
+
+display <annotation text relative> consisting of chstr:
+   reference point = 0.5, 0.5
+   offset = 0., 0.
+
+OPQA/CHARACTER CONTENT: Enter the displayed character string.
+pass/fail depending on (operator response = chstr)
+
+end_char:
+
+*** *** *** *** ***  effect of reference point    *** *** *** *** ***
+
+Divide screen up into 6 square labelled areas
+ngsq = no-good square containing error = random from 1 to 6
+chstr = "ABC"
+
+sider = list of 6 siders from which cube may be viewed =
+   front, back, left, right, top, bottom
+
+<inquire text extent> to get width and height of text extent rectangle
+   for chstr: xext, yext
+   ext = 0.5 * max(xext, yext)
+
+generate  reference point randomly to make the rectangle within the window
+   xrefpt = random from (ext, 1-ext)
+   yrefpt = random from (ext, 1-ext)
+   zrefpt = random from (ext, 1-ext)
+
+annotation offset = (0., 0., 0.)
+
+for ix = 1 to 6
+   rotate to view from sider(ix)
+   display the <annotation text relative 3>
+
+   calculate transformed position (x0, y0, z0) of (xrefpt,yrefpt,zrefpt)
+   set identity matrix as local transform matrix
+   if (ix = ngsq)  then
+      distort position (x0, y0, z0)
+   endif
+   draw 2D text extent rectangle centered at (x0, y0)
+next ix
+
+TEST: #SR 7 8 9
+      "The location of an annotation text primitive should reflect
+       its 3D reference point after being transformed."
+
+OPQA/EFFECT OF REFERENCE POINT: In which box is the annotation
+  text NOT accurately outlined by the rectangle?
+pass/fail depending on (operator identifies square #ngsq)
+
+ngsq = no-good square , random integer from 1 to 6
+generate a reference point :
+   xrefpt = random from (ext, 1-ext)
+   yrefpt = random from (ext, 1-ext)
+
+annotation offset = (0., 0.)
+
+for ix = 1 to 6
+   first, move text from Z=0 plane to somewhere in middle
+   rotate to view from sider(ix)
+   display the 2D annotation text in square #ix
+
+   calculate transformed position (x0, y0, z0) of (xrefpt, yrefpt, 0)
+   set identity matrix as local transform matrix
+   if (ix = ngsq)  then
+      distort position (x0, y0, z0)
+   endif
+   draw 2D text extent rectangle centered at (x0, y0)
+next ix
+
+TEST: #SR 7 8 9
+      "The location of an annotation text primitive should reflect
+       its 2D reference point after being transformed."
+
+OPQA/EFFECT OF REFERENCE POINT: In which box is the annotation
+  text NOT accurately outlined by the rectangle?
+pass/fail depending on (operator identifies square #ngsq)
+
+*** *** *** *** ***  effect of annotation offset  *** *** *** *** ***
+
+Divide screen up into 6 squares labelled areas - each with size=xsiz, ysiz
+ngsq = no-good square containing error = random from 1 to 6
+chstr = "ABC"
+
+for ix = 1 to 6
+   xrefpt,yrefpt,zrefpt = 1,1,1
+   scale reference point into center of box #ix
+     (make sure transformation does not affect offset)
+   xannpt,yannpt,zannpt = random offsets (MC converted to NPC),
+      so as to keep annotation text within square
+   if (ix <= 3) then
+      draw <annotation text relative 3> chstr
+         reference point = xrefpt, yrefpt, zrefpt
+         offset = xannpt, yannpt, zannpt
+   else
+      draw <annotation text relative> chstr
+         reference point = xrefpt, yrefpt
+         offset = xannpt, yannpt
+   endif
+
+   calculate (x0, y0, z0) = expected annotation point
+   if (ix = ngsq)  then
+      distort position (x0, y0, z0)
+   endif
+   draw 2D text extent rectangle centered at (x0, y0)
+
+next ix
+
+TEST: #SR 7 8 9
+      "An annotation text primitive should be displaced from the
+       reference point as specified by its annotation offset values."
+
+OPQA/EFFECT OF ANNOTATION OFFSET: In which box is the annotation
+  text NOT accurately outlined by the rectangle?
+pass/fail depending on (operator identifies square #ngsq)
+
+END PROGRAM 2

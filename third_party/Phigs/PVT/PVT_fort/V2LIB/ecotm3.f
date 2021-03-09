@@ -1,0 +1,11 @@
+      SUBROUTINE ECOTM3 (XFRMTI, X0,Y0,Z0, DX,DY,DZ, PHIX,PHIY,PHIZ,
+     1                   FX,FY,FZ, XFRMTO)
+
+      REAL   X0,Y0,Z0, DX,DY,DZ, PHIX,PHIY,PHIZ, FX,FY,FZ,
+     1       XFRMTI (4,4), XFRMTO (4,4), WKA(4,4)
+
+      CALL EBLTM3 (X0,Y0,Z0, DX,DY,DZ, PHIX,PHIY,PHIZ, FX,FY,FZ,
+     1             WKA)
+      CALL ECOM3 (XFRMTI, WKA, XFRMTO)
+
+      END

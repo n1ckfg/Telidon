@@ -1,0 +1,1761 @@
+TITLE: Structure network deletion
+
+MODULE#: 02.01.02.02
+
+DESCRIPTION:
+This module tests the deletion of structure networks
+contained in the CSS.  The state of the CSS is examined for the
+changes which occur when structure networks are removed.
+
+The semantic requirements of <delete structure network> may be described
+for each structure in the network by the following table:
+
+            PRE-CONDITION                    |     RESULTS
+---------------------------------------------+-------------
+       reference   ancestor    structure     |
+         flag       status       state       |
+       ---------   ---------   ---------     |
+SR 1    DELETE     ANSPEC        OPEN        |     EMPTY
+SR 2    DELETE     NON-ANSPEC    OPEN        |     EMPTY
+                                             |
+SR 3    DELETE     ANSPEC        CLOSE       |     REMOVE
+SR 4    DELETE     NON-ANSPEC    CLOSE       |     REMOVE
+                                             |
+SR 5    KEEP       ANSPEC        OPEN        |     EMPTY
+SR 6    KEEP       NON-ANSPEC    OPEN        |     AS IS
+                                             |
+SR 7    KEEP       ANSPEC        CLOSE       |     REMOVE
+SR 8    KEEP       NON-ANSPEC    CLOSE       |     AS IS
+
+reference flag:     DELETE       The reference handling flag is set to delete.
+                    KEEP         The reference handling flag is set to keep.
+
+ancestor status:    ANSPEC       All maximal ancestor paths from the structure
+                                 contain the structure specified in the
+                                 function.
+                    NON-ANSPEC   There exists a maximal ancestor path from
+                                 the structure that does not contain the
+                                 structure specified in the function.
+
+structure status:   OPEN         The network structure is open at the time
+                                 the <delete structure network> function
+                                 is performed.
+                    CLOSE        The network structure is closed at the time
+                                 the <delete structure network> function
+                                 is performed.
+
+RESULTS:            EMPTY        The network structure remains in the
+                                 CSS as an open, empty structure but all
+                                 references to it are removed.
+                    AS IS        The network structure remains in the
+                                 CSS with no changes.  References to it by
+                                 non-deleted, non-emptied structures also
+                                 remain.
+                    REMOVE       The network structure is removed from
+                                 the CSS.
+
+SEMANTIC REQUIREMENTS:
+
+*** The first 8 SR's  each refer to the corresponding line of the truth table.
+
+SR1.   (DELETE, ANSPEC, OPEN) ===> EMPTY
+#F 127
+#D 7 7.3.4 4.2 4.5
+#S 4.4.5/29/8
+#T P04/1 P04/2 P04/3 P05/1 P05/2 P05/3 P07/1 P07/2 P07/3
+
+SR2.   (DELETE, NON-ANSPEC, OPEN) ===> EMPTY
+#F 127
+#D 7 7.3.4 4.2 4.5
+#S 4.4.5/29/8
+#T P06/1 P06/2 P06/3
+
+SR3.   (DELETE, ANSPEC, CLOSE) ===> REMOVE
+#F 127
+#D 7 7.3.4 4.5
+#S 4.4.5/29/8
+#T P02/1 P03/1 P04/1 P05/1 P06/1 P07/1
+
+SR4.   (DELETE, NON-ANSPEC, CLOSE) ===> REMOVE
+#F 127
+#D 7 7.3.4 4.5
+#S 4.4.5/29/8
+#T P02/1 P03/1 P04/1 P05/1 P06/1 P07/1
+
+SR5.   (KEEP, ANSPEC, OPEN) ===> EMPTY
+#F 127
+#D 7 7.3.4 4.2 4.5
+#S 4.4.5/29/8
+#T P10/1 P10/2 P10/3 P11/1 P11/2 P11/3 P13/1 P13/2 P13/3
+
+SR6.   (KEEP, NON-ANSPEC, OPEN) ===> AS IS
+#F 127
+#D 7 7.3.4 4.2 4.5
+#S 4.4.5/29/8
+#T P12/1 P12/2
+
+SR7.   (KEEP, ANSPEC, CLOSE) ===> REMOVE
+#F 127
+#D 7 7.3.4 4.5
+#S 4.4.5/29/8
+#T P08/1 P09/1 P10/1 P11/1 P12/1 P13/1
+
+SR8.   (KEEP, NON-ANSPEC, CLOSE) ===> AS IS
+#F 127
+#D 7 7.3.4 4.5
+#S 4.4.5/29/8
+#T P08/1 P09/1 P10/1 P11/1 P12/1 P13/1
+
+SR9.   <Delete structure network> with a non-existent structure
+identifier has no effect on the contents of the CSS.
+#F 127
+#D 7
+#S 4.4.5/29/8
+#T P01/1 P01/2
+
+SR10.  If a structure is EMPTIED or REMOVED by <delete structure
+network> it is also unposted.
+#F 127
+#D 5.7
+#S 4.4.5/29/9
+#T P04/4 P05/4 P06/4 P07/4 P10/4 P11/4 P12/3 P13/4
+#X 05.03
+
+SR11.  If references to a deleted structure exist in the open
+structure and none of them is the current element, then, after
+they are deleted, the element pointer still points to the same
+element as before.  If the element pointer was zero, it remains
+at zero.
+#F 127
+#D 7.3 7.3.4 4.3
+#S 4.4.5/29/7 4.4.5/29/8
+#T P14/3 P14/4 P14/5
+#X 02.02.03
+
+SR12.  If references to a deleted structure exist in the open
+structure and one of them is the current element, then, after
+they are deleted, the element pointer is altered to point to the
+last preceding element, or to zero if there is no such element.
+#F 127
+#D 7.3 7.3.4 4.3
+#S 4.4.5/29/7 4.4.5/29/8
+#T P14/1 P14/2
+#X 02.02.03
+
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  127: pdsn    <delete structure network>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.2  ...  name_of_open_structure
+  4.3  ...  element_pointer
+  4.5  ...  list_of_structure_identifiers
+  5  ...  workstation_state_list
+  5.7  ...  list_of_posted_structures
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.4  ...  execute_structure
+ 
+LOCAL SUBROUTINES: The programs in this module use a special-purpose
+subroutine:
+
+1. DELCSS sets up a CSS network against which the programs test
+the PHIGS function <delete structure network>.
+
+
+PROGRAM 1: Deletion of a structure network using
+           a non-existent structure identifier
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+               100
+               / \
+             1/   \2
+             /     \
+          103       104     102
+          | |         \     / \
+         1| |2        1\  1/   \2
+          | |           \ /     \
+          105           106     109
+                        / \     / \
+                      1/   \2 1/   \2
+                      /     \ /     \
+                    107     108     110
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-2) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 9
+      "<Delete structure network> with a non-existent structure
+       identifier and the reference handling flag set to delete
+       should have no effect on the contents of the CSS."
+
+nostid = 25
+reffg = DELETE
+<delete structure network> using nostid, reffg
+
+pass/fail depending on (CSS contents =
+
+               100
+               / \
+             1/   \2
+             /     \
+          103       104     102
+          | |         \     / \
+         1| |2        1\  1/   \2
+          | |           \ /     \
+          105           106     109
+                        / \     / \
+                      1/   \2 1/   \2
+                      /     \ /     \
+                    107     108     110  )
+
+TEST: #SR 9
+      "<Delete structure network> with a non-existent structure
+       identifier and the reference handling flag set to keep
+       should have no effect on the contents of the CSS."
+
+nostid = 40
+reffg = KEEP
+<delete structure network> using nostid, reffg
+
+pass/fail depending on (CSS contents =
+
+               100
+               / \
+             1/   \2
+             /     \
+          103       104     102
+          | |         \     / \
+         1| |2        1\  1/   \2
+          | |           \ /     \
+          105           106     109
+                        / \     / \
+                      1/   \2 1/   \2
+                      /     \ /     \
+                    107     108     110  )
+END PROGRAM 1
+
+PROGRAM 2: Deletion of a structure network with the reference
+           flag set to delete and references are made to the
+           closed specified structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |2    |1
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 3 4
+      "When the reference handling flag is set to delete and
+       the closed specified structure is referenced outside the
+       structure network the following changes should occur to
+       the CSS:
+       All closed structures contained in a structure network
+       are removed."
+
+specf = 106
+reffg = DELETE
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / |       |     |               |
+         1| |2           /  |      0|     |              1|
+          | |          1/  2|       |     |1              |
+          | |          /    |             |               |
+          103         /     |             |              142
+                   104     105           107
+                   | |      |             |
+                  1| |2    1|             |1
+                   | |      |             |
+                   109      |             |
+                           110           113     )
+
+END PROGRAM 2
+
+PROGRAM 3: Deletion of a structure network with the reference
+           flag set to delete and references are not made to the
+           closed specified structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |2    |1
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 3 4
+      "When the reference handling flag is set to delete and
+       the closed specified structure is not referenced outside
+       the structure network the following changes should occur
+       to the CSS:
+       All closed structures contained in a structure network
+       are removed."
+
+specf = 120
+reffg = DELETE
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102           130             140
+          | |             / |             |               |
+         1| |2           /  |             |              1|
+          | |          1/  2|             |1              |
+          | |          /    |             |               |
+          103         /     |             |              142
+                   104     105           107
+                   | |      |             |
+                  1| |2    1|             |1
+                   | |      |             |
+                   109      |             |
+                           110           113     )
+
+END PROGRAM 3
+
+PROGRAM 4: Deletion of a structure network with the reference
+           flag set to delete and references are made to the
+           open specified structure
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |1
+                             |2    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 1 3 4
+      "When the reference handling flag is set to delete and
+       the open specified structure is referenced outside the
+       structure network the following changes should occur
+       to the CSS:
+       All closed structures contained in a structure network
+       are removed.
+       The specified structure is OPEN and EMPTY."
+
+specf = 106
+reffg = DELETE
+<open structure> specf
+<post structure> specf
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102  106   120   130             140
+          | |             / |    |     |     |               |
+         1| |2           /  |   0|    0|     |              1|
+          | |          1/  2|    |     |     |1              |
+          | |          /    |                |               |
+          103         /     |                |              142
+                   104     105              107
+                   | |      |                |
+                  1| |2    1|                |1
+                   | |      |                |
+                   109      |                |
+                           110              113     )
+
+TEST: #SR 1
+      "<Delete structure network> with the reference flag set
+       to delete and an open specified structure which
+       is referenced outside the structure network should
+       cause that structure to exist in the CSS as an open
+       structure."
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strref = structure id
+
+if (stype = OPEN and
+    specf = strref) then
+    pass
+    <close structure>
+else
+    fail
+endif
+
+TEST: #SR 1
+      "<Delete structure network> with the reference flag set to
+       delete and an open specified structure which is referenced
+       outside the structure network should cause that structure
+       to exist in the CSS as an empty structure."
+
+use <inquire structure status> on the specified structure to determine
+    strsti = structure status identifier
+
+pass/fail depending on (strsti = EMPTY)
+
+TEST: #SR 10
+      "<Delete structure network> should cause the open specified structure
+       referenced outside the structure network to become unposted from
+       the workstation when the reference handling flag is set to delete."
+
+Use inquire posted structures to determine:
+   pstnum = number of posted structures
+
+<inquire posted structures> pstnum
+pass/fail depending on (pstnum = 0)
+
+END PROGRAM 4
+
+PROGRAM 5: Deletion of a structure network with the reference flag
+           set to delete and references are not made to the
+           open specified structure
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |1
+                             |2    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 1 3 4
+      "When the reference handling flag is set to delete
+       and the open specified structure is not referenced
+       outside the structure network the following changes
+       should occur to the CSS:
+       All closed structures contained in a structure network
+       are removed.
+       The specified structure is OPEN and EMPTY."
+
+specf = 120
+reffg = DELETE
+<open structure> specf
+<post structure> specf
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / |       |     |               |
+         1| |2           /  |      0|     |              1|
+          | |          1/  2|       |     |1              |
+          | |          /    |             |               |
+          103         /     |             |              142
+                   104     105           107
+                   | |      |             |
+                  1| |2    1|             |1
+                   | |      |             |
+                   109      |             |
+                           110           113     )
+
+TEST: #SR 1
+      "<Delete structure network> with the reference flag set to
+       delete and an open specified structure which is not referenced
+       outside the structure network should cause that structure to
+       exist in the CSS as an open structure."
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strref = structure id
+
+if (stype = OPEN and
+    specf = strref) then
+    pass
+    <close structure>
+else
+    fail
+endif
+
+TEST: #SR 1
+      "<Delete structure network> with the reference flag set to
+       delete and an open specified structure which is not referenced
+       outside the structure network should cause that structure
+       to exist in the CSS as an empty structure."
+
+use <inquire structure status> on the specified structure to determine
+    strsti = structure status identifier
+
+pass/fail depending on (strsti = EMPTY)
+
+TEST: #SR 10
+      "<Delete structure network> should cause the open specified structure
+       not referenced outside the structure network to become unposted from
+       the workstation when the reference handling flag is set to delete."
+
+Use inquire posted structures to determine:
+   pstnum = number of posted structures
+
+<inquire posted structures> pstnum
+pass/fail depending on (pstnum = 0)
+
+END PROGRAM 5
+
+PROGRAM 6: Deletion of a structure network with the reference
+           flag set to delete and references are made to the
+           open non-specified structure
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |2    |1
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 2 3 4
+      "When the reference handling flag is set to delete and the
+       open non-specified structure is referenced outside the structure
+       network the following changes should occur to the CSS:
+       All closed structures contained in the structure network
+       are removed.
+       The non-specified structure is OPEN and EMPTY."
+
+specf  = 106
+nospec = 108
+reffg = DELETE
+<open structure> nospec
+<post structure> specf
+<post structure> nospec
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102  108   120   130             140
+          | |             / |    |     |     |               |
+         1| |2           /  |   0|    0|     |              1|
+          | |          1/  2|    |     |     |1              |
+          | |          /    |                |               |
+          103         /     |                |              142
+                   104     105              107
+                   | |      |                |
+                  1| |2    1|                |1
+                   | |      |                |
+                   109      |                |
+                           110              113     )
+
+TEST: #SR 2
+      "<Delete structure network> with the reference flag set to
+       delete and an open non-specified structure present in the
+       network and referenced outside the structure network should
+       cause that structure to exist in the CSS as an open structure."
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strref = structure id
+
+if (stype  = OPEN and
+    nospec = strref) then
+    pass
+    <close structure>
+else
+    fail
+endif
+
+TEST: #SR 2
+      "<Delete structure network> with the reference flag set to
+       delete and an open non-specified structure present in the
+       network and referenced outside the structure network should
+       cause that structure to exist in the CSS as an empty structure."
+
+use <inquire structure status> on the non specified structure to determine
+    strsti = structure status identifier
+
+pass/fail depending on (strsti = EMPTY)
+
+TEST: #SR 10
+      "<Delete structure network> should cause the closed posted specified
+       and an open posted non-specified structure referenced outside the
+       structure network to become unposted from a workstation when
+       the reference handling flag is set to delete."
+
+Use inquire posted structures to determine:
+   pstnum = number of posted structures
+
+<inquire posted structures> pstnum
+pass/fail depending on (pstnum = 0)
+
+END PROGRAM 6
+
+PROGRAM 7: Deletion of a structure network with the reference
+           flag set to delete and references are not made to the
+           open non-specified structure
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |2    |1
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 1 3 4
+      "When the reference handling flag is set to delete and the
+       open non-specified structure is not referenced outside the
+       structure network the following changes should occur to the CSS:
+       All closed structures contained in a structure network
+       are removed.
+       The open non-specified structure is OPEN and EMPTY."
+
+specf  = 120
+nospec = 111
+reffg = DELETE
+<open structure> nospec
+<post structure> specf
+<post structure> nospec
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102  111      130             140
+          | |             / |    |        |               |
+         1| |2           /  |   0|        |              1|
+          | |          1/  2|    |        |1              |
+          | |          /    |             |               |
+          103         /     |             |              142
+                   104     105           107
+                   | |      |             |
+                  1| |2    1|             |1
+                   | |      |             |
+                   109      |             |
+                           110           113     )
+
+TEST: #SR 1
+      "<Delete structure network> with the reference flag set
+       to delete and an open non-specified structure present
+       in the network and not referenced outside the structure
+       network should cause that structure to exist in the CSS
+       as an open structure."
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strref = structure id
+
+if (stype  = OPEN and
+    nospec = strref) then
+    pass
+    <close structure>
+else
+   fail
+endif
+
+TEST: #SR 1
+      "<Delete structure network> with the reference flag set
+       to delete and an open non-specified structure present
+       in the network and not referenced outside the structure
+       network should cause that structure to exist in the CSS
+       as an empty structure."
+
+use <inquire structure status> on the non-specified structure to determine
+    strsti = structure status identifier
+
+pass/fail depending on (strsti = EMPTY)
+
+TEST: #SR 10
+      "<Delete structure network> should cause the closed posted specified
+       and an open posted non-specified structure not referenced outside
+       the structure network to become unposted from a workstation when
+       the reference handling flag is set to delete."
+
+Use inquire posted structures to determine:
+   pstnum = number of posted structures
+
+<inquire posted structures> pstnum
+pass/fail depending on (pstnum = 0)
+
+END PROGRAM 7
+
+PROGRAM 8: Deletion of a structure network with the reference flag
+           set to keep and references are made to the closed
+           specified structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |1
+                             |2    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 7 8
+      "When the reference handling flag is set to keep and the
+       closed specified structure is referenced outside the structure
+       network the following changes should occur to the CSS:
+       The specified and all closed non-specified structures all of whose
+       maximal ancestor paths contain the specified structure are removed.
+       All non-specified structures one of whose maximal ancestor path
+       does not contain the specified structure remain AS IS."
+
+specf = 108
+reffg = KEEP
+
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |            |
+                  1| |2     /|            |1
+                   | |    1/ |            |
+                   109    /  |2           |
+                         /   |           113
+                       110   |
+                            114        )
+
+
+END PROGRAM 8
+
+PROGRAM 9: Deletion of a structure network with the reference
+           flag set to keep and references are not made to the
+           closed specified structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |2    |1
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 7 8
+      "When the reference handling flag is set to keep and the closed
+       specified structure is not referenced outside the structure network
+       the following changes should occur to the CSS:
+       All closed network structures all of whose maximal ancestor paths
+       contain the specified structure are removed.
+       All non-specified structures one of whose maximal ancestor path
+       does not contain the specified structure remain AS IS."
+
+specf = 100
+reffg = KEEP
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+
+                              120   130             140
+                               |    /|               |
+                               |   / |              1|
+                              1|  /1 |2              |
+                               | /   |               |
+                               |/    |              142
+                              106   107
+                              |    / /\
+                              |   / /  \
+                             1| 1/ /2   \3
+                              | / /      \
+                              |/ /       113
+                             108
+                              |
+                              |1
+                              |
+                              |
+                             111
+                            / |
+                           /  |
+                         1/  2|
+                         /    |
+                       114   115   )
+
+
+END PROGRAM 9
+
+PROGRAM 10: Deletion of a structure network with the reference
+            flag set to keep and references are made to the
+            open specified structure
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |2    |
+                             |     |1
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 5 7 8
+      "When the reference handling flag is set to keep and the open
+       specified structure is referenced outside the structure network the
+       following changes should occur to the CSS:
+       All closed non-specified structures all of whose maximal ancestor paths
+       contain the specified structure are removed.
+       The specified structure is OPEN and EMPTY.
+       All non-specified structures one of whose maximal ancestor paths
+       does not contain the specified structure remain AS IS."
+
+specf = 102
+reffg = KEEP
+<open structure> specf
+<post structure> specf
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+
+                   100
+                    |
+                    |
+                   1|
+                    |
+                    |
+                   101     102     120   130             140
+                   | |      |       |    /|               |
+                  1| |2    0|       |   / |              1|
+                   | |      |      1|  /1 |2              |
+                   | |      |       | /   |               |
+                   103              |/    |              142
+                                   106   107
+                                   |    / /\
+                                   |   / /  \
+                                  1| 1/ /2   \3
+                                   | / /      \
+                                   |/ /       113
+                                  108
+                                   |
+                                   |1
+                                   |
+                                   |
+                                  111
+                                 / |
+                                /  |
+                              1/  2|
+                              /    |
+                            114   115   )
+
+
+
+TEST: #SR 5
+      "<Delete structure network> with the reference flag set to
+       keep and an open specified structure which is referenced
+       outside the structure network should cause that structure
+       to exist in the CSS as an open structure."
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strref = structure id
+
+if (stype = OPEN and
+    specf = strref) then
+    pass
+    <close structure>
+else
+    fail
+endif
+
+TEST: #SR 5
+      "<Delete structure network> with the reference flag set to
+       keep and an open specified structure which is referenced
+       outside the structure network should cause that structure
+       to exist in the CSS as an empty structure."
+
+use <inquire structure status> on the specified structure to determine
+    strsti = structure status identifier
+
+pass/fail depending on (strsti = EMPTY)
+
+TEST: #SR 10
+      "<Delete structure network> should cause the open specified structure
+       referenced outside the structure network to become unposted from
+       the workstation when the reference handling flag is set to keep."
+
+Use inquire posted structures to determine:
+   pstnum = number of posted structures
+
+<inquire posted structures> pstnum
+pass/fail depending on (pstnum = 0)
+
+END PROGRAM 10
+
+PROGRAM 11: Deletion of a structure network with the reference
+            flag set to keep and references are not made to the
+            open specified structure
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |2    |1
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 5 7 8
+      "When the reference handling flag is set to keep and the open
+       specified structure is not referenced outside the structure network
+       the following changes should occur to the CSS:
+       All closed non-specified structures all of whose maximal ancestor paths
+       contain the specified structure are removed.
+       All non-specified structures one of whose maximal ancestor path
+       does not contain the specified structure remain AS IS.
+       The specified structure is OPEN and EMPTY."
+
+specf = 100
+reffg = KEEP
+<open structure> specf
+<post structure> specf
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+                   100          120   130             140
+                    |            |    /|               |
+                   0|            |   / |              1|
+                    |           1|  /1 |2              |
+                    |            | /   |               |
+                                 |/    |              142
+                                106   107
+                                |    / /\
+                                |   / /  \
+                               1| 1/ /2   \3
+                                | / /      \
+                                |/ /       113
+                               108
+                                |
+                                |1
+                                |
+                                |
+                               111
+                              / |
+                             /  |
+                           1/  2|
+                           /    |
+                         114   115   )
+
+
+
+TEST: #SR 5
+      "<Delete structure network> with the reference flag set to keep
+       and an open specified structure which is not referenced outside
+       the structure network should cause that structure to exist in
+       the CSS as an open structure."
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strref = structure id
+
+if (stype = OPEN and
+    specf  = strref) then
+    pass
+    <close structure>
+else
+    fail
+endif
+
+TEST: #SR 5
+      "<Delete structure network> with the reference flag set to keep and
+       an open specified structure which is not referenced outside the
+       structure network should cause that structure to exist in the CSS
+       as an empty structure."
+
+use <inquire structure status> on the specified structure to determine
+    strsti = structure status identifier
+
+pass/fail depending on (strsti = EMPTY)
+
+TEST: #SR 10
+      "<Delete structure network> should cause the open specified structure
+       not referenced outside the structure network to become unposted from
+       the workstation when the reference handling flag is set to keep."
+
+Use inquire posted structures to determine:
+   pstnum = number of posted structures
+
+<inquire posted structures> pstnum
+pass/fail depending on (pstnum = 0)
+
+END PROGRAM 11
+
+PROGRAM 12: Deletion of a structure network with the reference
+            flag set to keep and references are made to the
+            open non-specified structure
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |2    |1
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 6 7 8
+      "When the reference handling flag is set to keep and the open
+       non-specified structure is referenced outside the structure network
+       the following changes should occur to the CSS:
+       The specified and all closed non-specified structures all of
+       whose maximal ancestor paths contain the specified structure
+       are removed. All non-specified opened or closed structures
+       one of whose maximal ancestor path does not contain the
+       specified structure remain AS IS."
+
+specf = 100
+nospec = 108
+reffg = KEEP
+<open structure> nospec
+<post structure> specf
+<post structure> nospec
+<delete structure network> using specf, reffg
+
+pass/fail depending on (CSS contents =
+
+                                120   130             140
+                                 |    /|               |
+                                 |   / |              1|
+                                1|  /1 |2              |
+                                 | /   |               |
+                                 |/    |              142
+                                106   107
+                                |    / /\
+                                |   / /  \
+                               1| 1/ /2   \3
+                                | / /      \
+                                |/ /       113
+                               108
+                                |
+                                |1
+                                |
+                                |
+                               111
+                              / |
+                             /  |
+                           1/  2|
+                           /    |
+                         114   115    )
+
+TEST: #SR 6
+      "<Delete structure network> with the reference flag set to keep and
+       an open non-specified structure which is referenced outside the
+       structure network should cause that structure to exist in the CSS
+       as an open structure."
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strref = structure id
+
+if (stype  = OPEN and
+    nospec = strref) then
+    pass
+    <close structure>
+else
+    fail
+endif
+
+TEST: #SR 10
+      "<Delete structure network> should cause the open posted non-specified
+       structure referenced outside the structure network to remain posted
+       and the closed posted specified to become unposted from the workstation
+       when the reference handling flag is set to keep."
+
+Use inquire posted structures to determine:
+   pstnum = number of posted structuresi
+   strid  = Nth identifier of the posted structure
+
+<inquire posted structures> pstnum
+pass/fail depending on (pstnum = 1 and strid = nospec)
+
+END PROGRAM 12
+
+PROGRAM 13: Deletion of a structure network with the reference
+            flag set to keep and references are not made to the
+            open non-specified structure
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up the CSS
+as follows:
+
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130             140
+          | |             / | \     |    /|               |
+         1| |2           /  |  \    |   / |              1|
+          | |          1/  2|  3\  1|  /1 |2              |
+          | |          /    |    \  | /   |               |
+          103         /     |     \ |/    |              142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  1| |2     /|\    |   / /  \
+                   | |    1/ | \3 1| 1/ /2   \3
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |2    |1
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  2|
+                             |/    |
+                            114   115
+
+
+The nodes of the graph (100 and above) represent structures, and the
+labelled edges are references to invoke (lower) structures.  The
+labels (1-3) represent the element position of the <execute structure>
+function within the calling structure.
+
+TEST: #SR 5 7 8
+      "When the reference handling flag is set to keep and an open
+       non-specified structure is not referenced outside the structure
+       network the following changes should occur in the CSS:
+       The specified and closed non-specified structures all of whose
+       maximal ancestor paths contain the specified structure are removed.
+       An open non-specified structure one of whose maximal ancestor paths
+       contain the specified structure remains OPEN and EMPTY.
+       Closed non-specified structures one of whose maximal ancestor
+       paths does not contain the specified structure remain AS IS."
+
+specf = 102
+nospec = 105
+pspec = 108
+reffg = KEEP
+<open structure> nospec
+<post structure> specf
+<post structure> pspec
+<delete structure network> using specf, reffg
+
+
+pass/fail depending on (CSS contents =
+
+            100
+             |
+             |
+             |
+             |
+            101                    120   130             140
+            | |            105      |    /|               |
+           1| |2            |       |   / |              1|
+            | |            0|      1|  /1 |2              |
+            | |             |       | /   |               |
+            103             |       |/    |              142
+                                   106   107
+                                   |    / /\
+                                   |   / /  \
+                                  1| 1/ /2   \3
+                                   | / /      \
+                                   |/ /       113
+                                  108
+                                   |
+                                   |1
+                                   |
+                                   |
+                                  111
+                                 / |
+                                /  |
+                              1/  2|
+                              /    |
+                            114   115    )
+
+
+
+TEST: #SR 5
+      "<Delete structure network> with the reference flag set to keep and
+       an open non-specified structure present in the network and not
+       referenced outside the structure network should cause that structure
+       to exist in the CSS as an open structure."
+
+use <inquire open structure> to determine
+    stype = the structure status open or close
+    strref = structure id
+
+if (stype  = OPEN and
+    nospec = strref) then
+    pass
+    <close structure>
+else
+    fail
+endif
+
+TEST: #SR 5
+      "<Delete structure network> with the reference flag set to keep and
+       an open non-specified structure present in the network and not
+       referenced outside the structure network should cause that structure
+       to exist in the CSS as an empty structure."
+
+use <inquire structure status> on the non-specified structure to determine
+    strsti = structure status identifier
+
+
+pass/fail depending on (strsti = EMPTY)
+
+TEST: #SR 10
+      "<Delete structure network> should cause a closed posted non-specified
+       structure referenced outside the structure network to remain posted
+       and the closed posted specified structure to become unposted from
+       the workstation when the reference handling flag is set to keep."
+
+Use inquire posted structures to determine:
+   pstnum = number of posted structures
+   strid  = Nth identifier of the posted structure
+
+<inquire posted structures> pstnum
+pass/fail depending on (pstnum = 1 and strid = pspec)
+
+
+END PROGRAM 13
+
+PROGRAM 14: Effect of deleting structure networks on element pointer
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Set up CSS as:
+
+                               40
+                                |       50
+                             D:41      /  \
+                                |     /    \
+                               42   100   D:51
+                                |  / |\    / |
+                               43 /  | \4 /  |
+    20                          |/3  |  511  |
+   /  \                        44    |       |
+  /    \                             |       |
+21    D:22   -----------------------/ \     /
+       /  \ 1|       2|            /   \6  /
+      /    \ |        |  D:60     /     \ /
+     /      \|      D:30    \    /\     512
+   221      222       / \    \ 5/  \7    |
+             |       /   \    \/    \    |
+             |     31     32  61    70  5121
+            2221
+
+
+The nodes of the graph (20 and above) represent structures, and
+the labelled edges are references to invoke (lower) structures.
+The labels (1- 7) represent the element position of the <execute
+structure> function within structure #100.  The structures that
+are specified by <delete structure network> are prefaced by "D:".
+
+Structure 100 is left open.
+
+Throughout, the expected state is shown as the sequence of
+references within structure #100, with the current element
+marked by an asterisk.  Thus the first state is:
+
+   (222, 30*, 44, 511, 61, 512, 70)
+
+set edit mode to REPLACE
+informational message: following test cases run in REPLACE mode
+
+set element pointer to 2
+delete structure network #30, ref-flag = DELETE
+TEST: #SR 12
+      "When <delete structure network> causes deletion of
+       references at the current element, the element pointer
+       should be changed so as to point to the preceding element."
+pass/fail depending on (current element position = 1)
+(222*, 44, 511, 61, 512, 70)
+
+delete structure network #22, ref-flag = DELETE
+TEST: #SR 12
+      "When <delete structure network> causes deletion of
+       references at the current element, the element pointer
+       should be changed to zero when there is no preceding
+       element."
+pass/fail depending on (current element position = 0)
+(* 44, 511, 61, 512, 70)
+
+set edit mode to INSERT
+informational message: following test cases run in INSERT mode
+
+delete structure network #41, ref-flag = DELETE
+TEST: #SR 11
+      "When <delete structure network> causes deletion of
+       references following the current element, the element
+       pointer should be unchanged."
+pass/fail depending on (current element position = 0)
+(* 511, 61, 512, 70)
+
+set element pointer to 2
+delete structure network #51, ref-flag = DELETE
+TEST: #SR 11
+      "When <delete structure network> causes deletion of
+       references surrounding the current element, the element pointer
+       should be changed so as to point to the same element."
+pass/fail depending on (current element position = 1)
+(61*, 70)
+
+set element pointer to 2
+delete structure network #60, ref-flag = KEEP
+TEST: #SR 11
+      "When <delete structure network> does not cause deletion of
+       a reference in the open structure because the reference
+       flag is KEEP, the element pointer should be unchanged."
+pass/fail depending on (current element position = 2)
+(61, 70*)
+
+END PROGRAM 14

@@ -1,0 +1,69 @@
+TITLE: Archive/retrieve error indicators
+
+MODULE#: 09.02.09
+
+DESCRIPTION: This module tests that the functions related to archive/retrieve
+set the specified archive/retrieve error to error indicator if they are
+executed in an incorrect condition.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   If functions <inquire all conflicting structures>,<inquire conflicting
+structures in network> are called, and the specified archive file is not
+open, then the error indicator is set to 404.
+#F 213 214
+#D 4.6.1 4.6.2
+#S 4.11/109/1 5.12.1/232/1
+#T P01/1 P01/2 P01/3
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  213: pqcst   <inquire all conflicting structures>
+  214: pqcstn  <inquire conflicting structures in network>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.6  ...  set_of_open_archive_files
+  4.6.1  ...  archive_file
+  4.6.2  ...  archive_file_identifier
+ 
+
+
+PROGRAM 1: Error indicator = 404
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 213,214 with an archive file not open to test if they
+set number 404 to the error indicator: ignoring function, the specified
+structure does not exist.
+
+<inquire all conflicting structures>
+TEST: #SR 1
+      "If <inquire all conflicting structures> is called and the
+       specified archive file is not open, it should return error indicator
+       = 404."
+pass/fail depending on (returned error indicator = 404)
+
+<inquire conflicting structures in network>
+TEST: #SR 1
+      "If <inquire conflicting structures in network> is called and the
+       specified archive file is not open, it should return error indicator
+       = 404."
+pass/fail depending on (returned error indicator = 404)
+
+<inquire conflicting structures in network>
+TEST: #SR 1
+      "If <inquire conflicting structures in network> is called and the
+       specified archive file is not open, it should return error indicator
+       = 404."
+pass/fail depending on (returned error indicator = 404)
+
+END PROGRAM 1
+
+
+

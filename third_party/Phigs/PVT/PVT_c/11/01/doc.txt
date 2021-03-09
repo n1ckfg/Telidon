@@ -1,0 +1,124 @@
+TITLE: Fortran utilities
+
+
+MODULE#: 11
+
+
+DESCRIPTION: This module tests the Fortran utility functions.
+These functions are not defined in the generic PHIGS standard,
+but are specific to the Fortran language binding.
+
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  <Pack data record> causes integer, real, and/or character
+data entries to be packed into a single data record.
+#F 320
+#D
+#S Fortran/5/14/15 6.1/307/2 6.1/307/3
+#T P01/1 P01/2
+#C This function is found only in the Fortran binding, section 10.
+
+SR2.  <Unpack data record> decomposes a data record into its
+constituent integer, real, and/or character data entries.
+#F 321
+#D
+#S Fortran/5/14/15 6.1/307/2 6.1/307/3
+#T P01/2
+#C This function is found only in the Fortran binding, section 10.
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  320: pprec          <pack data record>
+  321: purec          <unpack data record>
+ 
+  Data Structures ---
+ 
+
+
+PROGRAM 1: Packing and unpacking
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+data record to hold:
+   drinin = 77, 32, -64, 286
+   drinrl = 9.9, -4.88, 1e12
+   drinst = "This string is to test pack and unpack", "THis is another"
+
+TEST: #SR 1
+      "<Pack data record> should report successful packing of
+       valid data."
+<pack data record> with drinin, drinrl, drinst
+if (no error reported) then
+   pass
+else
+   fail
+   message about skipping test, error code
+   goto done
+endif
+
+TEST: #SR 1 2
+      "Unpacking a packed data record should return the original data."
+<unpack data record> to determine
+   drotin = array with integer entries
+   drotrl = array with real entries
+   drotst = array with character string entries
+
+if (no error reported) then
+   OK so far
+else
+   fail
+   message about error code
+   goto done
+endif
+
+if (array sizes OK) then
+   OK so far
+else
+   fail
+   message: Array sizes from PUREC are incorrect.
+   goto done
+endif
+
+if (integer array contents OK) then
+   OK so far
+else
+   fail
+   message: Integer array from PUREC is incorrect.
+   goto done
+endif
+
+if (real array contents OK) then
+   OK so far
+else
+   fail
+   message: Real array from PUREC is incorrect.
+   goto done
+endif
+
+if (string length array contents OK) then
+   OK so far
+else
+   fail
+   message: String-length array from PUREC is incorrect.
+   goto done
+endif
+
+if (string array contents OK) then
+   OK so far
+else
+   fail
+   message: String array from PUREC is incorrect.
+   goto done
+endif
+
+pass
+
+done:
+
+END PROGRAM 1

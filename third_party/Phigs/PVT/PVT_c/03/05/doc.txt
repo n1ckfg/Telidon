@@ -1,0 +1,299 @@
+TITLE: Deleting archived structures
+
+
+MODULE#: 03.05
+
+
+DESCRIPTION: This module tests the various ways in which archived
+structures and structure networks may be deleted.
+
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  For <delete structures from archive>, the set of structures
+to be deleted from the specified archive file contains exactly
+those whose identifiers are in the specified list.
+#F 147
+#D 9.1.1
+#S 4.4.7/32/3
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P04/1
+#C Note that deleting a structure, but not all its ancestors, can
+create a partial network in the archive file.
+
+SR2.  For <delete structure networks from archive>, the set of
+structures to be deleted from the specified archive file contains
+those whose identifiers are in the specified list, and all their
+descendants in the archive file.
+#F 148
+#D 9.1.1 9.1.2.4
+#S 4.4.7/32/3
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P04/3
+#C Note that deleting a structure, but not all its ancestors, can
+create a partial network in the archive file.
+
+SR3.  For <delete all structures from archive>, the set of
+structures to be deleted from the specified archive file contains
+all those currently in the specified archive file.
+#F 149
+#D 9.1.1
+#S 4.4.7/32/3
+#T P03/1 P04/2
+
+SR4.  If a structure S is in the specified set of a <delete ...
+from archive> operation and S exists in the archive file, then S
+is deleted from the archive file.
+#F 147 148 149
+#D 9.1.1
+#S 4.4.7/32/4
+#T P01/1 P01/4 P02/1 P02/4 P03/1 P04/1 P04/2 P04/3
+#C This rule applies regardless of whether S is referenced by
+another structure in archive.
+
+SR5.  If a structure S is in the specified set of a <delete ...
+from archive> operation and S does not exist in the archive file,
+then no action is taken for S and warning 407 is signalled.
+#F 147 148 149
+#D 9.1.1
+#S 4.4.7/32/4
+#T P01/2 P01/3 P01/4 P01/5 P02/2 P02/3 P02/4 P02/5
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  147: pdstar  <delete structures from archive>
+  148: pdsnar  <delete structure networks from archive>
+  149: pdasar  <delete all structures from archive>
+ 
+  Data Structures ---
+  9  ...  archive
+  9.1  ...  archive_file
+  9.1.1  ...  structure_identifier
+  9.1.2  ...  list_of_structure_elements
+  9.1.2.4  ...  execute_structure
+ 
+
+
+PROGRAM 1: Delete specified structures from archive
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+set up standard networks in CSS
+open new archive file, with arid = archive identifier
+
+<archive all structures>, into arid
+allstr = all structures = 100,101,102,103,104,105,106,107,108,109
+                          110,111,113,114,115,120,130,140,142
+spcstr = specified structures = 103,105,113
+
+<delete structures from archive> arid, spcstr
+<retrieve structure identifiers> with arid
+   to determine actstr = actual list of archived structures
+TEST: #SR 1 4
+      "Only the structures explicitly listed as parameters of <delete
+       structures from archive> should be deleted from the specified
+       open archive file."
+pass/fail depending on (actstr = (allstr - spcstr))
+
+
+delete with structure identifier not in archive
+spcstr = 155
+
+<delete structures from archive> arid, spcstr
+<retrieve structure identifiers> with arid
+   to determine newstr = new list of archived structures
+TEST: #SR 1 5
+      "If the specified structure does not exist in the archive file,
+       then <delete structures from archive> should result in no
+       action for that structure."
+pass/fail depending on (newstr = actstr)
+TEST: #SR 1 5
+      "If the specified structure does not exist in the archive file,
+       then <delete structures from archive> should signal error 407."
+pass/fail depending on (error = 407)
+
+
+delete with structure identifiers both in and not-in archive
+spcstr = 102, 177, 142
+
+<delete structures from archive> arid, spcstr
+<retrieve structure identifiers> with arid
+   to determine actstr = new list of archived structures
+TEST: #SR 1 4 5
+      "If the list of specified structures to be deleted from the archive
+       file contains structures that exist and do not exist in the
+       archive file, then those structures that exist should be deleted
+       from the archive and no action is taken for those structures that
+       do not exist in the archive file."
+pass/fail depending on (actstr = (newstr - structures 102 and 142))
+TEST: #SR 1 5
+      "If the list of specified structures to be deleted from the
+       archive file contains structures that do not exist in the
+       archive file, then error 407 should be signalled."
+pass/fail depending on (error = 407)
+
+<close archive file> with arid
+
+END PROGRAM 1
+
+
+PROGRAM 2: Delete structure networks from archive
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+set up standard networks in CSS
+open new archive file, with arid = archive identifier
+<archive all structures>, into arid
+allstr = all structures = 100,101,102,103,104,105,106,107,108,109
+                          110,111,113,114,115,120,130,140,142
+spcstr = specified network structures = 107,114,105
+delstr = deleted network structures = 105,110,114,108,111,115,107,113
+
+<delete structure networks from archive> arid, spcstr
+<retrieve structure identifiers> with arid
+   to determine actstr = actual list of archived structures
+TEST: #SR 2 4
+      "Only the structures explicitly listed as parameters of <delete
+       structure networks from archive> and their descendants should
+       be deleted from the specified open archive file."
+pass/fail depending on (actstr = (allstr - delstr))
+
+
+delete with a structure network not in archive
+spcstr = 155
+
+<delete structure networks from archive> arid, spcstr
+<retrieve structure identifiers> with arid
+   to determine newstr = new list of archived structures
+TEST: #SR 2 5
+      "If the specified structure does not exist in the
+       archive file, then <delete structure networks from archive>
+       should result in no action with regards to that structure
+       network."
+pass/fail depending on (newstr = actstr)
+TEST: #SR 2 5
+      "If the specified structure does not exist in the archive file,
+       then <delete structure networks from archive> should signal
+       error 407."
+pass/fail depending on (error = 407)
+
+
+delete with structure networks both in and not-in archive
+spcstr = 104, 177, 140
+delstr = 104, 109, 140, 142
+
+<delete structure networks from archive> arid, spcstr
+<retrieve structure identifiers> with arid
+   to determine actstr = new list of archived structures
+TEST: #SR 2 4 5
+      "If the list of specified structures to be deleted from the
+       archive file contains structure networks that exist and do not
+       exist in the archive file, then those structure networks that
+       exist should be deleted from the archive and no action is taken
+       for those structures that do not exist in the archive file."
+pass/fail depending on (actstr = (newstr - delstr))
+TEST: #SR 2 5
+      "If the list of specified structure networks to be deleted
+       from the archive file contains structures that do not
+       exist in the archive file, then error 407 should be signalled."
+pass/fail depending on (error = 407)
+
+<close archive file> with arid
+
+END PROGRAM 2
+
+
+PROGRAM 3: Delete all structures from archive
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+set up standard networks in CSS
+open new archive file, with arid = archive identifier
+
+<archive all structures>, into arid
+
+<delete all structures from archive> arid
+TEST: #SR 3 4
+      "After <delete all structures from archive>, the specified
+       archive file should be empty."
+<retrieve structure identifiers> with arid
+   to determine actstr = actual list of archived structures
+pass/fail depending on (actstr = empty)
+
+<close archive file> with arid
+
+END PROGRAM 3
+
+
+PROGRAM 4: Deleting from archive when multiple archive files are open
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire phigs facilities> to determine
+   mxarno = maximum number of simultaneously open archive files
+if (mxarno <= 1) then
+   informative message that skippping tests, can't open multiple
+      archive files
+   goto done
+endif
+
+set up standard networks in CSS
+open new archive file, with arid1 = archive identifier
+open 2nd archive file, with arid2 = archive identifier
+
+<archive all structures>, into arid1
+<archive all structures>, into arid2
+expstr = expected structures  = 100,101,102,103,104,105,106,107,108,109,
+                                110,111,113,114,115,120,130,140,142
+spcstr = specified structures = 114,102,100,140,107
+
+<delete structures from archive> with arid1, spcstr
+<retrieve structure identifiers> with arid2
+   to determine newstr = new list of archived structures
+TEST: #SR 1 4
+      "If more than one archive file is open, <delete structures
+       from archive> should not affect any open archive file other
+       than the file specified."
+pass/fail depending on (newstr = expstr)
+
+<delete all structures from archive> arid1
+<retrieve structure identifiers> with arid2
+   to determine newstr
+TEST: #SR 3 4
+      "If more than one archive file is open, <delete all structures
+       from archive> should not affect any open archive file other
+       than the file specified."
+pass/fail depending on (newstr = expstr)
+
+<archive all structures> into arid1
+spcstr = specified structures = 107, 114, 105
+<delete structure networks from archive> with arid1, spcstr
+<retrieve structure identifiers> with arid2
+   to determine newstr
+TEST: #SR 2 4
+      "If more than one archive file is open, <delete structure
+       networks from archive> should not affect any open archive
+       file other than the file specified."
+pass/fail depending on (newstr = expstr)
+
+<close archive file> with arid1
+<close archive file> with arid2
+
+done:
+
+END PROGRAM 4

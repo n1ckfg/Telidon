@@ -1,0 +1,2627 @@
+TITLE: Fill area and fill area set - individual attributes
+
+MODULE#: 04.02.05.01
+
+DESCRIPTION: This module tests the individual fill area and fill
+area set attributes.  These values control the appearance of fill
+areas when they are under individual (as opposed to bundled)
+control.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** ***   Fill area attribute inquiry   *** *** ***
+
+SR1.   If current element is interior style, interior style
+index, interior colour index, edge flag, edgetype, edgewidth
+scale factor, edge colour index, pattern size, pattern reference
+point, or pattern reference point and vectors, then <inquire
+current element type and size> returns the appropriate element
+type and size.
+#F 303
+#D 7.3.2.6.1 7.3.2.6.2 7.3.2.6.3 7.3.2.6.4 7.3.2.6.5 7.3.2.6.6
+#D 7.3.2.6.7 7.3.2.6.8 7.3.2.6.9 7.3.2.6.10
+#S 4.4.4/29/5
+#T P01/1 P01/3 P01/5 P01/7 P01/9 P01/11 P01/13 P01/15 P01/17 P01/19
+
+SR2.   If current element is interior style, interior style
+index, interior colour index, edge flag, edgetype, edgewidth
+scale factor, edge colour index, pattern size, pattern reference
+point, or pattern reference point and vectors, then <inquire
+current element content> returns the associated value for that
+element.
+#F 304
+#D 7.3.2.6.1 7.3.2.6.2 7.3.2.6.3 7.3.2.6.4 7.3.2.6.5 7.3.2.6.6
+#D 7.3.2.6.7 7.3.2.6.8 7.3.2.6.9 7.3.2.6.10
+#S 4.4.4/29/5
+#T P01/2 P01/4 P01/6 P01/8 P01/10 P01/12 P01/14 P01/16 P01/18 P01/20
+
+*** *** ***   Fill area attribute traversal binding   *** *** ***
+
+SR3.  Upon traversal of a "fill area" or "fill area 3" element,
+the current interior style, interior style index, interior colour
+index, pattern size, pattern reference point and pattern
+reference vectors in the PTSL are bound to the resulting
+primitive.
+#F 50 51 52 57 58 59
+#D 3.5.2 3.5.3 3.5.4 3.7.1 3.7.2 3.7.3 7.3.1.9 7.3.1.10
+#S 4.5.2/38/3 4.5.2/41/3
+#T P02/1 P02/2 P02/3 P02/4 P02/7 P02/8 P02/9 P02/10 P02/11 P04/1 P04/2
+   P04/3 P04/4 P04/5 P05/1 P05/2 P05/3 P05/4 P05/5 P05/6 P05/7 P05/8
+   P05/9
+
+SR4.  Upon traversal of a "fill area set" or "fill area set 3"
+element, the current interior style, interior style index,
+interior colour index, edge flag, edgetype, edgewidth scale
+factor, edge colour index, pattern size, pattern reference point
+and pattern reference vectors in the PTSL are bound to the
+resulting primitive.
+#F 50 51 52 53 54 55 56 57 58 59
+#D 3.5.2 3.5.3 3.5.4 3.6.2 3.6.3 3.6.4 3.6.5 3.7.1 3.7.2 3.7.3
+#D 7.3.1.11 7.3.1.12
+#S 4.5.2/38/3 4.5.2/41/4
+#T P02/5 P02/8 P02/9 P02/10 P02/11 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+   P03/8 P03/9 P03/10 P03/11 P03/12 P03/13 P04/1 P04/2 P04/3 P04/4
+   P04/5 P05/1 P05/2 P05/3 P05/4 P05/5 P05/6 P05/7 P05/8 P05/9
+#C Fill area set uses the same interior and pattern attributes as
+fill area.
+
+*** ***   Interior style: element creation   *** ***
+
+SR5.  <Set interior style> creates a "set interior style" element
+(in the open structure), whose associated value is taken from the
+function's parameter.
+#F 50
+#D 7.3.2.6.1
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/1 P01/2 P02/1 P02/2 P02/3 P02/4 P02/5 P02/7 P02/8 P02/9
+
+SR6.  The only valid values for interior style are: HOLLOW,
+SOLID, PATTERN, HATCH, and EMPTY.
+#F 50
+#D 6.14.1.1 6.14.1.2
+#S 4.5.8/58/3
+#T P01/2 P02/1 P02/2 P02/3 P02/9
+
+*** ***   Interior style: effect during traversal   *** ***
+
+SR7.  Upon traversal of a "set interior style" element, the
+current interior style entry in the PHIGS traversal state list
+(PTSL) is set to the element's associated value.
+#F 50
+#D 3.5.2 7.3.2.6.1
+#S 4.5.2/38/3
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/7 P02/8 P02/9 P05/1
+
+SR8.  When a fill area or fill area set is displayed, if its bound
+interior style is available on the workstation and its bound
+interior style ASF is INDIVIDUAL, then that interior style is
+used for the interior of the primitive.
+#F 50 270
+#D 3.5.2 3.5.5 6.14.1.1 6.14.1.2
+#S 4.5.2/39/7 4.5.8/58/3
+#T P02/1 P02/3 P02/4 P02/5 P02/7 P02/8 P02/9 P05/1
+
+SR9.  When a fill area or fill area set is displayed, if its bound
+interior style is not available on the workstation and its bound
+interior style ASF is INDIVIDUAL, then interior style HOLLOW is
+used for the interior of the primitive.
+#F 50 270
+#D 3.5.2 3.5.5 6.14.1.1 6.14.1.2
+#S 4.5.2/39/7
+#T P02/2
+
+SR10.  For interior style HOLLOW, if the bound interior colour
+index ASF is INDIVIDUAL, then the interior of the area is not
+filled, but the bounding polyline is drawn with its colour
+dependent on the current interior colour index.
+#F 50 52
+#D 3.5.2 3.5.4 3.5.7
+#S 4.5.1/34/1 4.5.2/39/7 4.5.8/58/3
+#T P02/1 P02/2 P02/3 P02/10 P02/11 P03/2
+#C If the interior colour index is defined on the workstation,
+the colour of the bounding polyline will agree with the realized
+colour for that indexed entry in the colour table; otherwise, the
+realized colour for entry #1 is used.  See SRs below for interior
+colour index.
+
+SR11.  For interior style HOLLOW, the linetype and linewidth of
+the bounding polyline appear as specified in the implementor's
+documentation.
+#F
+#D 3.5.2
+#S 4.1.1/15/1 4.5.8/58/3
+#T P02/3
+
+SR12.  For interior style EMPTY, the interior of the fill area is
+not filled and no bounding polyline is drawn.
+#F 50
+#D 3.5.2
+#S 4.5.8/58/3
+#T P02/1
+#C Fill area primitives displayed with interior style EMPTY are
+not visible, nor are fill area sets without edges.
+
+SR13.  For interior style SOLID, if the bound interior colour
+index ASF is INDIVIDUAL, then the interior of the polygonal area
+is uniformally filled with its colour dependent on the current
+interior colour index.
+#F 50 52
+#D 3.5.2 3.5.4 3.5.7
+#S 4.5.1/34/1 4.5.2/39/7 4.5.8/58/3
+#T P02/1 P02/10 P02/11
+#C If the interior colour index is defined on the workstation,
+the colour of the interior will agree with the realized colour
+for that indexed entry in the colour table; otherwise, the
+realized colour for entry #1 is used.  See SRs below on interior
+colour index.
+
+SR14.  For interior style HATCH, if the bound interior colour
+index and interior style index ASFs are INDIVIDUAL, then the
+interior of the polygonal area is filled with a hatch style
+dependent on the current interior style index and its colour
+dependent on the current interior colour index.
+#F 50 51 52
+#D 3.5.2 3.5.3 3.5.4 3.5.6 3.5.7
+#S 4.5.1/34/1 4.5.2/39/7 4.5.8/58/3
+#T P02/1 P02/4 P02/5 P02/7 P02/10 P02/11
+#C If the interior colour index and the interior style index are
+defined on the workstation, the colour (style) of the hatches
+will agree with the realized colour (style) for that indexed
+entry in the colour (hatch) table; otherwise, the realized colour
+(style) for entry #1 is used.  See SRs below for interior colour
+index and interior style index.
+
+SR15.  For interior style PATTERN, it the bound interior style
+index ASF is INDIVIDUAL, then the interior of the polygonal area
+is filled with a pattern dependent on the interior style index.
+#F 50 51
+#D 3.5.2 3.5.3 3.5.6
+#S 4.5.1/34/1 4.5.2/39/7 4.5.8/58/3
+#T P02/1 P02/8 P02/9
+#X 04.02.05.04
+#C See SRs for interior style index.  As usual, entry #1 is used
+when the requested entry is unavailable.
+
+*** ***   Interior style: network traversal   *** ***
+
+SR16.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current interior style of the PTSL is set to HOLLOW.
+#F
+#D 2.14.2 3.5.2
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P05/1
+
+SR17.  As part of the PTSL, the current interior style is saved
+(but not changed) by execute structure and then, upon completion
+of the sub-traversal of the invoked network, restored to the
+saved value.
+#F 113
+#D 3.5.2
+#S 4.4.3/28/1
+#T P05/1
+
+*** ***   Interior style index: element creation   *** ***
+
+SR18.  <Set interior style index> creates a "set interior style
+index" element (in the open structure), whose associated value is
+taken from the function's parameter.
+#F 51
+#D 7.3.2.6.2
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/3 P01/4 P02/4 P02/5 P02/7 P02/8 P02/9
+
+*** ***   Interior style index: effect during traversal   *** ***
+
+SR19.  Upon traversal of a "set interior style index" element,
+the current interior style index entry in the PHIGS traversal
+state list (PTSL) is set to the element's associated value.
+#F 51
+#D 3.5.3 7.3.2.6.2
+#S 4.5.2/38/3
+#T P02/4 P02/5 P02/7 P02/8 P02/9 P05/2 P05/3
+
+SR20.  When a fill area or fill area set is displayed, if its bound
+interior style index is available on the workstation and its
+bound interior style index ASF is INDIVIDUAL, then that interior
+style index is used.
+#F 51 232 233 270
+#D 3.5.3 3.5.6 5.14.2.1 6.14.1.3 6.14.1.4
+#S 4.5.2/39/7 4.5.8/58/3 4.5.8/61/3
+#T P02/4 P02/5 P02/8 P05/2 P05/3
+#X 04.02.05.04
+#C Interior style index only applies to HATCH and PATTERN
+interior styles.
+
+SR21.  When a fill area or fill area set is displayed, if its bound
+interior style index is not available on the workstation and its
+bound interior style index ASF is INDIVIDUAL, then interior style
+index entry number 1 is used when present on the workstation.
+#F 51 232 270
+#D 3.5.3 3.5.6 5.14.2 6.14.1.3 6.14.1.4
+#S 4.5.2/39/7 4.5.2/43/3
+#T P02/7 P02/9
+#X 04.02.05.04
+#C Pattern index #1 is always present, but hatch style #1 may not
+be. Effect requesting unavailable hatch style is workstation
+dependent when hatch style #1 is not supported.
+
+SR22.  When available on the workstation to which posted, the
+hatch styles identified by indices greater than 0 appear as
+specified in the ISO register.
+#F
+#D 6.14.1.3 6.14.1.4
+#S 4.1.2/15/2 4.5.8/58/3 4.5.8/61/3 6.7/322/1
+#T P02/4
+
+SR23.  When available on the workstation to which posted, the
+hatch styles identified by indices less than 1 appear as
+specified in the implementor documentation.
+#F
+#D 6.14.1.3 6.14.1.4
+#S 4.1.1/15/1 4.5.8/58/3 4.5.8/62/1 6.7/322/1
+#T P02/5 P02/6
+
+*** ***   Interior style index: network traversal   *** ***
+
+SR24.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current interior style index of the PTSL is set 1.
+#F
+#D 2.14.3 3.5.3
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P05/2 P05/3
+
+SR25.  As part of the PTSL, the current interior style index is
+saved (but not changed) by execute structure and then, upon
+completion ofthe sub-traversal of the invoked network, restored
+to the saved value.
+#F 113
+#D 3.5.3
+#S 4.4.3/28/1
+#T P05/2 P05/3
+
+***   Interior colour index: element creation   ***
+
+SR26.   <Set interior colour index> creates a "set interior
+colour index" element (in the open structure), whose associated
+value is taken from the function's parameter.
+#F 52
+#D 7.3.2.6.3
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/5 P01/6 P02/10 P02/11
+
+*** ***   Interior colour index: effect during traversal   *** ***
+
+SR27.  Upon traversal of a "set interior colour index" element,
+the current interior colour index entry in the PHIGS traversal
+state list (PTSL) is set to the element's associated value.
+#F 52
+#D 3.5.4 7.3.2.6.3
+#S 4.5.2/38/3
+#T P02/10 P02/11 P05/8
+
+SR28.  When a fill area or fill area set is displayed, if its bound
+interior colour index is defined on the workstation and its bound
+interior colour index ASF is INDIVIDUAL, then the interior colour
+index is realized as itself.
+#F 52
+#D 3.5.4 3.5.7 5.15.3.1 5.15.3.2
+#S 4.5.2/39/7 4.5.12/63/4
+#T P02/10 P05/8
+
+SR29.  When a fill area or fill area set is displayed, if its bound
+interior colour index is not defined on the workstation and its
+bound interior colour index ASF is INDIVIDUAL, then the interior
+colour index is realized as number 1.
+#F 52
+#D 3.5.4 3.5.7 5.15.3.1 5.15.3.2
+#S 4.5.2/39/7 4.5.2/43/3
+#T P02/11
+
+*** ***   Interior colour index: network traversal   *** ***
+
+SR30.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current interior colour index of the PTSL is set to 1.
+#F
+#D 2.14.4 3.5.4
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P05/8
+
+SR31.  As part of the PTSL, the current interior colour index is
+saved (but not changed) by execute structure and then, upon
+completion of the sub-traversal of the invoked network, restored
+to the saved value.
+#F 113
+#D 3.5.4
+#S 4.4.3/28/1
+#T P05/8
+
+***   Edge flag: element creation   ***
+
+SR32.  <Set edge flag> creates a "set edge flag" element (in the
+open structure), whose associated value is taken from the
+function's parameter.
+#F 53
+#D 7.3.2.6.4
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/13 P01/14 P03/1 P03/2
+
+SR33.  The valid values for edge flag in <set edge flag> are: OFF
+or ON.
+#F 53
+#D 7.3.2.6.4
+#S 4.5.9/62/5
+#T P01/14 P03/1
+
+*** ***   Edge flag: effect during traversal   *** ***
+
+SR34.  Upon traversal of a "set edge flag" element, the current
+edge flag entry in the PHIGS traversal state list (PTSL) is set
+to the element's associated value.
+#F 53
+#D 3.6.2 7.3.2.6.4
+#S 4.5.2/38/3
+#T P03/1 P03/2 P05/4
+
+SR35.  When a fill area set is displayed, if its bound edge flag ASF
+is INDIVIDUAL, then the bound edge flag is used when displaying
+the edges of fill area sets.
+#F 53
+#D 3.6.2 3.6.6
+#S 4.5.2/39/7 4.5.9/62/5
+#T P03/1 P03/2 P05/4
+
+SR36.  If the edge flag aspect is ON, then the edges of fill area
+sets are drawn; otherwise, they are not.
+#F 53
+#D 3.6.2
+#S 4.5.9/62/5
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/8 P03/9 P03/10 P03/11 P03/12
+   P03/13 P05/4
+
+SR37.  The edges of fill area sets are drawn on top of the
+interior.
+#F
+#D
+#S 4.5.9/62/6 4.5.9/62/9
+#T P03/2
+#C Conceptually, the edges and interior are disjoint; however, in
+practice they may overlap.  For HOLLOW interior style, the
+bounding polyline may be visible between gaps of non-solid
+edgetypes or around the rendering of the edge.
+
+*** ***   Edge flag : network traversal   *** ***
+
+SR38.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current edge flag of the PTSL is set to OFF.
+#F
+#D 2.15.2 3.6.2
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P05/4
+
+SR39.  As part of the PTSL, the current edge flag is saved (but
+not changed) by execute structure and then, upon completion of
+the sub-traversal of the invoked network, restored to the saved
+value.
+#F 113
+#D 3.6.2
+#S 4.4.3/28/1
+#T P05/4
+
+*** ***   Edgetype: element creation   *** ***
+
+SR40.  <Set edgetype> creates a "set edgetype" element (in the
+open structure), whose associated value is taken from the
+function's parameter.
+#F 54
+#D 7.3.2.6.5
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/15 P01/16 P03/3 P03/4 P03/5 P03/6
+
+*** ***   Edgetype: effect during traversal   *** ***
+
+SR41.  Upon traversal of a "set edgetype" element, the current
+edgetype entry in the PHIGS traversal state list (PTSL) is set to
+the element's associated value.
+#F 54
+#D 3.6.3 7.3.2.6.5
+#S 4.5.2/38/3
+#T P03/3 P03/4 P03/5 P03/6 P05/5
+
+SR42.  When a fill area set is displayed, if its bound edgetype is
+available on the workstation and its bound edgetype ASF is
+INDIVIDUAL, then the appearance of the edgetype agrees with the
+documented specifications.
+#F 54 272
+#D 3.6.3 3.6.7 6.15.1.1 6.15.1.2
+#S 4.5.2/39/7 4.5.9/62/7
+#T P03/3 P03/4 P03/5 P03/6 P05/5
+
+SR43.  When a fill area set is displayed, if its bound edgetype is
+not available on the workstation and its bound edgetype ASF is
+INDIVIDUAL, then edgetype 1 (solid) is used to display the edge.
+#F 54 272
+#D 3.6.3 3.6.7 6.15.1.1 6.15.1.2
+#S 4.5.2/39/7 4.5.9/62/7
+#T P03/4
+
+SR44.  When available on the workstation to which posted,
+edgetypes 1 through 4 appear as solid, dashed, dotted, and
+dashed-dotted, respectively.
+#F
+#D 6.15.1.1 6.15.1.2
+#S 4.5.9/62/7
+#T P03/3 P03/4
+#X 04.02.01.01
+#C Edgetypes are drawn from the identical set of values with the
+same meanings as linetypes.
+
+SR45.  When available on the workstation to which posted,
+edgetypes greater than 4 appear as specified in the ISO register.
+#F
+#D 6.15.1.1 6.15.1.2
+#S 4.1.2/15/2 4.5.9/62/7
+#T P03/5
+#X 04.02.01.01
+#C Edgetypes are drawn from the identical set of values with the
+same meanings as linetypes.
+
+SR46.  When available on the workstation to which posted,
+edgetypes less than 1 appear as specified in the implementor
+documentation.
+#F
+#D 6.15.1.1 6.15.1.2
+#S 4.1.1/15/1 4.5.9/62/7
+#T P03/6 P03/7
+#X 04.02.01.01
+#C Edgetypes are drawn from the identical set of values with the
+same meanings as linetypes.
+
+*** ***   Edgetype: network traversal   *** ***
+
+SR47.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current edgetype of the PTSL is set to 1.
+#F
+#D 2.15.3 3.6.3
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P05/5
+
+SR48.  As part of the PTSL, the current edgetype is saved (but
+not changed) by execute structure and then, upon completion of
+the sub-traversal of the invoked network, restored to the saved
+value.
+#F 113
+#D 3.6.3
+#S 4.4.3/28/1
+#T P05/5
+
+***   Edgewidth scale factor: element creation   ***
+
+SR49.  <Set edgewidth scale factor> creates a "set edgewidth
+scale factor" element (in the open structure), whose associated
+value is taken from the function's parameter.
+#F 55
+#D 7.3.2.6.6
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/17 P01/18 P03/8 P03/9 P03/10 P03/11
+
+*** ***   Edgewidth scale factor: effect during traversal   *** ***
+
+SR50.  Upon traversal of a "set edgewidth scale factor" element,
+the current edgewidth scale factor entry in the PHIGS traversal
+state list (PTSL) is set to the element's associated value.
+#F 55
+#D 3.6.4 7.3.2.6.6
+#S 4.5.2/38/3
+#T P03/8 P03/9 P03/10 P03/11 P05/5
+
+SR51.  When a fill area set is displayed, if its logical edgewidth
+(= its bound edgewidth scale factor times the workstation's
+nominal edgewidth) is available on the workstation and its bound
+edgewidth scale factor ASF is INDIVIDUAL, then the actual
+edgewidth agrees with the logical edgewidth.
+#F 55 272
+#D 3.6.4 3.6.8 6.15.1.3 6.15.1.4 6.15.1.5 6.15.1.6
+#S 4.5.2/39/7 4.5.9/62/8
+#T P03/8 P05/5
+
+SR52.  When a fill area set is displayed, if its logical edgewidth
+is not available on the workstation and its bound edgewidth scale
+factor ASF is INDIVIDUAL, then the actual edgewidth is the
+nearest available to the logical edgewidth.
+#F 55 272
+#D 3.6.4 3.6.8 6.15.1.3 6.15.1.4 6.15.1.5 6.15.1.6
+#S 4.5.2/39/7 4.5.9/62/8
+#T P03/9 P03/10 P03/11 P05/5
+
+*** ***   Edgewidth scale factor: network traversal   *** ***
+
+SR53.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current edgewidth scale factor of the PTSL is set to 1.0.
+#F
+#D 2.15.4 3.6.4
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P05/5
+
+SR54.  As part of the PTSL, the current edgewidth scale factor is
+saved (but not changed) by execute structure and then, upon
+completion of the sub-traversal of the invoked network, restored
+to the saved value.
+#F 113
+#D 3.6.4
+#S 4.4.3/28/1
+#T P05/5
+
+***   Edge colour index: element creation   ***
+
+SR55.   <Set edge colour index> creates a "set edge colour index"
+element (in the open structure), whose associated value is taken
+from the function's parameter.
+#F 56
+#D 7.3.2.6.7
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/19 P01/20 P03/12 P03/13
+
+*** ***   Edge colour index: effect during traversal   *** ***
+
+SR56.  Upon traversal of a "set edge colour index" element, the
+current edge colour index entry in the PHIGS traversal state list
+(PTSL) is set to the element's associated value.
+#F 56
+#D 3.6.5 7.3.2.6.7
+#S 4.5.2/38/3
+#T P03/12 P03/13 P05/9
+
+SR57.  When a fill area set is displayed, if its bound edge colour
+index is defined on the workstation and its bound edge colour
+index ASF is INDIVIDUAL, then the edge colour index is realized
+as itself.
+#F 56
+#D 3.6.5 3.6.9 5.15.3.1 5.15.3.2
+#S 4.5.2/39/7 4.5.12/63/4
+#T P03/12 P05/9
+
+SR58.  When a fill area set is displayed, if its bound edge colour
+index is not defined on the workstation and its bound edge colour
+index ASF is INDIVIDUAL, then the edge colour index is realized
+as number 1.
+#F 56
+#D 3.6.5 3.6.9 5.15.3.1 5.15.3.2
+#S 4.5.2/39/7 4.5.2/43/3
+#T P03/13
+
+*** ***   Edge colour index: network traversal   *** ***
+
+SR59.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current edge colour index of the PTSL is set to 1.
+#F
+#D 2.15.5 3.6.5
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P05/9
+
+SR60.  As part of the PTSL, the current edge colour index is
+saved (but not changed) by execute structure and then, upon
+completion of the sub-traversal of the invoked network, restored
+to the saved value.
+#F 113
+#D 3.6.5
+#S 4.4.3/28/1
+#T P05/9
+
+*** *** ***   Pattern size: element creation   *** *** ***
+
+SR61.   <Set pattern size> creates a "set pattern size" element
+(in the open structure), whose associated value is taken from the
+function's parameter.
+#F 57
+#D 7.3.2.6.8
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/7 P01/8 P04/1 P04/2
+
+*** ***   Pattern size: effect during traversal   *** ***
+
+SR62.  Upon traversal of a non-degenerate "set pattern size"
+element, the current set pattern size entry in the PHIGS
+traversal state list (PTSL) is set to the element's associated
+value.
+#F 57
+#D 3.7.1 7.3.2.6.8
+#S 4.5.2/38/3
+#T P04/1 P05/6
+
+SR63.  Upon traversal of a "set pattern size" element, if the
+absolute value of either pattern size components is zero
+(degenerate), then the element is ignored.
+#F 57
+#D 3.7.1 7.3.2.6.8
+#S n
+#T P04/2
+#C Consequently, the value of the pattern size entry in the PTSL
+is unchanged.
+
+*** ***   Pattern size: network traversal  *** *** ***
+
+SR64.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current pattern size of the PTSL is set to (1.0,1.0).
+#F
+#D 2.16.1 3.7.1
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P05/6
+
+SR65.  As part of the PTSL, the current pattern size is saved
+(but not changed) by execute structure and then, upon completion
+of the sub-traversal of the invoked network, restored to the
+saved value.
+#F 113
+#D 3.7.1
+#S 4.4.3/28/1
+#T P05/6
+
+***   Pattern reference point and vectors: element creation   ***
+
+SR66.   <Set pattern reference point and vectors> creates a "set
+pattern reference point and vectors" element (in the open
+structure), whose associated value is taken from the function's
+parameter.
+#F 58
+#D 7.3.2.6.9
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/9 P01/10 P04/4 P04/5
+
+SR67.  <Set pattern reference point> creates a "set pattern
+reference point" element (in the open structure), whose
+associated value is taken from the function's parameter.
+#F 59
+#D 7.3.2.6.10
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/11 P01/12 P04/3
+
+***   Pattern reference point and vectors: effect during traversal
+
+SR68.  Upon traversal of a non-degenerate "set pattern reference
+point and vectors" element, the current pattern reference point
+and current pattern reference vectors entries in the PHIGS
+traversal state list (PTSL) are set to the element's associated
+values.
+#F 58
+#D 3.7.2 3.7.3 7.3.2.6.9
+#S 4.5.2/38/3
+#T P04/4 P04/5 P05/7
+
+SR69.  Upon traversal of a "set pattern reference point" element,
+the current pattern reference point entry in the PHIGS traversal
+state list (PTSL) is set to the element's associated value with
+the z-coordinate value equal to 0 and the current reference
+vectors entry in the PTSL is set to (1,0,0) and (0,1,0).
+#F 59
+#D 3.7.2 3.7.3 7.3.2.6.10
+#S 4.5.2/38/3
+#T P04/3
+
+SR70.  Upon traversal of a "set pattern reference point and
+vectors" element, if the vectors are degenerate, that is parallel
+or have zero length, then the element is ignored.
+#F 58
+#D 3.7.2 3.7.3 7.3.2.6.9
+#S n
+#T P04/5
+#C Consequently, the values of the current pattern reference
+point and current pattern reference vectors entries in the PTSL
+are unchanged.
+
+*** *** ***   Rendering of geometric attributes   *** *** ***
+
+SR71. A non-degenerate pattern box for a fill area is a
+parallelogram within the MC fill area plane, defined by a base
+corner and adjacent 1st and 2nd corners which are distinct from
+the base corner and each other.
+#F 57 58 59
+#D 3.7.1 3.7.2 3.7.3
+#S 4.5.8/59/1 4.5.8/60/1 4.5.8/60/2
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P05/7
+
+SR72. The base corner of the pattern box is the normal projection
+of the pattern reference point onto the fill area plane.
+#F 58 59
+#D 3.7.2
+#S 4.5.8/59/1
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P05/7
+
+SR73. The pattern width vector is a directed line segment from
+the base corner to the 1st corner such that its direction is
+parallel to the normal projection of the first pattern reference
+vector onto the fill area plane, and its length equals the
+magnitude of the 1st component of the pattern size.
+#F 57 58 59
+#D 3.7.1 3.7.2 3.7.3
+#S 4.5.8/59/1
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P05/6 P05/7
+
+SR74. The pattern height vector is a directed line segment from
+the base corner to the 2nd corner such that its direction is
+parallel to the normal projection of the second pattern reference
+vector onto the fill area plane, and its length equals the
+magnitude of the 2nd component of the pattern size.
+#F 57 58 59
+#D 3.7.1 3.7.2 3.7.3
+#S 4.5.8/60/1
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P05/6 P05/7
+
+SR75. The pattern representation is a 2D array of color indexes,
+numbered from 1 to DX in first dimension and 1 to DY in second
+dimension.
+#F 68
+#D 5.14.2.2
+#S 4.5.8/59/1 4.5.8/60/2
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P05/7
+#X 04.02.05.04
+
+SR76. Mapping a pattern representation into a pattern box
+subdivides the box into a 2D array of DX (along the pattern width
+vector) times DY (along the pattern height vector) colored cells
+of identical size and shape (in MC), with sides parallel to those
+of the pattern box.
+#F 57 58 59 68
+#D 3.7.1 3.7.2 3.7.3 5.14.2.2
+#S 4.5.8/59/1 4.5.8/60/2
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P05/7
+#X 04.02.05.04
+
+SR77. The pattern representation is mapped into the cells of a
+non-degenerate pattern box such that 1) element (1,DY) is
+associated with the cell adjacent to the base corner; 2) elements
+with increasing first dimension indexes are associated with
+successive cells in the direction of the pattern width vector;
+and 3) elements with decreasing second dimension indexes are
+associated with successive cells in the direction of the pattern
+height vector.
+#F 57 58 59 68
+#D 3.7.1 3.7.2 3.7.3 5.14.2.2
+#S 4.5.8/60/2
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P05/7
+#X 04.02.05.04
+
+SR78. A fill area or fill area set with interior style PATTERN is
+filled by replicating the pattern box or portions thereof in
+directions parallel to its sides until the entire area is filled.
+#F
+#D
+#S 4.5.8/60/2
+#T P04/1 P04/2 P04/3 P04/4 P04/5
+#X 04.02.05.04
+#C The original pattern box need not be within, or even overlap,
+the area to be filled; its location, however, determines where
+the derived pattern boxes will be located within the fill area.
+
+SR79. Workstations which support transformable patterns render
+pattern-filled area primitives by applying the usual
+transformations to the MC model described above to generate the
+primitive in DC space.
+#F
+#D 3.7 3.12 5.4.2.3 5.6.3 5.6.5 5.14.2.2
+#S 4.5.8/60/2
+#T P04/1 P04/2 P04/3 P04/4 P04/5
+#C There are no requirements for the rendering of patterns on
+workstations which do not support transformable patterns.
+
+***  Pattern reference point and vectors: network traversal  ***
+
+SR80.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current pattern reference point of the PTSL is set to (0,0,0).
+#F
+#D 2.16.2 3.7.2
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P05/7
+
+SR81.  As part of the PTSL, the current pattern reference point
+is saved (but not changed) by execute structure and then, upon
+completion of the sub-traversal of the invoked network, restored
+to the saved value.
+#F 113
+#D 3.7.2
+#S 4.4.3/28/1
+#T P05/7
+
+SR82.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current pattern reference vectors of the PTSL are set to (1,0,0)
+(0,1,0).
+#F
+#D 2.16.3 3.7.3
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P05/7
+
+SR83.  As part of the PTSL, the current pattern reference vectors
+are saved (but not changed) by execute structure and then, upon
+completion of the sub-traversal of the invoked network, restored
+to the saved value.
+#F 113
+#D 3.7.3
+#S 4.4.3/28/1
+#T P05/7
+
+
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   50: psis    <set interior style>
+   51: psisi   <set interior style index>
+   52: psici   <set interior colour index>
+   53: psedfg  <set edge flag>
+   54: psedt   <set edgetype>
+   55: psewsc  <set edgewidth scale factor>
+   56: psedci  <set edge colour index>
+   57: pspa    <set pattern size>
+   58: psprpv  <set pattern reference point and vectors>
+   59: psparf  <set pattern reference point>
+   68: pspar   <set pattern representation>
+  113: pexst   <execute structure>
+  232: pqepai  <inquire list of pattern indices>
+  233: pqpar   <inquire pattern representation>
+  270: pqif    <inquire interior facilities>
+  272: pqedf   <inquire edge facilities>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.14  ...  default_interior_attributes
+  2.14.2  ...  default_interior_style
+  2.14.3  ...  default_interior_style_index
+  2.14.4  ...  default_interior_colour_index
+  2.15  ...  default_edge_attributes
+  2.15.2  ...  default_edge_flag
+  2.15.3  ...  default_edgetype
+  2.15.4  ...  default_edgewidth_scale_factor
+  2.15.5  ...  default_edge_colour_index
+  2.16  ...  default_pattern_attributes
+  2.16.1  ...  default_pattern_size
+  2.16.2  ...  default_pattern_reference_point
+  2.16.3  ...  default_pattern_reference_vectors
+  3  ...  phigs_traversal_state_list
+  3.5  ...  current_interior_attributes
+  3.5.2  ...  current_interior_style
+  3.5.3  ...  current_interior_style_index
+  3.5.4  ...  current_interior_colour_index
+  3.5.5  ...  current_interior_style_asf
+  3.5.6  ...  current_interior_style_index_asf
+  3.5.7  ...  current_interior_colour_index_asf
+  3.6  ...  current_edge_attributes
+  3.6.2  ...  current_edge_flag
+  3.6.3  ...  current_edgetype
+  3.6.4  ...  current_edgewidth_scale_factor
+  3.6.5  ...  current_edge_colour_index
+  3.6.6  ...  current_edge_flag_asf
+  3.6.7  ...  current_edgetype_asf
+  3.6.8  ...  current_edgewidth_scale_factor_asf
+  3.6.9  ...  current_edge_colour_index_asf
+  3.7  ...  current_pattern_attributes
+  3.7.1  ...  current_pattern_size
+  3.7.2  ...  current_pattern_reference_point
+  3.7.3  ...  current_pattern_reference_vectors
+  3.12 ...  current_modelling_attributes
+  5  ...  workstation_state_list
+  5.4  ...  view_table
+  5.4.2  ...  view_table_ordered_by_input_priority
+  5.4.2.3  ...  current_view
+  5.6  ...  workstation_transformation_entry
+  5.6.3  ...  current_workstation_window
+  5.6.5  ...  current_workstation_viewport
+  5.14  ...  pattern_entry
+  5.14.2  ...  pattern_table
+  5.14.2.1  ...  pattern_index
+  5.14.2.2  ...  pattern_colour_index_array
+  5.15  ...  colour_entry
+  5.15.3  ...  colour_table
+  5.15.3.1  ...  colour_index
+  5.15.3.2  ...  colour_specification
+  6  ...  workstation_description_table
+  6.14  ...  interior_entry
+  6.14.1  ...  interior_facilities
+  6.14.1.1  ...  number_of_available_interior_styles
+  6.14.1.2  ...  list_of_available_interior_styles
+  6.14.1.3  ...  number_of_available_hatch_styles
+  6.14.1.4  ...  list_of_available_hatch_styles
+  6.15  ...  edge_entry
+  6.15.1  ...  edge_facilities
+  6.15.1.1  ...  number_of_available_edgetypes
+  6.15.1.2  ...  list_of_available_edgetypes
+  6.15.1.3  ...  number_of_available_edgewidths
+  6.15.1.4  ...  nominal_edgewidth
+  6.15.1.5  ...  minimum_edgewidth
+  6.15.1.6  ...  maximum_edgewidth
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.9  ...  fill_area_3
+  7.3.1.10 ...  fill_area
+  7.3.1.11 ...  fill_area_set_3
+  7.3.1.12 ...  fill_area_set
+  7.3.2  ...  primitive_attributes
+  7.3.2.6  ...  fill_area_attributes
+  7.3.2.6.1  ...  interior_style
+  7.3.2.6.2  ...  interior_style_index
+  7.3.2.6.3  ...  interior_colour_index
+  7.3.2.6.4  ...  edge_flag
+  7.3.2.6.5  ...  edgetype
+  7.3.2.6.6  ...  edgewidth_scale_factor
+  7.3.2.6.7  ...  edge_colour_index
+  7.3.2.6.8  ...  pattern_size
+  7.3.2.6.9  ...  pattern_reference_point_and_vectors
+  7.3.2.6.10 ...  pattern_reference_point
+ 
+SEMANTIC CROSS-REFERENCES:
+  04.02.05.04/SR02
+ 
+LOCAL SUBROUTINES:
+
+SHOWEW tests the rendering of a given edgewidth, and returns the
+pass/fail result or an abort signal if the requested edge is too
+wide to be tested.
+
+PARPT accepts a reference point and 2 vectors and computes a
+corner of the smallest parallelogram containing a specified
+rectangle. The corner is found in the direction specified by
+parity.
+
+PARLIN accepts a reference point and 2 vectors and computes a
+side of the smallest parallelogram containing a specified
+rectangle.  The side is found in the direction specified by
+parity.
+
+CLDIAG accepts the x-y coordinates of 2 MC points, the
+coefficients of a fill area plane, and a transformation from MC
+to WC, and draws the resulting (slightly shrunken) 3D line
+segment.
+
+
+PROGRAM 1: Simple setting and inquiring
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element content> throughout to determine:
+    celval = current element value as set by program
+    recval = auxiliary element values implied by the standard's
+             representation conventions.
+
+Use <inquire current element type and size> throughout to determine:
+    celsiz = current element size
+
+*** *** *** *** ***   Interior style   *** *** *** *** ***
+<set interior style>:
+    interior_style = PATTERN
+
+TEST: #SR 1 5
+      "<Inquire current element type and size> should return
+       interior style as the type of the created element and the
+       appropriate element size."
+
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = interior_style and
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 5 6
+      "<Inquire current element content> should return the
+       standard representation for all valid interior style
+       values."
+
+for istyle = HOLLOW, SOLID, PATTERN, HATCH, and EMPTY
+   <set interior style> with interior_style = istyle
+   <inquire current element content> for current element representation
+   if (celval = istyle and
+       recval = auxiliary values specified by the standard)
+       OK so far
+   else
+      fail
+      informative message on istyle
+      goto donestyle
+   endif
+next istyle
+
+pass
+
+donestyle:
+
+*** *** *** *** ***   Interior style index   *** *** *** *** ***
+<set interior style index>:
+    interior_stlye_index = 5
+
+TEST: #SR 1 18
+      "<Inquire current element type and size> should return
+       interior style index as the type of the created element
+       and the appropriate element size."
+
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = interior_style_index and
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 18
+      "<Inquire current element content> should return the
+       standard representation for the interior style index
+       value."
+
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 5 and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** *** ***   Interior colour index   *** *** *** *** ***
+<set interior colour index>:
+    interior_colour_index = 2
+
+TEST: #SR 1 26
+      "<Inquire current element type and size> should return
+       interior colour index as the type of the created element
+       and the appropriate element size."
+
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = interior_colour_index and
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 26
+      "<Inquire current element content> should return the
+       standard representation for the interior colour index
+       value."
+
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 2 and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** ***   Pattern size  *** *** *** ***
+<set pattern size>:
+    pattern_size = (4.1, 5.1)
+
+TEST: #SR 1 61
+      "<Inquire current element type and size> should return
+       pattern size as the type of the created element and the
+       appropriate element size."
+
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = pattern_size  and
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 61
+      "<Inquire current element content> should return the
+       standard representation for the pattern size value."
+
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = (4.1, 5.1) and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** ***   Pattern reference point and vectors  *** *** *** ***
+<set pattern reference point and vectors>:
+    pattern_reference_point = (0.5, 0.7, 0.9)
+    vector_1                = (1.1, 1.5, 1.9)
+    vector_2                = (1.3, 1.7, 2.1)
+
+TEST: #SR 1 66
+      "<Inquire current element type and size> should return
+       pattern reference point and vectors as the type of the
+       created element and the appropriate element size."
+
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = pattern_reference_point_and_vectors  and
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 66
+      "<Inquire current element content> should return the
+       standard representation for the pattern reference point
+       and vectors values."
+
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = refpt (0.5, 0.7, 0.9);
+            vec1  (1.1, 1.5, 1.9);
+            vec2  (1.3, 1.7, 2.1)  and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** ***   Pattern reference point   *** *** *** ***
+<set pattern reference point>:
+    pattern_reference_point = (0.35, 0.21)
+
+TEST: #SR 1 67
+      "<Inquire current element type and size> should return
+       pattern reference point as the type of the created element
+       and the appropriate element size."
+
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = pattern_reference_point
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 67
+      "<Inquire current element content> should return the
+       standard representation for the pattern reference point
+       values."
+
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = (0.35, 0.21) and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** *** ***   Edge flag   *** *** *** *** ***
+<set edge flag>:
+    edge_flag = ON
+
+TEST: #SR 1 32
+      "<Inquire current element type and size> should return edge
+       flag as the type of the created element and the
+       appropriate element size."
+
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = edge_flag and
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 32 33
+      "<Inquire current element content> should return the
+       standard representation for all valid edge flag values."
+
+for eflag = OFF, ON
+   <set edge flag> with edge_flag = eflag
+   <inquire current element content> for current element representation
+   if (celval = eflag and
+       recval = auxiliary values specified by the standard)
+       OK so far
+   else
+      fail
+      informative message on eflag
+      goto doneflag
+   endif
+next eflag
+
+pass
+
+doneflag:
+
+*** *** *** *** ***   Edgetype   *** *** *** *** ***
+<set edgetype>:
+    edgetype = 6
+
+TEST: #SR 1 40
+      "<Inquire current element type and size> should return
+       edgetype as the type of the created element and the
+       appropriate element size."
+
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = edgetype and
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 40
+      "<Inquire current element content> should return the
+       standard representation for the edgetype value."
+
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 6 and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** ***  Edgewidth scale factor   *** *** *** *** ***
+<set edgewidth scale factor>:
+    edgewidth_scale_factor = 0.33
+
+TEST: #SR 1 49
+      "<Inquire current element type and size> should return
+       edgewidth scale factor as the type of the created element
+       and the appropriate element size."
+
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = edgewidth_scale_factor and
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 49
+      "<Inquire current element content> should return the
+       standard representation for the edgewidth scale factor
+       value."
+
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 0.33 and
+   recval = auxiliary values specified by the standard)
+
+*** *** *** *** ***   Edge colour index   *** *** *** *** ***
+<set edge colour index>:
+    edge_colour_index = 3
+
+TEST: #SR 1 55
+      "<Inquire current element type and size> should return edge
+       colour index as the type of the created element and the
+       appropriate element size."
+
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = edge_colour_index and
+   celsiz               = values specified by the standard)
+
+TEST: #SR 2 55
+      "<Inquire current element content> should return the
+       standard representation for the edge colour index value."
+
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 3 and
+   recval = auxiliary values specified by the standard)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Appearance of individual interior attributes
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+INTERIOR STYLES: This screen should display examples of each of
+the mandatory and optional interior styles actually supported by
+the implementation.  You should not consider whether all 5 are
+present, but simply whether each interior style is recognizable
+from the verbal description.  Enter a list of integers which
+identify the interior styles in the same order as they appear in
+the prompt.
+
+UNSUPPORTED INTERIOR STYLES: This screen should display several
+hollow fill areas and one non-hollow fill area. Identify the
+non-hollow area.
+
+INTERIOR STYLE - HOLLOW: This screen should display several
+hollow fill areas.  All but one fill area should have linetype
+and linewidth as documented by the implementor.  Identify the
+fill area with the different linetype and linewidth.
+
+REGISTERED HATCH STYLES: This screen displays a sample of
+supported registered hatch styles (at most 8).  For each
+displayed fill area/area sets, look up its hatch style identifier
+in the ISO register and verify that the actual appearance of the
+hatch style agrees with the specification.
+
+IMPLEMENTOR DEFINED HATCH STYLES: This screen displays a sample
+of implementor defined hatch styles (at most 8).  For each
+displayed fill area/area set, look up its hatch style identifier
+in the implementor's documentation and verify that the actual
+appearance of the hatch style agrees with the specification.
+
+COMPLETE DOCUMENTATION FOR IMPLEMENTOR HATCH STYLES: No
+associated picture.  Verify that all the entries  in the list of
+available hatch styles for this workstation type are documented
+by the implementor.  The list may be a subset of the documented
+hatch styles.
+
+UNSUPPORTED HATCH STYLES: This screen should display several fill
+areas/area sets with a hatch style that corresponds to interior
+style index 1; and one fill area/area set with a different hatch
+style. Identify the area with the different hatch style.
+
+DEFINED PATTERN INDICES: All fill areas/area sets but one are
+drawn with the same pattern. Identify the single area drawn in
+the a different pattern style. NOTE: this tests the indices into
+the pattern table (similar to color).
+
+UNDEFINED PATTERNS: This screen should display several fill
+areas/area sets with a pattern that corresponds to interior style
+index 1; and one fill area/area set with a different pattern.
+Identify the area with the different pattern.
+
+DEFINED INTERIOR COLOR INDICES: All fill areas/areas sets
+but one are drawn in the background color.  Identify the fill
+area/area set drawn in the default foreground color.
+
+UNDEFINED INTERIOR COLOR INDICES: A star is drawn with
+several fill areas/area sets beneath it.  Normally, all of these
+will be the same color as the star.  Count up and report the
+number of fill areas/area sets which match the star in color.
+
+
+DESIGN:
+
+use <inquire interior facilities> to determine:
+  lavis  = list of available interior styles
+  nalis  = number of available & legal interior styles (HOLLOW:EMPTY)
+  numhs  = number of available hatch styles
+  lavrhs = list of available registered (non-mandatory) hatch styles
+  lavihs = list of available implementor-defined hatch styles
+           (may be derived directly from hatch style value, if reported
+            number of hatch styles < 0)
+  noaval = list of interior styles not available
+
+*** *** ***   1. interior style   *** *** ***
+
+Use default background color=0, foreground=1
+Use default interior style index = 1
+
+Display in random order FILL AREA with all available and legal
+   (hollow:empty) interior styles in lavis
+
+TEST: #SR 3 5 6 7 8 10 12 13 14 15
+      "The interior styles, including mandatory styles (HOLLOW,
+       EMPTY), should be recognizable from their standard
+       description."
+
+OPQA/INTERIOR STYLES: List, in order, the numeric labels for interior
+  styles: HOLLOW, SOLID, PATTERN, HATCH, EMPTY.
+
+pass/fail depending on (all displayed interior styles correctly identified)
+
+if (all 5 interior styles available) then
+   goto end_nosup
+endif
+
+lunsup = list of (mostly) unsupported interior styles contains:
+   HOLLOW
+   3 unsupported interiors from noaval
+   non-HOLLOW supported interior
+
+Display in random order FILL AREA with interior styles from lunsup
+
+TEST: #SR 3 5 6 7 9 10
+      "Unavailable interior styles should be displayed as
+       HOLLOW."
+
+OPQA/UNSUPPORTED INTERIOR STYLES: which rectangle is NOT hollow?
+pass/fail depending on (the non-hollow filled area selected)
+
+end_nosup:
+
+TEST: #SR 3 5 6 7 8 10 11
+      "For HOLLOW interior style, the linetype and linewidth of
+       the bounding polyline should be as specified by the
+       implementor."
+
+OPQA/Does implementor document the linetype and linewidth?
+If (no) then
+   fail
+   goto end_hollow
+endif
+
+OPQA/Enter the linetype used for a HOLLOW interior style.
+opltyp = operator response
+OPQA/Enter the linewidth used for a HOLLOW interior style.
+oplwid = operator response
+
+set linetype to opltyp
+set line width to oplwid
+
+draw 5 fill areas: 2 actual, 3 simulated, with one of the
+simulated ones drawn incorrectly
+
+OPQA/INTERIOR STYLE - HOLLOW: Which rectangle is different?
+pass/fail depending on (response = different rectangle)
+
+end_hollow:
+
+*** *** *** interior style index - hatch   *** *** ***
+
+if (HATCH not available) then
+   message: hatch style not supported, skip tests
+   goto end_hatch
+endif
+
+regdx = size of lavrhs
+if regdx < 1 skip to neg_type
+
+if regdx < 9
+   hatdis = hatch styles to be displayed = all hatch styles in lavrhs
+else
+   hatdis = hatch styles to be displayed = 8 hatch styles randomly selected
+                                           from lavrhs
+endif
+
+display in order and label all FILL AREA hatch styles in hatdis
+
+TEST: #SR 3 5 7 8 14 18 19 20 22
+      "The registered hatch styles (> 0) should agree with their
+       registered descriptions."
+
+OPQA/REGISTERED HATCH STYLES: Is each hatch style depicted
+  according to its numeric identifier's specification in
+  the ISO register?
+pass/fail depending on (operator responds "yes")
+
+neg_type:
+
+impdx = size of lavihs
+if impdx < 1 goto end_hatch_style
+
+if impdx< 9
+   hatdis = hatch styles to be displayed = all hatch styles in lavihs
+else
+   hatdis = hatch styles to be displayed = 8 hatch styles randomly
+                                           selected from lavihs
+endif
+
+display in order and label all FILL AREA SET hatch styles in hatdis
+
+TEST: #SR 4 5 7 8 14 18 19 20 23
+      "Implementor-defined hatch styles (< 1) should agree with
+       the descriptions supplied by the implementor."
+
+OPQA/IMPLEMENTOR DEFINED HATCH STYLES: Is each hatch style
+  depicted according to its numeric identifier's specification in
+  the implementor documentation.
+pass/fail depending on (operator responds "yes")
+
+if (impdx <= 8 or numhs < 0) then
+   either all implementor hatch styles already shown or
+   hatch styles appearance derived directly from value - skip test
+   goto end_hatch_style
+endif
+
+TEST: #SR 23
+      "All reported implementor-defined hatch styles available
+       for a given workstation type should be documented by the
+       implementor."
+
+OPQA/COMPLETE DOCUMENTATION FOR IMPLEMENTOR HATCH STYLES: Are all
+  these reportedly available hatch styles documented by the implementor
+  <lavihs>?
+pass/fail depending on (operator responds "yes")
+
+end_hatch_style:
+
+if (hatch index 1 not available) then
+   message: No index #1, skip test of unsupported hatch style
+   goto end_hatch
+endif
+lunsup = list of (mostly) unsupported hatch styles contains:
+   a negative unsupported type, if available (< minimum in lavihs)
+   0, if not in lavihs
+   a positive unsupported type (> maximum in lavrhs)
+   1, (horizontal hatch)
+   a supported type, other than 1 (should be at least 2 others)
+
+Display in random order FILL AREA  with interior styles from lunsup
+
+TEST: #SR 3 5 7 8 14 18 19 21
+      "Unavailable hatch styles should be displayed as hatch
+       style #1."
+
+OPQA/UNSUPPORTED HATCH STYLES: which hatch style is not the
+  horizontal hatch style of index #1?
+pass/fail depending on (the non-hatch style 1 selected)
+
+end_hatch:
+
+*** *** ***  interior style index - pattern   *** *** ***
+
+if (PATTERN not available) then
+   message: skip tests, pattern not available
+   goto end_pattern
+endif
+
+TEST: #SR 3 4 5 7 8 15 18 19 20
+      "A defined pattern index should cause the addressed entry
+       in the pattern table to be used when rendering a polygonal
+       area filled with pattern interior style."
+
+Set 5 patterns (use index 1-5): 4 identical and one different
+Display in random order FILL AREA SET with all 5 patterns
+
+OPQA/DEFINED PATTERN INDICES: which pattern is different?
+pass/fail depending on (response = different pattern selected )
+
+lunsup = list of (mostly) unsupported pattern indices contains:
+   3 undefined pattern indices
+   1, (reset to checkerboard)
+   a supported type, other than 1 (set one)
+
+Display in random order FILL AREA with interior styles from lunsup
+
+TEST: #SR 3 4 5 6 7 8 15 18 19 21
+      "Unavailable patterns should be displayed as pattern #1."
+
+OPQA/UNDEFINED PATTERNS: which pattern is different?
+pass/fail depending on (response = different pattern selected)
+
+end_pattern:
+
+*** *** *** interior color index   *** *** ***
+
+TEST: #SR 3 4 10 13 14 26 27 28
+      "A defined interior color index should cause the addressed
+       entry in the color table to be used when rendering the
+       interior of a fill area or fill area set."
+
+bckcol = background color = realized color spec for entry #0
+forcol = foreground color = realized color spec for entry #1
+
+szcolt = maximum size of color table (including entry #0)
+numfil = number of fill areas to be drawn = min(8, szcolt)
+facol  = random permutation of #0,#1, and numfil-2 random choices
+         from entries #2 to #szcolt-1
+visdx = from facol, randomly select an entry to be made visible
+        but not the one that contains 0, since this may not be
+        re-settable.
+
+for ix = 1 to numfil
+   set entry lncol(ix) to bckcol
+   set interior style to rotate through [HATCH,SOLID,HOLLOW]
+     (if unavailable, will default to HOLLOW)
+   draw fill area or fill area set #ix with interior colour index
+     = facol(ix), and label it
+next ix
+
+set entry facol(visdx) to forcol
+
+OPQA/DEFINED INTERIOR COLOR INDICES: which fill area is visible?
+pass/fail depending on (response = fill area colored by visdx)
+
+end_def_col:
+
+TEST: #SR 3 4 10 13 14 26 27 29
+      "An undefined interior color index should cause entry
+       #1 in the color table to be used when rendering the
+       interior of a fill area or fill area set."
+
+set entry #1 in color table opposite from BCKCOL
+set entry #1 different from FORCOL - make sure undefined default
+  to *current* color-rep of #1, not just a predefined color.
+
+u1,u2,u3 = 3 undefined, positive color indices - all greater
+  than maximum defined entry in color table
+expfas = number of explicit fill area/area sets of color #1
+       = random integer
+   from 0 to 4
+
+draw star with color #1
+
+display interleaved:
+  three fill areas of color u1,u2,u3,
+  expfas fill areas of color #1
+  set interior style to rotate through [HATCH,SOLID,HOLLOW]
+     (if unavailable, will default to HOLLOW)
+
+OPQA/UNDEFINED INTERIOR COLOR INDICES: how many rectangles
+  are the same color as the star?
+pass/fail depending on (response = 3+expfas)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Appearance of individual edge attributes
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+EDGE FLAG INDICATOR: This screen should display several
+rectangles with edges and several without edges.  Identify the
+rectangles with visible edges.
+
+EDGE OVERLAYS INTERIOR: A star is drawn with several HOLLOW fill
+areas and fill area sets beneath it. Count up and report the
+number of triangles with edges the same color as the star.
+
+STANDARD EDGETYPES: This screen should display examples of each
+of the edgetypes defined by the standard and actually supported
+by the implementation. You should not consider whether edgetype 1
+is present, but simply whether each edgetype is recognizable from
+the verbal description. Enter a list of integers which identify
+the edgetypes in the same order as they appear in the prompt.
+
+UNSUPPORTED EDGETYPES: This screen should display several
+rectangles with solid edges and one rectange with a non-solid
+edge.  Identify the rectangle with the non-solid edge.
+
+REGISTERED EDGETYPES: This screen displays a sample of supported
+registered edgetypes (at most 8).  For each displayed edge, look
+up its edgetype (or linetype) equivalent identifier in the ISO
+register and verify that the actual appearance of the edge agrees
+with the ISO specification.
+
+IMPLEMENTOR DEFINED EDGETYPES: This screen displays a sample of
+implementor defined edgetypes (at most 8).  For each displayed
+edge, look up its edgetype (or linetype) identifier in the
+implementor's documentation and verify that the actual appearance
+of the edge agrees with the specification.
+
+COMPLETE DOCUMENTATION FOR IMPLEMENTOR EDGETYPES: No associated
+picture.  Verify that all the entries in the list of available
+edgetypes for this workstation type are documented by the
+implementor.  The list may be a subset of the documented
+edgetypes.
+
+VARIOUS EDGEWIDTH SCALE FACTORS: Several numbered pairs of
+rectangles are drawn.  Compare the edgewidths for each pair. One
+pair should have the same width for both members.  Although the
+program tries to line up the bottom of the rectangles, there is
+no requirement that they be aligned, so judge only according to
+width.
+
+POSITIVE EDGEWIDTH BELOW MINIMUM: as above, for VARIOUS EDGEWIDTH
+SCALE FACTORS.
+
+NEGATIVE EDGEWIDTH: as above, for VARIOUS EDGEWIDTH SCALE
+FACTORS.
+
+POSITIVE EDGEWIDTH ABOVE MAXIMUM: as above, for VARIOUS EDGEWIDTH
+SCALE FACTORS.
+
+DEFINED EDGE COLOR INDICES: The edges of all the triangles but
+one are drawn in the background color.  Identify the triangle
+whose edge is drawn in the default foreground color.
+
+UNDEFINED EDGE COLOR INDICES: A star is drawn with several
+rectangles (with edge flag on) beneath it.  Normally, all of
+these will be the same color as the star.  Count up and report
+the number of rectangles whose edges match the star in color.
+
+DESIGN:
+
+use <inquire edge facilities> to determine:
+  numet  = number of available edgetypes
+  lavset = list of available standard edgetypes
+  lavret = list of available registered (>4) edgetypes
+  laviet = list of available implementor-defined edgetypes
+           (may be derived directly from edgetype value, if reported
+            number of edgetypes < 0)
+  numew  = number of available edge-widths
+  nomew  = nominal edge-width (DC)
+  minew,maxew = minimum,maximum edge-width (DC)
+
+*** *** ***  EDGE FLAG INDICATOR  *** *** ***
+
+use interior style EMPTY and FILL AREA SET
+
+filon  = number of areas to be drawn with edge flag ON =
+         random number 1 to 8
+display in random order:
+   filon number of polygonal areas
+   8-filon number of polygonal areas with flag=OFF
+
+TEST: #SR 4 32 33 34 35 36
+      "The edge of a polygonal area should be visible when the
+       edge flag is on and not visible when the edge flag is
+       off."
+
+OPQA/EDGE FLAG INDICATOR: which rectangles have visible
+   edges?
+pass/fail depending on (all displayed areas with visible edges
+   correctly identified)
+
+<inquire color facilities>
+if (monochrome) then
+   skip test - can't distinguish between edge and boundary
+   goto end_flag
+endif
+
+TEST: #SR 4 10 32 34 35 36 37
+      "The edges of fill area sets should be drawn on top of the
+       interior."
+
+bckcol = background color = realized color spec for color index 0
+forcol = foreground color = realized color spec for color index 1
+
+set color index entry #2 different from FORCOL and BCKCOL
+set interior style = HOLLOW
+set edge flag ON
+set interior color index = 1
+set edge color index = 2
+draw star with color index #2
+
+nfaset = number of fill area sets = random number 1 to 5
+
+display interleaved:
+   nfaset fill area sets
+   6-nfaset fill areas
+
+OPQA/EDGE OVERLAYS INTERIOR: Which rectangles have their
+   outermost edges the same colour as the star?
+pass/fail depending on (fill area sets correctly identified)
+
+end_flag:
+
+*** *** ***   EDGETYPE   *** *** ***
+
+Use default background color=0, foreground=1
+
+Display in random order all edgetypes in lavset
+
+TEST: #SR 4 36 40 41 42 44
+      "The edgetypes (1-4) should be recognizable from their
+       standard description."
+
+OPQA/STANDARD EDGETYPES: List, in order, the numeric labels for
+  edgetypes: solid, dotted, dashed, dotted-dashed.
+
+pass/fail depending on (all displayed edgetypes correctly identified)
+
+lunsup = list of (mostly) unsupported edgetypes, contains:
+index 1: a negative unsupported type, if available
+         (< minimum in laviet)
+      2: 0, if not in laviet
+      3: a positive unsupported type (> maximum in lavret)
+      4: 1,
+      5: a simulated rectangle with dotted linetype (PLDOT)
+
+randomize order edgetypes from lunsup, using perm
+for each entry = edx in lunsup
+   if (perm(edx) = size of lunsup) then
+      simulate rectangle with dotted linetype
+   else
+      display edgetype
+   endif
+next entry
+
+TEST: #SR 4 36 40 41 42 43 44
+      "Unavailable edgetypes should be displayed as edgetype
+       number 1."
+
+OPQA/UNSUPPORTED EDGETYPES: which rectangle has a non-solid edge?
+pass/fail depending on (the simulated rectangle selected)
+
+regdx = size of lavret
+if regdx < 1 skip to neg_type
+
+numdis = number to be displayed = min(8, size of lavret)
+lindis = list of numdis entries chosen randomly from lavret
+
+display in order and label entries in lindis
+
+TEST: #SR 4 36 40 41 42 45
+      "The appearance of the registered edgetypes (> 4) should
+       agree with their registered description."
+
+OPQA/REGISTERED EDGETYPES: Is each edgetype depicted according to
+  its numeric identifier's specification in the ISO register?
+pass/fail depending on (operator responds "yes")
+
+neg_type:
+
+impdx = size of laviet
+if impdx < 1 skip to end_edgetype
+
+numdis = number to be displayed = min(8, size of laviet)
+lindis = list of numdis entries chosen randomly from laviet
+
+display in order and label entries in lindis
+
+TEST: #SR 4 36 40 41 42 46
+      "The appearance of the implementor defined edgetypes (< 1)
+       should agree with the descriptions supplied by the
+       implementor."
+
+OPQA/IMPLEMENTOR DEFINED EDGETYPES: Is each edgetype depicted
+  according to its numeric identifier's specification in the
+  implementor documentation?
+pass/fail depending on (operator responds "yes")
+
+if (impdx <= 8 or numet < 0) then
+   either all implementor edgetypes already shown or
+   edgetype appearance derived directly from value - skip test
+   goto end_edgetype
+endif
+
+TEST: #SR 46
+      "All reported implementor-defined edgetypes available for a
+       given workstation type should be documented by the
+       implementor."
+
+sort laviet
+
+OPQA/COMPLETE DOCUMENTATION FOR IMPLEMENTOR EDGETYPES: Are all
+  these reported available edgetypes documented by the implementor?
+  <contents of laviet>
+pass/fail depending on (operator responds "yes")
+
+end_edgetype:
+
+*** *** ***   EDGEWIDTH   *** *** ***
+
+from dialog common:
+  wcpdc  = WC unit / DC unit
+  qvis   = minimum distinguishable length in DC-units
+
+Are there at least two visually distinguishable edge-widths?
+if (numew = 1)             or
+   (maxew <= 1.02 * minew)  or
+   (maxew-minew < qvis)    then
+   only one distinguishable:
+   tstew1 = first edgewidth to be tested = maxew
+   tstew2 =  last edgewidth to be tested = tstew1
+   mult = 2
+else
+   tstew1 = first edgewidth to be tested = minew
+   tstew2 =  last edgewidth to be tested = maxew
+   if (numew = 0) then
+      continuous range of edgewidths available - take 4 geometric steps
+      mult = 0.9999 * ((tstew2/tstew1) ** 0.25)
+   else
+      discrete set of edgewidths available - test min/max only
+      mult = 0.9999 * (tstew2/tstew1)
+   endif
+endif
+
+numpas = 0 = number of tests passed so far
+thisew = tstew1
+
+loop thru various edgewidths
+next_ew:
+OPQA/VARIOUS EDGEWIDTH SCALE FACTORS: invoke SHOWEW subroutine to
+  test requested edge width = thisew
+        expected edge width = thisew
+if abort indicated
+   if (numpas < 2) then
+      message about edgewidth too big for the screen
+      goto min_max_coerce
+   else
+      goto do_test_msg
+   endif
+elseif failure indicated
+   numpas = 0
+   goto do_tst_msg
+endif
+
+numpas = numpas+1
+set up for next edgewidth to be tested:
+thisew = thisew * mult
+if thisew <= tstew2 goto next_ew
+
+do_tst_msg:
+
+TEST: #SR 4 36 49 50 51
+      "Available edgewidth scale factors should control the
+       realized thickness of an edge."
+
+pass/fail depending on (numpas > 0)
+
+min_max_coerce:
+
+TEST: #SR 4 36 49 50 52
+      "A requested positive edgewidth scale factor below the
+       minimum available should be realized as the minimum."
+
+OPQA/POSITIVE EDGEWIDTH BELOW MINIMUM: invoke subroutine SHOWEW
+  to test requested edge width = minew/2
+           expected edge width = minew
+pass/fail depending on return code from SHOWEW
+
+TEST: #SR 4 36 49 50 52
+      "A requested negative edgewidth scale factor should be
+       realized as the minimum."
+
+OPQA/NEGATIVE EDGEWIDTH: invoke subroutine SHOWEW to test
+  requested edge width = -maxew-100
+   expected edge width = minew
+pass/fail depending on return code from SHOWEW
+
+OPQA/POSITIVE EDGEWIDTH ABOVE MAXIMUM: invoke subroutine SHOWEW
+  to test requested edge width = maxew*2
+           expected edge width = maxew
+if abort indicated
+   message about edgewidth too big for the screen
+else
+   TEST: #SR 4 36 49 50 52
+         "A requested edgewidth scale factor above the maximum
+          available should be realized as the maximum."
+   pass/fail depending on return code from SHOWEW
+endif
+
+*** *** ***   EDGE COLOR INDEX   *** *** ***
+
+EDGE FLAG = ON and interior style = EMPTY
+
+TEST: #SR 4 36 55 56 57
+      "A defined edge color index should cause the addressed
+       entry in the color table to be used when rendering the
+       edge of a polygonal area."
+
+bckcol = background color = realized color spec for entry #0
+forcol = foreground color = realized color spec for entry #1
+
+szcolt = maximum size of color table (including entry #0)
+numfil = number of fill areas to be drawn = min(8, szcolt)
+edcol  = random permutation of #0,#1, and numfil-2 random choices
+         from entries #2 to #szcolt-1
+visdx = from edcol, randomly select an entry to be made visible
+        but not the one that contains 0, since this may not be
+        re-settable.
+
+for ix = 1 to numfil
+   set entry edcol(ix) to bckcol
+   draw fill area set #ix with edge colour index = edcol(ix), and
+     label it
+next ix
+
+set entry edcol(visdx) to forcol
+
+OPQA/DEFINED EDGE COLOR INDICES: which triangle is visible?
+pass/fail depending on (response = fill area colored by visdx)
+
+end_def_col:
+
+TEST: #SR 4 36 55 56 58
+      "An undefined edge color index should cause entry number 1
+       in the color table to be used when rendering the edge of a
+       polygonal area."
+
+set entry #1 in color table opposite from BCKCOL
+set entry #1 different from FORCOL - make sure undefined default
+  to *current* color-rep of #1, not just a predefined color.
+
+u1,u2,u3 = 3 undefined, positive color indices - all greater
+  than maximum defined entry in color table
+explct = number of explicit lines of color #1 = random integer
+   from 0 to 4
+
+draw star with color #1
+
+display interleaved:
+  three fill areas (interior style EMPTY) of color u1,u2,u3,
+  explct fill areas (interior style EMPTY) of color #1
+
+OPQA/UNDEFINED EDGE COLOR INDICES: how many rectangles are the
+  same color as the star?
+pass/fail depending on (response = 3+explct)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Appearance of individual geometric attributes
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+ACCURACY OF PATTERN SIZE: Several patterned rectangles are drawn,
+each on a background of horizontal and vertical dotted lines.
+For all but one rectangle, these lines should be aligned with the
+boundaries of the pattern cells.  Identify the rectangle not so
+aligned.
+
+DEGENERATE PATTERN SIZE: Several patterned rectangles are drawn,
+all but one with the same pattern and cell size. Identify the
+rectangle with a distinct cell size.
+
+EFFECT OF SET PATTERN REFERENCE POINT: Several patterned
+rectangles are drawn, each on a background of horizontal and
+vertical dotted lines.  For all but one rectangle, these lines
+should be aligned with the boundaries of the pattern cells.
+Identify the rectangle not so aligned.
+
+EFFECT OF PATTERN REFERENCE POINT, VECTORS, AND SIZE: Several
+transformed and patterned fill areas are drawn.  On top of each,
+the expected location and color of each pattern cell is indicated
+by two polylines of the expected color, connecting the diagonally
+opposite corners of the cell. Thus, for all but one fill area,
+these polylines should be undetectable.  Identify the one
+rectangle in which they are NOT aligned within cells, and thus
+are visible.
+
+DEGENERATE PATTERN VECTORS: Several patterned rectangles are
+drawn, all but one with the same pattern reference point and
+vectors.  Their pattern cells are all of the same shape, but one
+should have its cells oriented in a different direction than the
+others. Identify the rectangle with distinct pattern vectors.
+
+
+DESIGN:
+
+use <inquire interior facilities> to determine:
+if (pattern not available) then
+   message: skipping tests of geometric attributes, since these
+     apply only to pattern interior style.
+   goto endit
+endif
+
+ask operator:
+if (transformable patterns not available) then
+   message: skipping tests of geometric attributes, since these
+     are predictable only for transformable patterns.
+   goto endit
+endif
+
+                                                    ---------
+                                                    | 0 | 1 |
+set up simple checkerboard pattern representation   |---+---|
+  as interior index #1:                             | 1 | 0 |
+                                                    ---------
+
+*** *** *** ***   pattern size   *** *** *** ***
+
+TEST: #SR 3 4 61 62 71 72 73 74 75 76 77 78 79
+      "The lengths of the sides of the pattern box should equal
+       the magnitudes of the pattern size attribute of a fill
+       area or fill area set primitive."
+
+ngpat = random integer from 1 to 5
+
+for ix = 1 to 5
+   patszx = pattern size #1 = random value from 0.06 to 0.12
+   patszy = pattern size #2 = random value from 0.04 to 0.08
+   randomly (50/50) set patszx = -patszx
+   randomly (50/50) set patszy = -patszy
+   exp1,exp2 = expected cell size = abs(patszx,patszy / 2)
+   if (ix = ngpat)
+      if (exp1 < 0.1) then
+         exp1 = 1.2 * exp1
+      else
+         exp1 = 0.8 * exp1
+      endif
+   endif
+   draw expected boundaries of pattern cells, based on exp1
+     and exp2, using dotted polylines
+   draw fill area or fill area set #ix
+      with pattern size = patszx, patszy
+next ix
+
+OPQA/ACCURACY OF PATTERN SIZE: For which rectangle are the dotted
+  lines NOT aligned with cell boundaries?
+pass/fail depending on (operator identifies rectangle #ngpat)
+
+TEST: #SR 3 4 61 63 71 72 73 74 75 76 77 78 79
+      "A degenerate value in a pattern size element (either
+       component zero) should not affect the traversal state
+       list, nor the value bound to fill area primitives."
+
+set perm to randomize positions of primitives
+use both fill area and fill area set
+
+In structure:
+   set reasonable pattern size = patszx,patszy
+   draw area #1 at location perm(1)
+   set pattern size = 0,-2*patszy   (no effect)
+   draw area #2 at location perm(2)
+   set pattern size = 3*patszx,0    (no effect)
+   draw area #3 at location perm(3)
+   set pattern size = 0,0           (no effect)
+   draw area #4 at location perm(4)
+   set pattern size = 1.2*patszx, 0.8*patszy
+   draw area #5 at location perm(5)
+
+OPQA/DEGENERATE PATTERN SIZE: Which rectangle has a different
+  pattern size?
+pass/fail depending on (operator identifies rectangle #5)
+
+
+*** *** *** ***   pattern reference point   *** *** *** ***
+
+TEST: #SR 3 4 67 69 71 72 73 74 75 76 77 78 79
+      "<Set pattern reference point> should set the x-y values of
+       the reference point as specified, the z-value to zero, and
+       the pattern reference vectors to (1,0,0) and (0,1,0)."
+
+ngpat = random integer from 1 to 5
+zoff  = z-location of axis of rotation = 0.2
+
+patszx,patszy = pattern size for this test = (0.15, 0.08)
+set pattern size to patszx,patszy
+
+for ix = 1 to 5
+   set up correct values:
+   refptx,refpty = random from within [-2,2]
+   rvec1, rvec2 always = (1,0,0), (0,1,0)
+   ang = angle of rotation around axis (x=0, z=zoff) for fill area plane
+       = random from within [15deg, 40deg]
+   celszx,celszy = size of cell = patszx/2, patszy/2
+   <set pattern reference point and vectors> to
+      refptx, refpty, patszx / (2 * sin(ang));
+         (if left in effect, this positions box boundary in
+          x-dimension exactly halfway from correct boundary; this
+          will be conspicuously wrong if not overridden by <set
+          pattern reference point>.)
+      vec1, vec2 = = random from within [-2,2]
+
+   exp1,exp2 = expected cell size as projected on to NPC plane
+   exp1 = abs(celszx * cosang)
+   exp2 = abs(celszy)
+
+   if (ix = ngpat)
+      if (exp1 < 0.1) then
+         exp1 = 1.2 * exp1
+      else
+         exp1 = 0.8 * exp1
+      endif
+   endif
+
+   draw expected boundaries of pattern cells, based on exp1
+     and exp2, using dotted polylines
+
+   set up z-values based on ang:
+   for ix = 1 to 4
+      za(ix) = xa(ix) * tan(ang) + zoff
+   next ix
+   <set pattern reference point> to refptx, refpty
+   draw fill area or fill area set #ix
+next ix
+
+OPQA/EFFECT OF SET PATTERN REFERENCE POINT: For which rectangle
+  are the dotted lines NOT aligned with cell boundaries?
+pass/fail depending on (operator identifies rectangle #ngpat)
+
+
+*** *** ***   pattern reference point and vectors   *** *** ***
+
+TEST: #SR 3 4 66 68 71 72 73 74 75 76 77 78 79
+      "The geometric attributes pattern size, pattern reference
+       point, and pattern reference vectors should determine the
+       location of colored pattern cells within fill area and
+       fill area set primitives."
+
+ngpat = random integer from 1 to 5
+yloc = midpoint for next rectangle
+xleft,xright = left,right MC edges of rectangle = -.1, +.1
+set up 3 x 2 pattern representation as index #1, using as many
+  distinct colors as available.
+
+loop to create 5 patterned fill areas, with simulated cells:
+for ix = 1 to 5
+
+pick_coeff:
+   a,b,c = first three coefficients for equation of fill area plane
+         = random from within [-5,5]
+   if (a,b,c too oblique) goto pick_coeff
+   calculate d such that rectangle MC center (0,yloc,.5) is
+     contained in plane
+   MC rectangle coordinates:
+      x: -1. : +.1
+      y: yloc + or - 0.4*yincr
+
+   set up z-values based on a,b,c,d plane coefficients
+   if (z-values of corners of rectangle not within [0,1]) then
+      plane too oblique
+      goto pick_coeff
+   endif
+
+   set up correct values:
+   refptx,refpty,refptz = reference point
+                        = random from within [-2,2]
+pick_vecs:
+   rfvc1,rfvc2 = reference vectors
+               = random from within [-2,2]
+   calculate shape of WC cell, based on vectors rfvc1, rfvc2
+     projected on to fill area plane, and then onto NPC.
+   if shape not rectangular enough (any angle < 55deg) then
+      goto pick_vecs
+   calculate patszx,patszy so as to make cell size visible
+   <set pattern size> to patszx,patszy
+   <set pattern reference point and vectors> to
+      ref point:   refptx, refpty, refptz
+      ref vectors: rfvc1, rfvc2
+   <set local modelling transform> such that in x, -.1,+.1 maps
+         to .4,.8) at z=1, and in y, yloc maps to yloc at z=0.5:
+
+          2   0  0   0.6                x' = (2x + .6)/w
+          0   1  0   yloc/4   yields    y' =  (y + yloc/4)/w
+          0   0  1   0                  z' =  z/w
+          0   0 -0.5 1.5                w  = (3-z)/2
+
+   draw fill area or fill area set #ix
+   <set local modelling transform> back to identity
+
+   calculate WC location and color of expected cells, based on
+     refpt, rfvc, patsz, and transformation
+
+   if (ix = ngpat) then
+      switch colors in expected cells (1,1) and (1,2)
+   endif
+
+   draw expected pattern cells, using diagonal polylines at
+     WC: z=0.999 (so that polylines are in front of fill area) to
+     connect diagonal corners.
+
+next ix
+
+OPQA/EFFECT OF PATTERN REFERENCE POINT, VECTORS, AND SIZE: For
+  which rectangle are colored pattern cell diagonals visible?
+pass/fail depending on (operator identifies rectangle #ngpat)
+
+
+TEST: #SR 3 4 66 68 70 71 72 73 74 75 76 77 78 79
+      "Degenerate values in the pattern reference vector (zero
+       length or parallel) should not affect the traversal state
+       list, nor the value bound to fill area primitives."
+
+set reasonable pattern size
+use 3x2 pattern from previous test
+set perm to randomize positions of primitives
+rfvc1,rfvc2 = reasonable pattern reference vectors; integer values
+            = (2,2,1), (-1,3,-1)
+
+re-locate fill areas by applying modelling transformation; thus
+pattern reference point (in MC) will be constant.
+
+In structure:
+   <set pattern reference vectors> to rfvc1,rfvc2
+   draw area #1 at location perm(1)
+   <set pattern reference vectors> to 0,rfvc1
+     (zero length vector: no effect)
+   draw area #2 at location perm(2)
+   <set pattern reference vectors> to rfvc2,0
+     (zero length vector: no effect)
+   draw area #3 at location perm(3)
+   <set pattern reference vectors> to 5*rfvc1,rfvc1
+     (parallel vectors: no effect)
+   draw area #4 at location perm(4)
+   <set pattern reference vectors> to rfvc2,rfvc1
+   draw area #5 at location perm(5)
+
+OPQA/DEGENERATE PATTERN VECTORS: Which rectangle's pattern cells
+  have a different orientation?
+pass/fail depending on (operator identifies rectangle #5)
+
+endit:
+
+END PROGRAM 4
+
+
+PROGRAM 5: Network inheritance and initialization
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR INTERIOR STYLE: Fourteen pairs
+of rectangles with various interior styles are displayed.
+Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR HATCH INDEX: Fourteen pairs of
+rectangles with various hatch styles are displayed.  Identify the
+non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR PATTERN INDEX: Fourteen pairs
+of rectangles with various patterns are displayed.  Identify the
+non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR EDGE FLAG: Fourteen pairs of
+triangles with edge flag eith ON or OFF are displayed.  Identify
+the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR EDGETYPE AND EDGEWIDTH:
+Fourteen pairs of triangles with various edgetypes and edgewidths
+are displayed.  Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR PATTERN SIZE: Fourteen pairs of
+rectangles with various pattern sizes are displayed.  Identify
+the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR PATTERN REFERENCE POINT AND
+VECTORS: Fourteen pairs of rectangles with various pattern
+reference point and vectors are displayed.  Identify the
+non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR INTERIOR COLOUR INDEX: Fourteen
+pairs of rectangles with various interior colors are displayed.
+Identify the non-matching pair.
+
+STRUCTURE NETWORK INHERITANCE FOR EDGE COLOUR INDEX: Fourteen
+pairs of triangles with various edge colors are displayed.
+Identify the non-matching pair.
+
+
+DESIGN:
+
+use <inquire interior facilities> to determine:
+  numsty = number of available interior styles
+use <inquire edge facilities> to determine:
+  numet = number of available edgetypes
+  numew = number of available edgewidths
+  nomew = nominal edgewidth
+  minew, maxew = minimum, maximum edgewidth
+
+All test cases use same basic structure network for testing
+inheritance.  Five (distinct if possible) values for the
+attribute to be tested are set up and propagated throughout the
+network.  The first value is the system default from the PDT.
+Note that structure #104 is executed by both #103 and #101.
+Actual results are displayed on the left, expected results
+on the right, with the 14th deliberately made incorrect.
+
+default = val#1
+  |                  102
+  |                 /  prim 2
+  |               /    attr = val#3   val#3
+  V        val#1/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   attr = val#4
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  attr = val#2                                  prim 7    \ val#4
+  prim 10                                                   \
+  transform             val#2                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        attr = val#5
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+
+*** *** *** ***   interior style   *** *** *** ***
+
+lstyle = list of 5 (possibly repeated) available interior styles,
+  with HOLLOW (default) in 1st position.
+if (HOLLOW not available) then
+   message: skipping test of interior style
+   goto end_int_style
+endif
+
+randomize location of rectangles
+set up CSS as described above; throughout, use edge flag = OFF
+  and pattern size to reasonable value
+display 14 pairs of rectangles, with interior styles from lstyle
+
+TEST: #SR 3 4 7 8 16 17
+      "The interior style attribute for the fill area and fill
+       area set primitives should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR INTERIOR STYLE: Which pair
+  of rectangles does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+end_int_style:
+
+*** *** *** ***   hatch index   *** *** *** ***
+
+if (hatch style unavailable) then
+   message: skipping test of hatch index.
+   goto end_hatch
+endif
+
+use <inquire interior facilities> to determine:
+  lhatch = list of 5 (possibly repeated) randomly chosen hatch
+           indexes, with #1 in 1st position
+
+if (hatch style #1 unavailable) then
+   message: skipping test of hatch index.
+   goto end_hatch
+endif
+
+randomize location of rectangles
+set up CSS as described above; throughout, use edge flag = OFF
+  and interior style = HATCH
+display 14 pairs of rectangles, with hatch indexes from lhatch
+
+TEST: #SR 3 4 19 20 24 25
+      "The hatch index attribute for the fill area and fill area
+       set primitives should be saved and restored by <execute
+       structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR HATCH INDEX: Which pair of
+  rectangles does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+end_hatch:
+
+*** *** *** ***   pattern index   *** *** *** ***
+
+if (pattern style unavailable) then
+   message: skipping test of pattern index.
+   goto end_pat_index
+endif
+
+set up 5 distinct patterns in pattern table, with indexes
+  from 1 to 5
+
+randomize location of rectangles
+set up CSS as described above; throughout, use edge flag = OFF,
+  interior style = PATTERN and pattern size = reasonable value
+display 14 pairs of rectangles, with pattern indexes from 1 to 5
+
+TEST: #SR 3 4 19 20 24 25
+      "The pattern index attribute for the fill area and fill
+       area set primitives should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR PATTERN INDEX: Which pair
+  of rectangles does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+end_pat_index:
+
+*** *** *** ***   edge flag   *** *** *** ***
+
+set up 5 edge flags in table - 1st must be default (OFF), and
+  make 2nd <> 4th, since these are both inherited by #104:
+  edgflg = [OFF,ON,ON,OFF,ON]
+
+randomize location of triangles
+set up CSS as described above; throughout, use interior style =
+  EMPTY, and edgewidth = moderately thick
+display 14 pairs of rectangles, with edge flags from edgflg
+
+TEST: #SR 3 4 34 35 36 38 39
+      "The edge flag attribute for the fill area set primitive
+       should be saved and restored by <execute structure>
+       during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR EDGE FLAG: Which pair of
+  triangles does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+*** *** *** ***   edgetype and width   *** *** *** ***
+
+if (only one edgetype and edgewidth available) then
+   message: skipping test of edgetype and edgewidth.
+   goto end_edgetype
+endif
+
+ledtyp = list of 5 (possibly repeated) randomly selected
+  edgetypes, with #1 in 1st position
+
+if (edgetype #1 unavailable) then
+   message: skipping test of edgetype and edgewidth.
+   goto end_edgetype
+endif
+
+try to set up 5 distinct edgewidth scale factors:
+maxsc = scale factor equivalent to 0.6 * height of rectangle
+minsc = scale factor equivalent to minew
+for ix = 1,5
+   ewvals(ix) = minsc + ((maxsc-minsc) * (ix-1)) / 4
+next ix
+
+set interior style to EMPTY and edge flag ON
+      CALL PSIS   (PISEMP)
+      CALL PSEDFG (PON)
+
+randomize location of triangles
+set up CSS as described above; throughout, use edge flag = ON
+  and interior style = EMPTY
+display 14 pairs of rectangles, with edgetypes from ledtyp
+  and edgewidth scale factors from ewvals
+
+TEST: #SR 3 4 41 42 47 48 50 51 52 53 54
+      "The edgetype and edgewidth scale factor attributes for the
+       fill area set primitive should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR EDGETYPE AND EDGEWIDTH:
+  Which pair of triangles does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+end_edgetype:
+
+*** *** *** ***   pattern size   *** *** *** ***
+
+if (pattern style unavailable) then
+   message: skipping tests of pattern size, reference point, and
+            vectors.
+   goto end_pat_geom
+endif
+
+set up simple checkerboard pattern as entry #1 in pattern table
+
+set up 5 distinguishable pattern sizes:
+
+        patszx  patszy
+        ------  ------
+  1:       1.0     1.0
+  2:       1.2     0.8
+  3:       0.8     1.2
+  4:       1.4     1.4
+  5:       0.6     0.6
+
+Because default pattern size of 1,1 would fill whole screen,
+display must be scaled such that 1,1 is part of a rectangle,
+whose height = recht = 0.045 - so map 1.2 to recht; scale down
+by recht/1.2
+
+randomize location of rectangles
+set up CSS as described above; throughout, use edge flag = OFF,
+  interior style = PATTERN and pattern index = 1
+display 14 pairs of rectangles, with pattern sizes from
+  patszx,patszy
+
+TEST: #SR 3 4 62 64 65 73 74
+      "The pattern size attribute for the fill area and fill area
+       set primitives should be saved and restored by <execute
+       structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR PATTERN SIZE: Which pair
+  of rectangles does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+*** *** ***   pattern reference point and vectors   *** *** ***
+
+set up simple stripe pattern as entry #1 in pattern table
+
+set up distinguishable pattern reference point and vectors:
+
+for reference point, vary x-component by 1/5 of rectangle height,
+  y,z components = 0
+
+for vectors, vary 1st within x-y plane, rotating counterclockwise
+  by 36 degrees from horizontal; keep 2nd perpendicular to 1st
+  (+ 90 degrees).  Effect is to rotate pattern, but not shear it.
+
+        xrefpt:            xyzvec:
+        x-component of     angle equivalent (in
+        reference point    degrees) of vector
+        ---------------    --------------------
+   1:     0.0 * recht             0
+   2:     0.2 * recht            36
+   3:     0.4 * recht            72
+   4:     0.6 * recht           108
+   5:     0.8 * recht           144
+
+randomize location of rectangles
+set up CSS as described above; throughout, use edge flag = OFF,
+  interior style = PATTERN, pattern index = 1, and pattern size =
+  reasonable value
+display 14 pairs of rectangles, with reference point from xrefpt
+  and vectors from xyzvec
+
+TEST: #SR 3 4 68 71 72 73 74 75 76 77 80 81 82 83
+      "The pattern reference point and vectors attributes for the
+       fill area and fill area set primitives should be saved and
+       restored by <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR PATTERN REFERENCE POINT
+  AND VECTORS: Which pair of rectangles does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+end_pat_geom:
+
+save color tests for last, since they may change the color table
+
+*** *** *** *** ***   interior color index   *** *** *** *** ***
+
+call DISCOL to try to get 5 distinct foreground colors,
+  returning fcol = actual number of foreground colors
+
+set up colind = list of distinguishable color indexes
+if (fcol <= 1) then
+   colind = selection from background and foreground colors
+          = [1,0,1,1,0]
+else
+   colind = circular list of indices = [1,..,fcol, 1,..]
+endif
+
+randomize location of rectangles
+set up CSS as described above; throughout, use edge flag = OFF
+  and requested interior style = SOLID (HOLLOW if unavailable)
+display 14 pairs of rectangles, with interior colour indexes from
+  colind
+
+TEST: #SR 3 4 27 28 30 31
+      "The interior colour index attribute for the fill area and
+       fill area set primitives should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR INTERIOR COLOUR INDEX:
+  Which pair of rectangles does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+*** *** *** *** ***   edge color index   *** *** *** *** ***
+
+use fcol and colind as set from interior colour index test
+
+randomize location of triangles
+set up CSS as described above; throughout, use edge flag = ON,
+  interior style = EMPTY, and edgewidth = moderately thick
+display 14 pairs of triangles, with edge colour indexes from
+  colind
+
+TEST: #SR 3 4 56 57 59 60
+      "The edge colour index attribute for the fill area set
+       primitive should be saved and restored by <execute
+       structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR EDGE COLOUR INDEX: Which
+  pair of triangles does NOT match?
+pass/fail depending on (location of 14th primitive selected)
+
+END PROGRAM 5

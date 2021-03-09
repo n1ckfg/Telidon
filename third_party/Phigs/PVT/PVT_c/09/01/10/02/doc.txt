@@ -1,0 +1,599 @@
+TITLE: Fortran-specific errors handled by system
+
+MODULE#: 09.01.10.02
+
+DESCRIPTION: This module tests if some functions generate FORTRAN binding
+specific errors under certain incorrect conditions. The error is handled
+by the default system error handling subroutine.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  If functions <redraw all structures>, <update workstation>, <set
+display update state>, <set text precision>, <set text path>, <set
+text alignment>, <set annotation text path>, <set annotation text
+alignment>, <set interior style>, <set edge flag>, <set individual
+asf>, <set text representation>, <set interior representation>, <set
+edge representation>, <set colour model>, <set local transformation
+3>, <set local transformation>, <set modelling clipping indicator>,
+<set view representation 3>, <set view representation>, <set view
+transformation input priority>, <set edit mode>, <delete structure
+network>, <set conflict resolution>, <retrieve paths to ancestors>,
+<retrieve paths to decendants>, <initialize choice 3>-<initialize
+pick>, <set locator mode>-<set string mode>, <flush device events>,
+<set error handling mode> are called, and enumeration type is out of
+range, then error 2000 is generated and the function is ignored.
+#F 5 6 7 37 43 44 47 48 50 53 62 65 66 67 72 75 76 81 84 85 86 117 127
+#F 140 145 146 158-161 164-169 187 318
+#D
+#S 4.12/109/6
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P01/18 P01/19 P01/20
+   P01/21 P01/22 P01/23
+
+SR2.  If functions <retrieve structure identifiers>, <retrieve paths
+to ancesters>, <retrieve paths to descendants>, <get stroke 3>, <get
+stroke>, <get pick> are called, and output parameter size is
+insufficeint - the FORTRAN array or string being passed as an output
+paremeter is too small to contain the returned information, then error
+2001 is generated and the function is ignored.
+#F 141 145 146 190 191 194
+#D
+#S 4.12/109/6
+#T P02/1 P02/2 P02/3
+
+SR3.  If functions <polyline 3>, <polyline>, <polymarker 3>,
+<polymarker>, <fill area 3>, <fill area>, <generalized drawing
+primitive 3>, <generalized drawing primitive>, <add names to set>,
+<remove names to set>, <set pattern representation>, <set highlighting
+filter>, <set invisibility filter>, <set modelling clipping volume 3>,
+<set modelling clipping volume>, <archive structures>, <archive
+structure networks>, <retrieve structures>, <retrieve structure
+networks>, <delete structures from archive>, <delete structure
+networks from archive>, <set pick filter>-<initialize string>, <write
+item to metafile>, <interpret item> are called, and input parameter
+size is out of range - the INTEGER passed as an input parameter
+defining the size of FORTRAN array parameters is negative or greater
+than an absolute maximum, then error 2004 is generated and the
+function is ignored.
+#F 9 10 11 12 17 18 23 24 60 61 68 70 71 79 80 137 138 142 143
+#F 147 148 151-163 196 199
+#D
+#S 4.12/109/6
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9 P03/10 P03/11
+   P03/12
+
+SR4.  If functions <fill area set 3>, <fill area set> are called, and
+list of point lists is invalid (NPL<1), then error 2005 is generated
+and the function is ignored.
+#F 19 20
+#D
+#S 4.12/109/6
+#T P04/1 P04/2 P04/3
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    5: prst    <redraw all structures>
+    6: puwk    <update workstation>
+    7: psdus   <set display update state>
+    9: ppl3    <polyline 3>
+   10: ppl     <polyline>
+   11: ppm3    <polymarker 3>
+   12: ppm     <polymarker>
+   17: pfa3    <fill area 3>
+   18: pfa     <fill area>
+   19: pfas3   <fill area set 3>
+   20: pfas    <fill area set>
+   23: pgdp3   <generalized drawing primitive 3>
+   24: pgdp    <generalized drawing primitive>
+   37: pstxpr  <set text precision>
+   43: pstxp   <set text path>
+   44: pstxal  <set text alignment>
+   47: psatp   <set annotation text path>
+   48: psatal  <set annotation text alignment>
+   50: psis    <set interior style>
+   53: psedfg  <set edge flag>
+   60: pads    <add names to set>
+   61: pres    <remove names from set>
+   62: psiasf  <set individual asf>
+   65: pstxr   <set text representation>
+   66: psir    <set interior representation>
+   67: psedr   <set edge representation>
+   68: pspar   <set pattern representation>
+   70: pshlft  <set highlighting filter>
+   71: psivft  <set invisibility filter>
+   72: pscmd   <set colour model>
+   75: pslmt3  <set local transformation 3>
+   76: pslmt   <set local transformation>
+   79: psmcv3  <set modelling clipping volume 3>
+   80: psmcv   <set modelling clipping volume>
+   81: psmcli  <set modelling clipping indicator>
+   84: psvwr3  <set view representation 3>
+   85: psvwr   <set view representation>
+   86: psvtip  <set view transformation input priority>
+  117: psedm   <set edit mode>
+  127: pdsn    <delete structure network>
+  137: parst   <archive structures>
+  138: parsn   <archive structure networks>
+  140: pscnrs  <set conflict resolution>
+  141: prsid   <retrieve structure identifiers>
+  142: prest   <retrieve structures>
+  143: presn   <retrieve structure networks>
+  145: prepan  <retrieve paths to ancestors>
+  146: prepde  <retrieve paths to descendants>
+  147: pdstar  <delete structures from archive>
+  148: pdsnar  <delete structure networks from archive>
+  151: pspkft  <set pick filter>
+  152: pinlc3  <initialize locator 3>
+  153: pinlc   <initialize locator>
+  154: pinsk3  <initialize stroke 3>
+  155: pinsk   <initialize stroke>
+  156: pinvl3  <initialize valuator 3>
+  157: pinvl   <initialize valuator>
+  158: pinch3  <initialize choice 3>
+  159: pinch   <initialize choice>
+  160: pinpk3  <initialize pick 3>
+  161: pinpk   <initialize pick>
+  162: pinst3  <initialize string 3>
+  163: pinst   <initialize string>
+  164: pslcm   <set locator mode>
+  165: psskm   <set stroke mode>
+  166: psvlm   <set valuator mode>
+  167: pschm   <set choice mode>
+  168: pspkm   <set pick mode>
+  169: psstm   <set string mode>
+  187: pflush  <flush device events>
+  190: pgtsk3  <get stroke 3>
+  191: pgtsk   <get stroke>
+  194: pgtpk   <get pick>
+  196: pwitm   <write item to metafile>
+  199: piitm   <interpret item>
+  318: pserhm  <set error handling mode>
+ 
+  Data Structures ---
+ 
+
+
+PROGRAM 1: Error 2000 handled by system
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+This program uses the system default error handler.  The usual
+means of invoking PVT programs links in a user-defined error handler.
+Be sure to use the special mechanism provided (normally the "phfe" or
+"phce" command) for invoking programs without the user-defined error
+handler, since it overrides the system handler.
+
+The general idea of this test is that errors are generated and the
+resulting error messages from the system default error handler are
+displayed so that you can verify their contents.
+
+The program needs to display the contents of the error file one message at
+a time .  If the system has a consistent message header (as specified to
+INITPH), this is done automatically.  If not, you are prompted to say
+whether the entire message has been displayed, since one message may occupy
+several records.  The program will keep displaying successive records
+until the entire message is visible.
+
+Once the entire error message is displayed, you must enter the function
+that  generated the corresponding error as reported in the message.  You
+may identify the function either by its full generic name ("polyline 3"),
+or by its unique number as specified in Fortran and C bindings (these are
+the same). E.g. instead of typing "polyline 3", you can enter "8".  If the
+message does not identify the function, enter a negative number to signify
+this.
+
+The error message may  or may not specify the numeric code of the error.
+If so, simply enter the code as prompted.  If not, enter "n".  The program
+will then display the standard wording for the error (there may be several
+possible wordings, since a given condition may sometimes generate one of
+several errors).  If the actual message is accurate with respect to the
+standard wording (has the same meaning), enter "y", otherwise "n".
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted by
+the tag "signals error"), the system-defined error handler should call
+<error logging> at least once to write an error message on the error file.
+
+*** *** ***  Generate errors *** *** ***
+
+<open workstation>
+
+<redraw all structures> with control flag = 2: signals error
+<update workstation> with regenerated flag = 3: signals error
+<set display update state> with deferral mode = 5: signals error
+<set display update state> with modification mode = 3: signals error
+<set text path> with text path = 4: signals error
+<set annotation text alignment> with annotation text alignment horizontal=4:
+    signals error
+<set annotation text alignment> with annotation text alignment vertical=6:
+    signals error
+<set interior style> with interior style = 5: signals error
+<set edge flag> with edge flag = 2: signals error
+
+<set individual asf> with aspect identifier = 18: signals error
+<set individual asf> with aspect source flag value = 2: signals error
+
+<set local transformation> with composition type = 3: signals error
+TEST: #SR 1
+      "If <set local transformation> signals an error because
+       enumeration type is out of range, it should not cause any other
+       effect."
+pass/fail depending on (element pointer = 0)
+
+<set edge representation> bundle #1 with edge flag = POFF
+<set edge representation> bundle #1 with edge flag = 2: signals error
+TEST: #SR 1
+      "If <set edge representation> signals an error because
+       enumeration type is out of range, it should not cause any other
+       effect."
+pass/fail depending on (PHIGS state = open and
+                        wkst state = open  and
+                        edge bundle #1 unchanged)
+
+<set view representation> with x-y clipping indicator = 2: signals error
+<set view transformation input priority> with relative priority = 2:
+    signals error
+<set edit mode> with edit mode = 2: signals error
+<delete structure network> with reference handling flag = 2: signals error
+<set conflict resolution> with archival conflict resolution = 3: signals error
+<set conflict resolution> with retrieval conflict resulution = 3:
+    signals error
+<retrieve paths to ancestors> with path order = 2: signals error
+<set error handling mode> with error handling mode = 2: signals error
+
+
+*** *** ***  Results of system-defined error handling  *** *** ***
+
+TEST: #SR 1
+      "If <redraw all structures> is called and enumeration type is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <update workstation> is called and enumeration type is out
+       of range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set display update state> is called and enumeration type is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set display update state> is called and enumeration type is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set text path> is called and enumeration type is out of
+       range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set annotation text alignment> is called and enumeration
+       type is out of range, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set annotation text alignment> is called and enumeration
+       type is out of range, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set interior style> is called and enumeration type is out
+       of range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set edge flag> is called and enumeration type is out of
+       range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set individual asf> is called and enumeration type is out
+       of range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set individual asf> is called and enumeration type is out
+       of range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set local transformation> is called and enumeration type is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set edge representation> is called and enumeration type is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set view representation> is called and enumeration type is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set view transformation input priority> is called and
+       enumeration type is out of range, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set edit mode> is called and enumeration type is out of
+       range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <delete structure network> is called and enumeration type is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set conflict resolution> is called and enumeration type is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set conflict resolution> is called and enumeration type is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <retrieve paths to ancestors> is called and enumeration type
+       is out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <set error handling mode> is called and enumeration type is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error 2001 handled by system
+
+CHARACTERISTICS: nnny
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted by
+the tag "signals error"), the system-defined error handler should call
+<error logging> at least once to write an error message on the error file.
+
+*** *** ***  Generate errors *** *** ***
+
+<open structure> 100
+<text>
+<execute structure> 101
+<execute structure> 102
+<close structure>
+
+<open structure> 101
+<text>
+<execute structure> 102
+<close structure>
+
+<open structure> 102
+<text>
+<closet structure>
+
+<open archive file> 11
+<archive all strucutures> 11
+
+<retrieve structure identifiers> with size of the list = 1: signals error
+<retrieve paths to ancestors> with size of path buffer = 1: signals error
+<retrieve paths to descendants> with size of path buffer = 1: signals error
+
+<close archive file> 11
+
+*** *** ***  Results of system-defined error handling  *** *** ***
+
+TEST: #SR 2
+      "If <retrieve structure identifiers> is called and output
+       parameter size is insufficient, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 2
+      "If <retrieve paths to ancestors> is called and output
+       parameter size is insufficient, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 2
+      "If <retrieve paths to descendants> is called and output
+       parameter size is insufficient, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+END PROGRAM 2
+
+
+
+PROGRAM 3: Error 2004 handled by system
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted by
+the tag "signals error"), the system-defined error handler should call
+<error logging> at least once to write an error message on the error file.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open structure>
+
+<polyline 3> with number of point = -1: signals error
+<polymarker> with number of point = -2: signals error
+<fill area 3> with number of point = -1: signals error
+
+<add names to set> with number of names in the set = -1: signals error
+
+TEST: #SR 3
+      "If <add names to set> signals an error because input parameter
+       size is out of range, it should not cause any other effect."
+pass/fail depending on (element pointer = 0)
+
+<set highlighting filter> with number of names in inclusive set = -1:
+    signals error
+<set highlighting filter> with number of names in exclusive set = -1:
+    signals error
+<set modelling clipping volume> with number of half-spaces in list = -1:
+    signals error
+<close structure>
+
+<open archive file>
+<archive structures> with number of structure identifiers in the list = -1:
+    signals error
+TEST: #SR 3
+      "If <archive structures> signals an error because input parameter
+       size is out of range, it should not cause any other effect."
+pass/fail depending on (no structures in archive)
+
+<retrieve structures> with number of structure identifiers in the list = -1:
+    signals error
+<delete structures from archive> with number of structure identifier in the
+    list = -1: signals error
+<close archive file>
+*** *** ***  Results of system-defined error handling  *** *** ***
+
+TEST: #SR 3
+      "If <polyline 3> is called and input parameter size is out of
+       range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 3
+      "If <polymarker> is called and input parameter size is out of
+       range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 3
+      "If <fill area 3> is called and input parameter size is out of
+       range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 3
+      "If <add names to set> is called and input parameter size is out
+       of range, it should write an accurate, self-identifying error
+       message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 3
+      "If <set highlighting filter> is called and input parameter size
+       is out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 3
+      "If <set highlighting filter> is called and input parameter size
+       is out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 3
+      "If <set modelling clipping volume> is called and input
+       parameter size is out of range, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 3
+      "If <archive structures> is called and input parameter size is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 3
+      "If <retrieve structures> is called and input parameter size is
+       out of range, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 3
+      "If <delete structures from archive> is called and input
+       parameter size is out of range, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+END PROGRAM 3
+
+
+
+PROGRAM 4: Error 2005 handled by system
+
+CHARACTERISTICS: nnny
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted by
+te tag "signals error", the user-defined error handler saves the error
+code, function identifier, and error file identifier in an error table.
+
+*** *** ***  Generate errors  *** *** ***
+
+<open structure> 100
+
+<fill area set> with npl = -2: signals error
+<fill area set 3> with npl = 0: signals error
+<close structure>
+
+TEST: #SR 4
+      "If <fill area set 3> signals an error because an invalid list
+       of point lists is specified, it should not cause any other
+       effect."
+pass/fail depending on (element pointer = 0)
+
+*** *** ***  Results of system-defined error handling  *** *** ***
+
+TEST: #SR 4
+      "If <fill area set> is called and an invalid list of point lists
+       is specified, it should write an accurate, self-identifying
+       error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 4
+      "If <fill area set 3> is called and an invalid list of point
+       lists is specified, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+END PROGRAM 4
+

@@ -1,0 +1,119 @@
+      SUBROUTINE E04154 (USEPRM)
+
+C   E04154 tests the handling of error 154.
+
+      COMMON /GLOBNU/ CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT, DUMRL
+      INTEGER         CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT(20), ERRIND
+      REAL    DUMRL(20)
+
+      COMMON /ERRINF/ ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR,
+     1                USRERR, ERRSAV,      FUNSAV,      FILSAV,
+     2                EFCNT, EFID
+      INTEGER         ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR(10),
+     1                USRERR, ERRSAV(200), FUNSAV(200), FILSAV(200),
+     2                EFCNT, EFID(100)
+      COMMON /ERRCHR/ CURCON,     ERRSRS,    ERRMRK,    ERFLNM,
+     1                CONTAB
+      CHARACTER       CURCON*200, ERRSRS*40, ERRMRK*20, ERFLNM*80,
+     1                CONTAB(40)*150
+
+C  clipping indicator
+      INTEGER     PNCLIP,     PCLIP
+      PARAMETER  (PNCLIP=0,   PCLIP=1)
+
+C  current/requested values
+      INTEGER     PCURVL,     PRQSVL
+      PARAMETER  (PCURVL=0,   PRQSVL=1)
+
+      INTEGER   USEPRM, ISIZ,IDUM1, PCL1, PCL2, PCL3
+
+      REAL      ROTMT(3,3), ROTMT3(4,4), MAPMT(3,3), MAPMT3(4,4)
+      REAL      QROTMT(4,4), QMAPMT(4,4)
+      REAL      VWCP0(6),VWCP(6),VWCP1(6)
+      REAL      VWCP4(4),VWCP40(6)
+
+      LOGICAL   STREQ, RAREQ
+
+      CURCON = 'the specified view clipping limits are not within '//
+     1         'NPC range'
+      CALL SETVS ('154', EXPERR, EXPSIZ)
+      ERRSRS = '5'
+      CALL ESETUP (USEPRM)
+
+      CALL POPWK (WKID, CONID, WTYPE)
+
+C  try 3D cases first
+
+      CALL ETR3 (.5,.6,.7, ROTMT3)
+      CALL ETR3 (.8,.9,.1, MAPMT3)
+
+      CALL SETRVS ('.1,.9,.1,.9,.1,.9', VWCP0, ISIZ)
+      CALL PSVWR3 (WKID,1,ROTMT3,MAPMT3,VWCP0,PNCLIP,PNCLIP,PNCLIP)
+
+      CALL ETR3 (.2,.3,.4, ROTMT3)
+      CALL ETR3 (.3,.4,.5, MAPMT3)
+
+      CALL SETRVS ('-.1,1.,0.,1.,0.,1.', VWCP, ISIZ)
+      CALL RSVWR3 (WKID,1,ROTMT3,MAPMT3,VWCP,PCLIP,PCLIP,PCLIP)
+
+      CALL SETRVS ('0.,1.,0.,1.1,0.,1.', VWCP, ISIZ)
+      CALL RSVWR3 (WKID,1,ROTMT3,MAPMT3,VWCP,PCLIP,PCLIP,PCLIP)
+
+      CALL SETRVS ('0.,1.,0.,1.,-0.1,1.1', VWCP, ISIZ)
+      CALL RSVWR3 (WKID,1,ROTMT3,MAPMT3,VWCP,PCLIP,PCLIP,PCLIP)
+
+      CALL ETR3 (.5,.6,.7, ROTMT3)
+      CALL ETR3 (.8,.9,.1, MAPMT3)
+
+      CALL PQVWR (WKID,1,PRQSVL,ERRIND,IDUM1,QROTMT,QMAPMT,VWCP1,
+     1            PCL1,PCL2,PCL3)
+      CALL CHKINQ ('pqvwr',ERRIND)
+      CALL TSTIGN (STREQ('OO**')                         .AND.
+     1             RAREQ(16, QROTMT, ROTMT3, 0.01, 0.01) .AND.
+     2             RAREQ(16, QMAPMT, MAPMT3, 0.01, 0.01) .AND.
+     3             RAREQ( 6, VWCP1,  VWCP0,  0.01, 0.01) .AND.
+     4             PCL1.EQ.PNCLIP.AND.PCL2.EQ.PNCLIP.AND.PCL3.EQ.PNCLIP)
+
+C  now test 2D cases
+
+      CALL ETR  (.1,.2, ROTMT)
+      CALL ETR  (.3,.4, MAPMT)
+
+      CALL SETRVS ('.1,.9,.1,.9,.0,1.0', VWCP40, ISIZ)
+      CALL PSVWR (WKID,1,ROTMT,MAPMT,VWCP40,PCLIP)
+
+      CALL ETR  (.5,.6, ROTMT)
+      CALL ETR  (.7,.8, MAPMT)
+
+      CALL SETRVS ('-0.1,1.,0.,1.', VWCP4, ISIZ)
+      CALL RSVWR (WKID,1,ROTMT,MAPMT,VWCP4,PNCLIP)
+
+      CALL SETRVS ('0.1,1.,0.,1.1', VWCP4, ISIZ)
+      CALL RSVWR (WKID,1,ROTMT,MAPMT,VWCP4,PNCLIP)
+
+      CALL SETRVS ('-.1,1.,0.,1.1', VWCP4, ISIZ)
+      CALL RSVWR (WKID,1,ROTMT,MAPMT,VWCP4,PNCLIP)
+
+      CALL ETR3 (.1,.2,0.0, ROTMT3)
+      CALL ETR3 (.3,.4,0.0, MAPMT3)
+
+      CALL PQVWR (WKID,1,PRQSVL,ERRIND,IDUM1,QROTMT,QMAPMT,VWCP1,
+     1            PCL1,PCL2,PCL3)
+      CALL CHKINQ ('pqvwr',ERRIND)
+      CALL TSTIGN (STREQ('OO**')                         .AND.
+     1             RAREQ(16, QROTMT, ROTMT3, 0.01, 0.01) .AND.
+     2             RAREQ(16, QMAPMT, MAPMT3, 0.01, 0.01) .AND.
+     3             RAREQ( 6, VWCP1,  VWCP40, 0.01, 0.01) .AND.
+     4             PCL1.EQ.PCLIP.AND.PCL2.EQ.PCLIP.AND.PCL3.EQ.PCLIP)
+
+      CALL PCLWK (WKID)
+
+      CALL ENDERR
+
+      END

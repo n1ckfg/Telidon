@@ -1,0 +1,701 @@
+TITLE: Creation and inquiry of CSS networks
+
+MODULE#: 02.01
+
+DESCRIPTION:  This module tests the basic features for setting
+up structure networks within the CSS and inquiring about their
+topology.  Other features for the manipulation of the CSS are
+tested in the modules below this one.  These descendant modules
+assume the capabilities tested herein, especially those for
+inquiring about the state of the CSS.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  Insertion of an <execute structure> element establishes a
+network link between the structure containing it (parent) and the
+structure referred to by it (child).
+#F 113
+#D 7.3.4
+#S 4.4.2/24/3
+#T P01/1 P02/1 P02/2 P02/3 P03/1 P03/2 P03/3
+
+SR2.  <Inquire structure identifiers> returns a list of identifiers
+for all existing structures in the CSS.
+#F 210
+#D 7.1
+#S 4.4.5/30/2
+#T P01/1
+
+SR3.  <Inquire paths to ancestors> returns a list of ancestor paths
+from the specified structure identifier.
+#F 308
+#D 7.3.4
+#S 4.4.6/30/5
+#T P02/1 P02/2 P02/3
+
+SR4.  <Inquire paths to descendants> returns a list of descendant
+paths from the specified structure identifier.
+#F 309
+#D 7.3.4
+#S 4.4.6/30/5
+#T P03/1 P03/2 P03/3
+
+SR5.  An ancestor or descendant path is a sequence of at least two
+ordered pairs (one pair for the specified structure, the second for an
+immediate ancestor or descendant) each of which consists of a
+referring structure identifier and the position of the 'execute
+structure' element in that structure (0 if there is no such element in
+the structure).
+#F 113 308 309
+#D 7.3.4
+#S 4.4.6/30/5
+#T P02/1 P02/2 P02/3 P03/1 P03/2 P03/3
+#C See defect 9592-1/066.  A (non-truncated) path cannot consist
+simply of the single specified structure.
+
+SR6.  Ancestor and descendant paths are always ordered with the
+element for the referring (parent) structure identifier preceding
+that for the referred (child) structure identifier, i.e.
+top-down.
+#F 113 308 309
+#D 7.3.4
+#S 4.4.6/30/5
+#T P02/1 P02/2 P02/3 P03/1 P03/2 P03/3
+
+SR7.  An ancestor path returned by <inquire paths to ancestors>
+is maximal if path depth is specified as zero or if path depth is
+positive but is not exceeded by the number of elements in the
+maximal path.
+#F 308
+#D 7.3.4
+#S n
+#T P02/1
+
+SR8.  A descendant path returned by <inquire paths to descendants>
+is maximal if path depth is specified as zero or if path depth is
+positive but is not exceeded by the number of elements in the
+maximal path.
+#F 309
+#D 7.3.4
+#S n
+#T P03/1
+
+SR9.  If a positive path depth of P and path order of TOPFIRST is
+specified for <inquire paths to ancestors>, then only the first P
+elements of any maximal ancestor path whose length exceeds P will
+be reported.
+#F 308
+#D 7.3.4
+#S 4.4.6/30/5
+#T P02/2
+
+SR10.  If a positive path depth of P and path order of BOTTOMFIRST
+is specified for <inquire paths to ancestors>, then only the last
+P elements of any maximal ancestor path whose length exceeds P
+will be reported.
+#F 308
+#D 7.3.4
+#S 4.4.6/30/5
+#T P02/3
+
+SR11.  If a positive path depth of P and path order of TOPFIRST is
+specified for <inquire paths to descendants>, then only the first
+P elements of any maximal descendant path whose length exceeds P
+will be reported.
+#F 309
+#D 7.3.4
+#S 4.4.6/30/5
+#T P03/2
+
+SR12.  If a positive path depth of P and path order of BOTTOMFIRST
+is specified for <inquire paths to descendants>, then only the
+last P elements of any maximal descendant path whose length
+exceeds P will be reported.
+#F 309
+#D 7.3.4
+#S 4.4.6/30/5
+#T P03/3
+
+SR13.  If, after truncation due to path depth, the remaining
+portions of two distinct maximal ancestor paths are the same,
+then only one such portion is reported by <inquire paths to
+ancestors>.
+#F 308
+#D 7.3.4
+#S 4.4.6/30/5
+#T P02/2 P02/3
+
+SR14.  If, after truncation due to path depth, the remaining
+portions of two distinct maximal descendant paths are the same,
+then only one such portion is reported by <inquire paths to
+descendants>.
+#F 309
+#D 7.3.4
+#S 4.4.6/30/5
+#T P03/2 P03/3
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  113: pexst   <execute structure>
+  210: pqsid   <inquire structure identifiers>
+  308: pqpan   <inquire paths to ancestors>
+  309: pqpde   <inquire paths to descendants>
+ 
+  Data Structures ---
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.3  ...  list_of_structure_elements
+  7.3.4  ...  execute_structure
+ 
+LOCAL SUBROUTINES:
+
+PTHSEQ accepts as a parameter a set of expected ancestor or
+descendant paths and compares the reported (actual) set to this
+expected value to test for set-equality.
+
+
+PROGRAM 1: Inquiring about structure identifiers
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up
+the CSS as follows:
+
+                 101        106       108
+                / | \       /
+               /  |  \    1/
+             1/  2|  3\   /
+             /    |    \ /
+            /     |    107
+           /      |
+        102      103
+        | \      / \\
+        |  \   1/   \\
+       1|  2\  /    2\\3
+        |    \/       \\
+        |    104      105
+        |     |      /
+        |    1|    1/
+         \    |    /
+          \   |   /
+           \  |  /
+            \ | /
+             109
+
+The nodes of the graph (101-109) represent structures, and the
+labeled edges are references to invoked (lower) structures.
+The labels (1-3) represent the element position of the <execute
+structure> function within the calling structure.  Eg, an element
+reference path from 101 to 109 would be: ( (101, 2), (103, 3),
+(105, 1), (109, 0) ).
+
+TEST: #SR 1 2
+      "<Inquire structure identifiers> should retrieve all identifiers
+       as created by <open structure> and <execute structure>."
+
+Use <inquire structure identifiers> to get:
+  lasi = list of all structure identifiers.
+
+pass/fail depending on (lasi contains exactly: 101, 102, 103,
+     104, 105, 106, 107, 108, 109)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Inquiring about ancestor paths
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up
+the CSS as follows:
+
+                 101        106       108
+                / | \       /
+               /  |  \    1/
+             1/  2|  3\   /
+             /    |    \ /
+            /     |    107
+           /      |
+        102      103
+        | \      / \\
+        |  \   1/   \\
+       1|  2\  /    2\\3
+        |    \/       \\
+        |    104      105
+        |     |      /
+        |    1|    1/
+         \    |    /
+          \   |   /
+           \  |  /
+            \ | /
+             109
+
+The nodes of the graph (101-109) represent structures, and the
+labelled edges are references to invoked (lower) structures.
+The labels (1-3) represent the element position of the <execute
+structure> function within the calling structure.  Eg, an element
+reference path from 101 to 109 would be: (101, 2), (103, 3),
+(105, 1), (109, 0).
+
+*** *** *** *** ***   No truncation   *** *** *** *** ***
+
+TEST: #SR 1 3 5 6 7
+      "<Inquire paths to ancestors> should retrieve all maximal
+       ancestor paths when path depth is zero."
+
+Use <inquire paths to ancestors> with
+     structure id = 109
+     path order   = TOPFIRST
+     path depth   = zero, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,1), (102,1), (109,0) ),
+      ( (101,1), (102,2), (104,1), (109,0) ),
+      ( (101,2), (103,1), (104,1), (109,0) ),
+      ( (101,2), (103,2), (105,1), (109,0) ),
+      ( (101,2), (103,3), (105,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <inquire paths to ancestors> with
+     structure id = 107
+     path order   = BOTTOMFIRST
+     path depth   = zero, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,3), (107,0) ),
+      ( (106,1), (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <inquire paths to ancestors> with
+     structure id = 106
+     path order   = BOTTOMFIRST
+     path depth   = zero, to get:
+  saap = set of all ancestor paths.
+
+if (saap not empty) then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <inquire paths to ancestors> with
+     structure id = 108
+     path order   = TOPFIRST
+     path depth   = zero, to get:
+  saap = set of all ancestor paths.
+
+if (saap not empty) then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+pass
+
+*** *** ***   Truncating via TOPFIRST   *** *** ***
+
+check_topfirst:
+
+TEST: #SR 1 3 5 6 9 13
+      "<Inquire paths to ancestors> should retrieve all
+       qualifying ancestor paths (or portions thereof), with no
+       repetition, when path depth is positive and path order is
+       TOPFIRST."
+
+Use <inquire paths to ancestors> with
+     structure id = 109
+     path order   = TOPFIRST
+     path depth   = 3, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,1), (102,1), (109,0) ),
+      ( (101,1), (102,2), (104,1) ),
+      ( (101,2), (103,1), (104,1) ),
+      ( (101,2), (103,2), (105,1) ),
+      ( (101,2), (103,3), (105,1) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <inquire paths to ancestors> with
+     structure id = 105
+     path order   = TOPFIRST
+     path depth   = 1, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,2) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <inquire paths to ancestors> with
+     structure id = 101
+     path order   = TOPFIRST
+     path depth   = 5, to get:
+  saap = set of all ancestor paths.
+
+if (saap not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+pass
+
+*** *** ***   Truncating via BOTTOMFIRST   *** *** ***
+
+check_bottomfirst:
+
+TEST: #SR 1 3 5 6 10 13
+      "<Inquire paths to ancestors> should retrieve all
+       qualifying ancestor paths (or portions thereof), with no
+       repetition, when path depth is positive and path order is
+       BOTTOMFIRST."
+
+Use <inquire paths to ancestors> with
+     structure id = 109
+     path order   = BOTTOMFIRST
+     path depth   = 3, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,1), (102,1), (109,0) ),
+      ( (102,2), (104,1), (109,0) ),
+      ( (103,1), (104,1), (109,0) ),
+      ( (103,2), (105,1), (109,0) ),
+      ( (103,3), (105,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <inquire paths to ancestors> with
+     structure id = 109
+     path order   = BOTTOMFIRST
+     path depth   = 2, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (102,1), (109,0) ),
+      ( (104,1), (109,0) ),
+      ( (105,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <inquire paths to ancestors> with
+     structure id = 107
+     path order   = BOTTOMFIRST
+     path depth   = 5, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,3), (107,0) ),
+      ( (106,1), (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <inquire paths to ancestors> with
+     structure id = 107
+     path order   = BOTTOMFIRST
+     path depth   = 1, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <inquire paths to ancestors> with
+     structure id = 106
+     path order   = BOTTOMFIRST
+     path depth   = 1, to get:
+  saap = set of all ancestor paths.
+
+if (saap not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+pass
+
+done:
+
+END PROGRAM 2
+
+
+PROGRAM 3: Inquiring about descendant paths
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <open structure> and <execute structure> to set up
+the CSS as follows:
+
+                 101        106       108
+                / | \       /
+               /  |  \    1/
+             1/  2|  3\   /
+             /    |    \ /
+            /     |    107
+           /      |
+        102      103
+        | \      / \\
+        |  \   1/   \\
+       1|  2\  /    2\\3
+        |    \/       \\
+        |    104      105
+        |     |      /
+        |    1|    1/
+         \    |    /
+          \   |   /
+           \  |  /
+            \ | /
+             109
+
+
+The nodes of the graph (101-109) represent structures, and the
+labelled edges are references to invoked (lower) structures.
+The labels (1-3) represent the element position of the <execute
+structure> function within the calling structure.  Eg, an element
+reference path from 101 to 109 would be: (101, 2), (103, 3),
+(105, 1), (109, 0).
+
+
+*** *** *** *** ***   No truncation   *** *** *** *** ***
+
+TEST: #SR 1 4 5 6 8
+      "<Inquire paths to descendants> should retrieve all maximal
+       descendant paths when path depth is zero."
+
+Use <inquire paths to descendants> with
+     structure id = 101
+     path order   = TOPFIRST
+     path depth   = zero, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (101,1), (102,1), (109,0) ),
+      ( (101,1), (102,2), (104,1), (109,0) ),
+      ( (101,2), (103,1), (104,1), (109,0) ),
+      ( (101,2), (103,2), (105,1), (109,0) ),
+      ( (101,2), (103,3), (105,1), (109,0) ),
+      ( (101,3), (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <inquire paths to descendants> with
+     structure id = 103
+     path order   = BOTTOMFIRST
+     path depth   = zero, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (103,1), (104,1), (109,0) ),
+      ( (103,2), (105,1), (109,0) ),
+      ( (103,3), (105,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <inquire paths to descendants> with
+     structure id = 109
+     path order   = BOTTOMFIRST
+     path depth   = zero, to get:
+  sadp = set of all descendant paths.
+
+if (sadp not empty) then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <inquire paths to descendants> with
+     structure id = 108
+     path order   = TOPFIRST
+     path depth   = zero, to get:
+  sadp = set of all descendant paths.
+
+if (sadp not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+pass
+
+*** *** ***   Truncating via TOPFIRST   *** *** ***
+
+check_topfirst:
+
+TEST: #SR 1 4 5 6 11 14
+      "<Inquire paths to descendants> should retrieve all
+       qualifying descendant paths (or portions thereof), with no
+       repetition, when path depth is positive and path order is
+       TOPFIRST."
+
+Use <inquire paths to descendants> with
+     structure id = 101
+     path order   = TOPFIRST
+     path depth   = 2, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (101,1), (102,1) ),
+      ( (101,1), (102,2) ),
+      ( (101,2), (103,1) ),
+      ( (101,2), (103,2) ),
+      ( (101,2), (103,3) ),
+      ( (101,3), (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <inquire paths to descendants> with
+     structure id = 101
+     path order   = TOPFIRST
+     path depth   = 1, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (101,1) ),
+      ( (101,2) ),
+      ( (101,3) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <inquire paths to descendants> with
+     structure id = 104
+     path order   = TOPFIRST
+     path depth   = 5, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (104,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <inquire paths to descendants> with
+     structure id = 109
+     path order   = TOPFIRST
+     path depth   = 5, to get:
+  sadp = set of all descendant paths.
+
+if (sadp not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+pass
+
+*** *** ***   Truncating via BOTTOMFIRST   *** *** ***
+
+check_bottomfirst:
+
+TEST: #SR 1 4 5 6 12 14
+      "<Inquire paths to descendants> should retrieve all
+       qualifying descendant paths (or portions thereof), with no
+       repetition, when path depth is positive and path order is
+       BOTTOMFIRST."
+
+Use <inquire paths to descendants> with
+     structure id = 101
+     path order   = BOTTOMFIRST
+     path depth   = 2, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (102,1), (109,0) ),
+      ( (104,1), (109,0) ),
+      ( (105,1), (109,0) ),
+      ( (101,3), (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <inquire paths to descendants> with
+     structure id = 102
+     path order   = BOTTOMFIRST
+     path depth   = 1, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <inquire paths to descendants> with
+     structure id = 108
+     path order   = BOTTOMFIRST
+     path depth   = 1, to get:
+  sadp = set of all descendant paths.
+
+if (sadp not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+pass
+
+done:
+
+END PROGRAM 3

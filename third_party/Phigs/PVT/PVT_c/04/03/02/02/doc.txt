@@ -1,0 +1,1889 @@
+TITLE: Colour facilities and appearance
+
+MODULE#: 04.03.02.02
+
+DESCRIPTION: This module tests the colour facilities of the
+workstation and the appearance of colored primitives.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** ***   Support of colour by workstation   *** *** ***
+
+***   Number of colors   ***
+
+SR1. <Inquire colour facilities> returns the number of available
+colors for the specified workstation type.
+#F 277
+#D 6.17.2.2
+#S n
+#T P01/3 P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8
+
+SR2.  Every workstation type supports at least two colours.
+#F 277
+#D 6.17.2.2
+#S 6.7/323/1
+#T P01/3
+
+SR3.  The workstation can realize a continuous range of colours
+if the reported number of available colours is 0.
+#F 69 236 277
+#D 6.17.2.2
+#S 6.7/323/1
+#T P01/3 P04/4 P04/5
+#C This doesn't necessarily mean that the workstation can realize
+all the colours within a colour model, since its gamut may be a
+subset of the full model. Within its gamut, however, all colours
+are realizable.
+
+***   Color available   ***
+
+SR4. <Inquire colour facilities> returns the ability to display
+colours as COLOUR or MONOCHROME for the specified workstation
+type.
+#F 277
+#D 6.17.2.3
+#S 4.5.12/64/3 6.7/323/1
+#T P01/4 P06/1 P06/2
+
+SR5. A workstation type has COLOUR for the value of its 'colour
+available' property if and only if it has displayable colours of
+various non-neutral hues.
+#F 69 236 277
+#D 6.17.2.3
+#S 4.5.12/64/3
+#T P01/5 P04/4 P06/1 P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8
+#C Neutral hues are the gray-scale colours: white, gray, black.
+
+SR6. A workstation type has MONOCHROME for the value of its
+'colour available' property if and only if it has displayable
+colours of at most one non-neutral hue.
+#F 69 236 277
+#D 6.17.2.3
+#S 4.5.12/64/3
+#T P01/6 P04/5 P06/2
+#C A monochrome workstation may be either gray-scale (no hues),
+or may display only a single hue, such as different intensities
+and saturation of green.
+
+***   Primaries   ***
+
+SR7. <Inquire colour facilities> returns each of the three
+primary colours as a CIELUV colour specification for a given
+workstation type.
+#F 277
+#D 6.17.2.1
+#S 6.1/306/9 6.7/323/1
+#T P01/1 P01/2
+
+***   Predefined colours  ***
+
+SR8.  <Inquire colour facilities> returns the number of
+predefined colour indices for the specified workstation type.
+#F 277
+#D 6.17.2.4
+#S n
+#T P02/1 P02/2
+
+SR9.  <Inquire predefined colour representation> returns the
+colour specification for a predefined colour index according to
+the default color model.
+#F 278
+#D 6.17.1.3 6.17.3.1
+#S n
+#T P02/2 P02/3 P02/4 P02/6 P03/2
+
+SR10.  The n predefined colour indices in the Workstation
+Description Table (WDT) are indexed as 0 to n-1.
+#F 277 278
+#D 6.17.3
+#S 4.5.12/63/5 6.7/323/1
+#T P02/2 P03/2
+#C The standard presumes this because in section 6.7 the predefined
+colour indices in the WDT do not mention index as a data item, nor
+is there a way to get a list of these indices (<inquire colour
+facilities> gives the number of predefined indices, but not a list
+thereof).
+
+SR11.  Predefined colour table indices 0 and 1 always exist.
+#F 277 278
+#D 6.17.3
+#S 4.5.12/63/5 6.6/318/1
+#T P02/1 P02/5 P02/6
+
+SR12.  The predefined colour indices number 0 and 1 have
+different colour specifications.
+#F 278
+#D 6.17.3.1
+#S 4.5.2/42/3 4.5.12/63/5 6.7/323/1
+#T P02/6
+
+SR13.  Immediately after <open workstation>, for each WDT
+predefined colour index there exists a Workstation State List
+(WSL) colour table entry with the same attributes, including the
+same colour index.
+#F 3 235 236 278
+#D 5.15.3 6.17.3
+#S 4.5.2/42/3 6.6/318/1 6.7/323/1
+#T P03/1 P03/2
+
+SR14.  Immediately after <open workstation>, the colour table
+contains nothing but the entries initialized from the WDT
+predefined colour table.
+#F 3 235 236 278
+#D 5.15.3 6.17.3
+#S 4.5.2/42/3 6.6/318/1 6.7/323/1
+#T P03/1
+
+SR15.  The colour coordinates of every predefined colour index
+are valid (with respect to the default colour model) and
+realizable for the workstation type.
+#F 276 278
+#D 6.17.1.3 6.17.2.1 6.17.2.2 6.17.3.1
+#S 4.5.2/39/3 5.12.1/232/1
+#T P02/3 P02/4
+#C This implies that the colour coordinates are between 0 and 1
+if the default color model is 1, 2, 3, or 4.
+
+***   Color models   ***
+
+SR16. <Inquire colour model facilities> returns the list of
+available colour models and the default colour model for the
+specified workstation type.
+#F 276
+#D 6.17.1.1 6.17.1.2 6.17.1.3
+#S 4.5.12/64/1
+#T P05/1 P05/2 P05/3 P05/4 P05/5 P05/12 P07/1 P07/2 P07/3 P07/4 P07/5
+   P07/6 P07/7 P07/8 P08/1 P08/2
+
+SR17.  All the colour models in the list of available colour
+models are valid and realizable for the specified workstation
+type.
+#F 72 234 276
+#D 5.15.1 6.17.1.2
+#S 4.5.12/64/1
+#T P05/5 P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P08/1 P08/2
+
+SR18. The workstation type's default colour model returned by
+<inquire colour model facilities> is in the list of available
+colour models.
+#F 276
+#D 6.17.1.2 6.17.1.3
+#S 4.5.12/64/1
+#T P05/3
+
+SR19.  The list of available colour models contains the
+registered types 1 (RGB) and 2 (CIE).
+#F 276
+#D 6.17.1.2
+#S 4.5.12/64/1 4.14/113/3 4.14/114/2
+#T P05/4
+
+SR20.  Immediately after <open workstation>, the default colour
+model for the corresponding workstation type is in effect.
+#F 3 234 276
+#D 5.15.1 6.17.1.3
+#S 4.5.12/63/6 6.6/317/1
+#T P05/1 P05/12
+
+SR21.  The current colour model governs the interpretation of the
+colour coordinate parameters used in subsequent calls to <set
+colour representation> and <inquire colour representation>.
+Changing the colour model does not affect the colours associated
+with the colour table indices.
+#F 69 72 236
+#D 5.15.1 5.15.3.2
+#S 4.5.12/63/8
+#T P04/1 P04/2 P04/3 P05/6 P05/7 P05/8 P05/9 P05/10 P05/11 P06/1 P06/2
+   P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P08/1 P08/2 P09/1
+#C Changing the colour model does not affect colours in the
+colour table but only the "language" in which they are expressed.
+E.g. The coordinates for red are (1,0,0) in RGB, and (0, 0.5, 1)
+in HLS.  A given index set to red under one color model continues
+to indicate red if the model is changed.
+
+SR22.  Colour model 1 is predefined as RGB.  The RGB color space
+is a unit cube (0-1 in all three dimensions) in which the primary
+axes represent red, green, and blue.  Fully saturated renditions
+of these colors are associated with (1,0,0), (0,1,0), and
+(0,0,1), respectively.  Other points are rendered by treating
+these primaries additively.
+#F 276
+#D 6.17.1.2
+#S 4.5.12/64/1 6.1/306/8
+#T P05/6 P05/7 P05/8 P05/9 P05/10 P05/11 P06/1 P06/2 P07/1 P07/2 P09/1
+#C E.g. dark grayish green might be represented by (0.2, 0.7,
+0.2).
+
+SR23.  Colour model 2 is predefined as CIELUV.  In the CIELUV
+color space, hue is determined by the first two parameters u' and
+v', as defined in the 1976 CIE standard and the third parameter,
+Y, determines luminance value (0 for black, 1 for fully lighted).
+#F 276
+#D 6.17.1.2
+#S 4.5.12/64/1 6.1/306/8
+#T P05/6 P05/7 P07/7 P07/8
+
+SR24.  Colour model 3 is predefined as HSV.  The first parameter,
+H, determines the hue, with values of 0 for red, 1/6 for yellow,
+2/6 for green, 3/6 for cyan, 4/6 for blue, and 5/6 for magenta.
+The second parameter, S, determines color saturation, with 0 for
+unsaturated (gray scale) and 1 for fully saturated colors.  The
+third parameter, V, determines the brightness, with 0 for black
+and 1 for fully bright colors.
+#F 276
+#D 6.17.1.2
+#S 4.5.12/64/1 6.1/306/8
+#T P05/8 P05/9 P07/3 P07/4
+#C Note that V=1 for fully saturated and bright hues, and also
+for white.  Dark grayish green might be represented by (0.3333,
+0.5, 0.5).
+
+SR25.  Colour model 4 is predefined as HLS.  The first parameter,
+H, determines the hue, with values of 0 for red, 1/6 for yellow,
+2/6 for green, 3/6 for cyan, 4/6 for blue, and 5/6 for magenta.
+The second parameter, L, determines the brightness, with 0 for
+black, 0.5 for fully bright colors, and 1 for white.  The third
+parameter, S, determines color saturation, with 0 for unsaturated
+(gray scale) and 1 for fully saturated colors.
+#F 276
+#D 6.17.1.2
+#S 4.5.12/64/1 6.1/306/8
+#T P05/10 P05/11 P07/5 P07/6
+#C E.g. dark grayish green might be represented by (0.3333, 0.3,
+0.5).
+
+SR26. The range of valid values for all parameters for all four
+predefined color models is 0 to 1.
+#F 69 236
+#D 5.15.3.2
+#S 4.5.12/64/1 6.1/306/8
+#T P01/1 P02/3 P04/1 P04/2 P04/3 P06/1 P06/2
+
+SR27.  Any colour coordinates within the range of the current
+colour model may be specified when invoking <set colour
+representation>.
+#F 69
+#D 5.15.1 5.15.3.2
+#S 4.5.12/63/7 4.5.12/63/8
+#T P04/1 P06/1 P06/2
+
+SR28.  When available on the workstation, colour models greater
+than 4 work as specified in the ISO register.
+#F 276
+#D 6.17.1.2
+#S 4.5.12/64/1
+#T P08/1
+
+SR29.  When available on the workstation, colour models less than
+one work as specified in the implementor documentation.
+#F 276
+#D 6.17.1.2
+#S 4.1.1/15/1 4.5.12/64/1
+#T P08/2
+
+*** *** *** ***   Colour appearance   *** *** *** ***
+
+SR30. The background colour (i.e. the colour of display
+immediately after clearing) is specified by entry number 0 in the
+colour table.
+#F 69 236
+#D 5.15.3.1 5.15.3.2
+#S 4.5.12/63/5
+#T P09/1 P10/1
+
+SR31. Colour indices in the colour table greater than zero
+specify foreground colours.
+#F 69 236
+#D 5.15.3.1 5.15.3.2
+#S 4.5.12/63/5
+#T P10/1
+
+SR32. <Inquire colour representation> returns the colour
+associated with an entry in the colour table as realized on the
+workstation, when type of returned values specified is REALIZED.
+The returned colour is described by a set of colour coordinates,
+to be interpreted according to the current colour model of the
+specified workstation.
+#F 72 236
+#D 5.15.3.1 5.15.3.2
+#S 4.5.12/63/7 4.5.12/63/8 4.11/108/1
+#T P01/2 P01/5 P01/6 P02/4 P04/2 P04/3 P04/4 P04/5 P07/1 P07/2 P07/3
+   P07/4 P07/5 P07/6 P07/7 P07/8 P08/1 P08/2 P09/1 P10/1
+
+SR33.  A defined colour specification is realized as the nearest
+available on the workstation.
+#F 69 236
+#D 5.15.3 6.17.2.1 6.17.2.2 6.17.2.3
+#S 4.5.12/64/2
+#T P01/2 P01/5 P01/6 P02/4 P04/2 P04/3 P04/4 P04/5 P06/1 P06/2 P07/1
+   P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8
+#C The background colour (number 0) of a workstation may not be
+changeable, and hence the same requested colour coordinates may
+be realized differently than when describing a foreground colour.
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+   69: pscr    <set colour representation>
+   72: pscmd   <set colour model>
+  234: pqcmd   <inquire colour model>
+  235: pqeci   <inquire list of colour indices>
+  236: pqcr    <inquire colour representation>
+  276: pqcmdf  <inquire colour model facilities>
+  277: pqcf    <inquire colour facilities>
+  278: pqpcr   <inquire predefined colour representation>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.15  ...  colour_entry
+  5.15.1  ...  current_colour_model
+  5.15.3  ...  colour_table
+  5.15.3.1  ...  colour_index
+  5.15.3.2  ...  colour_specification
+  6  ...  workstation_description_table
+  6.17  ...  colour_entry
+  6.17.1  ...  colour_model_facilities
+  6.17.1.1  ...  number_of_available_colour_models
+  6.17.1.2  ...  list_of_available_colour_models
+  6.17.1.3  ...  default_colour_model
+  6.17.2  ...  colour_facilities
+  6.17.2.1  ...  primary_colours
+  6.17.2.2  ...  number_of_available_colours
+  6.17.2.3  ...  colour_available
+  6.17.2.4  ...  number_of_predefined_colour_indices
+  6.17.3  ...  predefined_colour_table
+  6.17.3.1  ...  colour_specification
+ 
+
+
+PROGRAM 1: Colour facilities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<Inquire colour facilities> to determine
+   numcol = number of available colours
+   colavl = colour availability
+   pricol(1 to 3) = primary colours
+
+TEST: #SR 7 26
+      "The primary colours returned by <inquire colour facilities>
+       should be valid CIELUV values."
+pass/fail depending on (0 <= pricol (1 to 3) <= 1)
+
+TEST: #SR 7 32 33
+      "The primary colours of the workstation should be realizable."
+<set colour model> = CIELUV
+do ipcol = 1 to 3
+   <set colour representation> #1 to pricol(ipcol)
+   <inquire colour representation> #1 as REALIZED: realco
+   if realco approx= pricol(ipcol) then
+      OK so far
+   else
+      fail
+      goto end_pricol
+   endif
+loop
+pass
+
+end_pricol:
+
+TEST: #SR 1 2 3
+      "The number of available colours should be reported as 0 or
+       at least 2."
+pass/fail depending on (numcol = 0 or >=2)
+
+TEST: #SR 4
+      "Colour availability should be of type MONOCHROME or COLOUR."
+pass/fail depending on (colavl = MONOCHROME or COLOUR)
+
+Use angle around neutral (black-white) axis in RGB cube as a rough
+metric for hue.
+
+<set colour model> = RGB
+
+<set colour representation> index #1 = (0,0,1)
+<inquire colour representation> index #1 as REALIZED
+   to determine rspec = realized color spec
+ang0  = hue angle for rspec
+dist0 = distance of rspec from neutral axis
+
+<set colour representation> index #1 = (1,1,0)
+<inquire colour representation> index #1 as REALIZED
+   to determine rspec = realized color spec
+ang1  = hue angle for rspec
+dist1 = distance of rspec from neutral axis
+
+husame = both rspecs have the same hue =
+         ang0 approx= ang1            or
+         dist0 is near gray scale     or
+         dist1 is near gray scale
+
+if colour workstation then
+   TEST: #SR 5 32 33
+         "For colour workstations, very different hues should not be
+          realized as the same hue."
+   pass/fail depending on (not husame)
+else (monochrome)
+   TEST: #SR 6 32 33
+         "For monochrome workstations, different hues should be
+          realized as the same hue."
+   pass/fail depending on (husame)
+endif
+
+END PROGRAM 1
+
+
+PROGRAM 2: Validity of predefined colour table
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<Inquire colour model facilities> to determine
+   defmod  = default colour model
+chkcsr = true = check colour specification range
+if defmod < 1 or > 4 then
+   message about inability to check cspec within range
+   chkcsr = false
+endif
+
+Use <inquire colour facilities> to determine
+   npe  = number of predefined entries
+TEST: #SR 8 11
+      "<Inquire colour facilities> should report at least 2
+       predefined entries."
+pass/fail depending on (npe >= 2)
+
+gotbf(0:1) = false = got background / foreground index
+valcsv     = true  = valid colour specifications values
+
+preal      = true  = predefined color specs are realizable
+TEST: #SR 8 9 10
+      "<Inquire predefined colour representation> should be able
+       to access as many entries as reported by <inquire colour
+       facilities>."
+do ci = 0 to npe-1
+   <inquire predefined colour representation> for ci to determine
+      cspec = colour specification
+   if error then
+      fail
+      goto nxt_test
+   endif
+
+   if ci = 0 or 1 then
+      gotbf(ci) = true
+   endif
+
+   if chkcsr then
+      if (numret not= 3 or cspec < 0 or > 1) then
+      valscv = false
+      errval = erroneous cspec
+   endif
+
+   <set color rep> index #1 to cspec
+   <inquire color rep> index #1 as REALIZED to determine
+       rspec = realized color specification
+   if (cspec not= rspec) then
+      preal = false
+      errci = ci
+   endif
+loop
+pass
+
+nxt_text:
+
+if chkcsr then
+  TEST: #SR 9 15 26
+        "The colour specification parameters for all the
+         predefined colour indices should be valid for the
+         default colour model."
+   if (valcsv) then
+      pass
+   else
+      fail
+      informational message about errval
+   endif
+endif
+
+TEST: #SR 9 15 32 33
+      "The colour specification parameters for all the predefined
+       colour indices should be realizable by the workstation."
+if (preal) then
+   pass
+else
+   fail
+   informational message about errci
+endif
+
+TEST: #SR 11
+      "The predefined colour indices should include entries 0 and 1."
+pass/fail depending on (gotbf(0) and gotbf(1))
+
+TEST: #SR 9 11 12
+      "The first two predefined colour indices should be
+       mutually distinguishable."
+<inquire predefined colour representation> for index 0, determine
+    cspec = predefined colour specification for index 0
+<inquire predefined colour representation> for index 1, determine
+    cspec1 = predefined colour specification for index 1
+pass/fail depending on (cspec not= cspec1)
+
+END PROGRAM 2
+
+
+PROGRAM 3: WSL colour table initialized properly
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+msgsuf = message suffix = "opening workstation."
+
+check_table:
+
+<open workstation>
+<inquire colour facilities> to determine
+   npe = number of predefined colour entries in WDT
+
+<inquire list of colour indices> to determine
+   sct = size of WSL colour table
+TEST: #SR 13 14
+      "WSL colour table should be the same size as the
+       predefined colour table after " + msgsuf
+if sct not= npe then
+   fail
+   message about sct and npe
+else
+   pass
+endif
+
+TEST: #SR 9 10 13
+      "Each WSL colour index should have the same color
+       specification as the corresponding predefined colour
+       index after " + msgsuf
+do ci = 0 to min(npe,sct)-1
+  <inquire predefined colour representation> for index ci, determine
+    pdcs = predefined colour specification
+  <inquire colour representation> for index ci, determine
+    dcs = defined colour specification
+  if dcs = pdcs then
+     OK so far
+  else
+     fail
+     message about ci
+     goto end_check
+  endif
+loop
+pass
+
+end_check:
+alter table - insert new or different entry
+<close workstation>
+if (msgsuf = "opening workstation.") then
+   msgsuf = "re-opening workstation."
+   goto check_table
+endif
+
+END PROGRAM 3
+
+
+PROGRAM 4: Colour specification facilities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire colour model facilities> to determine
+   lacm = list of available colour models
+
+seterr = false
+inqerr = false
+
+All parameters of models 1-4 range from 0 to 1:
+for each colmod in lacm, between 1 and 4
+   <set current color model> = colmod
+   for val = 0 to 1 by .19999
+      <set colour representation>, index #1
+            c1 = val
+            c2 = val**2
+            c3 = val**3
+      if error signalled then
+         seterr = true
+         setprm = (c1, c2, c3)
+         setcod = error code
+         setmod = colmod
+      endif
+
+      <inquire colour representation>, index #1 as realized to
+         determine c1,c2,c3
+      if c1,c2,c3 outside [0, 1] then
+         inqerr = true
+         inqprm = (c1, c2, c3)
+         inqmod = colmod
+      endif
+   next val
+next colmod
+
+TEST: #SR 21 26 27
+      "All colour specification parameters within range of the
+       current colour model should be accepted as valid."
+if seterr then
+   fail
+   message about setmod, setprm, setcod
+else
+   pass
+endif
+
+TEST: #SR 21 26 32 33
+      "The components of a realized colour specification should be
+       reported within the range of the current colour model."
+if inqerr then
+   fail
+   message about inqmod, inqprm
+else
+   pass
+endif
+
+TEST: #SR 21 26 32 33
+      "The components of a realized colour specification should be
+       reported within the range of the current colour model, even
+       when converted from another colour model."
+<set current color model> = CIE
+<set colour representation>, index #0, uvY = 0.6, 0.48, 1.0
+<set colour representation>, index #1, uvY = 0.1, 0.53, 0.1
+<set current color model> = RGB
+do ci = 0 to 1
+   <inquire colour representation>, as realized, index #ci, rr, rg, rb
+   if rr, rg, rb outside [0, 1] then
+      fail
+      goto end_cie_spec
+   endif
+loop
+pass
+
+end_cie_spec:
+
+if (colour available and continuous range of colours) then
+   TEST: #SR 3 5 32 33
+         "For colour workstations with a continuous range of colours,
+          the colour specification parameters should be realized as
+          themselves."
+   <set colour representation> index #1, red=.78, green=.36, blue=.23
+   <inquire colour representation> REALIZED to determine
+       rred=realized red, rgreen=realized green, rblue=realized blue
+   pass/fail depending on (rred   approx= red   and
+                           rgreen approx= green and
+                           rblue  approx= blue)
+else
+   TEST: #SR 3 6 32 33
+         "For workstations with a noncontinuous range of colours
+          or monochrome workstations, the colour specification
+          parameters should be realized as closely as possible."
+   <set colour representation> index #1, red=.17, green=.92, blue=.87
+   <inquire colour representation> as REALIZED to determine
+      rred, rgreen, rblue
+   <set colour representation> index #1, rred, rgreen, rblue
+   <inquire colour representation> as REALIZED to determine
+        new_red, new_green, new_blue
+   pass/fail depending on (new_red   approx= rred   and
+                           new_green approx= rgreen and
+                           new_blue  approx= rblue)
+endif
+
+END PROGRAM 4
+
+
+PROGRAM 5: Colour model facilities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+<open workstation>
+
+<Inquire colour model facilities> to determine
+lacm   = list of available colour models
+defmod = default colour model
+
+TEST: #SR 16 20
+      "Immediately after <open workstation>, the current colour model
+       should be the same as the default colour model."
+<Inquire colour model> to determine
+   curmod = current colour model
+pass/fail depending on (curmod = defmod)
+
+errcod = false = any errors from inquire yet?
+gotdef = false = got default model in lacm?
+regmd(1 thru 4) = false = registered models(1-4)
+for each model in lacm
+   determine thiscm = nth colour model
+   keep track of non-zero indicators:
+   if errind not= 0 then
+      errcod = true
+      message about thiscm
+      goto loop
+   endif
+   keep track of registered colour models:
+   if 1<= thiscm <= 4)
+      regmd(thiscm) = true
+   endif
+   if thiscm = defmod then
+      gotdef = true
+   endif
+loop
+
+TEST: #SR 16
+      "All entries in the list of available colour models should
+       be accessible."
+pass/fail depending on (NOT errcod)
+
+TEST: #SR 16 18
+      "The default colour model should be in the list of available
+       colour models."
+pass/fail depending on (gotdef)
+
+TEST: #SR 16 19
+      "The list of available colour models should contain the RGB
+       and CIELUV colour models."
+pass/fail depending on (regmd(RGB) and regmd(CIE))
+
+TEST: #SR 16 17
+      "All entries within the reported list of available colour models
+       should be realizable and valid."
+do thiscm = each model in lacm
+   <set colour model>, model = thiscm
+   if rejected as invalid then
+      fail
+      message about thiscm
+      goto test_models
+   endif
+   <inquire colour model>, to determine
+       curmod = current colour model
+   if curmod not= thiscm then
+      fail
+      message about curmod and thiscm
+      goto test_models
+   endif
+loop
+pass
+
+test_models:
+
+table of colour equivalents (-1 for indeterminate):
+
+entry     colour     RGB        CIE                  HSV            HLS
+-----     ------     ---        ---                  ---            ---
+  1       red        1, 0, 0    0.600,0.480,1        0, 1,1         0,.5,1
+  2       yellow     1, 1, 0    0.247,0.555,1    .1667, 1,1     .1667,.5,1
+  3       green      0, 1, 0    0.007,0.542,1    .3333, 1,1     .3333,.5,1
+  4       cyan       0, 1, 1                        .5, 1,1        .5,.5,1
+  5       blue       0, 0, 1    0.117,0.203,1    .6667, 1,1     .6667,.5,1
+  6       magenta    1, 0, 1                     .8333, 1,1     .8333,.5,1
+  7       white      1, 1, 1    0.194,0.464,1       -1, 0,1        -1,1,-1
+  8       gray      .5,.5,.5    0.194,0.464,0.5     -1, 0,.5       -1,.5,0
+  9       black      0, 0, 0   -1,   -1,    0       -1,-1,0        -1,0,-1
+
+if (not regmd(CIE)) then
+   goto end_cie
+endif
+
+passct = 0
+for ix = 1,2,3,5,7,8,9
+   <set colour model> CIE
+   <set colour representation> index #1, CIE entry (ix)
+      but changing -1 to random value between 0 and 1
+   <inquire colour representation> index #1, as REALIZED
+   if (realized color not close to set color) then
+      skip to next ix
+   endif
+
+   <set colour model> RGB
+   <inquire colour representation> #1, as SET, to determine cspec
+   if (cspec approximately matches RGB entry (ix)) then
+      passct = passct+1
+   else
+      passct = -666
+      informational message about failing colour
+   endif
+next ix
+
+if (passct = 0) then
+   informational message: no realizable colors to convert
+else
+   TEST: #SR 21 22 23
+         "Changing the colour model from CIE to RGB should not affect the
+          colours in the colour table."
+   pass/fail depending on (passct > 0)
+endif
+
+end_from_cie:
+
+passct = 0
+for ix = 1,2,3,5,7,8,9
+   <set colour model> RGB
+   <set colour representation> index #1, RGB entry (ix)
+   <inquire colour representation> index #1, as REALIZED
+   if (realized color not close to set color) then
+      skip to next ix
+   endif
+
+   <set colour model> CIE
+   <inquire colour representation> #1, as SET, to determine cspec
+   if (cspec approximately matches CIE entry (ix)) then
+      passct = passct + 1
+   else
+      passct = -666
+      informational message about failing colour
+   endif
+next ix
+
+if (passct = 0) then
+   informational message: no realizable colors to convert
+else
+   TEST: #SR 21 22 23
+         "Changing the colour model from RGB to CIE should not affect the
+          colours in the colour table."
+   pass/fail depending on (passct > 0)
+endif
+
+end_cie:
+
+if (not regmd(HSV)) then
+   goto end_hsv
+endif
+
+passct = 0
+for ix = 1 to 9
+   <set colour model> HSV
+   <set colour representation> index #1, HSV entry (ix)
+      but changing -1 to random value between 0 and 1
+   <inquire colour representation> index #1, as REALIZED
+   if (realized color not close to set color) then
+      skip to next ix
+   endif
+
+   <set colour model> RGB
+   <inquire colour representation> #1, as SET, to determine cspec
+   if (cspec approximately matches RGB entry (ix)) then
+      passct = passct+1
+   else
+      passct = -666
+      informational message about failing colour
+   endif
+next ix
+
+if (passct = 0) then
+   informational message: no realizable colors to convert
+else
+   TEST: #SR 21 22 24
+         "Changing the colour model from HSV to RGB should not affect the
+          colours in the colour table."
+   pass/fail depending on (passct > 0)
+endif
+
+end_from_hsv:
+
+passct = 0
+for ix = 1 to 9
+   <set colour model> RGB
+   <set colour representation> index #1, RGB entry (ix)
+   <inquire colour representation> index #1, as REALIZED
+   if (realized color not close to set color) then
+      skip to next ix
+   endif
+
+   <set colour model> HSV
+   <inquire colour representation> #1, as SET, to determine cspec
+   if (cspec approximately matches HSV entry (ix)) then
+      passct = passct+1
+   else
+      passct = -666
+      informational message about failing colour
+   endif
+next ix
+
+if (passct = 0) then
+   informational message: no realizable colors to convert
+else
+   TEST: #SR 21 22 24
+         "Changing the colour model from RGB to HSV should not affect the
+          colours in the colour table."
+   pass/fail depending on (passct > 0)
+endif
+
+end_hsv:
+
+if (not regmd(HLS)) then
+   goto end_hls
+endif
+
+passct = 0
+for ix = 1 to 9
+   <set colour model> HLS
+   <set colour representation> index #1, HLS entry (ix)
+      but changing -1 to random value between 0 and 1
+
+   <inquire colour representation> index #1, as REALIZED
+   if (realized color not close to set color) then
+      skip to next ix
+   endif
+
+   <set colour model> RGB
+   <inquire colour representation> #1, as SET, to determine cspec
+   if (cspec approximately matches RGB entry (ix)) then
+      passct = passct+1
+   else
+      passct = -666
+      informational message about failing colour
+   endif
+next ix
+
+if (passct = 0) then
+   informational message: no realizable colors to convert
+else
+   TEST: #SR 21 22 25
+         "Changing the colour model from HLS to RGB should not affect the
+          colours in the colour table."
+   pass/fail depending on (passct > 0)
+endif
+
+end_from_hls:
+
+passct = 0
+for ix = 1 to 9
+   <set colour model> RGB
+   <set colour representation> index #1, RGB entry (ix)
+   <inquire colour representation> index #1, as REALIZED
+
+   if (realized color not close to set color) then
+      skip to next ix
+   endif
+
+   <set colour model> HLS
+   <inquire colour representation> #1, as SET, to determine cspec
+   if (cspec approximately matches HLS entry (ix)) then
+      passct = passct+1
+   else
+      passct = -666
+      informational message about failing colour
+   endif
+next ix
+
+if (passct = 0) then
+   informational message: no realizable colors to convert
+else
+   TEST: #SR 21 22 25
+         "Changing the colour model from RGB to HLS should not affect the
+          colours in the colour table."
+   pass/fail depending on (passct > 0)
+endif
+
+end_hls:
+
+<close workstation>
+<open workstation>
+<inquire colour model facilities> to determine
+lacm   = list of available colour models
+defmod = default colour model
+
+TEST: #SR 16 20
+      "Immediately after re-opening the workstation, the current
+       colour model should be the same as the default colour model."
+<Inquire colour model> to determine
+   curmod = current colour model
+pass/fail depending on (curmod = defmod)
+
+<close workstation>
+
+END PROGRAM 5
+
+
+PROGRAM 6: Colour or monochrome
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+HUE DISCRIMINATION FOR AVAILABLE COLOUR: There should be a
+uniformly colored rectangular patch in the middle of the screen.
+Pick the color name that best describes the patch.
+
+DESIGN:
+
+set color model = RGB
+
+<inquire colour facilities> to determine
+   colavl = colour available? = colour or monochrome
+
+if (colavl = colour) then
+   TEST: #SR 4 5 21 22 26 27 33
+         "A workstation reported as capable of colour should be
+          able to display more than one hue."
+elseif (colavl = monochrome) then
+   TEST: #SR 4 6 21 22 26 27 33
+         "A workstation reported as capable of monochrome should be
+          able to display at most one hue."
+else
+   informational message: Non-standard code for colour available;
+      skipping test.
+   goto done
+endif
+
+Use index #2, unless only 0 and 1 are available:
+<inquire workstation state table lengths> to determine
+  colsiz = size of color table
+if (colsiz > 2) then
+   colix = 2
+else
+   colix = 1
+endif
+
+newhue(1:6) = logical table of hues to be seen = all true
+for hue = red,yellow,green,cyan,blue,magenta
+   set colour representation #colix to hue
+   display color patch centered on screen, using colix#:
+      solid fill area if available, otherwise
+      cross-hatched polylines
+
+   OPQA/HUE DISCRIMINATION FOR AVAILABLE COLOUR: The color of the
+      rectangular patch is best described as: 1-red, 2-yellow,
+      3-green, 4-cyan, 5-blue, 6-magenta, 7-white, 8-gray, or 9-black?
+   opans = operator response
+
+   if (opans = 0) then
+      allow operator comment
+      fail
+      goto done
+   elseif (opans < 7) then
+      if (newhue(opans) then
+         huect = huect+1
+         if (huect > 1) goto gothues
+         newhue(opans) = false
+      endif
+   else
+      not a distinct hue; do nothing
+   endif
+next hue
+
+gothues:
+if (colavl = colour) then
+   pass/fail depending on (huect > 1)
+else
+   pass/fail depending on (huect <= 1)
+endif
+
+done:
+
+END PROGRAM 6
+
+
+PROGRAM 7: Hue recognition for colour models
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+APPEARANCE OF BASIC COLORS IN RGB: The screen should display a
+column of several colored rectangles, representing some of the
+vertices of the RGB cube, and also possibly the center point.
+Indicate the order of the rectangles' colors (starting from the
+top) to confirm their recognizability.  Use the color key in the
+prompt (1=black, 2=blue, etc.) to indicate the color order.
+
+APPEARANCE OF INTERMEDIATE COLORS IN RGB: The screen should
+display four colored rectangles, representing a normal hue and
+three variants (light, grayish, dark) of that hue.  Indicate the
+order of colors to confirm their recognizability.
+
+APPEARANCE OF BASIC COLORS IN HSV: Same as for RGB, above.
+
+APPEARANCE OF INTERMEDIATE COLORS IN HSV: Same as for RGB, above.
+
+APPEARANCE OF BASIC COLORS IN HLS: Same as for RGB, above.
+
+APPEARANCE OF INTERMEDIATE COLORS IN HLS: Same as for RGB, above.
+
+APPEARANCE OF BASIC COLORS IN CIE: Same as for RGB, above.
+
+APPEARANCE OF COMPOUND HUES IN CIE: Same as for APPEARANCE OF
+BASIC COLORS IN CIE, above.
+
+DESIGN:
+
+<inquire color facilities> to determine
+  sizpal = number of colours available (size of palette)
+  colavl = COLOR/MONOCHROME
+
+if (colavl not= COLOR) then
+   informational message: multi-hue color not available; skipping
+      all hue tests.
+   goto end_hue
+endif
+
+if (sizpal > 0 and sizpal < 27) then
+   informational message: number of available colors too low for
+      reliable testing; skipping all hue tests.
+   goto end_hue
+endif
+
+<inquire workstation state table lengths> to determine
+  mcoli = maximum number of color indices
+  maxfg = maximum available #foreground colors, besides #1
+        = mcoli-1
+
+if (maxfg < 4) then
+   informational message: number of available color entries too
+      low for reliable testing; skipping all hue tests.
+   goto end_hue
+endif
+
+if (solid interior style available) then
+   throughout, use solid fill area for color patches
+else
+   use dense polyline cross-hatch for color patches
+endif
+
+<inquire color model facilities> to determine
+  lscmod = list of color models
+
+set background to dark gray
+
+*** *** *** ***   RGB   *** *** *** ***
+
+if (lscmod does not contain RGB) then
+   informational message: RGB color model not available; skipping
+      RGB tests.
+   goto end_rgb
+endif
+
+set color model = RGB
+set as many foreground colors as possible in the color table,
+   starting with entry #2
+
+hues:
+    red        1, 0, 0
+    yellow     1, 1, 0
+    green      0, 1, 0
+    cyan       0, 1, 1
+    blue       0, 0, 1
+    magenta    1, 0, 1
+neutrals:
+    white      1, 1, 1
+    gray      .5,.5,.5
+    black      0, 0, 0
+
+numset = number actually set and realized in color table
+
+if (numset < 4) then
+   informational message: Realized basic colors not accurate
+      enough for testing RGB color model.
+   goto end_rgb
+endif
+
+TEST: #SR 1 5 16 17 21 22 32 33
+      "The basic hues and neutral colors should appear as
+       described within the RGB color model."
+
+In random order, display color patches for color entries #2 - #numset+1
+
+OPQA/APPEARANCE OF BASIC COLORS IN RGB: Enter a list of color
+  identifiers which corresponds to the order (from top to bottom)
+  of displayed rectangles.
+pass/fail depending on
+  (operator response matches actual order of colors as displayed)
+
+if (sizpal > 0 and sizpal < 64) then
+   informational message: number of available colors too low for
+      reliable testing of intermediate RGB hues.
+   goto end_rgb
+endif
+
+didtst = have any shading tests been performed = false
+
+Formulas for intermediate hues:
+light hue   = 0.3*hue + 0.7*white
+grayish hue = 0.3*hue + 0.7*gray
+dark hue    = 0.4*hue + 0.6*black
+
+for each primary hue = red,yellow,green,cyan,blue,magenta
+   liscol = primary,light,dark,gray shades of hue, in random order
+   try to set colors 2 thru 5 to those in liscol
+
+   if (could not set) then
+      goto next hue
+   endif
+
+   didtst = true
+   display colored rectangles from top to bottom
+   OPQA/APPEARANCE OF INTERMEDIATE COLORS IN RGB: Enter a list of
+     color identifiers which corresponds to the order (from top to
+     bottom) of displayed rectangles. The identifiers are: 1-normal,
+     2-light, 3-grayish, and 4-dark shade of + (name of hue)
+
+   if (operator response incorrect) then
+      goto end_rgb_loop
+   endif
+end_rgb_hue:
+next hue
+
+end_rgb_loop:
+
+if (didtst) then
+   TEST: #SR 1 5 16 17 21 22 32 33
+         "The intermediate hues should appear as described within
+          the RGB color model."
+   pass/fail depending on (all operator lists were correct)
+else
+   informational message: realized intermediate colors not
+     accurate enough for testing RGB color model.
+endif
+
+end_rgb:
+
+*** *** *** ***   HSV   *** *** *** ***
+
+if (lscmod does not contain HSV) then
+   informational message: HSV color model not available; skipping
+      HSV tests.
+   goto end_hsv
+endif
+
+set color model = HSV
+set as many foreground colors as possible in the color table,
+   starting with entry #2
+
+hues:
+   red             0, 1,1
+   yellow      .1667, 1,1
+   green       .3333, 1,1
+   cyan           .5, 1,1
+   blue        .6667, 1,1
+   magenta     .8333, 1,1
+neutrals:
+   white          -1, 0,1
+   gray           -1, 0,.5
+   black          -1,-1,0
+
+numset = number actually set and realized in color table
+
+if (numset < 4) then
+   informational message: Realized basic colors not accurate
+      enough for testing HSV color model.
+   goto end_hsv
+endif
+
+TEST: #SR 1 5 16 17 21 24 32 33
+      "The basic hues and neutral colors should appear as
+       described within the HSV color model."
+
+In random order, display color patches for color entries #2 - #numset+1
+
+OPQA/APPEARANCE OF BASIC COLORS IN HSV: Enter a list of color
+  identifiers which corresponds to the order (from top to bottom)
+  of displayed rectangles.
+pass/fail depending on
+  (operator response matches actual order of colors as displayed)
+
+if (sizpal > 0 and sizpal < 64) then
+   informational message: number of available colors too low for
+      reliable testing of intermediate HSV hues.
+   goto end_hsv
+endif
+
+didtst = have any shading tests been performed = false
+
+Formulas for intermediate hues:
+grayish hue = change saturation from 1 to 0.5 and
+              change value from 1 to 0.7
+dark hue    = change value from 1 to 0.7
+light hue   = change saturation from 1 to 0.5
+
+for each primary hue = red,yellow,green,cyan,blue,magenta
+   liscol = primary,light,dark,gray shades of hue, in random order
+   try to set colors 2 thru 5 to those in liscol
+
+   if (could not set) then
+      goto next hue
+   endif
+
+   didtst = true
+   display colored rectangles from top to bottom
+   OPQA/APPEARANCE OF INTERMEDIATE COLORS IN HSV: Enter a list of
+     color identifiers which corresponds to the order (from top to
+     bottom) of displayed rectangles. The identifiers are: 1-normal,
+     2-light, 3-grayish, and 4-dark shade of + (name of hue)
+
+   if (operator response incorrect) then
+      goto end_hsv_loop
+   endif
+end_hsv_hue:
+next hue
+
+end_hsv_loop:
+
+if (didtst) then
+   TEST: #SR 1 5 16 17 21 24 32 33
+         "The intermediate hues should appear as described within
+          the HSV color model."
+   pass/fail depending on (all operator lists were correct)
+else
+   informational message: realized intermediate colors not
+     accurate enough for testing HSV color model.
+endif
+
+end_hsv:
+
+*** *** *** ***   HLS   *** *** *** ***
+
+if (lscmod does not contain HLS) then
+   informational message: HLS color model not available; skipping
+      HLS tests.
+   goto end_hls
+endif
+
+set color model = HLS
+set as many foreground colors as possible in the color table,
+   starting with entry #2
+
+hues:
+   red             0,.5,1
+   yellow      .1667,.5,1
+   green       .3333,.5,1
+   cyan           .5,.5,1
+   blue        .6667,.5,1
+   magenta     .8333,.5,1
+neutrals:
+   white          -1,1,-1
+   gray           -1,.5,0
+   black          -1,0,-1
+
+numset = number actually set and realized in color table
+
+if (numset < 4) then
+   informational message: Realized basic colors not accurate
+      enough for testing HLS color model.
+   goto end_hls
+endif
+
+TEST: #SR 1 5 16 17 21 25 32 33
+      "The basic hues and neutral colors should appear as
+       described within the HLS color model."
+
+In random order, display color patches for color entries #2 - #numset+1
+
+OPQA/APPEARANCE OF BASIC COLORS IN HLS: Enter a list of color
+  identifiers which corresponds to the order (from top to bottom)
+  of displayed rectangles.
+pass/fail depending on
+  (operator response matches actual order of colors as displayed)
+
+if (sizpal > 0 and sizpal < 64) then
+   informational message: number of available colors too low for
+      reliable testing of intermediate HLS hues.
+   goto end_hls
+endif
+
+didtst = have any shading tests been performed = false
+
+Formulas for intermediate hues:
+grayish hue = change saturation from 1 to .5
+dark hue    = change lightness from .5 to .3
+light hue   = change lightness from .5 to .8
+
+for each primary hue = red,yellow,green,cyan,blue,magenta
+   liscol = primary,light,dark,gray shades of hue, in random order
+   try to set colors 2 thru 5 to those in liscol
+
+   if (could not set) then
+      goto next hue
+   endif
+
+   didtst = true
+   display colored rectangles from top to bottom
+   OPQA/APPEARANCE OF INTERMEDIATE COLORS IN HLS: Enter a list of
+     color identifiers which corresponds to the order (from top to
+     bottom) of displayed rectangles. The identifiers are: 1-normal,
+     2-light, 3-grayish, and 4-dark shade of + (name of hue)
+
+   if (operator response incorrect) then
+      goto end_hls_loop
+   endif
+end_hls_hue:
+next hue
+
+end_hls_loop:
+
+if (didtst) then
+   TEST: #SR 1 5 16 17 21 25 32 33
+         "The intermediate hues should appear as described within
+          the HLS color model."
+   pass/fail depending on (all operator lists were correct)
+else
+   informational message: realized intermediate colors not
+     accurate enough for testing HLS color model.
+endif
+
+end_hls:
+
+*** *** *** ***   CIE   *** *** *** ***
+
+if (lscmod does not contain CIE) then
+   informational message: CIE color model not available; skipping
+      CIE tests.
+   goto end_cie
+endif
+
+set color model = CIE
+set as many foreground colors as possible in the color table,
+   starting with entry #2
+
+hues:
+  purple            0.27300, 0.21274, 1
+  blue              0.12789, 0.24391, 1
+  green             0.03119, 0.53718, 1
+  yellow            0.24355, 0.55067, 1
+  orange            0.31424, 0.54033, 1
+  red               0.53377, 0.48834, 1
+  pink              0.34292, 0.48012, 1
+neutrals:
+  white             0.19499, 0.46412, 1
+  gray              0.19499, 0.46412, 0.5
+  black                  -1,      -1, 0
+
+basic colors =
+  (red, orange, yellow, green, blue, purple, pink, white, gray,
+   black)
+
+numset = number actually set and realized in color table
+
+if (numset < 4) then
+   informational message: Realized basic colors not accurate
+      enough for testing CIE color model.
+   goto end_cie
+endif
+
+TEST: #SR 1 5 16 17 21 23 32 33
+      "The basic hues and neutral colors should appear as
+       described within the CIE color model."
+
+In random order, display color patches for color entries #2 - #numset+1
+
+OPQA/APPEARANCE OF BASIC COLORS IN CIE: Enter a list of color
+  identifiers which corresponds to the order (from top to bottom)
+  of displayed rectangles.
+pass/fail depending on
+  (operator response matches actual order of displayed colors)
+
+if (sizpal > 0 and sizpal < 64) then
+   informational message: number of available colors too low for
+      reliable testing of intermediate CIE hues.
+   goto end_cie
+endif
+
+didtst = have any shading tests been performed = false
+
+group1, group2 chosen to avoid adjacent colors within a group:
+group1 of compound hues =
+  purplish blue     0.19783, 0.11434, 1
+  greenish blue     0.08062, 0.36172, 1
+  yellowish green   0.10592, 0.56614, 1
+  greenish yellow   0.21071, 0.55192, 1
+  orange yellow     0.27763, 0.54550, 1
+  purplish red      0.49906, 0.39395, 1
+group2 of compound hues =
+  bluish green      0.05087, 0.45206, 1
+  yellow green      0.18037, 0.55056, 1
+  reddish orange    0.38490, 0.52474, 1
+  reddish purple    0.42005, 0.28769, 1
+  yellowish pink    0.31657, 0.50889, 1
+  purplish pink     0.31096, 0.41980, 1
+
+for both group1 and group2:
+   try to set color table to colors of this group, starting with
+     entry #2
+   numset = number actually set and realized in color table
+   if (numset < 4) then
+      goto next group
+   endif
+   didtst = true
+
+   In random order, display color patches for color entries #2 -
+      #numset+1
+
+   OPQA/APPEARANCE OF COMPOUND HUES IN CIE: Enter a list of color
+     identifiers which corresponds to the order (from top to bottom)
+     of displayed rectangles.
+   if (operator response incorrect) then
+      goto end_compound
+   endif
+next group
+
+end_compound:
+
+if (didtst) then
+   TEST: #SR 1 5 16 17 21 23 32 33
+         "The compound hues should appear as described within the
+          CIE color model."
+   pass/fail depending on (operator responses were correct)
+else
+   informational message: realized compound hues not accurate
+     enough for testing.
+endif
+
+end_cie:
+
+end_hue:
+
+END PROGRAM 7
+
+
+PROGRAM 8: Non-explicitly defined color models
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DIMENSION OF COLOUR MODEL: Indicate how many values are required
+to specify a color in the given color model.  (All the standard
+defined models (RGB, CIELUV, HSV, HLS) are three-dimensional.)
+
+DIMENSION BOUNDS: For each dimension of the given color model,
+enter the lowest and highest valid value.  (All three dimensions
+of all the standard defined models range from 0.0 to 1.0).
+
+ACCURACY OF COLOUR MODEL: The screen should display a number of
+colored rectangles, with the reported color coordinate values to
+their right.  Consult the relevant documentation and determine if
+the colors are accurate with respect to the coordinate values.
+
+DESIGN:
+
+<inquire color model facilities> to determine
+  lrgcmd = list of registered, non-explicitly defined color
+           models (i.e. all those > 4)
+  limcmd = list of implementor-defined color models (i.e. all
+           those < 1)
+
+<inquire workstation state table lengths> to determine
+  colsiz = size of color table
+if (colsiz > 2) then
+   hicol = min (colsiz-1, locol+7)
+else
+   informational message: Color table too small to allow testing
+      of non-explicitly defined color models
+   goto end_imp
+endif
+
+*** *** *** ***   registered color models   *** *** *** ***
+
+if (lrgcmd is empty) then
+   informational message: No registered color models are
+      supported; skipping test.
+   goto end_reg
+endif
+
+TEST: #SR 16 17 21 28 32
+      "Registered colour models should work as described by the
+       ISO register."
+
+numtst = number of models to test = min(8, size of lrgcmd)
+ltstmd = list of models to be tested = numtst entries
+   randomly chosen from lrgcmd
+
+for each color model, cm, in ltstmd
+   <set colour model> to cm
+   OPQA/DIMENSION OF COLOUR MODEL: How many dimensions are there
+     for colour model <cm>?
+   cmdim = operator response
+   for ix = 1 to cmdim
+      OPQA/DIMENSION BOUNDS: Enter the lower and upper limit
+        for valid values for dimension #ix.
+      lo(ix) = lower limit
+      hi(ix) = upper limit
+   next ix
+   draw color patches down left side of screen:
+   for colix = locol to hicol
+      for ix = 1 to cmdim
+         colval(ix) = random from lo(ix) to hi(ix)
+      next ix
+      <set color representation> #colix to colval
+      <inquire color representation> #colix as realized to
+         determine actual colval
+      display color patch in next position down from top,
+         using color #colix
+
+      To the right of color patch, display values of colval,
+         using text color #1
+   next colix
+
+   OPQA/ACCURACY OF COLOUR MODEL: Are the colors of the
+     rectangles compatible with the corresponding displayed
+     color coordinate values, according to the ISO register?
+
+   if (operator answers "no") then
+      fail
+      informational message: Color model #cm caused failure
+      goto end_reg
+   endif
+
+next cm
+pass
+
+end_reg:
+
+*** *** *** ***   implementor defined color models   *** *** *** ***
+
+if (limcmd is empty) then
+   informational message: No implementor defined color models are
+      supported; skipping test.
+   goto end_imp
+endif
+
+TEST: #SR 16 17 21 29 32
+      "Implementor defined colour models should work as described
+       by the implementor's documentation."
+
+numtst = number of models to test = min(8, size of limcmd)
+ltstmd = list of models to be tested = numtst entries
+   randomly chosen from limcmd
+
+for each color model, cm, in ltstmd
+   <set colour model> to cm
+   OPQA/DIMENSION OF COLOUR MODEL: How many dimensions are there
+     for colour model <cm>?
+   cmdim = operator response
+   for ix = 1 to cmdim
+      OPQA/DIMENSION BOUNDS: Enter the lower and upper limit
+        for valid values for dimension #ix.
+      lo(ix) = lower limit
+      hi(ix) = upper limit
+   next ix
+   draw color patches down left side of screen:
+   for colix = 2 to hicol
+      for ix = 1 to cmdim
+         colval(ix) = random from lo(ix) to hi(ix)
+      next ix
+      <set color representation> #colix to colval
+      <inquire color representation> #colix as realized to
+         determine actual colval
+      display color patch in next position down from top,
+         using color #colix
+      To the right of color patch, display values of colval,
+         using text color #1
+   next colix
+
+   OPQA/ACCURACY OF COLOUR MODEL: Are the colors of the
+     rectangles compatible with the corresponding displayed
+     color coordinate values, according to the implementor
+     documentation?
+   if (operator answers "no") then
+      fail
+      informational message: Color model #cm caused failure
+      goto end_imp
+   endif
+
+next cm
+pass
+
+end_imp:
+
+END PROGRAM 8
+
+
+PROGRAM 9: Background colour
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+BACKGROUND COLOUR: The program attempts to set explicitly the
+background color of the display.  Indicate the background
+colour when prompted.
+
+DESIGN:
+
+<set color model> = RGB
+
+rgbval = list of RGB color coordinates
+         for blue, black, cyan, gray, green, magenta, red, white, yellow
+
+numtst = number of colors to test = 6
+paltte = size of palette = 9
+
+liscol = list of colors to be tested
+       = numtst chosen from palette, in random order
+listst = list of colors tested so far = empty
+passed = passed all so far = true
+
+for each col in liscol
+   <set colour representation> #0 to col
+   <inquire colour representation> #0 as realized to
+      determine real0 = color #0 as realized
+   if (real0 not near any in the palette) then
+      skip to next color
+   else
+      realiz = realized color
+   endif
+
+   if (realiz already contained in listst) then
+      already tested: goto next col
+   endif
+
+   got new (untested) nameable background color:
+   listst = listst + realiz
+
+   <set colour representation> #1 different from real0
+
+   OPQA/BACKGROUND COLOUR: The color of the background is best
+      described as: 1-black, 2-blue, 3-cyan, 4-gray, 5-green,
+      6-magenta, 7-red, 8-white, 9-yellow?
+   opans = operator response
+
+   if (opans = realiz) then
+      OK so far
+   else
+      if (opans = 0) then
+         allow operator comment
+      endif
+      passed = false
+      goto end_bg
+   endif
+next col
+
+end_bg:
+
+if (listst is empty) then
+   informational message: Cannot find nameable realized color for
+      background; skipping test
+else
+   TEST: #SR 21 22 30 32
+         "The background colour should correspond to entry #0 in
+          the colour table."
+   pass/fail depending on passed
+endif
+
+END PROGRAM 9
+
+
+PROGRAM 10: Foreground colour
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+FOREGROUND COLOUR: Five of the six labelled squares should
+contain a square grid of polymarkers.  The polymarkers of all
+five should be the same color.  Identify the square containing a
+different display.
+
+DESIGN:
+
+set colour model = RGB
+
+bg = requested background colour = randomly: green, blue or magenta
+set color representation #0 to bg
+inquire color representation #0 as realized to determine
+  bckcol = actual background color
+
+inquire workstation state table lengths to determine
+  colsiz = number of settable entries in color table
+maxci = maximum color index = colsiz-1
+
+fg = foreground color farthest from bckcol in color cube
+set color representations from #1 to #maxci to fg
+
+TEST: #SR 30 31 32
+      "All the positive entries within the reported size of the color
+       table should control a foreground colour."
+
+sqside = integer number of polymarkers per side of square array
+       = sqrt(colsiz/4 + 1) + 1
+(this ensures all color slots will be used)
+side1 = 0.1
+side2 = 0.9
+sqinc = increment for square = (side2-side1) / (sqside-1)
+mrksiz = polymarker size = min(0.05, 0.2 * sqinc)
+
+set polymarker style = plus (+)
+set polymarker size = mrksiz (in WC)
+
+divide screen up into six labelled square areas
+perm = randomize order from 1 to 6
+nxtcol = next color index to use = maxci
+
+draw square grids of polymarkers:
+  simulated using only color #1,
+  actual using all foreground colors.
+
+for ix = 1 to 6
+   window = perm(ix)
+   set tranformation to scale unit square into this window
+
+   if (window = 1) then
+      simulate incorrect display:
+      ngsq = ix
+      set polymarker color = 1
+      siz = 0
+      for xloc = side1 to (side2 + 0.5*sqinc) by sqinc
+      for yloc = side1 to (side2 + 0.5*sqinc) by sqinc
+         siz = siz+1
+         xa(siz) = xloc
+         ya(siz) = yloc
+      next yloc
+      next xloc
+      put a polymarker at a non-aligned position:
+      siz = siz+1
+      xa(siz) = side1 + sqinc * ((random integer from 0 to sqside-1) + 0.5)
+      ya(siz) = side1 + sqinc * ((random integer from 0 to sqside-1) + 0.5)
+      display polymarker: siz, xa,ya
+   elseif (window = 2) then
+      simulate correct display:
+      set polymarker color = 1
+      siz = 0
+      for xloc = side1 to (side2 + 0.5*sqinc) by sqinc
+      for yloc = side1 to (side2 + 0.5*sqinc) by sqinc
+         siz = siz+1
+         xa(siz) = xloc
+         ya(siz) = yloc
+      next yloc
+      next xloc
+      display polymarker: siz, xa,ya
+   else
+      draw an actual grid:
+      for xloc = side1 to (side2 + 0.5*sqinc) by sqinc
+      for yloc = side1 to (side2 + 0.5*sqinc) by sqinc
+         visible aligned marker:
+         if (nxtcol < maxci) then
+            nxtcol = nxtcol+1
+         else
+            nxtcol = 1
+         endif
+         set polymarker color = nxtcol
+         xa(1) = xloc
+         ya(1) = yloc
+         display single polymarker: xa,ya
+
+      next yloc
+      next xloc
+   endif
+next ix
+
+OPQA/FOREGROUND COLOUR: Which polymarker is different in either
+  color or geometry?
+
+pass/fail depending on (operator response = ngsq)
+
+END PROGRAM 10

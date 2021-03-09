@@ -1,0 +1,699 @@
+TITLE: Pattern table
+
+
+MODULE#: 04.02.05.04
+
+
+DESCRIPTION: This module tests the table entries and other
+workstation facilities for pattern.  These values control the
+appearance of patterns when specified by fill area or fill area
+set (which may be under either bundled or individual control).
+The visual tests for pattern index (a.k.a. interior style index)
+are found in 04.02.05.01 and 04.02.05.02 (individual attributes,
+interior bundles, respectively).  The visual tests for the
+geometric attributes are in 04.02.05.01.
+
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  <Set pattern representation> causes an entry to be defined.
+#F 68
+#D 5.14.1 5.14.2.1
+#S n
+#T P02/2 P02/3 P02/6 P02/7 P02/9 P02/10
+
+SR2.  <Set pattern representation> sets the pattern colour index
+array of an entry in the pattern table.
+#F 68
+#D 5.14.2
+#S 4.5.2/42/3
+#T P01/1 P02/4 P02/8 P02/11
+#X 04.02.05.01
+
+SR3.  <Inquire list of pattern indices> returns list of defined
+pattern indices.
+#F 232
+#D 5.14.1 5.14.2.1
+#S n
+#T P02/1 P02/2 P02/3 P02/5 P02/6 P02/7 P02/9 P02/10 P02/12
+
+SR4.  <Inquire pattern representation> works for all defined
+entries.
+#F 232 233
+#D 5.14.1 5.14.2.1
+#S n
+#T P02/12
+
+SR5.  <Inquire pattern representation> returns the pattern colour
+index array of an entry in the pattern table as set, when type of
+returned values specified as SET.
+#F 233
+#D 5.14.2.2
+#S 4.11/108/1
+#T P01/1 P02/4 P02/8 P02/11
+
+SR6.  <Inquire pattern representation> returns the pattern
+colour index array of an entry in the pattern table as realized,
+when type of returned values specified as REALIZED.
+#F 233
+#D 5.14.2.2
+#S 4.11/108/1
+#T P06/1 P06/3
+
+SR7.  <Inquire pattern representation> returns representation for
+pattern index number 1, if type of returned values is REALIZED,
+and pattern index is undefined.
+#F 232 233
+#D 5.14.2 5.14.2.1
+#S n
+#T P02/5
+
+*** *** *** ***   Maximum Size of pattern table   *** *** *** ***
+
+SR8.  <Inquire workstation state table lengths> returns the
+maximum size of pattern table.
+#F 285
+#D 6.21.6
+#S n
+#T P03/1 P03/2 P03/3
+
+SR9.  If PATTERN interior style is not supported, the size of the
+pattern table returned by <inquire workstation state table
+lengths> is 0.
+#F 285
+#D 6.14.1.2 6.21.6
+#S 6.7/324/1
+#T P03/1
+
+SR10.  There must be at least 10 settable entries available in the
+pattern table.
+#F 68 285
+#D 5.14 6.21.6
+#S 4.14/114/2 6.7/324/1
+#T P03/2
+
+*** *** *** ***   Predefined table facilities   *** *** *** ***
+
+SR11.  <Inquire pattern facilities> returns the number of
+predefined pattern indices.
+#F 274
+#D 6.16.1.1
+#S n
+#T P04/1 P04/2 P04/4 P05/2
+
+SR12.  <Inquire predefined pattern representation> returns the
+pattern color index array for a predefined pattern index.
+#F 275
+#D 6.16.2
+#S n
+#T P04/2 P04/3
+
+SR13.  If PATTERN interior style is supported on a workstation,
+then it must have at least 1 predefined pattern.
+#F 274 275
+#D 6.16.1.1 6.16.2
+#S 4.14/114/2
+#T P04/4
+#X 04.02.05.02
+
+SR14.  If PATTERN interior style is not supported, the number of
+predefined patterns is 0.
+#F 274
+#D 6.14.1.2 6.16.1.1
+#S 4.14/114/2 6.7/323/1
+#T P04/1
+#X 04.02.05.02
+
+SR15.  The n predefined patterns in the Workstation Description
+Table (WDT) are indexed as 1-n.
+#F 275
+#D 6.16.2
+#S 6.7/323/1
+#T P04/2 P05/2
+#C The standard presumes this because in section 6.7 the predefined
+pattern indices in the WDT do not mention index as a data item, nor
+is there a way to get a list of these indices (<inquire pattern
+facilities> gives the number of predefined indices, but not a list
+thereof).
+
+SR16.  Immediately after <open workstation>, for each WDT
+predefined pattern there exists a Workstation State List (WSL)
+pattern table entry with the same attributes, including the same
+pattern index.
+#F 232 233 275 3
+#D 5.14.2 6.16.2
+#S 4.5.2/42/3 6.6/317/1 6.7/323/1
+#T P05/1 P05/2
+
+SR17.  Immediately after <open workstation>, the pattern table
+contains nothing but the entries initialized from the WDT
+predefined pattern table.
+#F 232 233 275 3
+#D 5.14.2 6.16.2
+#S 4.5.2/42/3 6.6/317/1 6.7/323/1
+#T P05/1
+
+*** *** *** ***   Validity of predefined pattern indices    *** *** *** ***
+
+SR18.  Each predefined pattern has a color index array with color
+indices within range of the predefined color indices.
+#F 275 277
+#D 6.16.2.1 6.17.2.4
+#S 5.12.1/232/2
+#T P04/3
+
+*** *** *** ***   Pattern color index array   *** *** *** ***
+
+SR19.  Any non-negative pattern color index may be specified in a
+pattern color index array when invoking <set pattern
+representation>.
+#F 68
+#D 5.14.2.2
+#S n
+#T P06/2
+
+SR20.  A defined pattern color index is realized as itself.
+#F 68 233
+#D 5.14.2.2 5.15.3
+#S n
+#T P06/1
+
+SR21.  An undefined pattern color index is realized as color
+index 1.
+#F 68 233
+#D 5.14.2.2 5.15.3
+#S n
+#T P06/3
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+   68: pspar   <set pattern representation>
+  232: pqepai  <inquire list of pattern indices>
+  233: pqpar   <inquire pattern representation>
+  274: pqpaf   <inquire pattern facilities>
+  275: pqppar  <inquire predefined pattern representation>
+  277: pqcf    <inquire colour facilities>
+  285: pqwksl  <inquire workstation state table lengths>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.14  ...  pattern_entry
+  5.14.1  ...  number_of_pattern_table_entries
+  5.14.2  ...  pattern_table
+  5.14.2.1  ...  pattern_index
+  5.14.2.2  ...  pattern_colour_index_array
+  5.15  ...  colour_entry
+  5.15.3  ...  colour_table
+  6  ...  workstation_description_table
+  6.14  ...  interior_entry
+  6.14.1  ...  interior_facilities
+  6.14.1.2  ...  list_of_available_interior_styles
+  6.16  ...  pattern_entry
+  6.16.1  ...  pattern_facilities
+  6.16.1.1  ...  number_of_predefined_pattern_indices
+  6.16.2  ...  predefined_pattern_table
+  6.16.2.1  ...  pattern_colour_index_array
+  6.17  ...  colour_entry
+  6.17.2  ...  colour_facilities
+  6.17.2.4  ...  number_of_predefined_colour_indices
+  6.21  ...  maximum_table_lengths
+  6.21.6  ...  maximum_number_of_pattern_indices
+ 
+SEMANTIC CROSS-REFERENCES:
+  04.02.05.01/SR15 04.02.05.01/SR20 04.02.05.01/SR21
+  04.02.05.01/SR75 04.02.05.01/SR76 04.02.05.01/SR77
+  04.02.05.01/SR78 04.02.05.02/SR34 04.02.05.02/SR41
+ 
+
+
+PROGRAM 1: Simple setting and inquiring
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+if (PATTERN is not in list of available interior styles) then
+   message about Pattern not supported on workstation
+   goto end_test
+endif
+
+<set pattern representation>:
+  index   = 1
+  pattern_color_index_array =  11 21 31
+                               41 41 51
+<inquire pattern representation> for index #1, as set
+
+TEST: #SR 2 5
+      "Pattern attributes should be returned as set."
+pass/fail depending on
+   (pattern_color_index_array = 11 21 31
+                                41 41 51)
+
+end_test:
+
+END PROGRAM 1
+
+
+PROGRAM 2: Setting entries of various kinds
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+if (PATTERN is not in list of available interior styles)then
+   message about Pattern not supported on workstation
+   goto end_access_all
+endif
+
+<inquire workstation state table lengths> to determine maximum
+   number of entries:
+
+*** *** *** *** ***    initialized entries   *** *** *** *** ***
+
+<inquire list of pattern indices> to determine initialized entries
+   nie = number of initialized entries
+   aii = an initialized index
+TEST: #SR 3
+      "<Inquire list of pattern indices> should return initialized
+       indices."
+if (<inquire list of pattern indices> indicates error) then
+   fail
+   goto undefined_test
+else
+   pass
+endif
+
+initialized_test:
+
+<inquire pattern representation> for index# aii, as set
+   establishes:
+      old_pattern_color_index_array
+new_pattern_color_index_array  =
+      old_pattern_color_index_array + 1, for each element
+
+<set pattern representation> sets:
+  index      = aii
+  pattern_color_index_array = new_pattern_color_index_array
+
+<inquire list of pattern indices> returns defined list
+
+TEST: #SR 1 3
+      "Redefining a system-initialized entry should not change
+       the number of defined entries."
+pass/fail depending on (current number of entries = nie)
+
+TEST: #SR 1 3
+      "Initialized table entry should be reported as defined after
+       being set."
+if (defined list includes #aii) then
+   pass
+else
+   fail
+   goto undefined_test
+endif
+
+<inquire pattern representation> for index# aii, as set
+TEST: #SR 2 5
+      "New values should be set for initialized table entry."
+pass/fail depending on
+   (pattern_color_index_array =
+      new_pattern_color_index_array)
+
+*** *** *** *** ***    undefined entries   *** *** *** *** ***
+
+undefined_test:
+
+<inquire list of pattern indices> returns defined list
+determine lowest undefined index (not in defined list) = lui
+determine current number defined entries = cnde
+
+TEST: #SR 3 7
+      "<Inquire pattern representation> should return attributes for
+       pattern index #1 when inquiring an undefined entry as REALIZED."
+<inquire pattern representation> as REALIZED for index #lui
+   to get undefined_entry.
+<inquire pattern representation> as REALIZED for index #1
+   to get pattern index #1.
+pass/fail depending on (undefined_entry = entry for pattern index #1).
+
+If (number of initialized entries
+   >= max size of pattern table) then
+   skip rest of undefined_test; goto redefined_test
+endif
+
+If (number of initialized entries
+   >= max table size in test program) then
+   skip rest of undefined_test; goto redefined_test
+endif
+
+<set pattern representation>:
+   index     = lui
+   pattern_color_index_array = 33 53
+                               32 48
+
+<inquire list of pattern indices> to determine
+   listot = total number of entries in list
+
+TEST: #SR 1 3
+      "Defining an undefined entry should increment the number
+       of defined entries."
+pass/fail depending on (listot = cnde + 1)
+
+TEST: #SR 1 3
+      "Undefined table entry should be reported as defined after set."
+if (resulting list of indices contains lui) then
+   pass
+else
+   fail
+   goto redefined_test
+endif
+
+<inquire pattern representation> for index #lui, as set
+TEST: #SR 2 5
+      "New values should be set for undefined table entry."
+pass/fail depending on
+   (pattern_color_index_array =  33 53
+                                 32 48)
+
+*** *** *** *** ***    redefined entries   *** *** *** *** ***
+
+redefined_test:
+
+dpi  = defined pattern index
+cnde = current number of defined entries
+
+<set pattern representation>:
+   index     = dpi
+   pattern_color_index_array  =  8 22 36
+                                19 53 89
+
+new_pattern_color_index_array =  3  9
+                                19 47
+<set pattern representation>:
+   index = dpi
+   pattern_color_index_array =
+      new_pattern_color_index_array
+
+<inquire list of pattern indices> to determine
+   nnde = new number of defined entries
+
+TEST: #SR 1 3
+      "Redefining a user-defined entry should not change number
+       of defined entries."
+pass/fail depending on (nnde = cnde)
+
+TEST: #SR 1 3
+      "Redefined table entry should be reported as defined after
+       set."
+if (resulting list of indices contains dpi) then
+   pass
+else
+   fail
+   goto end_redefined_test
+endif
+
+<inquire pattern representation> for index #dpi, as set
+TEST: #SR 2 5
+      "New values should be set for redefined table entry."
+pass/fail depending on
+   (pattern_color_index_array = new_pattern_color_index_array)
+
+end_redefined_test:
+
+*** *** *** *** ***    access all defined entries   *** *** *** *** ***
+
+TEST: #SR 3 4
+      "<Inquire list of pattern indices> and <inquire pattern
+       representation> should detect all defined entries."
+Use <inquire list of pattern indices> to get
+    list of defined indices
+if (non-zero error code) then
+   fail
+   goto end_access_all
+endif
+For each defined index, apply <inquire pattern representation>
+   if (non-zero error code) then
+      fail
+      goto end_access_all
+   endif
+loop to next index
+pass
+
+end_access_all:
+
+END PROGRAM 2
+
+
+PROGRAM 3: Pattern table length
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+nopat = true iff no pattern interior style
+if (nopat) then
+   message about Pattern not supported on workstation
+endif
+
+<inquire workstation state table lengths> to determine
+   mpte = maximum pattern table entries
+
+if (nopat) then
+   TEST: #SR 8 9
+         "If PATTERN interior style is not supported, <inquire
+          workstation state table lengths> should report 0
+          entries as maximum size of pattern table."
+   pass/fail depending on (mpte = 0)
+   goto done
+endif
+
+TEST: #SR 8 10
+      "If PATTERN interior style is supported, <inquire
+       workstation state table lengths> should report at least 10
+       entries as maximum size of pattern table."
+pass/fail depending on (mpte >= 10)
+
+Use <inquire list of pattern indices> to determine
+   nde = number of defined entries and
+   mdpi = maximum defined pattern index
+nemp = number of empty entries = mpte - nde
+TEST: #SR 8
+      "The program should be able to define additional pattern table
+       entries, up to the maximum."
+do ii = mdpi+1, mdpi+nemp
+   set pattern table entry, with index = ii
+   if error signalled then
+      fail
+      goto done
+   endif
+loop
+
+pass
+
+done:
+
+END PROGRAM 3
+
+
+PROGRAM 4: Validity of predefined pattern table
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+nopat = true iff no pattern interior style
+if (nopat) then
+   message about Pattern not supported on workstation
+endif
+
+mpci = maximum predefined color index
+
+Use <inquire pattern facilities> to determine
+   npe    = number of predefined entries
+
+if (nopat) then
+   TEST: #SR 11 14
+         "If PATTERN interior style is not supported, <inquire
+          pattern facilities> should report 0 predefined indices."
+   pass/fail (npe=0)
+   goto done
+endif
+
+colerr  = false = color error found yet
+
+TEST: #SR 11 12 15
+      "<Inquire predefined pattern representation> should be able to
+       access as many entries as reported by <inquire pattern facilities>."
+do ii = 1 to npe
+   <inquire predefined pattern representation> for ii to determine
+      colia = pattern color index array
+   if error then
+      fail
+      goto more_tests
+   endif
+
+   for each color index in colia
+      if color index < 0 or > mpci then
+         colerr = true
+         erpci = erroneous color index
+      endif
+   loop
+loop
+pass
+
+TEST: #SR 12 18
+      "All color indices in predefined pattern color index array should
+       themselves be in the predefined color table."
+if colerr then
+   fail
+   message about erpci
+else
+   pass
+endif
+
+more_tests:
+
+TEST: #SR 11 13
+      "If PATTERN interior style is supported, <inquire pattern
+       facilities> should report at least 1 predefined entry."
+pass/fail depending on (npe >= 1)
+
+done:
+
+END PROGRAM 4
+
+
+PROGRAM 5: WSL pattern table initialized properly
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+msgsuf = message suffix = "opening workstation."
+
+check_table:
+
+<open workstation>
+
+if (PATTERN is not in list of available interior styles) then
+   message about Pattern not supported on workstation
+   goto done
+endif
+
+<inquire pattern facilities> to determine
+   npe = number of predefined pattern entries in WDT
+
+<inquire list of pattern indices> to determine
+   spt = size of WSL pattern table
+TEST: #SR 16 17
+      "WSL pattern table should be the same size as the WDT
+       predefined pattern table after " + msgsuf
+if spt = npe then
+   pass
+else
+   fail
+   message about spt and npe
+endif
+
+TEST: #SR 11 15 16
+      "Each WSL pattern table entry should have the same
+       attributes as the corresponding predefined pattern table
+       entry after " + msgsuf
+do ii = 1 to min(npe,spt)
+   <inquire predefined pattern representation> for index ii, determine
+     pdcia = predefined pattern color index array
+     pddx  = predefined dx -pattern array dimension
+     pddy  = predefined dy -pattern array dimension
+   <inquire pattern representation> for index ii, determine
+     dcia = defined pattern color index array
+     ddx  = defined dx -pattern array dimension
+     ddy  = defined dy -pattern array dimension
+   if dcia = pdcia then
+      OK so far
+   else
+      fail
+      message about ii
+      goto end_check
+   endif
+loop
+pass
+
+end_check:
+alter pattern table - insert new or different entry
+<close workstation>
+if (msgsuf = "opening workstation.") then
+   msgsuf = "re-opening workstation."
+   goto check_table
+endif
+
+done:
+
+END PROGRAM 5
+
+
+PROGRAM 6: Pattern color index array
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+if (PATTERN is not in list of available interior styles) then
+   message about Pattern not supported on workstation
+   goto done
+endif
+
+loop thru color table to determine:
+  mci = maximum defined color index
+undci = mci + 1 = undefined color index
+
+<set pattern representation>, index #5,
+   pattern color index array =   mci mci
+                                 mci mci
+
+TEST: #SR 6 20
+      "<Inquire pattern representation> should report a defined
+       pattern color index in the pattern color index array
+       realized as itself."
+<inquire pattern representation>, index #5 to determine
+   rcolia = realized pattern color index array
+pass/fail depending on (rcolia = mci mci
+                                 mci mci)
+
+TEST: #SR 19
+      "Any non-negative color index specified in the pattern color
+       index array should be accepted as valid."
+<set pattern representation>, index #5,
+   pattern color index array = undci undci
+                               undci undci
+if error signalled then
+   fail
+   message about undci
+else
+   pass
+endif
+
+TEST: #SR 6 21
+      "<Inquire pattern representation> should report an undefined
+       color index in the pattern color index array realized as 1."
+<inquire pattern representation>, index #5 to determine
+   rcolia = realized pattern color index array
+pass/fail depending on (rcolia = 1 1
+                                 1 1)
+
+done:
+
+END PROGRAM 6

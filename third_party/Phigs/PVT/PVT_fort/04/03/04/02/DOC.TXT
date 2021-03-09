@@ -1,0 +1,725 @@
+TITLE: Highlighting and invisibility
+
+MODULE#: 04.03.04.02
+
+DESCRIPTION: This module tests the ability of the programmer to
+set and change a workstation's highlighting and invisibility
+filters.  These filters, along with the nameset, control a
+primitive's eligibility for highlighting and/or invisibility
+upon traversal.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** ***   Highlighting   *** *** *** ***
+
+SR1.  <Set highlighting filter> sets the specified workstation's
+highlighting filter entry.
+#F 70
+#D 5.16
+#S 4.5.15/64/8
+#T P01/2 P01/3 P01/4 P01/5 P01/6 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+   P03/7 P03/8 P03/9
+
+SR2.  <Inquire highlighting filter> returns the workstation's
+highlighting filter.
+#F 237
+#D 5.16
+#S n
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7
+
+SR3.  Immediately after <open workstation>, the inclusion and
+exclusion sets of the highlighting filter entry in the
+Workstation State List (WSL) are null.
+#F 3 237
+#D 5.16
+#S 6.6/318/1
+#T P01/1 P01/7
+
+SR4.  A primitive is highlighted on a workstation if and only if
+its nameset has an element in common with the inclusion set of and
+is disjoint from the exclusion set of the highlighting filter of
+that workstation and it is not invisible.
+#F 60 61 70
+#D 3.11 5.16
+#S 4.5.15/64/8ff
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+#C See defect report 9592-1/#057
+
+*** *** *** ***   Invisibility   *** *** *** ***
+
+SR5.  <Set invisibility filter> sets the specified workstation's
+invisibility filter entry.
+#F 71
+#D 5.17
+#S 4.5.15/64/8
+#T P02/2 P02/3 P02/4 P02/5 P02/6 P03/8 P03/9 P04/1 P04/2 P04/3 P04/4
+   P04/5 P04/6 P04/7 P04/8
+
+SR6.  <Inquire invisibility filter> returns the workstation's
+invisibility filter.
+#F 238
+#D 5.17
+#S n
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7
+
+SR7.  Immediately after <open workstation>, the inclusion and
+exclusion sets of the invisibility filter entry in the
+Workstation State List (WSL) table are null.
+#F 3 238
+#D 5.17
+#S 6.6/318/1
+#T P02/1 P02/7
+
+SR8.  A primitive is invisible on a workstation if and only if
+its nameset has an element in common with the inclusion set of and
+is disjoint from the exclusion set of the invisibility filter of
+that workstation.
+#F 60 61 71
+#D 3.11 5.17
+#S 4.5.15/64/8ff
+#T P03/8 P03/9 P04/1 P04/2 P04/3 P04/4 P04/5 P04/6 P04/7 P04/8
+#C See defect report 9592-1/#057
+
+SR9.  Invisible primitives do not obscure visible primitives.
+#F 60 61 71
+#D 3.11 5.17
+#S 4.6.6/76/4
+#T P04/8
+
+*** *** *** ***   Filters   *** *** *** ***
+
+SR10.  The range of accessible names for use by <set highlighting
+filter> and <set invisibility filter> is at least 0-63.
+#F 70 71
+#D 5.16 5.17
+#S 4.5.15/65/4
+#T P01/2 P02/2 P03/1 P03/5 P04/1
+
+SR11.  Both the highlighting filter and the invisibility filter
+are capable of containing at least 64 names.
+#F 70 71
+#D 5.16 5.17
+#S 4.5.15/65/4
+#T P01/4 P02/4 P03/1 P03/5 P04/1
+
+SR12.  The range of accessible names for use by <set highlighting
+filter> and <set invisibility filter> consists of the consecutive
+integers from 0 to the implementation dependent `number of available
+names for namesets' - 1.
+#F 70 71
+#D 2.5 5.16 5.17
+#S n
+#T P01/5 P01/6 P02/5 P02/6 P03/3 P03/4 P04/3 P04/4 P04/5
+#C See defect 9592-1/0025 and FORTRAN BINDING: section 5, description
+of NM data type.
+
+SR13. Invalid names specified by <set highlighting filter> and <set
+invisibility filter> are ignored.
+#F 70 71
+#D 2.5 5.16 5.17
+#S n
+#T P01/6 P02/6 P03/4 P04/5
+#C See defect 9592-1/0025.
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+   60: pads    <add names to set>
+   61: pres    <remove names from set>
+   70: pshlft  <set highlighting filter>
+   71: psivft  <set invisibility filter>
+  237: pqhlft  <inquire highlighting filter>
+  238: pqivft  <inquire invisibility filter>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.5  ...  number_of_available_names_for_name_sets
+  3  ...  phigs_traversal_state_list
+  3.11 ...  current_name_set
+  5  ...  workstation_state_list
+  5.16  ...  highlighting_filter
+  5.17  ...  invisibility_filter
+ 
+
+
+PROGRAM 1: Highlighting filter - setting and inquiring
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+<open workstation>
+
+TEST: #SR 2 3
+      "Immediately after opening the workstation, the
+       highlighting filter inclusion and exclusion sets should be
+       null."
+<inquire highlighting filter>
+pass/fail depending on (inclusion = null and
+                        exclusion = null)
+
+TEST: #SR 1 2 10
+      "Highlighting filter should be reported as it was set for
+       any set of names drawn from the accessible range."
+<set highlighting filter>:
+   orig_inclusion set = 2,4,8,44,63
+   orig_exclusion set = 0,4,5,32,59
+<inquire highlighting filter>
+pass/fail depending on (inclusion set = orig_inclusion and
+                        exclusion set = orig_inclusion)
+
+TEST: #SR 1 2
+      "Highlighting filter should be reported as it was re-set
+       for any set of names drawn from the accessible range."
+<set highlighting filter>
+   new_inclusion set = 59,47
+   new_exclusion set = 13,15,18
+<inquire highlighting filter>
+pass/fail depending on (inclusion set = new_inclusion  and
+                        exclusion set = new_exclusion)
+
+TEST: #SR 1 2 11
+      "Highlighting filter should be capable of containing at
+       at least 64 names in its inclusion and exclusion sets."
+<set highlighting filter>
+   new_inclusion set = 0,1,2, ... ,62,63
+   new_exclusion set = 0,1,2, ... ,62,63
+<inquire highlighting filter>
+pass/fail depending on (inclusion set = new_inclusion  and
+                        exclusion set = new_exclusion)
+
+<inquire PHIGS facilities> to determine
+  nanams = number of available names in namesets
+TEST: #SR 1 2 12
+      "Highlighting filter should be capable of containing the
+       minimum and maximum allowed value for a name."
+<set highlighting filter>
+   new_inclusion set = 0,nanams-1
+   new_exclusion set = 0,nanams-1
+<inquire highlighting filter>
+pass/fail depending on (inclusion set = new_inclusion  and
+                        exclusion set = new_exclusion)
+
+TEST: #SR 1 2 12 13
+      "Highlighting filter should contain only the valid names as set;
+       invalid names specified by <set highlighting filter> should be
+       ignored."
+<set highlighting filter>
+   inv_inclusion set = 0, nanams-1, nanams,    -10
+   inv_exclusion set = 0, nanams-1, nanams+10, -10
+<inquire highlighting filter>
+pass/fail depending on (inclusion set = new_inclusion  and
+                        exclusion set = new_exclusion)
+
+TEST: #SR 2 3
+      "Immediately after re-opening the workstation, the
+       highlighting filter inclusion and exclusion sets should be
+       null."
+
+<close workstation>
+<open workstation>
+
+<inquire highlighting filter>
+pass/fail depending on (inclusion = null and
+                        exclusion = null)
+<close workstation>
+
+END PROGRAM 1
+
+
+PROGRAM 2: Invisibility filter - setting and inquiring
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+<open workstation>
+
+TEST: #SR 6 7
+      "Immediately after opening the workstation, the
+       invisibility filter inclusion and exclusion sets should be
+       null."
+<inquire invisibility filter>
+pass/fail depending on (inclusion = null and
+                        exclusion = null)
+
+TEST: #SR 5 6 10
+      "Invisibility filter should be reported as it was set for
+       any set of names drawn from the accessible range."
+<set invisibility filter>:
+   orig_inclusion set = 2,4,8,44,63
+   orig_exclusion set = 0,4,5,32,59
+<inquire invisibility filter>
+pass/fail depending on (inclusion set = orig_inclusion and
+                        exclusion set = orig_inclusion)
+
+TEST: #SR 5 6
+      "Invisibility filter should be reported as it was re-set
+       for any set of names drawn from the accessible range."
+<set invisibility filter>
+   new_inclusion set = 59,47
+   new_exclusion set = 13,15,18
+<inquire invisibility filter>
+pass/fail depending on (inclusion set = new_inclusion  and
+                        exclusion set = new_exclusion)
+
+TEST: #SR 5 6 11
+      "Invisibility filter should be capable of containing at
+       at least 64 names in its inclusion and exclusion sets."
+<set invisibility filter>
+   new_inclusion set = 0,1,2, ... ,62,63
+   new_exclusion set = 0,1,2, ... ,62,63
+<inquire invisibility filter>
+pass/fail depending on (inclusion set = new_inclusion  and
+                        exclusion set = new_exclusion)
+
+<inquire PHIGS facilities> to determine
+  nanams = number of available names in namesets
+
+TEST: #SR 5 6 12
+      "Invisibility filter should be capable of containing the
+       minimum and maximum allowed value for a name."
+<set invisibility filter>
+   new_inclusion set = 0,nanams-1
+   new_exclusion set = 0,nanams-1
+<inquire invisibility filter>
+pass/fail depending on (inclusion set = new_inclusion  and
+                        exclusion set = new_exclusion)
+
+TEST: #SR 5 6 12 13
+      "Invisibility filter should contain only the valid names as set;
+       invalid names specified by <set invisibility filter> should be
+       ignored."
+<set invisibility filter>
+   inv_inclusion set = 0, nanams-1, nanams,    -10
+   inv_exclusion set = 0, nanams-1, nanams+10, -10
+<inquire invisibility filter>
+pass/fail depending on (inclusion set = new_inclusion  and
+                        exclusion set = new_exclusion)
+
+TEST: #SR 6 7
+      "Immediately after re-opening the workstation, the
+       invisibility filter inclusion and exclusion sets should be
+       null."
+
+<close workstation>
+<open workstation>
+
+<inquire invisibility filter>
+pass/fail depending on (inclusion = null and
+                        exclusion = null)
+<close workstation>
+
+END PROGRAM 2
+
+
+PROGRAM 3: Appearance of highlighted primitives
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+HIGHLIGHTING FILTER: Several numbered pairs of primitives are
+displayed.  For each prompt, enter a list of integers indicating
+the pairs for which the left member of the pair is highlighted.
+Use the right member as the non-highlighted one for comparison.
+
+PRECEDENCE OF INVISIBILITY OVER HIGHLIGHTING: Several different
+numbered primitives are displayed.  As prompted, enter a list of
+integers indicating which of them are invisible and which are
+highlighted.
+
+DESIGN:
+
+If workstation allows, set up its color table with entries:
+color index   RGB        color
+-----------   ---        -----
+   0          0,0,0      black
+   1          0,1,0      green
+   2          1,1,0      yellow
+   3          1,1,1      white
+   4          0,0,1      blue
+rationale: make sure highlighting works, even with bright colors
+
+Set up structure of primitive pairs to be displayed, numbered 1-8
+down the screen:
+Nameset of all right members is null set
+
+number   primitive        color    nameset of left member
+------   ---------        -----    ----------------------
+   1     polyline           1         0, 1, 2
+   2     polymarker         2         3, 4, 5
+   3     fill area          3         6, 7, 8
+   4     cell array         4         9,10,11
+   5     text               1        12,13,14
+   6     polyline 3         2        15,16,17
+   7     annotation text    3        18,19,20
+   8     fill area set      4        21,22,23
+
+Throughtout:
+incl = inclusion set
+excl = exclusion set
+
+TEST: #SR 1 4 10 11
+      "Highlighting of primitives should be correctly controlled
+       by the highlighting filter when its inclusion set is the
+       largest guaranteed by the standard."
+
+incl = {0-63}
+excl = random set of 6 elements chosen from 0-23
+
+set highlighting filter using incl, excl
+compute expected subset of highlighted primitives
+  from incl,excl
+
+OPQA/HIGHLIGHTING FILTER: For which pairs of primitives is the
+  left member highlighted (n if none)?
+
+pass/fail depending on (response = expected subset)
+
+TEST: #SR 1 4
+      "Highlighting of primitives should be correctly controlled
+       by the highlighting filter when its inclusion set is null."
+
+set highlighting filter:
+   incl = null, excl = {2,4,6,8}
+compute expected subset of highlighted primitives
+  from incl,excl
+
+OPQA/HIGHLIGHTING FILTER: For which pairs of primitives is the
+  left member highlighted (n if none)?
+
+pass/fail depending on (response = expected subset)
+
+<inquire PHIGS facilities> to determine:
+nanams = number of available names for namesets
+if (nanams too large for array size of program) then
+   message to that effect
+   goto end_maximpl
+endif
+
+TEST: #SR 1 4 12
+      "Highlighting of primitives should be correctly controlled
+       by the highlighting filter when its inclusion set is the
+       largest supported by the implementation."
+
+incl = {0-nanams}
+excl = random set of 6 elements chosen from 0-23
+
+set highlighting filter using incl, excl
+compute expected subset of highlighted primitives
+  from incl,excl
+
+OPQA/HIGHLIGHTING FILTER: For which pairs of primitives is the
+  left member highlighted (n if none)?
+pass/fail depending on (response = expected subset)
+
+end_maximpl:
+
+TEST: #SR 1 4 12 13
+      "Highlighting of primitives should be correctly controlled
+       by the highlighting filter by ignoring invalid names in its
+       inclusion set."
+
+incl = random set of 6 elements chosen from 0-23 plus -1, nanams
+excl = null
+
+set highlighting filter using incl, excl
+compute expected subset of highlighted primitives
+  from incl,excl
+
+OPQA/HIGHLIGHTING FILTER: For which pairs of primitives is the
+  left member highlighted (n if none)?
+pass/fail depending on (response = expected subset)
+
+TEST: #SR 1 4 10 11
+      "Highlighting of primitives should be correctly controlled
+       by the highlighting filter when its exclusion set is the
+       largest guaranteed by the standard."
+
+incl = random set of 6 elements chosen from 0-23
+excl = {0-63}
+
+set highlighting filter using incl, excl
+compute expected subset of highlighted primitives
+  from incl,excl
+
+OPQA/HIGHLIGHTING FILTER: For which pairs of primitives is the
+  left member highlighted (n if none)?
+pass/fail depending on (response = expected subset)
+
+TEST: #SR 1 4
+      "Highlighting of primitives should be correctly controlled
+       by the highlighting filter when its exclusion set is null."
+
+incl = random set of 6 elements chosen from 0-23
+excl = null
+
+set highlighting filter using incl, excl
+compute expected subset of highlighted primitives
+  from incl,excl
+
+OPQA/HIGHLIGHTING FILTER: For which pairs of primitives is the
+  left member highlighted (n if none)?
+pass/fail depending on (response = expected subset)
+
+TEST: #SR 1 4
+      "Highlighting of primitives should be correctly controlled
+       by the highlighting filter when its inclusion and
+       exclusion set are neither null nor full."
+
+incl = random set of 7 elements chosen from 0-23
+excl = random set of 5 elements chosen from 0-23
+
+set highlighting filter using incl, excl
+compute expected subset of highlighted primitives
+  from incl,excl
+
+OPQA/HIGHLIGHTING FILTER: For which pairs of primitives is the
+  left member highlighted (n if none)?
+pass/fail depending on (response = expected subset)
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+ranord = random order for 1-8
+
+for ix = 1 to 4
+   primid = ranord(ix)
+   make primitive #primid eligible for highlighting
+next ix
+
+for ix = 3 to 6
+   primid = ranord(ix)
+   make primitive #primid eligible for invisibility
+next ix
+
+TEST: #SR 1 4 5 8
+      "Primitives eligible only for highlighting should be highlighted
+       even when displayed along with invisible primitives."
+
+OPQA/PRECEDENCE OF INVISIBILITY OVER HIGHLIGHTING: For which pairs of
+   primitives is the left member highlighted (n if none)?
+
+pass/fail depending on (operator response matches ranord(1:2))
+
+TEST: #SR 1 4 5 8
+      "Primitives eligible for both highlighting and invisibility
+       should be invisible."
+
+OPQA/PRECEDENCE OF INVISIBILITY OVER HIGHLIGHTING: For which pairs of
+   primitives is the left member invisible (n if none)?
+
+pass/fail depending on (operator response matches ranord(3:6))
+
+END PROGRAM 3
+
+
+PROGRAM 4: Appearance of invisible primitives
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+INVISIBILITY FILTER: Several different numbered primitives are
+displayed.  For each prompt, enter a list of integers indicating
+which of them are invisible.
+
+OBSCURING BY INVISIBLE PRIMITIVES: A set of dotted lines is
+drawn, some invisible, some overlaid by solid invisible lines.
+Enter a list indicating which lines appear as visible dotted
+lines, not overlaid by any other primitives.
+
+DESIGN:
+
+If workstation allows, set up its color table with entries:
+color index   RGB        color
+-----------   ---        -----
+   0          0,0,0      black
+   1          0,1,0      green
+   2          1,1,0      yellow
+   3          1,1,1      white
+   4          0,0,1      blue
+rationale: make sure invisibility works for all colors
+
+Set up structure of primitives to be displayed, numbered 1-8 down
+the screen:
+location   primitive        color    nameset
+--------   ---------        -----    -------
+   1       polyline           1      0, 1, 2
+   2       polymarker         2      3, 4, 5
+   3       fill area          3      6, 7, 8
+   4       cell array         4      9,10,11
+   5       text               1     12,13,14
+   6       polyline 3         2     15,16,17
+   7       annotation text    3     18,19,20
+   8       fill area set      4     21,22,23
+
+Throughtout:
+incl = inclusion set
+excl = exclusion set
+
+TEST: #SR 5 8 10 11
+      "Invisibility of primitives should be correctly controlled
+       by the invisibility filter when its inclusion set is the
+       largest guaranteed by the standard."
+
+incl = {0-63}
+excl = random set of 6 elements chosen from 0-23
+
+set invisibility filter using incl, excl
+compute expected subset of invisible primitives
+  from incl,excl
+
+OPQA/INVISIBILITY FILTER: Which primitives are invisible (n if
+   none)?
+pass/fail depending on (response = expected subset)
+
+TEST: #SR 5 8
+      "Invisibility of primitives should be correctly controlled
+       by the invisibility filter when its inclusion set is null."
+
+set invisibility filter:
+   incl = null, excl = {2,4,6,8}
+compute expected subset of invisible primitives
+   from incl,excl
+
+OPQA/INVISIBILITY FILTER: Which primitives are invisible (n if
+   none)?
+pass/fail depending on (response = expected subset)
+
+<inquire PHIGS facilities> to determine:
+nanams = number of available names for namesets
+if (nanams too large for array size of program) then
+   message to that effect
+   goto end_maximpl
+endif
+
+TEST: #SR 5 8 12
+      "Invisibility of primitives should be correctly controlled
+       by the invisibility filter when its inclusion set is the
+       largest supported by the implementation."
+
+incl = {0-nanams}
+excl = random set of 6 elements chosen from 0-23
+
+set invisibility filter using incl, excl
+compute expected subset of invisible primitives
+  from incl,excl
+
+OPQA/INVISIBILITY FILTER: Which primitives are invisible (n if
+   none)?
+pass/fail depending on (response = expected subset)
+
+TEST: #SR 5 8 12
+      "Invisibility of primitives should be correctly controlled
+       by the invisibility filter when its exclusion set is the
+       largest supported by the implementation."
+
+incl = random set of 6 elements chosen from 0-23
+excl = {0-nanams}
+
+set invisibility filter using incl, excl
+compute expected subset of invisible primitives
+  from incl,excl
+
+OPQA/INVISIBILITY FILTER: Which primitives are invisible (n if
+   none)?
+pass/fail depending on (response = expected subset)
+
+end_maximpl:
+
+TEST: #SR 5 8 12 13
+      "Invisibility of primitives should be correctly controlled
+       by the invisibility filter by ignoring invalid names in its
+       exclusion set."
+
+incl = {0,63}
+excl = random set of 6 elements chosen from 0-23 plus -11, nanams+11
+
+set invisibility filter using incl, excl
+compute expected subset of invisible primitives
+  from incl,excl
+
+OPQA/INVISIBILITY FILTER: Which primitives are invisible (n if
+   none)?
+pass/fail depending on (response = expected subset)
+
+TEST: #SR 5 8
+      "Invisibility of primitives should be correctly controlled
+       by the invisibility filter when its exclusion set is null."
+
+incl = random set of 6 elements chosen from 0-23
+excl = null
+
+set invisibility filter using incl, excl
+compute expected subset of invisible primitives
+  from incl,excl
+
+OPQA/INVISIBILITY FILTER: Which primitives are invisible (n if
+   none)?
+pass/fail depending on (response = expected subset)
+
+TEST: #SR 5 8
+      "Invisibility of primitives should be correctly controlled
+       by the invisibility filter when its inclusion and
+       exclusion set are neither null nor full."
+
+incl = random set of 7 elements chosen from 0-23
+excl = random set of 5 elements chosen from 0-23
+
+set invisibility filter using incl, excl
+compute expected subset of invisible primitives
+  from incl,excl
+
+OPQA/INVISIBILITY FILTER: Which primitives are invisible (n if
+   none)?
+pass/fail depending on (response = expected subset)
+
+TEST: #SR 5 8 9
+      "Invisible primitives should not obscure visible primitives."
+
+Set up new structure with display priority of 0, containing 8
+  numbered 2D (drawn in z=0 plane) thin dotted lines.  Some of
+  these should be invisible, some visible but possibly obscured,
+  and some directly visible:
+
+location    color    nameset
+--------    -----    -------
+   1          1        {1}
+   2          2        {2}
+   3          3        {3}
+   4          4        {4}
+   5          1        {5}
+   6          2        {6}
+   7          3        {7}
+   8          4        {8}
+
+invobs = number invisible or obscured = random from 4 to 6
+invset = randomize order of entries 1-8
+numinv = number invisible = invobs/2
+
+invset(1       :numinv) should be invisible
+invset(numinv+1:invobs) should be visible, even though obscured
+invset(invobs+1:8)      should be visible
+
+set invisibility filter using incl = invset(1:numinv), excl = null
+
+set up new root structure = nstruc, for obscuring primitives
+post nstruc to workstation with priority = 1.0
+set linewidth scale factor = wide
+add names to set: invset(1) to make all obscuring primitives invisible
+set linestyle = solid
+for ix = numinv+1 to invobs (all entries to be obscured)
+   set polyline color # = ix mod 2 (alternate between 0 and 1)
+   3D polyline at location invset(ix), in z=0.5 plane
+next ix
+
+OPQA/OBSCURING BY INVISIBLE PRIMITIVES: Which primitives appear
+   as visible dotted lines (n if none)?
+pass/fail depending on
+  (response = everything except invset(1:numinv))
+
+END PROGRAM 4

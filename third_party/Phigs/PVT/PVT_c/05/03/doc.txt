@@ -1,0 +1,550 @@
+TITLE: Posting structures to a workstation
+
+MODULE#: 05.03
+
+DESCRIPTION:
+This module tests the posting functions' effects on the "list of
+workstations to which posted" in the structure state list, the
+"list of posted structures" in the workstation state list and the
+setting of a structure's display priority.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Post structure> adds the workstation identifier to the
+"list of workstations to which posted" in the specified structure
+state list if not already in that list.
+#F 132
+#D 7.2.1
+#S 4.4.3/25/4
+#T P01/4
+
+SR2.   <Post structure> adds the specified structure to the "list
+of posted structures" in the specified workstation state list
+if not already in that list.
+#F 132
+#D 5.7.1
+#S 4.4.3/25/4
+#T P01/5
+
+SR3.  <Post structure> assigns a display priority between 0 and 1 when
+adding an entry for the specified structure in the "list of posted
+structures" for the specified workstation.
+#F 132
+#D 5.7.2
+#S 4.4.3/25/8 6.1/306/6
+#T P02/2 P02/3
+
+SR4.  If the specified structure is already posted to the specified
+workstation, the only effect of <post structure> is to change the
+display priority to the new specified value for that structure in the
+"list of posted structures" for that workstation.
+#F 132
+#D 5.7.2
+#S 4.4.3/25/8 6.1/306/6
+#T P01/6 P01/7 P01/8
+#C See defect report 9592-1/001.
+
+SR5.   <Unpost structure> removes the workstation identifier from
+the "list of workstations to which posted" in the specified
+structure state list.
+#F 133
+#D 7.2.1
+#S 4.4.3/25/5
+#T P01/14
+
+SR6.   <Unpost structure> removes the entry for the specified
+structure from the "list of posted structures" in the specified
+workstation state list.
+#F 133
+#D 5.7.1 5.7.2
+#S 4.4.3/25/5
+#T P01/15
+
+SR7.  <Unpost structure> has no effect if the specified structure does
+not exist or is not currently posted to any workstation.
+#F 133
+#D 5.7 7.2
+#S 4.4.3/25/5
+#T P01/9 P01/10 P01/11 P01/12 P01/13
+#C See defect report 9592-1/032.
+
+SR8.   <Unpost all structures> removes the workstation identifier
+from the "list of workstations to which posted" of all the
+structure state lists.
+#F 134
+#D 7.2.1
+#S 4.4.3/25/5
+#T P01/16
+
+SR9.   <Unpost all structures> removes all the structures from
+the "list of posted structures" in the specified workstation
+state list.
+#F 134
+#D 5.7
+#S 4.4.3/25/5
+#T P01/17
+
+SR10.  Immediately after structure creation via <open structure>,
+<execute structure>, or <empty structure>, its "list of
+workstations to which posted" is empty, and no "list of posted
+structures" contains the structure identifier.
+#F 111 113 125
+#D 5.7 7.2
+#S n
+#T P01/2 P01/3
+
+SR11.   Immediately after <open workstation>, its "list of posted
+structures" is empty, and no "list of workstations to which
+posted" contains the workstation identifier.
+#F 3
+#D 5.7 7.2
+#S 6.6/317/1
+#T P01/1 P01/19 P01/20
+
+SR12.  <Close workstation> removes the workstation identifier
+from the "list of workstations to which posted" of all the
+structure state lists.
+#F 4
+#D 7.2.1
+#S n
+#T P01/18
+
+SR13.  <Inquire set of workstations to which posted> returns the
+"list of workstations to which posted" of the specified structure
+state list.
+#F 300
+#D 7.2
+#S n
+#T P01/2 P01/4 P01/6 P01/9 P01/12 P01/14 P01/16 P01/18 P01/20
+
+SR14.  <Inquire posted structures> returns the "list of posted
+structures" of the specified workstation state list.
+#F 220
+#D 5.7
+#S n
+#T P01/1 P01/3 P01/5 P01/7 P01/8 P01/10 P01/13 P01/15 P01/17 P01/19
+
+SR15.  Each entry in the "list of posted structures" contains a
+structure identifier and its display priority for that structure
+on the specified workstation.
+#F 220
+#D 5.7.1 5.7.2
+#S 4.4.3/25/8 6.1/306/6
+#T P02/2 P02/3
+
+SR16.  <Inquire number of display priorities supported> returns
+the number of display priorities for the specific workstation
+type.
+#F 284
+#D 6.20
+#S n
+#T P02/1 P02/2 P02/3
+
+SR17.  The number of display priorities supported is 0 or >=2.
+#F 284
+#D 6.20
+#S 4.14/114/2 6.7/323/1
+#T P02/1
+
+SR18.  If the number of display priorities is 0, then a
+continuous range of display priorities is supported by the
+specified workstation type.
+#F 284
+#D 6.20
+#S 6.7/323/1
+#T P02/2
+
+SR19.  If the number of display priorities is >=2, then it
+indicates the number of distinct values for display priorities
+supported by the specified workstation type.
+#F 284
+#D 6.20
+#S 6.7/323/1
+#T P02/3
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+    4: pclwk   <close workstation>
+  111: popst   <open structure>
+  113: pexst   <execute structure>
+  125: pemst   <empty structure>
+  132: ppost   <post structure>
+  133: pupost  <unpost structure>
+  134: pupast  <unpost all structures>
+  220: pqpost  <inquire posted structures>
+  284: pqdp    <inquire number of display priorities supported>
+  300: pqwkpo  <inquire set of workstations to which posted>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.7  ...  list_of_posted_structures
+  5.7.1  ...  structure_identifier
+  5.7.2  ...  display_priority
+  6  ...  workstation_description_table
+  6.20  ...  number_of_display_priorities_supported
+  7  ...  structure_state_list
+  7.2  ...  list_of_workstations_to_which_posted
+  7.2.1  ...  workstation_identifier
+ 
+SEMANTIC CROSS-REFERENCES:
+  02.01.01/SR04 02.01.02.01/SR04 02.01.02.02/SR10
+  02.01.03.01/SR01 02.01.03.02/SR05 02.01.03.02/SR06
+  02.01.03.03/SR01
+ 
+LOCAL SUBROUTINES: The programs in this module use two
+special-purpose subroutines:
+
+1. SETPST posts a set of structures to a set of workstations
+   according to the contents of a two-dimensional array.
+
+2. CHKPST accepts a list of structure identifiers, a list of
+   workstation identifiers, and an expected posting state, encoded
+   as a two-dimensional array. It compares the actual list of posted
+   structures and list of workstations to which posted against the
+   expected state and reports back any discrepancies.
+
+
+PROGRAM 1: Effects of posting on the structure state list and
+           workstation state list
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+*** *** *** *** ***   Initialization   *** *** *** *** ***
+
+setup:
+Use <inquire phigs facilities> to determine:
+   simopw = maximum number of simultaneously open workstations
+accout = number of accessible workstations with output capabilities
+acwkid = array containing the specified workstation identifiers
+numwks = min (3, accout, simopw) = number of workstations open
+
+table setup:
+stvswk = all -1's, indicating unposted = 4 rows x 3 column array
+         indicating what structures (rows) are expected to be
+         posted to what workstations (columns).
+stinwk = 4 rows x 3 column array indicating what structures
+         (rows) are initially posted to what workstations
+         (columns).
+
+open workstations:
+do iwk = 1 to numwks
+   get information for acwkid(iwk)
+   <open workstation> acwkid(iwk)
+loop
+
+TEST: #SR 11 14
+      "Immediately after opening a workstation, its list of
+       posted structures should be empty."
+pass/fail depending on
+   (list of posted structures for all workstations
+       equivalent to expected status in stvswk)
+
+structure setup:
+numstr = 4 = number of structures
+strid  = array containing the specified structure identifiers
+
+create structures:
+do istr = 1 to numstr
+   for each structure -
+   1: <open structure>    strid(istr)
+   2: <execute structure> strid(istr)
+   3: <empty structure>   strid(istr)
+   4: <close structure>
+      <open structure>    strid(istr)
+loop
+
+TEST: #SR 10 13
+      "Immediately after a structure is created, its list of
+       workstations to which posted should be empty."
+pass/fail depending on
+   (list of workstations to which posted for all structures
+       equivalent to expected status in stvswk)
+
+TEST: #SR 10 14
+      "Immediately after a structure is created, no list of
+       posted structures should contain it."
+pass/fail depending on
+   (list of posted structures for all workstations
+       equivalent to expected status in stvswk)
+
+*** *** *** *** ***   Posting   *** *** *** *** ***
+
+Loop posts structures as follows:
+   structure    workstations to which posted
+   ---------    ----------------------------
+       1        all
+       2        first and last
+       3        all but the last
+       4        all but the first
+
+do iwk = 1 to numwks
+   do istr = 1 to numstr
+      if ((istr = 1)                               or
+          (istr = 2 and (iwk = 1 or iwk = numstr)) or
+          (istr = 3 and  iwk not= numstr)          or
+          (istr = 4 and  iwk not= 1) ) then
+         stinwk (istr, iwk) = 1, to be posted
+         stvswk (istr, iwk) = 1, to be posted
+      endif
+   loop
+loop
+
+post structures to workstations, according to stinwk
+
+TEST: #SR 1 13
+      "<Post structure> should add the workstation identifier to
+       the list of workstations to which posted of the specified
+       structure."
+pass/fail depending on
+   (list of workstations to which posted for all structures
+       equivalent to expected status in stvswk)
+
+TEST: #SR 2 14
+      "<Post structure> should add the structure identifier to
+       the list of posted structures of the specified
+       workstation."
+pass/fail depending on
+   (list of posted structures for all workstations
+       equivalent to expected status in stvswk)
+
+Re-post 2nd structure to 1st workstation, with different priority = dp
+
+TEST: #SR 4 13
+      "<Post structure> should leave unchanged the list of
+       workstations to which posted of the specified structure when
+       that structure has already been posted to the specified
+       workstation."
+pass/fail depending on
+   (list of workstations to which posted for all structures
+       equivalent to expected status in stvswk)
+
+TEST: #SR 4 14
+      "<Post structure> should leave unchanged the list of posted
+       structures of the specified workstation when the specified
+       structure has already been posted to that workstation."
+pass/fail depending on
+   (list of posted structures for all workstations
+       equivalent to expected status in stvswk)
+
+TEST: #SR 4 14
+      "<Post structure> should change the relevant display priority in
+       the list of posted structures when the specified structure has
+       already been posted to the specified workstation."
+
+<inquire list of posted structures> for 2nd structure, 1st workstation
+  to determine new priority = np
+
+pass/fail depending on (np = dp)
+
+*** *** *** ***   Unposting a non-existent structure   *** *** *** ***
+
+<unpost structure> acwkid(1), structure #99
+
+TEST: #SR 7 13
+      "Unposting a non-existent structure should have no effect
+       on any list of workstations to which posted."
+pass/fail depending on
+   (list of workstations to which posted for all structures
+       equivalent to expected status in stvswk)
+
+TEST: #SR 7 14
+      "Unposting a non-existent structure should have no effect
+       on any list of posted structures."
+pass/fail depending on
+   (list of posted structures for all workstations
+       equivalent to expected status in stvswk)
+
+TEST: #SR 7
+      "Unposting a non-existent structure should not create the
+       specified structure."
+pass/fail depending on (structure #99 does not exist)
+
+
+*** *** *** ***   Unposting an unposted existent structure   *** *** *** ***
+
+<empty structure> 99
+<unpost structure> acwkid(1), structure #99
+
+TEST: #SR 7 13
+      "Unposting an unposted structure should have no effect
+       on any list of workstations to which posted."
+pass/fail depending on
+   (list of workstations to which posted for all structures
+       equivalent to expected status in stvswk)
+
+TEST: #SR 7 14
+      "Unposting an unposted structure should have no effect
+       on any list of posted structures."
+pass/fail depending on
+   (list of posted structures for all workstations
+       equivalent to expected status in stvswk)
+
+*** *** ***   Unposting individual structures  *** *** ***
+
+unpost every other posting:
+upsw = false
+
+do istr = 1 to numstr
+do iwk = 1 to numwks
+   if (stvswk(istr, iwk) = 1) then
+      upsw = not upsw
+      if (upsw) then
+         <unpost structure> acwkid(iwk), strid(istr)
+         stvswk(istr, iwk) = -1
+      endif
+   endif
+loop
+loop
+
+TEST: #SR 5 13
+      "<Unpost structure> should remove the workstation
+       identifier from the list of workstations to which posted
+       of the specified structure."
+pass/fail depending on
+   (list of workstations to which posted for all structures
+       equivalent to expected status in stvswk)
+
+TEST: #SR 6 14
+      "<Unpost structure> should remove the structure identifier
+       from the list of posted structures of the specified
+       workstation."
+pass/fail depending on
+   (list of posted structures for all workstations
+       equivalent to expected status in stvswk)
+
+*** *** ***   Unposting all structures  *** *** ***
+
+post structures to workstations, according to stinwk
+stvswk = stinwk
+<unpost all structures> acwkid(1)
+do istr = 1 to numstr
+   stvswk(istr, 1) = -1
+loop
+
+TEST: #SR 8 13
+      "<Unpost all structures> should remove the workstation
+       identifier from the list of workstations to which posted
+       in all the structure state lists."
+pass/fail depending on
+   (list of workstations to which posted for all structures
+       equivalent to expected status in stvswk)
+
+TEST: #SR 9 14
+      "<Unpost all structures> should remove all structure
+       identifiers from the list of posted structures of
+       the specified workstation."
+pass/fail depending on
+   (list of posted structures for all workstations
+       equivalent to expected status in stvswk)
+
+*** *** *** *** ***   Close workstation   *** *** *** *** ***
+
+post structures to workstations, according to stinwk
+stvswk = stinwk
+<close workstation> acwkid(1)
+do istr = 1 to numstr
+   stvswk(istr, 1) = -1
+loop
+
+TEST: #SR 12 13
+      "<Close workstation> should remove the workstation
+       identifier from the list of workstations to which posted
+       in all the structure state lists."
+pass/fail depending on
+   (list of workstations to which posted for all structures
+       equivalent to expected status in stvswk)
+
+*** *** *** *** ***   Re-opening  workstation   *** *** *** *** ***
+
+<open workstation> acwkid(1)
+
+TEST: #SR 11 14
+      "Immediately after re-opening a workstation, its list of
+       posted structures should be empty."
+pass/fail depending on
+   (list of posted structures for all workstations
+       equivalent to expected status in stvswk)
+
+TEST: #SR 11 13
+      "Immediately after re-opening a workstation, no list of
+       workstations to which posted should contain it."
+pass/fail depending on
+   (list of workstations to which posted for all structures
+       equivalent to expected status in stvswk)
+
+<close structure>
+close all workstations
+
+END PROGRAM 1
+
+
+PROGRAM 2: Setting and inquiring display priorities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<open workstation> wkid
+
+Use <inquire number of display priorities supported> to determine:
+    ndpsup = number of display priorities supported
+informative message on ndpsup
+
+TEST: #SR 16 17
+      "<Inquire number of display priorities supported> should
+       report the number of display priorities for any specific
+       workstation type as 0 or >= 2."
+if (no error reported and (ndpsup = 0 or ndpsup >= 2)) then
+   pass
+else
+   fail
+   informative message: skipping further tests
+   goto done
+endif
+
+strpri = (0.0, 0.67, 1.0) = array of display priorities
+strid  = (101,  102, 103) = array of structure identifiers
+
+for istr = 1 to 3
+   <post structure> wkid, strid(istr), strpri(istr)
+loop
+
+if (ndpsup = 0) then
+   TEST: #SR 3 15 16 18
+         "A workstation with the number of display priorities
+          equal to 0 should report any valid display priority
+          exactly as it was set."
+   <inquire posted structures> for wkid to determine
+      lps = list of posted structures
+   if (number of entries in lps = 3) then
+      pass/fail depending on
+         (lps contains entry:[strid(istr), strpri(istr)] for istr = 1,2,3)
+   else
+      fail
+   endif
+else
+   TEST: #SR 3 15 16 19
+         "A workstation with the number of display priorities
+          equal to at least 2 should be able to distinguish the
+          highest and lowest valid priority."
+   Use <inquire posted structures> to determine:
+       pri1 = the reported display priority for structure 101
+       pri2 = the reported display priority for structure 103
+   pass/fail depending on (pri1 < pri2)
+endif
+
+done:
+
+<close workstation> wkid
+
+END PROGRAM 2
+

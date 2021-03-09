@@ -1,0 +1,1406 @@
+TITLE: Operating state errors handled by user
+
+MODULE#: 09.01.01.01
+
+DESCRIPTION: This module tests that the functions which require a
+certain set of operating states generate the specified error codes if
+they are executed in an incorrect state.  The error is handled by a
+user defined error handling subroutine.  Also, this module tests the
+requirement that no side effects are generated.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  If function <open phigs> is called, and the state is not
+(PHCL,WSCL,STCL,ARCL), then error 1 is generated and the function is
+ignored.
+#F 1
+#D 1.1 1.2 1.3 1.4 8.1
+#S 4.12/109/6
+#T P01/1 P01/2
+
+SR2.  If functions <open workstation>, <set edit mode>, <empty
+structure>-<change structure identifier and references>, <open archive
+file>, <set conflict resolution>, <interpret item>, <set error
+handling mode>, <escape> are called, and the state is not
+(PHOP,*,*,*), then error 2 is generated and the function is ignored.
+#F 3 117 125-131 135 140 199 318 319
+#D 1.1 8.1
+#S 4.12/109/6
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11
+
+SR3.  If functions <close workstation>-<message>, <set polyline
+representaion>-<set color model>, <set hlhsr mode>, <set view
+representation 3>-<set workstation viewport>, <post structure>-<unpost
+sll structures>, <set pick filter>-<read item from metafile> are
+called, and the state is not (PHOP,WSOP,*,*), then error 3 or 54 is
+generated and the function is ignored.
+#F 4-8 63-72 74 84-90 132-134 151-198
+#D 1.1 1.2 8.1
+#S 4.12/109/6
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9 P03/10 P03/11
+   P03/12 P03/13 P03/14 P03/15 P03/16 P03/17 P03/18 P03/19 P03/20
+   P03/21 P03/22 P03/23 P03/24 P03/25 P03/26 P03/27 P03/28 P03/29
+   P03/30 P03/31 P03/32 P03/33 P03/34
+
+SR4.  If function <close phigs> is called, and the state is not
+(PHOP,WSCL,STCL,ARCL), then error 4 is generated and the function is
+ignored.
+#F 2
+#D 1.1 1.2 1.3 1.4 8.1
+#S 4.12/109/6
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P04/6 P04/7 P04/8
+
+SR5.  If functions <polyline 3>-<set individual asf>, <set hlhsr
+identifier>, <set local transformation 3>-<set view index>, <close
+structure>-<generalized strcture element>, <copy all elements from
+structure>-<delete elements between labels>, <set pick identifier> are
+called, and the state is not (PHOP,*,STOP,*), then error 5 is
+generated and the function is ignored.
+#F 9-62 73 75-83 112-116 118-124 150
+#D 1.1 1.3 8.1
+#S 4.12/109/6
+#T P05/1 P05/2 P05/3 P05/4 P05/5 P05/6 P05/7 P05/8 P05/9 P05/10 P05/11
+   P05/12 P05/13 P05/14 P05/15 P05/16 P05/17 P05/18 P05/19 P05/20
+   P05/21 P05/22 P05/23 P05/24 P05/25 P05/26 P05/27 P05/28 P05/29
+   P05/30 P05/31 P05/32 P05/33 P05/34 P05/35
+
+SR6.  If function <open structure> is called, and the state is not
+(PHOP,*,STCL,*), then error 6 is generated and the function is
+ignored.
+#F 111
+#D 1.1 1.3 8.1
+#S 4.12/109/6
+#T P06/1 P06/2 P06/3 P06/4
+
+SR7.  If functions <close archive file>-<archive all structures>,
+<retrieve structure identifiers>-<delete all structures from archieve>
+are called, and the state is not (PHOP,*,*,AROP), then error number 7
+or 404 is generated and the function is ignored.
+#F 136-139 141-149
+#D 1.1 1.4 8.1
+#S 4.12/109/6
+#T P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10 P07/11
+   P07/12 P07/13 P07/14 P07/15 P07/16 P07/17 P07/18 P07/19 P07/20
+   P07/21 P07/22 P07/23
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    1: popph   <open phigs>
+    2: pclph   <close phigs>
+    3: popwk   <open workstation>
+    4: pclwk   <close workstation>
+    5: prst    <redraw all structures>
+    6: puwk    <update workstation>
+    7: psdus   <set display update state>
+    8: pmsg    <message>
+    9: ppl3    <polyline 3>
+   10: ppl     <polyline>
+   11: ppm3    <polymarker 3>
+   12: ppm     <polymarker>
+   13: ptx3    <text 3>
+   14: ptx     <text>
+   15: patr3   <annotation text relative 3>
+   16: patr    <annotation text relative>
+   17: pfa3    <fill area 3>
+   18: pfa     <fill area>
+   19: pfas3   <fill area set 3>
+   20: pfas    <fill area set>
+   21: pca3    <cell array 3>
+   22: pca     <cell array>
+   23: pgdp3   <generalized drawing primitive 3>
+   24: pgdp    <generalized drawing primitive>
+   25: pspli   <set polyline index>
+   26: pspmi   <set polymarker index>
+   27: pstxi   <set text index>
+   28: psii    <set interior index>
+   29: psedi   <set edge index>
+   30: psln    <set linetype>
+   31: pslwsc  <set linewidth scale factor>
+   32: psplci  <set polyline colour index>
+   33: psmk    <set marker type>
+   34: psmksc  <set marker size scale factor>
+   35: pspmci  <set polymarker colour index>
+   36: pstxfn  <set text font>
+   37: pstxpr  <set text precision>
+   38: pschxp  <set character expansion factor>
+   39: pschsp  <set character spacing>
+   40: pstxci  <set text colour index>
+   41: pschh   <set character height>
+   42: pschup  <set character up vector>
+   43: pstxp   <set text path>
+   44: pstxal  <set text alignment>
+   45: psatch  <set annotation text character height>
+   46: psatcu  <set annotation text character up vector>
+   47: psatp   <set annotation text path>
+   48: psatal  <set annotation text alignment>
+   49: psans   <set annotation style>
+   50: psis    <set interior style>
+   51: psisi   <set interior style index>
+   52: psici   <set interior colour index>
+   53: psedfg  <set edge flag>
+   54: psedt   <set edgetype>
+   55: psewsc  <set edgewidth scale factor>
+   56: psedci  <set edge colour index>
+   57: pspa    <set pattern size>
+   58: psprpv  <set pattern reference point and vectors>
+   59: psparf  <set pattern reference point>
+   60: pads    <add names to set>
+   61: pres    <remove names from set>
+   62: psiasf  <set individual asf>
+   63: psplr   <set polyline representation>
+   64: pspmr   <set polymarker representation>
+   65: pstxr   <set text representation>
+   66: psir    <set interior representation>
+   67: psedr   <set edge representation>
+   68: pspar   <set pattern representation>
+   69: pscr    <set colour representation>
+   70: pshlft  <set highlighting filter>
+   71: psivft  <set invisibility filter>
+   72: pscmd   <set colour model>
+   73: pshrid  <set hlhsr identifier>
+   74: pshrm   <set hlhsr mode>
+   75: pslmt3  <set local transformation 3>
+   76: pslmt   <set local transformation>
+   77: psgmt3  <set global transformation 3>
+   78: psgmt   <set global transformation>
+   79: psmcv3  <set modelling clipping volume 3>
+   80: psmcv   <set modelling clipping volume>
+   81: psmcli  <set modelling clipping indicator>
+   82: prmcv   <restore modelling clipping volume>
+   83: psvwi   <set view index>
+   84: psvwr3  <set view representation 3>
+   85: psvwr   <set view representation>
+   86: psvtip  <set view transformation input priority>
+   87: pswkw3  <set workstation window 3>
+   88: pswkw   <set workstation window>
+   89: pswkv3  <set workstation viewport 3>
+   90: pswkv   <set workstation viewport>
+  111: popst   <open structure>
+  112: pclst   <close structure>
+  113: pexst   <execute structure>
+  114: plb     <label>
+  115: pap     <application data>
+  116: pgse    <generalized structure element>
+  117: psedm   <set edit mode>
+  118: pcelst  <copy all elements from structure>
+  119: psep    <set element pointer>
+  120: posep   <offset element pointer>
+  121: pseplb  <set element pointer at label>
+  122: pdel    <delete element>
+  123: pdelra  <delete element range>
+  124: pdellb  <delete elements between labels>
+  125: pemst   <empty structure>
+  126: pdst    <delete structure>
+  127: pdsn    <delete structure network>
+  128: pdas    <delete all structures>
+  129: pcstid  <change structure identifier>
+  130: pcstrf  <change structure references>
+  131: pcstir  <change structure identifier and references>
+  132: ppost   <post structure>
+  133: pupost  <unpost structure>
+  134: pupast  <unpost all structures>
+  135: poparf  <open archive file>
+  136: pclarf  <close archive file>
+  137: parst   <archive structures>
+  138: parsn   <archive structure networks>
+  139: parast  <archive all structures>
+  140: pscnrs  <set conflict resolution>
+  141: prsid   <retrieve structure identifiers>
+  142: prest   <retrieve structures>
+  143: presn   <retrieve structure networks>
+  144: prast   <retrieve all structures>
+  145: prepan  <retrieve paths to ancestors>
+  146: prepde  <retrieve paths to descendants>
+  147: pdstar  <delete structures from archive>
+  148: pdsnar  <delete structure networks from archive>
+  149: pdasar  <delete all structures from archive>
+  150: pspkid  <set pick identifier>
+  151: pspkft  <set pick filter>
+  152: pinlc3  <initialize locator 3>
+  153: pinlc   <initialize locator>
+  154: pinsk3  <initialize stroke 3>
+  155: pinsk   <initialize stroke>
+  156: pinvl3  <initialize valuator 3>
+  157: pinvl   <initialize valuator>
+  158: pinch3  <initialize choice 3>
+  159: pinch   <initialize choice>
+  160: pinpk3  <initialize pick 3>
+  161: pinpk   <initialize pick>
+  162: pinst3  <initialize string 3>
+  163: pinst   <initialize string>
+  164: pslcm   <set locator mode>
+  165: psskm   <set stroke mode>
+  166: psvlm   <set valuator mode>
+  167: pschm   <set choice mode>
+  168: pspkm   <set pick mode>
+  169: psstm   <set string mode>
+  170: prqlc3  <request locator 3>
+  171: prqlc   <request locator>
+  172: prqsk3  <request stroke 3>
+  173: prqsk   <request stroke>
+  174: prqvl   <request valuator>
+  175: prqch   <request choice>
+  176: prqpk   <request pick>
+  177: prqst   <request string>
+  178: psmlc3  <sample locator 3>
+  179: psmlc   <sample locator>
+  180: psmsk3  <sample stroke 3>
+  181: psmsk   <sample stroke>
+  182: psmvl   <sample valuator>
+  183: psmch   <sample choice>
+  184: psmpk   <sample pick>
+  185: psmst   <sample string>
+  186: pwait   <await event>
+  187: pflush  <flush device events>
+  188: pgtlc3  <get locator 3>
+  189: pgtlc   <get locator>
+  190: pgtsk3  <get stroke 3>
+  191: pgtsk   <get stroke>
+  192: pgtvl   <get valuator>
+  193: pgtch   <get choice>
+  194: pgtpk   <get pick>
+  195: pgtst   <get string>
+  196: pwitm   <write item to metafile>
+  197: pgtitm  <get item type from metafile>
+  198: prditm  <read item from metafile>
+  199: piitm   <interpret item>
+  318: pserhm  <set error handling mode>
+  319: pesc    <escape>
+ 
+  Data Structures ---
+  1  ...  operating_state
+  1.1  ...  system_state
+  1.2  ...  workstation_state
+  1.3  ...  structure_state
+  1.4  ...  archive_state
+  8  ...  phigs_error_state_list
+  8.1  ...  error_state
+ 
+
+
+PROGRAM 1: Error 1 handled by user
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: This is a passive test, but take care to invoke it so
+as to link in the standard PVT user-defined error handler.  Since this
+is the mode in which the non-error-handling tests are executed, this
+program should be invoked in the normal way.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open phigs>
+<open phigs>: signals error
+TEST: #SR 1
+      "If <open phigs> signals an error because PHIGS is open, it
+       should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 1
+      "If <open phigs> is called and PHIGS is open, it should
+       return error code  001, function identifier  000, and the current
+       error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error 2 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves the
+error code, function identifier, and error file identifier in an error
+table.  Since PHIGS is closed, the error file identifier is not checked.
+
+Close phigs after initializing to test if functions 2, 96, 104,
+106, 110, 114, 119 generates error 2: ignoring function, function
+requires state (PHOP,*,*,*).
+
+*** *** *** Generate errors; test absence of side effects  *** *** ***
+
+<close phigs>
+<open workstation> : signals error
+TEST: #SR 2
+      "If <open workstation> signals an error because PHIGS is
+       closed, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+mode = random choice of INSERT or REPLACE
+<set edit mode> using mode : signals error
+TEST: #SR 2
+      "If <set edit mode> signals an error because PHIGS is closed,
+       it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+<empty structure> 101 : signals error
+TEST: #SR 2
+      "If <empty structure> signals an error because PHIGS is
+       closed, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+dsnt = random choice of DELETE or KEEP
+<delete structure network> using 101, dsnt : signals error
+
+<change structure identifier and references> from 101 to 102 : signals error
+
+<open archive file> with 11, 24 : signals error
+TEST: #SR 2
+      "If <open archive file> signals an error because PHIGS is
+       closed, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+arccr = random choice of MAINTAIN, ABANDON, or UPDATE
+retcr = random choice of MAINTAIN, ABANDON, or UPDATE
+<set conflict resolution> with arccr, retcr : signals error
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 2
+      "If <open workstation> is called and PHIGS is closed,
+       it should return error code  002 and function identifier  002 to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <set edit mode> is called and PHIGS is closed,
+       it should return error code  002 and function identifier  096 to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <empty structure> is called and PHIGS is closed,
+       it should return error code  002 and function identifier  104 to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <delete structure network> is called and PHIGS is closed,
+       it should return error code  002 and function identifier  106
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <change structure identifier and references> is called and
+       PHIGS is closed, it should return error code  002 and function
+       identifier  110 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <open archive file> is called and PHIGS is closed,
+       it should return error code  002 and function identifier  114 to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <set conflict resolution> is called and PHIGS is closed,
+       it should return error code  002 and function identifier  119
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Error 3 handled by user
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves the
+error code, function identifier, and error file identifier in an
+error table. When phigs is closed, the error file identifier is not
+checked.
+
+close workstation after initializing to test if functions
+3,4,5,63,65,70,73,86,88,112 generate error 3 and/or 54; then close
+phigs to test if functions 3,4,5,6,62,66,69,71,84,87,89,111,113
+generate error 3 and/or 54: ignoring function, function requires
+state (PHOP,WSOP,*,*).
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<close workstation> : signals error
+TEST: #SR 3
+      "If <close workstation> signals an error because PHIGS is open
+       but all workstations are closed, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<redraw all structures> with WKID, PCONDI : signals error
+TEST: #SR 3
+      "If <redraw all structures> signals an error because PHIGS is
+       open but all workstations are closed, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<update workstation> with WKID, PPOSTP : signals error
+TEST: #SR 3
+      "If <update workstation> signals an error because PHIGS is
+       open but all workstations are closed, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<set polymarker representation> with (WKID, 1,1,1.0,1) : signals error
+TEST: #SR 3
+      "If <set polymarker representation> signals an error because
+       PHIGS is open but all workstations are closed, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<set interior representation> with (WKID, 1, hollow, 1, 1) : signals error
+TEST: #SR 3
+      "If <set interior representation> signals an error because
+       PHIGS is open but all workstations are closed, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+inclusive set = {2,3,5}
+exclusive set = {6}
+<set invisibility filter> with inclusive set and exclusive set : signals error
+TEST: #SR 3
+      "If <set invisibility filter> signals an error because PHIGS
+       is open but all workstations are closed, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<set hlhsr mode> with WKID, 1 : signals error
+TEST: #SR 3
+      "If <set hlhsr mode> signals an error because PHIGS is open
+       but all workstations are closed, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<set workstation window> with WKID, 0., 1., 0., 1. : signals error
+TEST: #SR 3
+      "If <set workstation window> signals an error because PHIGS is
+       open but all workstations are closed, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<set workstation viewport> with WKID, 0., 1., 0., 1. : signals error
+TEST: #SR 3
+      "If <set workstation viewport> signals an error because PHIGS
+       is open but all workstations are closed, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<unpost structure> 101 : signals error
+TEST: #SR 3
+      "If <unpost structure> signals an error because PHIGS is open
+       but all workstations are closed, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 3
+      "If <close workstation> is called and PHIGS is open but all
+       workstations are closed, it should return error code  003 and/or  054,
+       function identifier  003, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <redraw all structures> is called and PHIGS is open but all
+       workstations are closed, it should return error code  003 and/or  054,
+       function identifier  004, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <update workstation> is called and PHIGS is open but all
+       workstations are closed, it should return error code  003 and/or  054,
+       function identifier  005, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set polymarker representation> is called and PHIGS is open
+       but all workstations are closed, it should return error code  003
+       and/or  054, function identifier  063, and the current error
+       file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set interior representation> is called and PHIGS is open
+       but all workstations are closed,  it should return error code
+       003 and/or  054, function identifier  065, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set invisibility filter> is called and PHIGS is open but all
+       workstations are closed, it should return error code  003 and/or
+       054, function identifier  070, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set hlhsr mode> is called and PHIGS is open but all workstations
+       are closed, it should return error code  003 and/or  054,
+       function identifier  073, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set workstation window> is called and PHIGS is open but all
+       workstations are closed, it should return
+       error code  003 and/or  054, function identifier  087, and the
+       current error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set workstation viewport> is called and PHIGS is open
+       but all workstations are closed, it should return error code
+       003 and/or 054, function identifier  089, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <unpost structure> is called and PHIGS is open but all
+       workstations are closed, it should return error code  003
+       and/or  054, function identifier  112, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+*** *** *** Generate errors; test absence of side effects *** *** ***
+
+<close phigs>
+
+<close workstation>  : signals error
+TEST: #SR 3
+      "If <close workstation> signals an error because PHIGS is
+       closed, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+<redraw all structures> with WKID, PCONDI : signals error
+
+<update workstation> with WKID, PPOSTP : signals error
+
+defmod = rndint(PASAP, PBNIG, PBNIL, PASTI, PWAITD)
+modmod = rndint(PNIVE, PUWOR, PUQUM)
+<set display update state> with WKID, defmod, modmod : signals error
+
+<set polyline representation> with (WKID, 1, 1, 1.0, 0) : signals error
+
+<set edge representation> with (WKID, 1, ON, 1, 1.0, 0) : signals error
+
+inclusion set = {2,3,5}
+exclusion set = {6}
+<set highlighting filter> with WKID, inclusion set, exclusion set
+   : signals error
+
+<set colour model> with WKID, PRGB : signals error
+
+xfrmt = identity matrix
+limt = (0.,1.), (0.,1.)
+<set view representation> with (WKID, 1, xfrmt, xfrmt, limt,
+   PCLIP) : signals error
+
+<set workstation window> with WKID, 0., 1., 0., 1. : signals error
+
+<set workstation viewport> with WKID, 0., 1., 0., 1. : signals error
+
+<post structure> with WKID, 101,stid, prioty : signals error
+
+<unpost all structures> with WKID : signals error
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 3
+      "If <close workstation> is called and PHIGS is closed, it should
+       return error code  003 and/or  054 and function identifier
+       003 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <redraw all structures> is called and PHIGS is closed, it
+       should return error code  003 and/or  054 and function identifier
+       004 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <update workstation> is called and PHIGS is closed, it
+       should return error code  003 and/or  054 and function identifier
+       005 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set display update state> is called and PHIGS is closed,
+       it should return error code  003 and/or  054 and function
+       identifier  006 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set polyline representation> is called and PHIGS is closed,
+       it should return error code  003 and/or  054 and function
+       identifier  062 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set edge representation> is called and PHIGS is closed, it
+       should return error code  003 and/or  054 and function
+       identifier  066 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set highlighting filter> is called and PHIGS is closed, it
+       should return error code  003 and/or  054 and function
+       identifier  069 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set colour model> is called and PHIGS is closed, it should
+       return error code  003 and/or  054 and function identifier
+       071 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set view representation> is called and PHIGS is closed, it
+       should return error code  003 and/or  054 and function
+       identifier  084 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set workstation window> is called and PHIGS is closed, it
+       should return error code  003 and/or  054 and function identifier
+       087 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set workstation viewport> is called and PHIGS is closed,
+       it should return error code  003 and/or  054 and function
+       identifier  089 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <post structure> is called and PHIGS is closed, it should
+       return error code  003 and/or  054 and function identifier  111 to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <unpost all structures> is called and PHIGS is closed, it should
+       return error code  003 and/or  054 and function identifier
+       113 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Error 4 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted by
+the tag "signals error"), the user-defined error handler saves the error
+code, function identifier, and error file identifier in an error table.
+When phigs is closed, the error file identifier is not checked.
+
+Open workstation, open structure or open archive file after
+initializing to test if function <close phigs> generates error 4;
+then close phigs to test if <close phigs> generates error 4:
+ignoring function, function requires state (PHOP, WSCL, STCL,
+ARCL).
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> with WKID, CONID, WTYPE
+<close phigs> : signals error
+TEST: #SR 4
+      "If <close phigs> signals an error because PHIGS is open and a
+       workstation is open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open)
+<close workstation>
+
+<open structure>
+<close phigs> : signals error
+TEST: #SR 4
+      "If <close phigs> signals an error because PHIGS is open and a
+       structure is open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open  and
+                        workstation state = closed and
+                        structure state = open)
+<close structure>
+
+<open archive file>
+<close phigs> : signals error
+TEST: #SR 4
+      "If <close phigs> signals an error because PHIGS is open and
+       an archive file is open, it should not cause any other
+       effect."
+pass/fail depending on (system state = PHIGS-open  and
+                        workstation state = closed and
+                        structure state = closed and
+                        archive state = open)
+<close archive file>
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 4
+      "If <close phigs> is called and PHIGS is open and a workstation
+       is open, it should return error code  004,
+       function identifier 001, and the current error file identifier
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <close phigs> is called and PHIGS is open and a structure
+       is open, it should return error code  004,
+       function identifier 001, and the current error file identifier
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <close phigs> is called and PHIGS is open and an archive file
+       is open, it should return error code  004, function identifier
+       001, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+*** *** *** Generate errors; test absence of side effects  *** *** ***
+
+<close phigs>
+
+<close phigs> : signals error
+TEST: #SR 4
+      "If <close phigs> signals an error because PHIGS is closed, it
+       should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 4
+      "If <close phigs> is called and PHIGS is closed, it should
+       return error code  004 and function identifier  001 to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Error 5 handled by user
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted by
+te tag "signals error", the user-defined error handler saves the error
+code, function identifier, and error file identifier in an error table.
+When phigs is closed, the error file identifier is not checked.
+
+Not open structure after initializing to test if functions
+8,13,17,24,29,34, 37,57,59,61,75,79,92,97,101 generate error 5;
+then close phigs to test if functions
+11,15,19,27,33,35,48,58,60,72,76,91,93,98 generate error 5:
+ignoring function, function requires state (PHOP,*,STOP,*)
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+n = 2
+pxa = (0., 0.5)
+pya = (0., 0.5)
+pza = (0., 0.5)
+<polyline3> with (n, pxa, pya, pza) : signals error
+TEST: #SR 5
+      "If <polyline 3> signals an error because PHIGS is open but no
+       structure is open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = closed)
+
+<text> with (0.5, 0.5, 'text') : signals error
+
+pxa = (0.,0.5,0.5,0.)
+pya = (0.,0.,0.5,0.5)
+<fill area> with (n, pxa, pya) : signals error
+
+<set polyline index> to 1 : signals error
+
+<set linetype> to solid line : signals error
+
+<set polymarker colour index> to 1 : signals error
+
+<set character expansion factor> to 1.0 : signals error
+
+<set edge flag> to 1 : signals error
+
+nameset(1)=1
+<add names to set> with nameset : signals error
+
+<set individual asf> to polyline and individual : signals error
+
+xfrmt = identity matrix
+<set local transformation> with xfrmt and REPLACE : signals error
+
+op = PMCREP
+n = 1
+halfsp = (0.52, 0., -1., 0., 0.48, 0., 1., 0.)
+<set modelling clipping volume> with op, n, halfsp : signals error
+
+<execute structure> 101 : signals error
+TEST: #SR 5
+      "If <execute structure> signals an error because PHIGS is open
+       but no structure is open, it should not cause any other
+       effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = closed)
+
+<copy all elements from structure> : signals error
+TEST: #SR 5
+      "If <copy all elements from structure> signals an error
+       because PHIGS is open but no structure is open, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = closed)
+
+<delete element> : signals error
+TEST: #SR 5
+      "If <delete element> signals an error because PHIGS is open
+       but no structure is open, it should not cause any other
+       effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = closed)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 5
+      "If <polyline 3> is called and PHIGS is open but no structure
+       is open, it should return error code  005, function identifier
+       008, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <text> is called and PHIGS is open but no structure is open,
+       it should return error code  005, function identifier  013,
+       and the current error file identifier to the user defined
+       error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <fill area> is called and PHIGS is open but no structure is
+       open, it should return error code  005, function identifier
+       017, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set polyline index> is called and PHIGS is open but no structure
+       is open,  it should return error code  005, function
+       identifier  024, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set linetype> is called and PHIGS is open but no structure is
+       open, it should return error code  005, function
+       identifier  029, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set polymarker colour index> is called and PHIGS is open but
+       no structure is open, it should return error code  005,
+       function identifier  034, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set character expansion factor> is called and PHIGS is open
+       but no structure is open, it should return error code  005,
+       function identifier  037, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set edge flag> is called and PHIGS is open but no structure
+       is open, it should return error code  005, function identifier
+       052, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <add names to set> is called and PHIGS is open but no structure
+       is open, it should return error code  005, function identifier
+       059, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set individual asf> is called and PHIGS is open but no structure
+       is open, it should return error code  005, function
+       identifier  061, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set local transformation> is called and PHIGS is open but no
+       structure is open, it should return error code 005, function
+       identifier  075, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set modelling clipping volume> is called and PHIGS is open but
+       no structure is open, it should return error code  005,
+       function identifier  079, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <execute structure> is called and PHIGS is open but no structure
+       is open, it should return error code  005, function
+       identifier  092, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <copy all elements from structure> is called and PHIGS is open
+       but no structure is open, it should return error code  005,
+       function identifier  097, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <delete element> is called and PHIGS is open but no structure
+       is open, it should return error code  005, function
+       identifier  101, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<close phigs>
+
+n = 2
+pxa = (0.5, 0.5)
+pya = (0.5, 0.5)
+<polymarker> with n, pxa, pya : signals error
+TEST: #SR 5
+      "If <polymarker> signals an error because PHIGS is closed, it
+       should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+<annotation text relative> with (0.5, 0.5, 0.1, 0.1, 'text') : signals error
+
+npl = 2
+ixa = (3,3)
+pxa = (0.,0.4,0.2,0.2,0.4,0.)
+pya = (0.,0.,0.2,0.3,0.5,0.5)
+<fill area set> with (npl, ixa, pxa, pya) : signals error
+
+<set interior index> to 1: signals error
+
+<set marker size scale factor> to 1.0 : signals error
+
+<set text font> to 1 : signals error
+
+<set annotation style> to unconnected : signals error
+
+<set pattern reference point> to 0., 0. : signals error
+
+<remove names from set> with nameset : signals error
+
+<set hlhsr identifier> to 1 : signals error
+
+<set global transformation> with mat : signals error
+
+<close structure> : signals error
+
+<label> 99 : signals error
+
+<set element pointer> to 10 : signals error
+TEST: #SR 5
+      "If <set element pointer> signals an error because PHIGS is
+       closed, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 5
+      "If <polymarker> is called and PHIGS is closed,
+       it should return error code  005 and function identifier  011
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <annotation text relative> is called and PHIGS is closed,
+       it should return error code  005 and function identifier  015
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <fill area set> is called and PHIGS is closed, it should
+       return error code  005 and function identifier 019 to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set interior index> is called and PHIGS is closed,
+       it  should return error code  005 and function identifier  027
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set marker size scale factor> is called and PHIGS is closed,
+       it should return error code  005 and function identifier  033
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set text font> is called and PHIGS is closed, it
+       should return error code  005 and function identifier 035 to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set annotation style> is called and PHIGS is closed, it
+       should return error code  005 and function identifier  048 to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set pattern reference point> is called and PHIGS is closed,
+       it should return error code  005 and function identifier  058
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <remove names from set> is called and PHIGS is closed, it
+       should return error code  005 and function identifier  060 to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set hlhsr identifier> is called and PHIGS is closed, it
+       should return error code  005 and function identifier  072 to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set global transformation> is called and PHIGS is closed,
+       it should return error code  005 and function identifier  077
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <close structure> is called and PHIGS is closed, it should
+       return error code  005 and function identifier 091 to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <label> is called and PHIGS is closed, it should
+       return error code  005 and function identifier  093 to the user defined
+       error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set element pointer> is called and PHIGS is closed, it
+       should return error code  005 and function identifier  098 to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Error 6 handled by user
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted by
+the tag "signals error"), the user-defined error handler saves the error
+code, function identifier, and error file identifier in an error table.
+When phigs is closed, the error file identifier is not checked.
+
+Open structure after initializing to test if <open structure>
+generates error 6; then close phigs to test if <open structure>
+generates error 6: ignoring function, function requires state
+(PHOP, *, STCL, *).
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open structure> 101
+<open structure> 102: signals error
+TEST: #SR 6
+      "If <open structure> signals an error because PHIGS is open
+       and a structure is open, it should not cause any other
+       effect."
+pass/fail depending on (system state = PHIGS-open    and
+                        structure state = open)
+<close structure>
+
+*** *** ***  Results of user-defined error handlling  *** *** ***
+
+TEST: #SR 6
+      "If <open structure> is called and PHIGS is open and a structure
+       is open, it should return error code  006, function
+       identifier  090, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+<close phigs>
+
+<open structure> 101: signals error
+TEST: #SR 6
+      "If <open structure> signals an error because PHIGS is closed,
+       it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 6
+      "If <open structure> is called and PHIGS is closed, it
+       should return error code  006 and function identifier 090 to the user
+       defined error handler."
+
+END PROGRAM 6
+
+
+PROGRAM 7: Error 7 handled by user
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted by
+the tag "signals error"), the user-defined error handler saves the error
+code, function identifier, and error file identifier in an error table.
+When phigs is closed, the error file identifier is not checked.
+
+Not open archive file after initializing to test if function
+115,116, 120,121,123,124,126 generates error 7 and/or 404; close
+phigs to test if those functions generate error 7 and/or 404:
+ignoring function, function requires state (PHOP, *, *, AROP).
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+arid = 11
+stid = 101
+stlist = (101, 102)
+pathod = TOPFIRST
+pathdp = 1
+<close archive file> arid : signals error
+TEST: #SR 7
+      "If <close archive file> signals an error because PHIGS is
+       open but no archive file is open, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        archive state = closed)
+
+<archive structures> arid, stlist : signals error
+TEST: #SR 7
+      "If <archive structures> signals an error because PHIGS is
+       open but no archive file is open, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        archive state = closed)
+
+<retrieve structure identifiers> with arid, stlist : signals error
+
+<retrieve structures> with arid, stlist : signals error
+
+<retrieve all structures> with arid : signals error
+TEST: #SR 7
+      "If <retrieve all structures> signals an error because PHIGS
+       is open but no archive file is open, it should not cause
+       any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        archive state = closed)
+
+<retrieve paths to ancestors> wit arid, stid, pathod, pathdp,
+   reppth : signals error
+TEST: #SR 7
+      "If <retrieve paths to ancestors> signals an error because
+       PHIGS is open but no archive file is open, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        archive state = closed)
+
+<delete structures from archive> with arid, stlist : signals error
+TEST: #SR 7
+      "If <delete structures from archive> signals an error because
+       PHIGS is open but no archive file is open, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        archive state = closed)
+
+*** *** ***   Results of user-defined error handling  *** *** ***
+
+TEST: #SR 7
+      "If <close archive file> is called and PHIGS is open but no
+       archive file is open, it should return error code 007 and/or  404,
+       function identifier  115, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <archive structures> is called and PHIGS is open but no
+       archive file is open, it should return error code 007 and/or  404,
+       function identifier  116, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <retrieve structure identifiers> is called and PHIGS is open
+       but no archive file is open, it should return error code
+       007 and/or  404, function identifier  120, and the current
+       error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <retrieve structures> is called and PHIGS is open but no
+       archive file is open, it should return error code 007 and/or
+       404, function identifier  121, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <retrieve all structures> is called and PHIGS is open but
+       no archive file is open, it should return error code  007 and/or
+       404, function identifier  123, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <retrieve paths to ancestors> is called and PHIGS is open but
+       no archive file is open, it should return error code
+       007 and/or  404, function identifier  124, and the current
+       error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <delete structures from archive> is called and PHIGS is open but
+       no archive file is open, it should return error code  007 and/or
+       404, function identifier  126, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+<close PHIGS>
+
+<close archive file> arid : signals error
+TEST: #SR 7
+      "If <close archive file> signals an error because PHIGS is
+       closed, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+<archive structures> arid, stlist : signals error
+TEST: #SR 7
+      "If <archive structures> signals an error because PHIGS is
+       closed, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+<retrieve structure identifiers> with arid, stlist : signals error
+
+<retrieve structures> with arid, stlist : signals error
+
+<retrieve all structures> with arid : signals error
+
+<retrieve paths to ancestors> with arid, stid, pathod, pathdp,
+   reppth : signals error
+TEST: #SR 7
+      "If <retrieve paths to ancestors> signals an error because
+       PHIGS is closed, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+<delete structures from archive> with arid, stlist : signals error
+TEST: #SR 7
+      "If <delete structures from archive> signals an error because
+       PHIGS is closed, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-closed)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 7
+      "If <close archive file> is called and PHIGS is closed, it should
+       return error code  007 and/or  404 and function identifier
+       115 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <archive structures> is called and PHIGS is closed, it should
+       return error code  007 and/or  404 and function identifier
+       116 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <retrieve structure identifiers> is called and PHIGS is closed,
+       it should return error code  007 and/or  404 and
+       function identifier  120 to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <retrieve structures> is called and  PHIGS is closed, it
+       should return error code  007 and/or  404 and function identifier
+       121 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <retrieve all structures> is called and PHIGS is closed, it
+       should return error code  007 and/or  404 and function
+       identifier  123 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+
+TEST: #SR 7
+      "If <retrieve paths to ancestors> is called and PHIGS is closed,
+       it should return error code  007 and/or 404 and function
+       identifier  124 to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+
+TEST: #SR 7
+      "If <delete structures from archive> is called and PHIGS is closed,
+       it should return error code  007 and/or  404 and
+       function identifier  126 to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 7

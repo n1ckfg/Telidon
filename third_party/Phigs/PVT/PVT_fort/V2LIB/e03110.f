@@ -1,0 +1,64 @@
+      SUBROUTINE E03110 (USEPRM)
+
+C  E03110 tests the handling of error 110
+
+      COMMON /GLOBNU/ CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT, DUMRL
+      INTEGER         CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT(20), ERRIND
+      REAL    DUMRL(20)
+
+      COMMON /ERRINF/ ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR,
+     1                USRERR, ERRSAV,      FUNSAV,      FILSAV,
+     2                EFCNT, EFID
+      INTEGER         ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR(10),
+     1                USRERR, ERRSAV(200), FUNSAV(200), FILSAV(200),
+     2                EFCNT, EFID(100)
+      COMMON /ERRCHR/ CURCON,     ERRSRS,    ERRMRK,    ERFLNM,
+     1                CONTAB
+      CHARACTER       CURCON*200, ERRSRS*40, ERRMRK*20, ERFLNM*80,
+     1                CONTAB(40)*150
+
+C  colour model
+      INTEGER      PRGB,   PCIE,    PHSV,    PHLS
+      PARAMETER   (PRGB=1, PCIE=2,  PHSV=3,  PHLS=4)
+
+      INTEGER   USEPRM, IX, UNTYPE, NCOLMD,MXMOD,IDUM1,IDUM2
+      INTEGER   CMODEL, SPECWT, THISMD
+      LOGICAL   STREQ
+
+      CURCON = 'the specified colour model is not available '//
+     1         'on the workstation'
+      CALL SETVS ('110', EXPERR, EXPSIZ)
+      ERRSRS = '9'
+      CALL ESETUP (USEPRM)
+
+      CALL POPWK (WKID, CONID, WTYPE)
+      CALL PQWKC (WKID, ERRIND, CONID, SPECWT)
+      CALL CHKINQ ('pqwkc', ERRIND)
+
+      CALL PQCMDF (SPECWT,1, ERRIND, NCOLMD, MXMOD,IDUM2)
+      CALL CHKINQ ('pqcmdf', ERRIND)
+      DO 50 IX = 1, NCOLMD
+         CALL PQCMDF (SPECWT,IX, ERRIND, IDUM1,THISMD,IDUM2)
+         CALL CHKINQ ('pqcmdf', ERRIND)
+         IF (THISMD .GT. MXMOD) MXMOD=THISMD
+50    CONTINUE
+
+      UNTYPE = MXMOD + 1
+
+      CALL PSCMD (WKID, THISMD)
+      CALL RSCMD (WKID, UNTYPE)
+      CALL PQCMD (WKID, ERRIND, CMODEL)
+      CALL CHKINQ ('pqcmd', ERRIND)
+      CALL TSTIGN (STREQ('OO**') .AND. CMODEL.EQ.THISMD)
+
+      CALL PCLWK (WKID)
+
+      CALL ENDERR
+
+      END

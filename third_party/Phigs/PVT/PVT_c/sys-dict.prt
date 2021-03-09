@@ -1,0 +1,1942 @@
+FILE: SYS_DICT.PRT
+
+Function numbering, in standard order. Section of the PHIGS
+standard which defines the function is shown in parentheses. 
+Each line contains ordinal number, page number, Fortran bound
+name, and generic name.
+
+---  Control  (5.2)
+---  Control/Phigs Control  (5.2)
+001  p.116  popph   <open phigs>
+002  p.116  pclph   <close phigs>
+---  Control/Workstation Control  (5.2)
+003  p.116  popwk   <open workstation>
+004  p.117  pclwk   <close workstation>
+---  Control/Update Control  (5.2)
+005  p.118  prst    <redraw all structures>
+006  p.118  puwk    <update workstation>
+007  p.119  psdus   <set display update state>
+---  Control/Message  (5.2)
+008  p.120  pmsg    <message>
+
+---  Output Primitives  (5.3)
+009  p.121  ppl3    <polyline 3>
+010  p.121  ppl     <polyline>
+011  p.121  ppm3    <polymarker 3>
+012  p.122  ppm     <polymarker>
+013  p.122  ptx3    <text 3>
+014  p.123  ptx     <text>
+015  p.123  patr3   <annotation text relative 3>
+016  p.124  patr    <annotation text relative>
+017  p.125  pfa3    <fill area 3>
+018  p.125  pfa     <fill area>
+019  p.126  pfas3   <fill area set 3>
+020  p.126  pfas    <fill area set>
+021  p.127  pca3    <cell array 3>
+022  p.127  pca     <cell array>
+023  p.128  pgdp3   <generalized drawing primitive 3>
+024  p.129  pgdp    <generalized drawing primitive>
+
+---  Attribute Specification  (5.4)
+---  Attribute/Bundled  (5.4.1)
+025  p.131  pspli   <set polyline index>
+026  p.131  pspmi   <set polymarker index>
+027  p.131  pstxi   <set text index>
+028  p.132  psii    <set interior index>
+029  p.132  psedi   <set edge index>
+
+---  Attribute/Individual  (5.4.2)
+---  Attribute/Individual/Polyline  (5.4.2)
+030  p.133  psln    <set linetype>
+031  p.133  pslwsc  <set linewidth scale factor>
+032  p.134  psplci  <set polyline colour index>
+
+---  Attribute/Individual/Polymarker  (5.4.2)
+033  p.134  psmk    <set marker type>
+034  p.135  psmksc  <set marker size scale factor>
+035  p.135  pspmci  <set polymarker colour index>
+
+---  Attribute/Individual/Text  (5.4.2)
+036  p.136  pstxfn  <set text font>
+037  p.137  pstxpr  <set text precision>
+038  p.137  pschxp  <set character expansion factor>
+039  p.138  pschsp  <set character spacing>
+040  p.138  pstxci  <set text colour index>
+041  p.138  pschh   <set character height>
+042  p.139  pschup  <set character up vector>
+043  p.140  pstxp   <set text path>
+044  p.140  pstxal  <set text alignment>
+
+---  Attribute/Individual/Annotation  (5.4.2)
+045  p.140  psatch  <set annotation text character height>
+046  p.141  psatcu  <set annotation text character up vector>
+047  p.141  psatp   <set annotation text path>
+048  p.142  psatal  <set annotation text alignment>
+049  p.142  psans   <set annotation style>
+
+---  Attribute/Individual/Fill Area  (5.4.2)
+050  p.143  psis    <set interior style>
+051  p.143  psisi   <set interior style index>
+052  p.144  psici   <set interior colour index>
+053  p.144  psedfg  <set edge flag>
+054  p.145  psedt   <set edgetype>
+055  p.146  psewsc  <set edgewidth scale factor>
+056  p.146  psedci  <set edge colour index>
+057  p.147  pspa    <set pattern size>
+058  p.147  psprpv  <set pattern reference point and vectors>
+059  p.148  psparf  <set pattern reference point>
+
+---  Attribute/Individual/Nameset Control  (5.4.2)
+060  p.148  pads    <add names to set>
+061  p.148  pres    <remove names from set>
+
+---  Attribute/Aspect Source Flag Setting  (5.4.3)
+062  p.149  psiasf  <set individual asf>
+
+---  Attribute/Workstation Attribute Table Definition  (5.4.4)
+063  p.150  psplr   <set polyline representation>
+064  p.151  pspmr   <set polymarker representation>
+065  p.152  pstxr   <set text representation>
+066  p.153  psir    <set interior representation>
+067  p.154  psedr   <set edge representation>
+068  p.156  pspar   <set pattern representation>
+069  p.156  pscr    <set colour representation>
+
+---  Attribute/Workstation Filter Definition  (5.4.5)
+070  p.157  pshlft  <set highlighting filter>
+071  p.158  psivft  <set invisibility filter>
+
+---  Attribute/Colour Model Control  (5.4.6)
+072  p.158  pscmd   <set colour model>
+
+---  Attribute/HLHSR Attributes  (5.4.7)
+073  p.159  pshrid  <set hlhsr identifier>
+074  p.159  pshrm   <set hlhsr mode>
+
+---  Transformation and Clipping  (5.5)
+---  Transformation/Modelling  (5.5.1)
+075  p.160  pslmt3  <set local transformation 3>
+076  p.160  pslmt   <set local transformation>
+077  p.161  psgmt3  <set global transformation 3>
+078  p.161  psgmt   <set global transformation>
+079  p.161  psmcv3  <set modelling clipping volume 3>
+080  p.162  psmcv   <set modelling clipping volume>
+081  p.163  psmcli  <set modelling clipping indicator>
+082  p.163  prmcv   <restore modelling clipping volume>
+
+---  Transformation/View Operations  (5.5.2)
+083  p.164  psvwi   <set view index>
+084  p.164  psvwr3  <set view representation 3>
+085  p.165  psvwr   <set view representation>
+086  p.166  psvtip  <set view transformation input priority>
+
+---  Transformation/Workstation Transformation  (5.5.3)
+087  p.166  pswkw3  <set workstation window 3>
+088  p.167  pswkw   <set workstation window>
+089  p.167  pswkv3  <set workstation viewport 3>
+090  p.168  pswkv   <set workstation viewport>
+
+---  Transformation/Utility Functions to Support Modelling  (5.5.4)
+091  p.168  ptr3    <translate 3>
+092  p.169  ptr     <translate>
+093  p.169  psc3    <scale 3>
+094  p.169  psc     <scale>
+095  p.170  prox    <rotate x>
+096  p.170  proy    <rotate y>
+097  p.171  proz    <rotate z>
+098  p.171  pro     <rotate>
+099  p.171  pcom3   <compose matrix 3>
+100  p.172  pcom    <compose matrix>
+101  p.172  ptp3    <transform point 3>
+102  p.173  ptp     <transform point>
+103  p.173  pbltm3  <build transformation matrix 3>
+104  p.173  pbltm   <build transformation matrix>
+105  p.174  pcotm3  <compose transformation matrix 3>
+106  p.174  pcotm   <compose transformation matrix>
+
+---  Transformation/Utility Functions to Support Viewing  (5.5.5)
+107  p.175  pevom3  <evaluate view orientation matrix 3>
+108  p.175  pevom   <evaluate view orientation matrix>
+109  p.176  pevmm3  <evaluate view mapping matrix 3>
+110  p.177  pevmm   <evaluate view mapping matrix>
+
+---  Structure Operations  (5.6 - 5.9)
+---  Structure/Contents  (5.6)
+---  Structure/Contents/Control  (5.6)
+111  p.178  popst   <open structure>
+112  p.178  pclst   <close structure>
+
+---  Structure/Contents/Adding elements  (5.6)
+113  p.178  pexst   <execute structure>
+114  p.179  plb     <label>
+115  p.179  pap     <application data>
+116  p.179  pgse    <generalized structure element>
+
+---  Structure/Contents/Editing elements  (5.6)
+117  p.180  psedm   <set edit mode>
+118  p.180  pcelst  <copy all elements from structure>
+119  p.181  psep    <set element pointer>
+120  p.181  posep   <offset element pointer>
+121  p.181  pseplb  <set element pointer at label>
+122  p.182  pdel    <delete element>
+123  p.182  pdelra  <delete element range>
+124  p.183  pdellb  <delete elements between labels>
+125  p.183  pemst   <empty structure>
+
+---  Structure/Manipulation  (5.7)
+126  p.184  pdst    <delete structure>
+127  p.184  pdsn    <delete structure network>
+128  p.184  pdas    <delete all structures>
+129  p.185  pcstid  <change structure identifier>
+130  p.185  pcstrf  <change structure references>
+131  p.186  pcstir  <change structure identifier and references>
+
+---  Structure/Display  (5.8)
+132  p.187  ppost   <post structure>
+133  p.187  pupost  <unpost structure>
+134  p.187  pupast  <unpost all structures>
+
+---  Structure/Archiving  (5.9)
+---  Structure/Archiving/File control  (5.9)
+135  p.189  poparf  <open archive file>
+136  p.189  pclarf  <close archive file>
+---  Structure/Archiving/Adding  (5.9)
+137  p.189  parst   <archive structures>
+138  p.190  parsn   <archive structure networks>
+139  p.190  parast  <archive all structures>
+---  Structure/Archiving/Setting flags  (5.9)
+140  p.191  pscnrs  <set conflict resolution>
+---  Structure/Archiving/Retrieving   (5.9)
+141  p.191  prsid   <retrieve structure identifiers>
+142  p.191  prest   <retrieve structures>
+143  p.192  presn   <retrieve structure networks>
+144  p.192  prast   <retrieve all structures>
+145  p.192  prepan  <retrieve paths to ancestors>
+146  p.193  prepde  <retrieve paths to descendants>
+---  Structure/Archiving/Deleting   (5.9)
+147  p.194  pdstar  <delete structures from archive>
+148  p.194  pdsnar  <delete structure networks from archive>
+149  p.194  pdasar  <delete all structures from archive>
+
+---  Input  (5.10)
+---  Input/Pick Identifier and Filter  (5.10.1)
+150  p.196  pspkid  <set pick identifier>
+151  p.196  pspkft  <set pick filter>
+
+---  Input/Initialization of Devices  (5.10.2)
+152  p.197  pinlc3  <initialize locator 3>
+153  p.199  pinlc   <initialize locator>
+154  p.201  pinsk3  <initialize stroke 3>
+155  p.203  pinsk   <initialize stroke>
+156  p.205  pinvl3  <initialize valuator 3>
+157  p.206  pinvl   <initialize valuator>
+158  p.207  pinch3  <initialize choice 3>
+159  p.209  pinch   <initialize choice>
+160  p.211  pinpk3  <initialize pick 3>
+161  p.212  pinpk   <initialize pick>
+162  p.213  pinst3  <initialize string 3>
+163  p.214  pinst   <initialize string>
+
+---  Input/Setting the Mode of Devices  (5.10.3)
+164  p.215  pslcm   <set locator mode>
+165  p.215  psskm   <set stroke mode>
+166  p.216  psvlm   <set valuator mode>
+167  p.216  pschm   <set choice mode>
+168  p.217  pspkm   <set pick mode>
+169  p.217  psstm   <set string mode>
+
+---  Input/Request  (5.10.4)
+170  p.218  prqlc3  <request locator 3>
+171  p.218  prqlc   <request locator>
+172  p.219  prqsk3  <request stroke 3>
+173  p.219  prqsk   <request stroke>
+174  p.220  prqvl   <request valuator>
+175  p.220  prqch   <request choice>
+176  p.221  prqpk   <request pick>
+177  p.221  prqst   <request string>
+
+---  Input/Sample   (5.10.5)
+178  p.222  psmlc3  <sample locator 3>
+179  p.222  psmlc   <sample locator>
+180  p.223  psmsk3  <sample stroke 3>
+181  p.223  psmsk   <sample stroke>
+182  p.224  psmvl   <sample valuator>
+183  p.224  psmch   <sample choice>
+184  p.224  psmpk   <sample pick>
+185  p.225  psmst   <sample string>
+
+---  Input/Event    (5.10.6)
+186  p.225  pwait   <await event>
+187  p.226  pflush  <flush device events>
+188  p.226  pgtlc3  <get locator 3>
+189  p.227  pgtlc   <get locator>
+190  p.227  pgtsk3  <get stroke 3>
+191  p.227  pgtsk   <get stroke>
+192  p.228  pgtvl   <get valuator>
+193  p.228  pgtch   <get choice>
+194  p.229  pgtpk   <get pick>
+195  p.229  pgtst   <get string>
+
+---  Metafiles  (5.11)
+196  p.230  pwitm   <write item to metafile>
+197  p.230  pgtitm  <get item type from metafile>
+198  p.230  prditm  <read item from metafile>
+199  p.231  piitm   <interpret item>
+
+---  Inquiry  (5.12)
+---  Inquiry/Operating State Values  (5.12.2)
+200  p.232  pqsys   <inquire system state value>
+201  p.232  pqwkst  <inquire workstation state value>
+202  p.232  pqstrs  <inquire structure state value>
+203  p.233  pqars   <inquire archive state value>
+
+---  Inquiry/PHIGS Description Table  (5.12.3)
+204  p.233  pqewk   <inquire list of available workstation types>
+205  p.233  pqphf   <inquire phigs facilities>
+206  p.234  pqgsef  <inquire generalized structure element facilities>
+207  p.234  pqmclf  <inquire modelling clipping facilities>
+
+---  Inquiry/PHIGS State List  (5.12.4)
+208  p.235  pqedm   <inquire edit mode>
+209  p.235  pqopwk  <inquire set of open workstations>
+210  p.235  pqsid   <inquire structure identifiers>
+211  p.236  pqarf   <inquire archive files>
+212  p.236  pqcnrs  <inquire conflict resolution>
+213  p.237  pqcst   <inquire all conflicting structures>
+214  p.237  pqcstn  <inquire conflicting structures in network>
+215  p.238  pqsim   <inquire more simultaneous events>
+
+---  Inquiry/Workstation State List  (5.12.5)
+---  Inquiry/WSL/Connection and Type  (5.12.5)
+216  p.238  pqwkc   <inquire workstation connection and type>
+
+---  Inquiry/WSL/Viewing and HLHSR  (5.12.5)
+217  p.239  pqevwi  <inquire list of view indices>
+218  p.239  pqvwr   <inquire view representation>
+219  p.240  pqhrm   <inquire hlhsr mode>
+
+---  Inquiry/WSL/Structures and Updating  (5.12.5)
+220  p.240  pqpost  <inquire posted structures>
+221  p.241  pqdus   <inquire display update state>
+
+---  Inquiry/WSL/Bundles and Attribute Tables  (5.12.5)
+222  p.241  pqepli  <inquire list of polyline indices>
+223  p.242  pqplr   <inquire polyline representation>
+224  p.242  pqepmi  <inquire list of polymarker indices>
+225  p.243  pqpmr   <inquire polymarker representation>
+226  p.244  pqetxi  <inquire list of text indices>
+227  p.244  pqtxr   <inquire text representation>
+228  p.245  pqeii   <inquire list of interior indices>
+229  p.245  pqir    <inquire interior representation>
+230  p.246  pqeedi  <inquire list of edge indices>
+231  p.246  pqedr   <inquire edge representation>
+232  p.247  pqepai  <inquire list of pattern indices>
+233  p.247  pqpar   <inquire pattern representation>
+234  p.248  pqcmd   <inquire colour model>
+235  p.248  pqeci   <inquire list of colour indices>
+236  p.249  pqcr    <inquire colour representation>
+
+---  Inquiry/WSL/Filters  (5.12.5)
+237  p.250  pqhlft  <inquire highlighting filter>
+238  p.250  pqivft  <inquire invisibility filter>
+
+---  Inquiry/WSL/Workstation Transformation  (5.12.5)
+239  p.251  pqwkt3  <inquire workstation transformation 3>
+240  p.251  pqwkt   <inquire workstation transformation>
+
+---  Inquiry/WSL/Input Devices  (5.12.5)
+241  p.252  pqlcs3  <inquire locator device state 3>
+242  p.252  pqlcs   <inquire locator device state>
+243  p.253  pqsks3  <inquire stroke device state 3>
+244  p.254  pqsks   <inquire stroke device state>
+245  p.254  pqvls3  <inquire valuator device state 3>
+246  p.255  pqvls   <inquire valuator device state>
+247  p.256  pqchs3  <inquire choice device state 3>
+248  p.256  pqchs   <inquire choice device state>
+249  p.257  pqpks3  <inquire pick device state 3>
+250  p.258  pqpks   <inquire pick device state>
+251  p.258  pqsts3  <inquire string device state 3>
+252  p.259  pqsts   <inquire string device state>
+
+---  Inquiry/Workstation Description Table  (5.12.6)
+---  Inquiry/WDT/General Characteristics  (5.12.6)
+253  p.259  pqwkca  <inquire workstation category>
+254  p.260  pqdsp3  <inquire display space size 3>
+255  p.260  pqdsp   <inquire display space size>
+256  p.261  pqhrif  <inquire hlhsr facilities>
+256  p.261  pqhrmf  <inquire hlhsr facilities>
+257  p.261  pqvwf   <inquire view facilities>
+258  p.262  pqpvwr  <inquire predefined view representation>
+259  p.262  pqwkcl  <inquire workstation classification>
+260  p.263  pqdswa  <inquire dynamics of workstation attributes>
+261  p.264  pqddus  <inquire default display update state>
+
+---  Inquiry/WDT/Output Primitives and Attributes  (5.12.6)
+262  p.264  pqplf   <inquire polyline facilities>
+263  p.265  pqpplr  <inquire predefined polyline representation>
+264  p.266  pqpmf   <inquire polymarker facilities>
+265  p.267  pqppmr  <inquire predefined polymarker representation>
+266  p.267  pqtxf   <inquire text facilities>
+267  p.268  pqptxr  <inquire predefined text representation>
+268  p.269  pqanf   <inquire annotation facilities>
+269  p.269  pqtxx   <inquire text extent>
+270  p.270  pqif    <inquire interior facilities>
+271  p.271  pqpir   <inquire predefined interior representation>
+272  p.272  pqedf   <inquire edge facilities>
+273  p.272  pqpedr  <inquire predefined edge representation>
+274  p.273  pqpaf   <inquire pattern facilities>
+275  p.273  pqppar  <inquire predefined pattern representation>
+276  p.274  pqcmdf  <inquire colour model facilities>
+277  p.275  pqcf    <inquire colour facilities>
+278  p.275  pqpcr   <inquire predefined colour representation>
+279  p.276  pqegd3  <inquire list of available generalized drawing primitives 3>
+280  p.276  pqegdp  <inquire list of available generalized drawing primitives>
+281  p.277  pqgdp3  <inquire generalized drawing primitive 3>
+282  p.278  pqgdp   <inquire generalized drawing primitive>
+283  p.278  pqegse  <inquire list of available generalized structure elements>
+
+---  Inquiry/WDT/Rendering Features  (5.12.6)
+284  p.279  pqdp    <inquire number of display priorities supported>
+285  p.280  pqwksl  <inquire workstation state table lengths>
+286  p.280  pqdstr  <inquire dynamics of structures>
+
+---  Inquiry/WDT/Input Devices  (5.12.6)
+287  p.281  pqli    <inquire number of available logical input devices>
+288  p.282  pqdlc3  <inquire default locator device data 3>
+289  p.282  pqdlc   <inquire default locator device data>
+290  p.283  pqdsk3  <inquire default stroke device data 3>
+291  p.283  pqdsk   <inquire default stroke device data>
+292  p.284  pqdvl3  <inquire default valuator device data 3>
+293  p.284  pqdvl   <inquire default valuator device data>
+294  p.285  pqdch3  <inquire default choice device data 3>
+295  p.286  pqdch   <inquire default choice device data>
+296  p.286  pqdpk3  <inquire default pick device data 3>
+297  p.287  pqdpk   <inquire default pick device data>
+298  p.287  pqdst3  <inquire default string device data 3>
+299  p.288  pqdst   <inquire default string device data>
+
+---  Inquiry/Structure State List  (5.12.7)
+300  p.288  pqwkpo  <inquire set of workstations to which posted>
+
+---  Inquiry/Structure Content  (5.12.8)
+301  p.289  pqopst  <inquire open structure>
+302  p.289  pqep    <inquire element pointer>
+303  p.290  pqcets  <inquire current element type and size>
+304  p.291  pqceco  <inquire current element content>
+305  p.292  pqets   <inquire element type and size>
+306  p.294  pqeco   <inquire element content>
+307  p.294  pqstst  <inquire structure status>
+308  p.295  pqpan   <inquire paths to ancestors>
+309  p.295  pqpde   <inquire paths to descendants>
+310  p.296  pels    <element search>
+311  p.298  piss3   <incremental spatial search 3>
+312  p.299  piss    <incremental spatial search>
+
+---  Inquiry/Error State List  (5.12.9)
+313  p.300  pqiqov  <inquire input queue overflow>
+314  p.301  pqerhm  <inquire error handling mode>
+
+---  Error Control  (5.13)
+315  p.302  peclph  <emergency close phigs>
+316  p.302  perhnd  <error handling>
+317  p.302  perlog  <error logging>
+318  p.303  pserhm  <set error handling mode>
+
+--- Special Interface  (5.14)
+319  p.304  pesc    <escape>
+
+--- Fortran Utilities  (5.15)
+320  p.---  pprec   <pack data record>
+321  p.---  purec   <unpack data record>
+
+--- C Utilities  (5.16)
+322  p.---  pcreate_store  <create store>
+323  p.---  pdel_store     <delete store>
+324  p.---  pset_err_hand  <set error handler>
+
+
+End functions in numerical order
+
+
+Function numbering, alphabetical order by generic name
+
+060   p.148  pads     <add names to set>
+015   p.123  patr3    <annotation text relative 3>
+016   p.124  patr     <annotation text relative>
+115   p.179  pap      <application data>
+139   p.190  parast   <archive all structures>
+138   p.190  parsn    <archive structure networks>
+137   p.189  parst    <archive structures>
+186   p.225  pwait    <await event>
+
+103   p.173  pbltm3   <build transformation matrix 3>
+104   p.173  pbltm    <build transformation matrix>
+
+021   p.127  pca3     <cell array 3>
+022   p.127  pca      <cell array>
+131   p.186  pcstir   <change structure identifier and references>
+129   p.185  pcstid   <change structure identifier>
+130   p.185  pcstrf   <change structure references>
+136   p.189  pclarf   <close archive file>
+002   p.116  pclph    <close phigs>
+112   p.178  pclst    <close structure>
+004   p.117  pclwk    <close workstation>
+099   p.171  pcom3    <compose matrix 3>
+100   p.172  pcom     <compose matrix>
+105   p.174  pcotm3   <compose transformation matrix 3>
+106   p.174  pcotm    <compose transformation matrix>
+118   p.180  pcelst   <copy all elements from structure>
+
+149   p.194  pdasar   <delete all structures from archive>
+128   p.184  pdas     <delete all structures>
+123   p.182  pdelra   <delete element range>
+122   p.182  pdel     <delete element>
+124   p.183  pdellb   <delete elements between labels>
+127   p.184  pdsn     <delete structure network>
+148   p.194  pdsnar   <delete structure networks from archive>
+126   p.184  pdst     <delete structure>
+147   p.194  pdstar   <delete structures from archive>
+
+310   p.296  pels     <element search>
+315   p.302  peclph   <emergency close phigs>
+125   p.183  pemst    <empty structure>
+316   p.302  perhnd   <error handling>
+317   p.302  perlog   <error logging>
+319   p.304  pesc     <escape>
+109   p.176  pevmm3   <evaluate view mapping matrix 3>
+110   p.177  pevmm    <evaluate view mapping matrix>
+107   p.175  pevom3   <evaluate view orientation matrix 3>
+108   p.175  pevom    <evaluate view orientation matrix>
+113   p.178  pexst    <execute structure>
+
+017   p.125  pfa3     <fill area 3>
+019   p.126  pfas3    <fill area set 3>
+020   p.126  pfas     <fill area set>
+018   p.125  pfa      <fill area>
+187   p.226  pflush   <flush device events>
+
+023   p.128  pgdp3    <generalized drawing primitive 3>
+024   p.129  pgdp     <generalized drawing primitive>
+116   p.179  pgse     <generalized structure element>
+193   p.228  pgtch    <get choice>
+197   p.230  pgtitm   <get item type from metafile>
+188   p.226  pgtlc3   <get locator 3>
+189   p.227  pgtlc    <get locator>
+194   p.229  pgtpk    <get pick>
+195   p.229  pgtst    <get string>
+190   p.227  pgtsk3   <get stroke 3>
+191   p.227  pgtsk    <get stroke>
+192   p.228  pgtvl    <get valuator>
+
+311   p.298  piss3    <incremental spatial search 3>
+312   p.299  piss     <incremental spatial search>
+158   p.207  pinch3   <initialize choice 3>
+159   p.209  pinch    <initialize choice>
+152   p.197  pinlc3   <initialize locator 3>
+153   p.199  pinlc    <initialize locator>
+160   p.211  pinpk3   <initialize pick 3>
+161   p.212  pinpk    <initialize pick>
+162   p.213  pinst3   <initialize string 3>
+163   p.214  pinst    <initialize string>
+154   p.201  pinsk3   <initialize stroke 3>
+155   p.203  pinsk    <initialize stroke>
+156   p.205  pinvl3   <initialize valuator 3>
+157   p.206  pinvl    <initialize valuator>
+213   p.237  pqcst    <inquire all conflicting structures>
+268   p.269  pqanf    <inquire annotation facilities>
+211   p.236  pqarf    <inquire archive files>
+203   p.233  pqars    <inquire archive state value>
+247   p.256  pqchs3   <inquire choice device state 3>
+248   p.256  pqchs    <inquire choice device state>
+277   p.275  pqcf     <inquire colour facilities>
+276   p.274  pqcmdf   <inquire colour model facilities>
+234   p.248  pqcmd    <inquire colour model>
+236   p.249  pqcr     <inquire colour representation>
+212   p.236  pqcnrs   <inquire conflict resolution>
+214   p.237  pqcstn   <inquire conflicting structures in network>
+304   p.291  pqceco   <inquire current element content>
+303   p.290  pqcets   <inquire current element type and size>
+294   p.285  pqdch3   <inquire default choice device data 3>
+295   p.286  pqdch    <inquire default choice device data>
+261   p.264  pqddus   <inquire default display update state>
+288   p.282  pqdlc3   <inquire default locator device data 3>
+289   p.282  pqdlc    <inquire default locator device data>
+296   p.286  pqdpk3   <inquire default pick device data 3>
+297   p.287  pqdpk    <inquire default pick device data>
+298   p.287  pqdst3   <inquire default string device data 3>
+299   p.288  pqdst    <inquire default string device data>
+290   p.283  pqdsk3   <inquire default stroke device data 3>
+291   p.283  pqdsk    <inquire default stroke device data>
+292   p.284  pqdvl3   <inquire default valuator device data 3>
+293   p.284  pqdvl    <inquire default valuator device data>
+254   p.260  pqdsp3   <inquire display space size 3>
+255   p.260  pqdsp    <inquire display space size>
+221   p.241  pqdus    <inquire display update state>
+286   p.280  pqdstr   <inquire dynamics of structures>
+260   p.263  pqdswa   <inquire dynamics of workstation attributes>
+272   p.272  pqedf    <inquire edge facilities>
+231   p.246  pqedr    <inquire edge representation>
+208   p.235  pqedm    <inquire edit mode>
+306   p.294  pqeco    <inquire element content>
+302   p.289  pqep     <inquire element pointer>
+305   p.292  pqets    <inquire element type and size>
+314   p.301  pqerhm   <inquire error handling mode>
+281   p.277  pqgdp3   <inquire generalized drawing primitive 3>
+282   p.278  pqgdp    <inquire generalized drawing primitive>
+206   p.234  pqgsef   <inquire generalized structure element facilities>
+237   p.250  pqhlft   <inquire highlighting filter>
+256   p.261  pqhrif   <inquire hlhsr facilities>
+256   p.261  pqhrmf   <inquire hlhsr facilities>
+219   p.240  pqhrm    <inquire hlhsr mode>
+313   p.300  pqiqov   <inquire input queue overflow>
+270   p.270  pqif     <inquire interior facilities>
+229   p.245  pqir     <inquire interior representation>
+238   p.250  pqivft   <inquire invisibility filter>
+279   p.276  pqegd3   <inquire list of available generalized drawing primitives 3>
+280   p.276  pqegdp   <inquire list of available generalized drawing primitives>
+283   p.278  pqegse   <inquire list of available generalized structure elements>
+204   p.233  pqewk    <inquire list of available workstation types>
+235   p.248  pqeci    <inquire list of colour indices>
+230   p.246  pqeedi   <inquire list of edge indices>
+228   p.245  pqeii    <inquire list of interior indices>
+232   p.247  pqepai   <inquire list of pattern indices>
+222   p.241  pqepli   <inquire list of polyline indices>
+224   p.242  pqepmi   <inquire list of polymarker indices>
+226   p.244  pqetxi   <inquire list of text indices>
+217   p.239  pqevwi   <inquire list of view indices>
+241   p.252  pqlcs3   <inquire locator device state 3>
+242   p.252  pqlcs    <inquire locator device state>
+207   p.234  pqmclf   <inquire modelling clipping facilities>
+215   p.238  pqsim    <inquire more simultaneous events>
+287   p.281  pqli     <inquire number of available logical input devices>
+284   p.279  pqdp     <inquire number of display priorities supported>
+301   p.289  pqopst   <inquire open structure>
+308   p.295  pqpan    <inquire paths to ancestors>
+309   p.295  pqpde    <inquire paths to descendants>
+274   p.273  pqpaf    <inquire pattern facilities>
+233   p.247  pqpar    <inquire pattern representation>
+205   p.233  pqphf    <inquire phigs facilities>
+249   p.257  pqpks3   <inquire pick device state 3>
+250   p.258  pqpks    <inquire pick device state>
+262   p.264  pqplf    <inquire polyline facilities>
+223   p.242  pqplr    <inquire polyline representation>
+264   p.266  pqpmf    <inquire polymarker facilities>
+225   p.243  pqpmr    <inquire polymarker representation>
+220   p.240  pqpost   <inquire posted structures>
+278   p.275  pqpcr    <inquire predefined colour representation>
+273   p.272  pqpedr   <inquire predefined edge representation>
+271   p.271  pqpir    <inquire predefined interior representation>
+275   p.273  pqppar   <inquire predefined pattern representation>
+263   p.265  pqpplr   <inquire predefined polyline representation>
+265   p.267  pqppmr   <inquire predefined polymarker representation>
+267   p.268  pqptxr   <inquire predefined text representation>
+258   p.262  pqpvwr   <inquire predefined view representation>
+209   p.235  pqopwk   <inquire set of open workstations>
+300   p.288  pqwkpo   <inquire set of workstations to which posted>
+251   p.258  pqsts3   <inquire string device state 3>
+252   p.259  pqsts    <inquire string device state>
+243   p.253  pqsks3   <inquire stroke device state 3>
+244   p.254  pqsks    <inquire stroke device state>
+210   p.235  pqsid    <inquire structure identifiers>
+202   p.232  pqstrs   <inquire structure state value>
+307   p.294  pqstst   <inquire structure status>
+200   p.232  pqsys    <inquire system state value>
+269   p.269  pqtxx    <inquire text extent>
+266   p.267  pqtxf    <inquire text facilities>
+227   p.244  pqtxr    <inquire text representation>
+245   p.254  pqvls3   <inquire valuator device state 3>
+246   p.255  pqvls    <inquire valuator device state>
+257   p.261  pqvwf    <inquire view facilities>
+218   p.239  pqvwr    <inquire view representation>
+253   p.259  pqwkca   <inquire workstation category>
+259   p.262  pqwkcl   <inquire workstation classification>
+216   p.238  pqwkc    <inquire workstation connection and type>
+285   p.280  pqwksl   <inquire workstation state table lengths>
+201   p.232  pqwkst   <inquire workstation state value>
+239   p.251  pqwkt3   <inquire workstation transformation 3>
+240   p.251  pqwkt    <inquire workstation transformation>
+199   p.231  piitm    <interpret item>
+
+114   p.179  plb      <label>
+
+008   p.120  pmsg     <message>
+
+120   p.181  posep    <offset element pointer>
+135   p.189  poparf   <open archive file>
+001   p.116  popph    <open phigs>
+111   p.178  popst    <open structure>
+003   p.116  popwk    <open workstation>
+
+320   p.---  pprec    <pack data record>
+009   p.121  ppl3     <polyline 3>
+010   p.121  ppl      <polyline>
+011   p.121  ppm3     <polymarker 3>
+012   p.122  ppm      <polymarker>
+132   p.187  ppost    <post structure>
+
+198   p.230  prditm   <read item from metafile>
+005   p.118  prst     <redraw all structures>
+061   p.148  pres     <remove names from set>
+175   p.220  prqch    <request choice>
+170   p.218  prqlc3   <request locator 3>
+171   p.218  prqlc    <request locator>
+176   p.221  prqpk    <request pick>
+177   p.221  prqst    <request string>
+172   p.219  prqsk3   <request stroke 3>
+173   p.219  prqsk    <request stroke>
+174   p.220  prqvl    <request valuator>
+082   p.163  prmcv    <restore modelling clipping volume>
+144   p.192  prast    <retrieve all structures>
+145   p.192  prepan   <retrieve paths to ancestors>
+146   p.193  prepde   <retrieve paths to descendants>
+141   p.191  prsid    <retrieve structure identifiers>
+143   p.192  presn    <retrieve structure networks>
+142   p.191  prest    <retrieve structures>
+095   p.170  prox     <rotate x>
+096   p.170  proy     <rotate y>
+097   p.171  proz     <rotate z>
+098   p.171  pro      <rotate>
+
+183   p.224  psmch    <sample choice>
+178   p.222  psmlc3   <sample locator 3>
+179   p.222  psmlc    <sample locator>
+184   p.224  psmpk    <sample pick>
+185   p.225  psmst    <sample string>
+180   p.223  psmsk3   <sample stroke 3>
+181   p.223  psmsk    <sample stroke>
+182   p.224  psmvl    <sample valuator>
+093   p.169  psc3     <scale 3>
+094   p.169  psc      <scale>
+049   p.142  psans    <set annotation style>
+048   p.142  psatal   <set annotation text alignment>
+045   p.140  psatch   <set annotation text character height>
+046   p.141  psatcu   <set annotation text character up vector>
+047   p.141  psatp    <set annotation text path>
+038   p.137  pschxp   <set character expansion factor>
+041   p.138  pschh    <set character height>
+039   p.138  pschsp   <set character spacing>
+042   p.139  pschup   <set character up vector>
+167   p.216  pschm    <set choice mode>
+072   p.158  pscmd    <set colour model>
+069   p.156  pscr     <set colour representation>
+140   p.191  pscnrs   <set conflict resolution>
+007   p.119  psdus    <set display update state>
+056   p.146  psedci   <set edge colour index>
+053   p.144  psedfg   <set edge flag>
+029   p.132  psedi    <set edge index>
+067   p.154  psedr    <set edge representation>
+054   p.145  psedt    <set edgetype>
+055   p.146  psewsc   <set edgewidth scale factor>
+117   p.180  psedm    <set edit mode>
+121   p.181  pseplb   <set element pointer at label>
+119   p.181  psep     <set element pointer>
+318   p.303  pserhm   <set error handling mode>
+077   p.161  psgmt3   <set global transformation 3>
+078   p.161  psgmt    <set global transformation>
+070   p.157  pshlft   <set highlighting filter>
+073   p.159  pshrid   <set hlhsr identifier>
+074   p.159  pshrm    <set hlhsr mode>
+062   p.149  psiasf   <set individual asf>
+052   p.144  psici    <set interior colour index>
+028   p.132  psii     <set interior index>
+066   p.153  psir     <set interior representation>
+051   p.143  psisi    <set interior style index>
+050   p.143  psis     <set interior style>
+071   p.158  psivft   <set invisibility filter>
+030   p.133  psln     <set linetype>
+031   p.133  pslwsc   <set linewidth scale factor>
+075   p.160  pslmt3   <set local transformation 3>
+076   p.160  pslmt    <set local transformation>
+164   p.215  pslcm    <set locator mode>
+034   p.135  psmksc   <set marker size scale factor>
+033   p.134  psmk     <set marker type>
+081   p.163  psmcli   <set modelling clipping indicator>
+079   p.161  psmcv3   <set modelling clipping volume 3>
+080   p.162  psmcv    <set modelling clipping volume>
+058   p.147  psprpv   <set pattern reference point and vectors>
+059   p.148  psparf   <set pattern reference point>
+068   p.156  pspar    <set pattern representation>
+057   p.147  pspa     <set pattern size>
+151   p.196  pspkft   <set pick filter>
+150   p.196  pspkid   <set pick identifier>
+168   p.217  pspkm    <set pick mode>
+032   p.134  psplci   <set polyline colour index>
+025   p.131  pspli    <set polyline index>
+063   p.150  psplr    <set polyline representation>
+035   p.135  pspmci   <set polymarker colour index>
+026   p.131  pspmi    <set polymarker index>
+064   p.151  pspmr    <set polymarker representation>
+169   p.217  psstm    <set string mode>
+165   p.215  psskm    <set stroke mode>
+044   p.140  pstxal   <set text alignment>
+040   p.138  pstxci   <set text colour index>
+036   p.136  pstxfn   <set text font>
+027   p.131  pstxi    <set text index>
+043   p.140  pstxp    <set text path>
+037   p.137  pstxpr   <set text precision>
+065   p.152  pstxr    <set text representation>
+166   p.216  psvlm    <set valuator mode>
+083   p.164  psvwi    <set view index>
+084   p.164  psvwr3   <set view representation 3>
+085   p.165  psvwr    <set view representation>
+086   p.166  psvtip   <set view transformation input priority>
+089   p.167  pswkv3   <set workstation viewport 3>
+090   p.168  pswkv    <set workstation viewport>
+087   p.166  pswkw3   <set workstation window 3>
+088   p.167  pswkw    <set workstation window>
+
+013   p.122  ptx3     <text 3>
+014   p.123  ptx      <text>
+101   p.172  ptp3     <transform point 3>
+102   p.173  ptp      <transform point>
+091   p.168  ptr3     <translate 3>
+092   p.169  ptr      <translate>
+
+321   p.---  purec    <unpack data record>
+134   p.187  pupast   <unpost all structures>
+133   p.187  pupost   <unpost structure>
+006   p.118  puwk     <update workstation>
+
+196   p.230  pwitm    <write item to metafile>
+
+
+Function numbering, alphabetical order by bound name
+
+060   p.148  pads     <add names to set>
+115   p.179  pap      <application data>
+139   p.190  parast   <archive all structures>
+138   p.190  parsn    <archive structure networks>
+137   p.189  parst    <archive structures>
+016   p.124  patr     <annotation text relative>
+015   p.123  patr3    <annotation text relative 3>
+104   p.173  pbltm    <build transformation matrix>
+103   p.173  pbltm3   <build transformation matrix 3>
+022   p.127  pca      <cell array>
+021   p.127  pca3     <cell array 3>
+118   p.180  pcelst   <copy all elements from structure>
+136   p.189  pclarf   <close archive file>
+002   p.116  pclph    <close phigs>
+112   p.178  pclst    <close structure>
+004   p.117  pclwk    <close workstation>
+100   p.172  pcom     <compose matrix>
+099   p.171  pcom3    <compose matrix 3>
+106   p.174  pcotm    <compose transformation matrix>
+105   p.174  pcotm3   <compose transformation matrix 3>
+129   p.185  pcstid   <change structure identifier>
+131   p.186  pcstir   <change structure identifier and references>
+130   p.185  pcstrf   <change structure references>
+128   p.184  pdas     <delete all structures>
+149   p.194  pdasar   <delete all structures from archive>
+122   p.182  pdel     <delete element>
+124   p.183  pdellb   <delete elements between labels>
+123   p.182  pdelra   <delete element range>
+127   p.184  pdsn     <delete structure network>
+148   p.194  pdsnar   <delete structure networks from archive>
+126   p.184  pdst     <delete structure>
+147   p.194  pdstar   <delete structures from archive>
+315   p.302  peclph   <emergency close phigs>
+310   p.296  pels     <element search>
+125   p.183  pemst    <empty structure>
+316   p.302  perhnd   <error handling>
+317   p.302  perlog   <error logging>
+319   p.304  pesc     <escape>
+110   p.177  pevmm    <evaluate view mapping matrix>
+109   p.176  pevmm3   <evaluate view mapping matrix 3>
+108   p.175  pevom    <evaluate view orientation matrix>
+107   p.175  pevom3   <evaluate view orientation matrix 3>
+113   p.178  pexst    <execute structure>
+018   p.125  pfa      <fill area>
+017   p.125  pfa3     <fill area 3>
+020   p.126  pfas     <fill area set>
+019   p.126  pfas3    <fill area set 3>
+187   p.226  pflush   <flush device events>
+024   p.129  pgdp     <generalized drawing primitive>
+023   p.128  pgdp3    <generalized drawing primitive 3>
+116   p.179  pgse     <generalized structure element>
+193   p.228  pgtch    <get choice>
+197   p.230  pgtitm   <get item type from metafile>
+189   p.227  pgtlc    <get locator>
+188   p.226  pgtlc3   <get locator 3>
+194   p.229  pgtpk    <get pick>
+191   p.227  pgtsk    <get stroke>
+190   p.227  pgtsk3   <get stroke 3>
+195   p.229  pgtst    <get string>
+192   p.228  pgtvl    <get valuator>
+199   p.231  piitm    <interpret item>
+159   p.209  pinch    <initialize choice>
+158   p.207  pinch3   <initialize choice 3>
+153   p.199  pinlc    <initialize locator>
+152   p.197  pinlc3   <initialize locator 3>
+161   p.212  pinpk    <initialize pick>
+160   p.211  pinpk3   <initialize pick 3>
+155   p.203  pinsk    <initialize stroke>
+154   p.201  pinsk3   <initialize stroke 3>
+163   p.214  pinst    <initialize string>
+162   p.213  pinst3   <initialize string 3>
+157   p.206  pinvl    <initialize valuator>
+156   p.205  pinvl3   <initialize valuator 3>
+312   p.299  piss     <incremental spatial search>
+311   p.298  piss3    <incremental spatial search 3>
+114   p.179  plb      <label>
+008   p.120  pmsg     <message>
+135   p.189  poparf   <open archive file>
+001   p.116  popph    <open phigs>
+111   p.178  popst    <open structure>
+003   p.116  popwk    <open workstation>
+120   p.181  posep    <offset element pointer>
+010   p.121  ppl      <polyline>
+009   p.121  ppl3     <polyline 3>
+012   p.122  ppm      <polymarker>
+011   p.121  ppm3     <polymarker 3>
+132   p.187  ppost    <post structure>
+320   p.---  pprec    <pack data record>
+268   p.269  pqanf    <inquire annotation facilities>
+211   p.236  pqarf    <inquire archive files>
+203   p.233  pqars    <inquire archive state value>
+304   p.291  pqceco   <inquire current element content>
+303   p.290  pqcets   <inquire current element type and size>
+277   p.275  pqcf     <inquire colour facilities>
+248   p.256  pqchs    <inquire choice device state>
+247   p.256  pqchs3   <inquire choice device state 3>
+234   p.248  pqcmd    <inquire colour model>
+276   p.274  pqcmdf   <inquire colour model facilities>
+212   p.236  pqcnrs   <inquire conflict resolution>
+236   p.249  pqcr     <inquire colour representation>
+213   p.237  pqcst    <inquire all conflicting structures>
+214   p.237  pqcstn   <inquire conflicting structures in network>
+295   p.286  pqdch    <inquire default choice device data>
+294   p.285  pqdch3   <inquire default choice device data 3>
+261   p.264  pqddus   <inquire default display update state>
+289   p.282  pqdlc    <inquire default locator device data>
+288   p.282  pqdlc3   <inquire default locator device data 3>
+284   p.279  pqdp     <inquire number of display priorities supported>
+297   p.287  pqdpk    <inquire default pick device data>
+296   p.286  pqdpk3   <inquire default pick device data 3>
+291   p.283  pqdsk    <inquire default stroke device data>
+290   p.283  pqdsk3   <inquire default stroke device data 3>
+255   p.260  pqdsp    <inquire display space size>
+254   p.260  pqdsp3   <inquire display space size 3>
+299   p.288  pqdst    <inquire default string device data>
+298   p.287  pqdst3   <inquire default string device data 3>
+286   p.280  pqdstr   <inquire dynamics of structures>
+260   p.263  pqdswa   <inquire dynamics of workstation attributes>
+221   p.241  pqdus    <inquire display update state>
+293   p.284  pqdvl    <inquire default valuator device data>
+292   p.284  pqdvl3   <inquire default valuator device data 3>
+235   p.248  pqeci    <inquire list of colour indices>
+306   p.294  pqeco    <inquire element content>
+272   p.272  pqedf    <inquire edge facilities>
+208   p.235  pqedm    <inquire edit mode>
+231   p.246  pqedr    <inquire edge representation>
+230   p.246  pqeedi   <inquire list of edge indices>
+279   p.276  pqegd3   <inquire list of available generalized drawing primitives 3>
+280   p.276  pqegdp   <inquire list of available generalized drawing primitives>
+283   p.278  pqegse   <inquire list of available generalized structure elements>
+228   p.245  pqeii    <inquire list of interior indices>
+302   p.289  pqep     <inquire element pointer>
+232   p.247  pqepai   <inquire list of pattern indices>
+222   p.241  pqepli   <inquire list of polyline indices>
+224   p.242  pqepmi   <inquire list of polymarker indices>
+314   p.301  pqerhm   <inquire error handling mode>
+305   p.292  pqets    <inquire element type and size>
+226   p.244  pqetxi   <inquire list of text indices>
+217   p.239  pqevwi   <inquire list of view indices>
+204   p.233  pqewk    <inquire list of available workstation types>
+282   p.278  pqgdp    <inquire generalized drawing primitive>
+281   p.277  pqgdp3   <inquire generalized drawing primitive 3>
+206   p.234  pqgsef   <inquire generalized structure element facilities>
+237   p.250  pqhlft   <inquire highlighting filter>
+256   p.261  pqhrif   <inquire hlhsr facilities>
+219   p.240  pqhrm    <inquire hlhsr mode>
+256   p.261  pqhrmf   <inquire hlhsr facilities>
+270   p.270  pqif     <inquire interior facilities>
+313   p.300  pqiqov   <inquire input queue overflow>
+229   p.245  pqir     <inquire interior representation>
+238   p.250  pqivft   <inquire invisibility filter>
+242   p.252  pqlcs    <inquire locator device state>
+241   p.252  pqlcs3   <inquire locator device state 3>
+287   p.281  pqli     <inquire number of available logical input devices>
+207   p.234  pqmclf   <inquire modelling clipping facilities>
+301   p.289  pqopst   <inquire open structure>
+209   p.235  pqopwk   <inquire set of open workstations>
+274   p.273  pqpaf    <inquire pattern facilities>
+308   p.295  pqpan    <inquire paths to ancestors>
+233   p.247  pqpar    <inquire pattern representation>
+278   p.275  pqpcr    <inquire predefined colour representation>
+309   p.295  pqpde    <inquire paths to descendants>
+273   p.272  pqpedr   <inquire predefined edge representation>
+205   p.233  pqphf    <inquire phigs facilities>
+271   p.271  pqpir    <inquire predefined interior representation>
+250   p.258  pqpks    <inquire pick device state>
+249   p.257  pqpks3   <inquire pick device state 3>
+262   p.264  pqplf    <inquire polyline facilities>
+223   p.242  pqplr    <inquire polyline representation>
+264   p.266  pqpmf    <inquire polymarker facilities>
+225   p.243  pqpmr    <inquire polymarker representation>
+220   p.240  pqpost   <inquire posted structures>
+275   p.273  pqppar   <inquire predefined pattern representation>
+263   p.265  pqpplr   <inquire predefined polyline representation>
+265   p.267  pqppmr   <inquire predefined polymarker representation>
+267   p.268  pqptxr   <inquire predefined text representation>
+258   p.262  pqpvwr   <inquire predefined view representation>
+210   p.235  pqsid    <inquire structure identifiers>
+215   p.238  pqsim    <inquire more simultaneous events>
+244   p.254  pqsks    <inquire stroke device state>
+243   p.253  pqsks3   <inquire stroke device state 3>
+202   p.232  pqstrs   <inquire structure state value>
+252   p.259  pqsts    <inquire string device state>
+251   p.258  pqsts3   <inquire string device state 3>
+307   p.294  pqstst   <inquire structure status>
+200   p.232  pqsys    <inquire system state value>
+266   p.267  pqtxf    <inquire text facilities>
+227   p.244  pqtxr    <inquire text representation>
+269   p.269  pqtxx    <inquire text extent>
+246   p.255  pqvls    <inquire valuator device state>
+245   p.254  pqvls3   <inquire valuator device state 3>
+257   p.261  pqvwf    <inquire view facilities>
+218   p.239  pqvwr    <inquire view representation>
+216   p.238  pqwkc    <inquire workstation connection and type>
+253   p.259  pqwkca   <inquire workstation category>
+259   p.262  pqwkcl   <inquire workstation classification>
+300   p.288  pqwkpo   <inquire set of workstations to which posted>
+285   p.280  pqwksl   <inquire workstation state table lengths>
+201   p.232  pqwkst   <inquire workstation state value>
+240   p.251  pqwkt    <inquire workstation transformation>
+239   p.251  pqwkt3   <inquire workstation transformation 3>
+144   p.192  prast    <retrieve all structures>
+198   p.230  prditm   <read item from metafile>
+145   p.192  prepan   <retrieve paths to ancestors>
+146   p.193  prepde   <retrieve paths to descendants>
+061   p.148  pres     <remove names from set>
+143   p.192  presn    <retrieve structure networks>
+142   p.191  prest    <retrieve structures>
+082   p.163  prmcv    <restore modelling clipping volume>
+098   p.171  pro      <rotate>
+095   p.170  prox     <rotate x>
+096   p.170  proy     <rotate y>
+097   p.171  proz     <rotate z>
+175   p.220  prqch    <request choice>
+171   p.218  prqlc    <request locator>
+170   p.218  prqlc3   <request locator 3>
+176   p.221  prqpk    <request pick>
+173   p.219  prqsk    <request stroke>
+172   p.219  prqsk3   <request stroke 3>
+177   p.221  prqst    <request string>
+174   p.220  prqvl    <request valuator>
+141   p.191  prsid    <retrieve structure identifiers>
+005   p.118  prst     <redraw all structures>
+049   p.142  psans    <set annotation style>
+048   p.142  psatal   <set annotation text alignment>
+045   p.140  psatch   <set annotation text character height>
+046   p.141  psatcu   <set annotation text character up vector>
+047   p.141  psatp    <set annotation text path>
+094   p.169  psc      <scale>
+093   p.169  psc3     <scale 3>
+041   p.138  pschh    <set character height>
+167   p.216  pschm    <set choice mode>
+039   p.138  pschsp   <set character spacing>
+042   p.139  pschup   <set character up vector>
+038   p.137  pschxp   <set character expansion factor>
+072   p.158  pscmd    <set colour model>
+140   p.191  pscnrs   <set conflict resolution>
+069   p.156  pscr     <set colour representation>
+007   p.119  psdus    <set display update state>
+056   p.146  psedci   <set edge colour index>
+053   p.144  psedfg   <set edge flag>
+029   p.132  psedi    <set edge index>
+117   p.180  psedm    <set edit mode>
+067   p.154  psedr    <set edge representation>
+054   p.145  psedt    <set edgetype>
+119   p.181  psep     <set element pointer>
+121   p.181  pseplb   <set element pointer at label>
+318   p.303  pserhm   <set error handling mode>
+055   p.146  psewsc   <set edgewidth scale factor>
+078   p.161  psgmt    <set global transformation>
+077   p.161  psgmt3   <set global transformation 3>
+070   p.157  pshlft   <set highlighting filter>
+073   p.159  pshrid   <set hlhsr identifier>
+074   p.159  pshrm    <set hlhsr mode>
+062   p.149  psiasf   <set individual asf>
+052   p.144  psici    <set interior colour index>
+028   p.132  psii     <set interior index>
+066   p.153  psir     <set interior representation>
+050   p.143  psis     <set interior style>
+051   p.143  psisi    <set interior style index>
+071   p.158  psivft   <set invisibility filter>
+164   p.215  pslcm    <set locator mode>
+076   p.160  pslmt    <set local transformation>
+075   p.160  pslmt3   <set local transformation 3>
+030   p.133  psln     <set linetype>
+031   p.133  pslwsc   <set linewidth scale factor>
+183   p.224  psmch    <sample choice>
+081   p.163  psmcli   <set modelling clipping indicator>
+080   p.162  psmcv    <set modelling clipping volume>
+079   p.161  psmcv3   <set modelling clipping volume 3>
+033   p.134  psmk     <set marker type>
+034   p.135  psmksc   <set marker size scale factor>
+179   p.222  psmlc    <sample locator>
+178   p.222  psmlc3   <sample locator 3>
+184   p.224  psmpk    <sample pick>
+181   p.223  psmsk    <sample stroke>
+180   p.223  psmsk3   <sample stroke 3>
+185   p.225  psmst    <sample string>
+182   p.224  psmvl    <sample valuator>
+057   p.147  pspa     <set pattern size>
+068   p.156  pspar    <set pattern representation>
+059   p.148  psparf   <set pattern reference point>
+151   p.196  pspkft   <set pick filter>
+150   p.196  pspkid   <set pick identifier>
+168   p.217  pspkm    <set pick mode>
+032   p.134  psplci   <set polyline colour index>
+025   p.131  pspli    <set polyline index>
+063   p.150  psplr    <set polyline representation>
+035   p.135  pspmci   <set polymarker colour index>
+026   p.131  pspmi    <set polymarker index>
+064   p.151  pspmr    <set polymarker representation>
+058   p.147  psprpv   <set pattern reference point and vectors>
+165   p.215  psskm    <set stroke mode>
+169   p.217  psstm    <set string mode>
+044   p.140  pstxal   <set text alignment>
+040   p.138  pstxci   <set text colour index>
+036   p.136  pstxfn   <set text font>
+027   p.131  pstxi    <set text index>
+043   p.140  pstxp    <set text path>
+037   p.137  pstxpr   <set text precision>
+065   p.152  pstxr    <set text representation>
+166   p.216  psvlm    <set valuator mode>
+086   p.166  psvtip   <set view transformation input priority>
+083   p.164  psvwi    <set view index>
+085   p.165  psvwr    <set view representation>
+084   p.164  psvwr3   <set view representation 3>
+090   p.168  pswkv    <set workstation viewport>
+089   p.167  pswkv3   <set workstation viewport 3>
+088   p.167  pswkw    <set workstation window>
+087   p.166  pswkw3   <set workstation window 3>
+102   p.173  ptp      <transform point>
+101   p.172  ptp3     <transform point 3>
+092   p.169  ptr      <translate>
+091   p.168  ptr3     <translate 3>
+014   p.123  ptx      <text>
+013   p.122  ptx3     <text 3>
+134   p.187  pupast   <unpost all structures>
+133   p.187  pupost   <unpost structure>
+321   p.---  purec    <unpack data record>
+006   p.118  puwk     <update workstation>
+186   p.225  pwait    <await event>
+196   p.230  pwitm    <write item to metafile>
+
+
+Canonical hierarchical numbering of Data Structures
+
+1  ...  operating_state
+1.1  ...  system_state
+1.2  ...  workstation_state
+1.3  ...  structure_state
+1.4  ...  archive_state
+
+2  ...  phigs_description_table
+2.1  ...  number_of_available_workstation_types
+2.2  ...  list_of_available_workstation_types
+2.2.1  ...  workstation_type
+2.3  ...  maximum_number_of_simultaneously_open_workstations
+2.4  ...  maximum_number_of_simultaneously_open_archive_files
+2.5  ...  number_of_available_names_for_name_sets
+2.6  ...  number_of_available_character_sets
+2.7  ...  list_of_available_character_sets
+2.7.1  ...  character_set
+2.8  ...  maximum_length_of_normal_filter_list_for_iss
+2.9  ...  maximum_length_of_inverted_filter_list_for_iss
+2.10 ...  default_polyline_attributes
+2.10.1  ...  default_polyline_index
+2.10.2  ...  default_linetype
+2.10.3  ...  default_linewidth_scale_factor
+2.10.4  ...  default_polyline_colour_index
+2.10.5  ...  default_linetype_asf
+2.10.6  ...  default_linewidth_scale_factor_asf
+2.10.7  ...  default_polyline_colour_index_asf
+2.11 ...  default_polymarker_attributes
+2.11.1  ...  default_polymarker_index
+2.11.2  ...  default_marker_type
+2.11.3  ...  default_marker_size_scale_factor
+2.11.4  ...  default_polymarker_colour_index
+2.11.5  ...  default_marker_type_asf
+2.11.6  ...  default_marker_size_scale_factor_asf
+2.11.7  ...  default_polymarker_colour_index_asf
+2.12 ...  default_text_attributes
+2.12.1  ...  default_text_index
+2.12.2  ...  default_text_font
+2.12.3  ...  default_text_precision
+2.12.4  ...  default_character_expansion_factor
+2.12.5  ...  default_character_spacing
+2.12.6  ...  default_text_colour_index
+2.12.7  ...  default_text_font_asf
+2.12.8  ...  default_text_precision_asf
+2.12.9  ...  default_character_expansion_factor_asf
+2.12.10 ...  default_character_spacing_asf
+2.12.11 ...  default_text_colour_index_asf
+2.12.12 ...  default_character_height
+2.12.13 ...  default_character_up_vector
+2.12.14 ...  default_character_width
+2.12.15 ...  default_character_base_vector
+2.12.16 ...  default_text_path
+2.12.17 ...  default_text_alignment_horizontal
+2.12.18 ...  default_text_alignment_vertical
+
+2.13  ...  default_annotation_text_attributes
+2.13.1  ...  default_annotation_text_character_height
+2.13.2  ...  default_annotation_text_character_up_vector
+2.13.3  ...  default_annotation_text_character_width
+2.13.4  ...  default_annotation_text_character_base_vector
+2.13.5  ...  default_annotation_text_path
+2.13.6  ...  default_annotation_text_alignment_horizontal
+2.13.7  ...  default_annotation_text_alignment_vertical
+2.13.8  ...  default_annotation_style
+2.14  ...  default_interior_attributes
+2.14.1  ...  default_interior_index
+2.14.2  ...  default_interior_style
+2.14.3  ...  default_interior_style_index
+2.14.4  ...  default_interior_colour_index
+2.14.5  ...  default_interior_style_asf
+2.14.6  ...  default_interior_style_index_asf
+2.14.7  ...  default_interior_colour_index_asf
+2.15  ...  default_edge_attributes
+2.15.1  ...  default_edge_index
+2.15.2  ...  default_edge_flag
+2.15.3  ...  default_edgetype
+2.15.4  ...  default_edgewidth_scale_factor
+2.15.5  ...  default_edge_colour_index
+2.15.6  ...  default_edge_flag_asf
+2.15.7  ...  default_edgetype_asf
+2.15.8  ...  default_edgewidth_scale_factor_asf
+2.15.9  ...  default_edge_colour_index_asf
+2.16  ...  default_pattern_attributes
+2.16.1  ...  default_pattern_size
+2.16.2  ...  default_pattern_reference_point
+2.16.3  ...  default_pattern_reference_vectors
+2.17  ...  number_of_available_generalized_structure_elements
+2.18  ...  list_of_available_generalized_structure_elements
+2.18.1  ...  gse_identifier
+2.18.2  ...  workstation_dependency_indicator
+2.19  ...  default_pick_identifier
+2.20  ...  default_view_identifier
+2.21  ...  default_hlhsr_identifier
+2.22  ...  default_name_set
+2.23  ...  default_modelling_attributes
+2.23.1  ...  default_global_modelling_transformation
+2.23.2  ...  default_local_modelling_transformation
+2.23.3  ...  default_modelling_clipping_volume
+2.23.4  ...  default_modelling_clipping_indicator
+2.23.5  ...  maximum_number_of_distinct_planes_in_modelling_clipping_volume
+2.23.6  ...  number_of_available_modelling_clipping_operators
+2.23.7  ...  list_of_available_modelling_clipping_operators
+2.23.7.1  ...  modelling_clipping_operator
+
+3  ...  phigs_traversal_state_list
+3.1  ...  current_polyline_attributes
+3.1.1  ...  current_polyline_index
+3.1.2  ...  current_linetype
+3.1.3  ...  current_linewidth_scale_factor
+3.1.4  ...  current_polyline_colour_index
+3.1.5  ...  current_linetype_asf
+3.1.6  ...  current_linewidth_scale_factor_asf
+3.1.7  ...  current_polyline_colour_index_asf
+3.2  ...  current_polymarker_attributes
+3.2.1  ...  current_polymarker_index
+3.2.2  ...  current_marker_type
+3.2.3  ...  current_marker_size_scale_factor
+3.2.4  ...  current_polymarker_colour_index
+3.2.5  ...  current_marker_type_asf
+3.2.6  ...  current_marker_size_scale_factor_asf
+3.2.7  ...  current_polymarker_colour_index_asf
+3.3  ...  current_text_attributes
+3.3.1  ...  current_text_index
+3.3.2  ...  current_text_font
+3.3.3  ...  current_text_precision
+3.3.4  ...  current_character_expansion_factor
+3.3.5  ...  current_character_spacing
+3.3.6  ...  current_text_colour_index
+3.3.7  ...  current_text_font_asf
+3.3.8  ...  current_text_precision_asf
+3.3.9  ...  current_character_expansion_factor_asf
+3.3.10 ...  current_character_spacing_asf
+3.3.11 ...  current_text_colour_index_asf
+3.3.12 ...  current_character_height
+3.3.13 ...  current_character_up_vector
+3.3.14 ...  current_character_width
+3.3.15 ...  current_character_base_vector
+3.3.16 ...  current_text_path
+3.3.17 ...  current_text_alignment_horizontal
+3.3.18 ...  current_text_alignment_vertical
+3.4  ...  current_annotation_text_attributes
+3.4.1  ...  current_annotation_text_character_height
+3.4.2  ...  current_annotation_text_character_up_vector
+3.4.3  ...  current_annotation_text_character_width
+3.4.4  ...  current_annotation_text_character_base_vector
+3.4.5  ...  current_annotation_text_path
+3.4.6  ...  current_annotation_text_alignment_horizontal
+3.4.7  ...  current_annotation_text_alignment_vertical
+3.4.8  ...  current_annotation_style
+3.5  ...  current_interior_attributes
+3.5.1  ...  current_interior_index
+3.5.2  ...  current_interior_style
+3.5.3  ...  current_interior_style_index
+3.5.4  ...  current_interior_colour_index
+3.5.5  ...  current_interior_style_asf
+3.5.6  ...  current_interior_style_index_asf
+3.5.7  ...  current_interior_colour_index_asf
+
+3.6  ...  current_edge_attributes
+3.6.1  ...  current_edge_index
+3.6.2  ...  current_edge_flag
+3.6.3  ...  current_edgetype
+3.6.4  ...  current_edgewidth_scale_factor
+3.6.5  ...  current_edge_colour_index
+3.6.6  ...  current_edge_flag_asf
+3.6.7  ...  current_edgetype_asf
+3.6.8  ...  current_edgewidth_scale_factor_asf
+3.6.9  ...  current_edge_colour_index_asf
+3.7  ...  current_pattern_attributes
+3.7.1  ...  current_pattern_size
+3.7.2  ...  current_pattern_reference_point
+3.7.3  ...  current_pattern_reference_vectors
+3.8  ...  current_pick_identifier
+3.9  ...  current_view_identifier
+3.10 ...  current_hlhsr_identifier
+3.11 ...  current_name_set
+3.12 ...  current_modelling_attributes
+3.12.1  ...  current_global_modelling_transformation
+3.12.2  ...  current_local_modelling_transformation
+3.12.3  ...  current_modelling_clipping_volume
+3.12.4  ...  current_modelling_clipping_indicator
+
+4  ...  phigs_state_list
+4.1  ...  set_of_open_workstations
+4.1.1  ...  workstation_identifier
+4.2  ...  name_of_open_structure
+4.3  ...  element_pointer
+4.4  ...  edit_mode
+4.5  ...  list_of_structure_identifiers
+4.5.1  ...  structure_identifier
+4.6  ...  set_of_open_archive_files
+4.6.1  ...  archive_file
+4.6.2  ...  archive_file_identifier
+4.7  ...  archival_conflict_resolution_flag
+4.8  ...  retrieval_conflict_resolution_flag
+4.9  ...  input_queue
+4.9.1  ...  workstation_identifier
+4.9.2  ...  logical_input_device_number
+4.9.3  ...  last_of_group_of_simultaneous_events
+4.9.4  ...  input_class
+4.9.5  ...  locator_entry
+4.9.5.1  ...  view_index
+4.9.5.2  ...  locator_position
+4.9.6  ...  stroke_entry
+4.9.6.1  ...  view_index
+4.9.6.2  ...  coordinates_of_points_in_stroke
+4.9.7  ...  valuator_entry
+4.9.7.1  ...  value
+4.9.8  ...  choice_entry
+4.9.8.1  ...  status
+4.9.8.2  ...  choice_number
+4.9.9  ...  pick_entry
+4.9.9.1  ...  status
+4.9.9.2  ...  pick_path
+4.9.10 ...  string_entry
+4.9.10.1 ...  character_string
+4.10 ...  current_event_report
+4.10.1  ...  input_class
+4.10.2  ...  locator_entry
+4.10.2.1  ...  view_index
+4.10.2.2  ...  locator_position
+4.10.3  ...  stroke_entry
+4.10.3.1  ...  view_index
+4.10.3.2  ...  coordinates_of_points_in_stroke
+4.10.4  ...  valuator_entry
+4.10.4.1  ...  value
+4.10.5  ...  choice_entry
+4.10.5.1  ...  status
+4.10.5.2  ...  choice_number
+4.10.6  ...  pick_entry
+4.10.6.1  ...  status
+4.10.6.2  ...  pick_path
+4.10.7  ...  string_entry
+4.10.7.1  ...  character_string
+4.11  ...  more_simultaneous_events
+
+5  ...  workstation_state_list
+5.1  ...  workstation_identifier
+5.2  ...  connection_identifier
+5.3  ...  workstation_type
+5.4  ...  view_table
+5.4.1  ...  number_of_view_table_entries
+5.4.2  ...  view_table_ordered_by_input_priority
+5.4.2.1  ...  view_index
+5.4.2.2  ...  view_transformation_update_state
+5.4.2.3  ...  current_view
+5.4.2.3.1  ...  current_view_orientation_matrix
+5.4.2.3.2  ...  current_view_mapping_matrix
+5.4.2.3.3  ...  current_view_clipping_limits
+5.4.2.3.4  ...  current_x_y_clipping_indicator
+5.4.2.3.5  ...  current_back_clipping_indicator
+5.4.2.3.6  ...  current_front_clipping_indicator        
+5.4.2.4  ...  requested_view
+5.4.2.4.1  ...  requested_view_orientation_matrix
+5.4.2.4.2  ...  requested_view_mapping_matrix
+5.4.2.4.3  ...  requested_view_clipping_limits
+5.4.2.4.4  ...  requested_x_y_clipping_indicator
+5.4.2.4.5  ...  requested_back_clipping_indicator
+5.4.2.4.6  ...  requested_front_clipping_indicator
+5.5  ...  hlhsr_entry
+5.5.1  ...  hlhsr_update_state
+5.5.2  ...  current_hlhsr_mode
+5.5.3  ...  requested_hlhsr_mode
+5.6  ...  workstation_transformation_entry
+5.6.1  ...  workstation_transformation_update_state
+5.6.2  ...  requested_workstation_window
+5.6.3  ...  current_workstation_window
+5.6.4  ...  requested_workstation_viewport
+5.6.5  ...  current_workstation_viewport
+5.7  ...  list_of_posted_structures
+5.7.1  ...  structure_identifier
+5.7.2  ...  display_priority
+5.8  ...  update_status
+5.8.1  ...  deferral_mode
+5.8.2  ...  modification_mode
+5.8.3  ...  display_surface_empty
+5.8.4  ...  state_of_visual_representation
+5.9  ...  polyline_entry
+5.9.1  ...  number_of_polyline_bundle_table_entries
+5.9.2  ...  polyline_bundle_table
+5.9.2.1  ...  polyline_index
+5.9.2.2  ...  linetype
+5.9.2.3  ...  linewidth_scale_factor
+5.9.2.4  ...  polyline_colour_index
+5.10 ...  polymarker_entry
+5.10.1  ...  number_of_polymarker_bundle_table_entries
+5.10.2  ...  polymarker_bundle_table
+5.10.2.1  ...  polymarker_index
+5.10.2.2  ...  marker_type
+5.10.2.3  ...  marker_size_scale_factor
+5.10.2.4  ...  polymarker_colour_index
+
+5.11  ...  text_entry
+5.11.1  ...  number_of_text_bundle_table_entries
+5.11.2  ...  text_bundle_table
+5.11.2.1  ...  text_index
+5.11.2.2  ...  text_font
+5.11.2.3  ...  text_precision
+5.11.2.4  ...  character_expansion_factor
+5.11.2.5  ...  character_spacing
+5.11.2.6  ...  text_colour_index
+5.12  ...  interior_entry
+5.12.1  ...  number_of_interior_bundle_table_entries
+5.12.2  ...  interior_bundle_table
+5.12.2.1  ...  interior_index
+5.12.2.2  ...  interior_style
+5.12.2.3  ...  interior_style_index
+5.12.2.4  ...  interior_colour_index
+5.13  ...  edge_entry
+5.13.1  ...  number_of_edge_bundle_table_entries
+5.13.2  ...  edge_bundle_table
+5.13.2.1  ...  edge_index
+5.13.2.2  ...  edge_flag
+5.13.2.3  ...  edgetype
+5.13.2.4  ...  edgewidth_scale_factor
+5.13.2.5  ...  edge_colour_index
+5.14  ...  pattern_entry
+5.14.1  ...  number_of_pattern_table_entries
+5.14.2  ...  pattern_table
+5.14.2.1  ...  pattern_index
+5.14.2.2  ...  pattern_colour_index_array
+5.15  ...  colour_entry
+5.15.1  ...  current_colour_model
+5.15.2  ...  number_of_colour_table_entries
+5.15.3  ...  colour_table
+5.15.3.1  ...  colour_index
+5.15.3.2  ...  colour_specification
+5.16  ...  highlighting_filter
+5.17  ...  invisibility_filter
+5.18  ...  input_device_status
+5.18.1  ...  locator_entry
+5.18.1.1  ...  locator_device_number
+5.18.1.2  ...  operating_mode
+5.18.1.3  ...  echo_switch
+5.18.1.4  ...  initial_view_index
+5.18.1.5  ...  initial_locator_position
+5.18.1.6  ...  prompt_echo_type
+5.18.1.7  ...  echo_volume
+5.18.1.8  ...  locator_data_record
+5.18.2  ...  stroke_entry
+5.18.2.1  ...  stroke_device_number
+5.18.2.2  ...  operating_mode
+5.18.2.3  ...  echo_switch
+5.18.2.4  ...  initial_view_index
+5.18.2.5  ...  coordinates_of_initial_stroke
+5.18.2.6  ...  prompt_echo_type
+5.18.2.7  ...  echo_volume
+5.18.2.8  ...  stroke_data_record
+5.18.2.8.1  ...  input_buffer_size
+
+5.18.3  ...  valuator_entry
+5.18.3.1  ...  valuator_device_number
+5.18.3.2  ...  operating_mode
+5.18.3.3  ...  echo_switch
+5.18.3.4  ...  initial_value
+5.18.3.5  ...  prompt_echo_type
+5.18.3.6  ...  echo_volume
+5.18.3.7  ...  valuator_data_record
+5.18.3.7.1  ...  low_value
+5.18.3.7.2  ...  high_value
+5.18.4  ...  choice_entry
+5.18.4.1  ...  choice_device_number
+5.18.4.2  ...  operating_mode
+5.18.4.3  ...  echo_switch
+5.18.4.4  ...  initial_status
+5.18.4.5  ...  initial_choice_number
+5.18.4.6  ...  prompt_echo_type
+5.18.4.7  ...  echo_volume
+5.18.4.8  ...  choice_data_record
+5.18.5  ...  pick_entry
+5.18.5.1  ...  pick_device_number
+5.18.5.2  ...  operating_mode
+5.18.5.3  ...  echo_switch
+5.18.5.4  ...  pick_filter
+5.18.5.5  ...  initial_status
+5.18.5.6  ...  initial_pick_path
+5.18.5.7  ...  prompt_echo_type
+5.18.5.8  ...  echo_volume
+5.18.5.9  ...  pick_data_record
+5.18.5.10 ...  initial_pick_path_order
+5.18.6  ...  string_entry
+5.18.6.1  ...  string_device_number
+5.18.6.2  ...  operating_mode
+5.18.6.3  ...  echo_switch
+5.18.6.4  ...  initial_string
+5.18.6.5  ...  prompt_echo_type
+5.18.6.6  ...  echo_volume
+5.18.6.7  ...  string_data_record
+5.18.6.7.1  ...  input_buffer_size
+5.18.6.7.2  ...  initial_cursor_position
+
+6  ...  workstation_description_table
+6.1  ...  workstation_type
+6.2  ...  workstation_category
+6.3  ...  device_coordinate_units
+6.4  ...  maximum_display_space_size
+6.4.1  ...  in_device_coordinates
+6.4.2  ...  in_device_address_units
+6.5  ...  hlhsr_entry
+6.5.1  ...  number_of_available_hlhsr_identifiers
+6.5.2  ...  list_of_available_hlhsr_identifiers
+6.5.2.1  ...  hlhsr_identifier
+6.5.3  ...  number_of_available_hlhsr_modes
+6.5.4  ...  list_of_available_hlhsr_modes
+6.5.4.1  ...  hlhsr_mode
+6.6  ...  predefined_view_table
+6.6.1  ...  number_of_predefined_view_indices
+6.6.2  ...  table_of_predefined_view_representations
+6.6.2.1  ...  view_orientation_matrix
+6.6.2.2  ...  view_mapping_matrix
+6.6.2.3  ...  view_clipping_limits
+6.6.2.4  ...  x_y_clipping_indicator
+6.6.2.5  ...  back_clipping_indicator
+6.6.2.6  ...  front_clipping_indicator
+6.7  ...  workstation_classification
+6.8  ...  dynamic_modification_accepted_for
+6.8.1  ...  view_representation
+6.8.2  ...  polyline_bundle_representation
+6.8.3  ...  polymarker_bundle_representation
+6.8.4  ...  text_bundle_representation
+6.8.5  ...  interior_bundle_representation
+6.8.6  ...  edge_bundle_representation
+6.8.7  ...  pattern_representation
+6.8.8  ...  colour_representation
+6.8.9  ...  workstation_transformation_representation
+6.8.10 ...  highlighting_filter
+6.8.11 ...  invisibility_filter
+6.8.12 ...  hlhsr_mode
+6.9  ...  default_value_for_deferral_state
+6.9.1  ...  deferral_mode
+6.9.2  ...  modification_mode
+6.10 ...  polyline_entry
+6.10.1  ...  polyline_facilities
+6.10.1.1  ...  number_of_available_linetypes
+6.10.1.2  ...  list_of_available_linetypes
+6.10.1.2.1  ...  available_linetype
+6.10.1.3  ...  number_of_available_linewidths
+6.10.1.4  ...  nominal_linewidth
+6.10.1.5  ...  minimum_linewidth
+6.10.1.6  ...  maximum_linewidth
+6.10.1.7  ...  number_of_predefined_polyline_indices
+6.10.2  ...  predefined_polyline_bundle_table
+6.10.2.1  ...  linetype
+6.10.2.2  ...  linewidth_scale_factor
+6.10.2.3  ...  polyline_colour_index
+
+6.11  ...  polymarker_entry
+6.11.1  ...  polymarker_facilities
+6.11.1.1  ...  number_of_available_marker_types
+6.11.1.2  ...  list_of_available_marker_types
+6.11.1.2.1  ...  available_marker_type
+6.11.1.3  ...  number_of_available_marker_sizes
+6.11.1.4  ...  nominal_marker_size
+6.11.1.5  ...  minimum_marker_size
+6.11.1.6  ...  maximum_marker_size
+6.11.1.7  ...  number_of_predefined_polymarker_indices
+6.11.2  ...  predefined_polymarker_bundle_table
+6.11.2.1  ...  marker_type
+6.11.2.2  ...  marker_size_scale_factor
+6.11.2.3  ...  polymarker_colour_index
+6.12  ...  text_entry
+6.12.1  ...  text_facilities
+6.12.1.1  ...  number_of_text_font_and_precision_pairs
+6.12.1.2  ...  list_of_text_font_and_precision_pairs
+6.12.1.2.1  ...  text_font_and_precision_pair
+6.12.1.3  ...  number_of_available_character_heights
+6.12.1.4  ...  minimum_character_height
+6.12.1.5  ...  maximum_character_height
+6.12.1.6  ...  number_of_available_character_expansion_factors
+6.12.1.7  ...  minimum_character_expansion_factor
+6.12.1.8  ...  maximum_character_expansion_factor
+6.12.1.9  ...  number_of_predefined_text_indices
+6.12.2  ...  predefined_text_bundle_table
+6.12.2.1  ...  text_font
+6.12.2.2  ...  text_precision
+6.12.2.3  ...  character_expansion_factor
+6.12.2.4  ...  character_spacing
+6.12.2.5  ...  text_colour_index
+6.13  ...  annotation_entry
+6.13.1  ...  annotation_facilities
+6.13.1.1  ...  number_of_available_annotation_text_character_heights
+6.13.1.2  ...  minimum_annotation_text_character_height
+6.13.1.3  ...  maximum_annotation_text_character_height
+6.13.1.4  ...  number_of_available_annotation_styles
+6.13.1.5  ...  list_of_available_annotation_styles
+6.13.1.5.1  ...  annotation_style
+6.14  ...  interior_entry
+6.14.1  ...  interior_facilities
+6.14.1.1  ...  number_of_available_interior_styles
+6.14.1.2  ...  list_of_available_interior_styles
+6.14.1.2.1  ...  interior_style
+6.14.1.3  ...  number_of_available_hatch_styles
+6.14.1.4  ...  list_of_available_hatch_styles
+6.14.1.4.1  ...  hatch_style
+6.14.1.5  ...  number_of_predefined_interior_indices
+6.14.2  ...  predefined_interior_bundle_table
+6.14.2.1  ...  interior_style
+6.14.2.2  ...  interior_style_index
+6.14.2.3  ...  interior_colour_index
+
+6.15  ...  edge_entry
+6.15.1  ...  edge_facilities
+6.15.1.1  ...  number_of_available_edgetypes
+6.15.1.2  ...  list_of_available_edgetypes
+6.15.1.2.1  ...  edgetype
+6.15.1.3  ...  number_of_available_edgewidths
+6.15.1.4  ...  nominal_edgewidth
+6.15.1.5  ...  minimum_edgewidth
+6.15.1.6  ...  maximum_edgewidth
+6.15.1.7  ...  number_of_predefined_edge_indices
+6.15.2  ...  predefined_edge_bundle_table
+6.15.2.1  ...  edge_flag
+6.15.2.2  ...  edgetype
+6.15.2.3  ...  edgewidth_scale_factor
+6.15.2.4  ...  edge_colour_index
+6.16  ...  pattern_entry
+6.16.1  ...  pattern_facilities
+6.16.1.1  ...  number_of_predefined_pattern_indices
+6.16.2  ...  predefined_pattern_table
+6.16.2.1  ...  pattern_colour_index_array
+6.17  ...  colour_entry
+6.17.1  ...  colour_model_facilities
+6.17.1.1  ...  number_of_available_colour_models
+6.17.1.2  ...  list_of_available_colour_models
+6.17.1.2.1  ...  colour_model
+6.17.1.3  ...  default_colour_model
+6.17.2  ...  colour_facilities
+6.17.2.1  ...  primary_colours
+6.17.2.2  ...  number_of_available_colours
+6.17.2.3  ...  colour_available
+6.17.2.4  ...  number_of_predefined_colour_indices
+6.17.3  ...  predefined_colour_table
+6.17.3.1  ...  colour_specification
+6.18  ...  generalized_drawing_primitives_entry
+6.18.1  ...  number_of_available_generalized_drawing_primitives_3
+6.18.2  ...  list_of_available_generalized_drawing_primitives_3
+6.18.2.1  ...  gdp_identifier
+6.18.2.2  ...  number_of_sets_of_attributes_used
+6.18.2.3  ...  list_of_sets_of_attributes_used
+6.18.3  ...  number_of_available_generalized_drawing_primitives
+6.18.4  ...  list_of_available_generalized_drawing_primitives
+6.18.4.1  ...  gdp_identifier
+6.18.4.2  ...  number_of_sets_of_attributes_used
+6.18.4.3  ...  list_of_sets_of_attributes_used
+6.19  ...  generalized_structure_elements_entry
+6.19.1  ...  number_of_available_generalized_structure_elements
+6.19.2  ...  list_of_available_generalized_structure_elements
+6.19.2.1  ...  gse_identifier
+6.20  ...  number_of_display_priorities_supported
+6.21  ...  maximum_table_lengths
+6.21.1  ...  maximum_number_of_polyline_bundle_table_entries
+6.21.2  ...  maximum_number_of_polymarker_bundle_table_entries
+6.21.3  ...  maximum_number_of_text_bundle_table_entries
+6.21.4  ...  maximum_number_of_interior_bundle_table_entries
+6.21.5  ...  maximum_number_of_edge_bundle_table_entries
+6.21.6  ...  maximum_number_of_pattern_indices
+6.21.7  ...  maximum_number_of_colour_indices
+6.21.8  ...  maximum_number_of_view_table_indices
+
+6.22  ...  dynamic_modification_accepted_for
+6.22.1  ...  structure_content_modification
+6.22.2  ...  post_structure
+6.22.3  ...  unpost_structure
+6.22.4  ...  delete_structure
+6.22.5  ...  reference_modification
+6.23  ...  default_input_device_status
+6.23.1  ...  locator_entry
+6.23.1.1  ...  number_of_locator_devices
+6.23.1.2  ...  locator_devices
+6.23.1.2.1  ...  logical_input_device_number
+6.23.1.2.2  ...  default_initial_locator_position
+6.23.1.2.3  ...  number_of_available_prompt_and_echo_types
+6.23.1.2.4  ...  list_of_available_prompt_and_echo_types
+6.23.1.2.4.1  ...  prompt_and_echo_type
+6.23.1.2.5  ...  default_echo_volume
+6.23.1.2.6  ...  default_locator_data_record
+6.23.2  ...  stroke_entry
+6.23.2.1  ...  number_of_stroke_devices
+6.23.2.2  ...  stroke_devices
+6.23.2.2.1  ...  logical_input_device_number
+6.23.2.2.2  ...  maximum_input_buffer_size
+6.23.2.2.3  ...  number_of_available_prompt_and_echo_types
+6.23.2.2.4  ...  list_of_available_prompt_and_echo_types
+6.23.2.2.4.1  ...  prompt_and_echo_type
+6.23.2.2.5  ...  default_echo_volume
+6.23.2.2.6  ...  default_stroke_data_record
+6.23.2.2.6.1  ...  input_buffer_size
+6.23.3  ...  valuator_entry
+6.23.3.1  ...  number_of_valuator_devices
+6.23.3.2  ...  valuator_devices
+6.23.3.2.1  ...  logical_input_device_number
+6.23.3.2.2  ...  default_initial_value
+6.23.3.2.3  ...  number_of_available_prompt_and_echo_types
+6.23.3.2.4  ...  list_of_available_prompt_and_echo_types
+6.23.3.2.4.1  ...  prompt_and_echo_type
+6.23.3.2.5  ...  default_echo_volume
+6.23.3.2.6  ...  default_valuator_data_record
+6.23.3.2.6.1  ...  low_value
+6.23.3.2.6.2  ...  high_value
+6.23.4  ...  choice_entry
+6.23.4.1  ...  number_of_choice_devices
+6.23.4.2  ...  choice_devices
+6.23.4.2.1  ...  logical_input_device_number
+6.23.4.2.2  ...  maximum_number_of_choice_alternatives
+6.23.4.2.3  ...  number_of_available_prompt_and_echo_types
+6.23.4.2.4  ...  list_of_available_prompt_and_echo_types
+6.23.4.2.4.1  ...  prompt_and_echo_type
+6.23.4.2.5  ...  default_echo_volume
+6.23.4.2.6  ...  default_choice_data_record
+6.23.5  ...  pick_entry
+6.23.5.1  ...  number_of_pick_devices
+6.23.5.2  ...  pick_devices
+6.23.5.2.1  ...  logical_input_device_number
+6.23.5.2.2  ...  number_of_available_prompt_and_echo_types
+6.23.5.2.3  ...  list_of_available_prompt_and_echo_types
+6.23.5.2.3.1  ...  prompt_and_echo_type
+6.23.5.2.4  ...  default_echo_volume
+6.23.5.2.5  ...  default_pick_data_record
+
+6.23.6  ...  string_entry
+6.23.6.1  ...  number_of_string_devices
+6.23.6.2  ...  string_devices
+6.23.6.2.1  ...  logical_input_device_number
+6.23.6.2.2  ...  maximum_input_buffer_size
+6.23.6.2.3  ...  number_of_available_prompt_and_echo_types
+6.23.6.2.4  ...  list_of_available_prompt_and_echo_types
+6.23.6.2.4.1  ...  prompt_and_echo_type
+6.23.6.2.5  ...  default_echo_volume
+6.23.6.2.6  ...  default_string_data_record
+6.23.6.2.6.1  ...  input_buffer_size
+6.23.6.2.6.2  ...  initial_cursor_position
+
+7  ...  structure_state_list
+7.1  ...  structure_identifier
+7.2  ...  list_of_workstations_to_which_posted
+7.2.1  ...  workstation_identifier
+7.3  ...  list_of_structure_elements
+7.3.1  ...  graphical_primitives
+7.3.1.1  ...  polyline_3
+7.3.1.2  ...  polyline
+7.3.1.3  ...  polymarker_3
+7.3.1.4  ...  polymarker
+7.3.1.5  ...  text_3
+7.3.1.6  ...  text
+7.3.1.7  ...  annotation_text_relative_3
+7.3.1.8  ...  annotation_text_relative
+7.3.1.9  ...  fill_area_3
+7.3.1.10 ...  fill_area
+7.3.1.11 ...  fill_area_set_3
+7.3.1.12 ...  fill_area_set
+7.3.1.13 ...  cell_array_3
+7.3.1.14 ...  cell_array
+7.3.1.15 ...  generalized_drawing_primitive_3
+7.3.1.16 ...  generalized_drawing_primitive
+7.3.2  ...  primitive_attributes
+7.3.2.1  ...  bundle_index_attributes
+7.3.2.1.1  ...  polyline_index
+7.3.2.1.2  ...  polymarker_index
+7.3.2.1.3  ...  text_index
+7.3.2.1.4  ...  interior_index
+7.3.2.1.5  ...  edge_index
+7.3.2.2  ...  polyline_attributes
+7.3.2.2.1  ...  linetype
+7.3.2.2.2  ...  linewidth_scale_factor
+7.3.2.2.3  ...  polyline_colour_index
+7.3.2.3  ...  polymarker_attributes
+7.3.2.3.1  ...  marker_type
+7.3.2.3.2  ...  marker_size_scale_factor
+7.3.2.3.3  ...  polymarker_colour_index
+7.3.2.4  ...  text_attributes
+7.3.2.4.1  ...  text_font
+7.3.2.4.2  ...  text_precision
+7.3.2.4.3  ...  character_expansion_factor
+7.3.2.4.4  ...  character_spacing
+7.3.2.4.5  ...  text_colour_index
+7.3.2.4.6  ...  character_height
+7.3.2.4.7  ...  character_up_vector
+7.3.2.4.8  ...  text_path
+7.3.2.4.9  ...  text_alignment
+7.3.2.5  ...  annotation_text_attributes
+7.3.2.5.1  ...  annotation_text_character_height
+7.3.2.5.2  ...  annotation_text_character_up_vector
+7.3.2.5.3  ...  annotation_text_path
+7.3.2.5.4  ...  annotation_text_alignment
+7.3.2.5.5  ...  annotation_style
+
+7.3.2.6  ...  fill_area_attributes
+7.3.2.6.1  ...  interior_style
+7.3.2.6.2  ...  interior_style_index
+7.3.2.6.3  ...  interior_colour_index
+7.3.2.6.4  ...  edge_flag
+7.3.2.6.5  ...  edgetype
+7.3.2.6.6  ...  edgewidth_scale_factor
+7.3.2.6.7  ...  edge_colour_index
+7.3.2.6.8  ...  pattern_size
+7.3.2.6.9  ...  pattern_reference_point_and_vectors
+7.3.2.6.10 ...  pattern_reference_point
+7.3.2.7  ...  nameset_attributes
+7.3.2.7.1  ...  add_names_to_set
+7.3.2.7.2  ...  remove_names_from_set
+7.3.2.8  ...  individual_asf
+7.3.2.9  ...  hlhsr_identifier
+7.3.2.10 ...  view_index
+7.3.2.11 ...  pick_identifier
+7.3.3  ...  modelling_transformation_elements
+7.3.3.1  ...  local_transformation_3
+7.3.3.2  ...  local_transformation
+7.3.3.3  ...  global_transformation_3
+7.3.3.4  ...  global_transformation
+7.3.3.5  ...  modelling_clipping_volume_3
+7.3.3.6  ...  modelling_clipping_volume
+7.3.3.7  ...  modelling_clipping_indicator
+7.3.3.8  ...  restore_modelling_clipping_volume
+7.3.4  ...  execute_structure
+7.3.5  ...  label
+7.3.6  ...  application_data
+7.3.7  ...  generalized_structure_element
+
+8  ...  phigs_error_state_list
+8.1  ...  error_state
+8.2  ...  error_handling_mode
+8.3  ...  error_file
+8.3.1  ...  one_of_input_devices_that_caused_input_queue_overflow
+8.3.1.1  ...  workstation_identifier
+8.3.1.2  ...  input_class
+8.3.1.3  ...  logical_input_device_number
+
+9  ...  archive
+9.1  ...  archive_file
+9.1.1  ...  structure_identifier
+9.1.2  ...  list_of_structure_elements
+9.1.2.1  ...  graphical_primitives
+9.1.2.1.1  ...  polyline_3
+9.1.2.1.2  ...  polyline
+9.1.2.1.3  ...  polymarker_3
+9.1.2.1.4  ...  polymarker
+9.1.2.1.5  ...  text_3
+9.1.2.1.6  ...  text
+9.1.2.1.7  ...  annotation_text_relative_3
+9.1.2.1.8  ...  annotation_text_relative
+9.1.2.1.9  ...  fill_area_3
+9.1.2.1.10 ...  fill_area
+9.1.2.1.11 ...  fill_area_set_3
+9.1.2.1.12 ...  fill_area_set
+9.1.2.1.13 ...  cell_array_3
+9.1.2.1.14 ...  cell_array
+9.1.2.1.15 ...  generalized_drawing_primitive_3
+9.1.2.1.16 ...  generalized_drawing_primitive
+9.1.2.2  ...  primitive_attributes
+9.1.2.2.1  ...  bundle_index_attributes
+9.1.2.2.1.1  ...  polyline_index
+9.1.2.2.1.2  ...  polymarker_index
+9.1.2.2.1.3  ...  text_index
+9.1.2.2.1.4  ...  interior_index
+9.1.2.2.1.5  ...  edge_index
+9.1.2.2.2  ...  polyline_attributes
+9.1.2.2.2.1  ...  linetype
+9.1.2.2.2.2  ...  linewidth_scale_factor
+9.1.2.2.2.3  ...  polyline_colour_index
+9.1.2.2.3  ...  polymarker_attributes
+9.1.2.2.3.1  ...  marker_type
+9.1.2.2.3.2  ...  marker_size_scale_factor
+9.1.2.2.3.3  ...  polymarker_colour_index
+9.1.2.2.4  ...  text_attributes
+9.1.2.2.4.1  ...  text_font
+9.1.2.2.4.2  ...  text_precision
+9.1.2.2.4.3  ...  character_expansion_factor
+9.1.2.2.4.4  ...  character_spacing
+9.1.2.2.4.5  ...  text_colour_index
+9.1.2.2.4.6  ...  character_height
+9.1.2.2.4.7  ...  character_up_vector
+9.1.2.2.4.8  ...  text_path
+9.1.2.2.4.9  ...  text_alignment
+9.1.2.2.5  ...  annotation_text_attributes
+9.1.2.2.5.1  ...  annotation_text_character_height
+9.1.2.2.5.2  ...  annotation_text_character_up_vector
+9.1.2.2.5.3  ...  annotation_text_path
+9.1.2.2.5.4  ...  annotation_text_alignment
+9.1.2.2.5.5  ...  annotation_style
+
+9.1.2.2.6  ...  fill_area_attributes
+9.1.2.2.6.1  ...  interior_style
+9.1.2.2.6.2  ...  interior_style_index
+9.1.2.2.6.3  ...  interior_colour_index
+9.1.2.2.6.4  ...  edge_flag
+9.1.2.2.6.5  ...  edgetype
+9.1.2.2.6.6  ...  edgewidth_scale_factor
+9.1.2.2.6.7  ...  edge_colour_index
+9.1.2.2.6.8  ...  pattern_size
+9.1.2.2.6.9  ...  pattern_reference_point_and_vectors
+9.1.2.2.6.10 ...  pattern_reference_point
+9.1.2.2.7  ...  nameset_attributes
+9.1.2.2.7.1  ...  add_names_to_set
+9.1.2.2.7.2  ...  remove_names_from_set
+9.1.2.2.8  ...  individual_asf
+9.1.2.2.9  ...  hlhsr_identifier
+9.1.2.2.10 ...  view_index
+9.1.2.2.11 ...  pick_identifier
+9.1.2.3  ...  modelling_transformation_elements
+9.1.2.3.1  ...  local_transformation_3
+9.1.2.3.2  ...  local_transformation
+9.1.2.3.3  ...  global_transformation_3
+9.1.2.3.4  ...  global_transformation
+9.1.2.3.5  ...  modelling_clipping_volume_3
+9.1.2.3.6  ...  modelling_clipping_volume
+9.1.2.3.7  ...  modelling_clipping_indicator
+9.1.2.3.8  ...  restore_modelling_clipping_volume
+9.1.2.4  ...  execute_structure
+9.1.2.5  ...  label
+9.1.2.6  ...  application_data
+9.1.2.7  ...  generalized_structure_element
+
+10  ...  metafile

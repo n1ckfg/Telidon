@@ -1,0 +1,335 @@
+TITLE: Opening and closing archive files
+
+
+MODULE#: 03.01
+
+
+DESCRIPTION: This module tests the facilities for opening and
+closing archive files.
+
+
+SEMANTIC REQUIREMENTS:
+
+*** *** ***   Open and close of archive files   *** *** ***
+
+SR1.  <Inquire phigs facilities> returns maximum number of
+simultaneously open archive files.
+#F 205
+#D 2.4
+#S 4.4.7/32/4
+#T P01/4 P01/5
+
+SR2.  Maximum number of simultaneously open archive files must be
+at least 1.
+#F 205
+#D 2.4
+#S 6.3/309/1 4.14/114/2
+#T P01/4 P01/5
+
+SR3.  Whenever there are no open archive files, the archive state
+is ARCL.
+#F 203
+#D 1.4
+#S 6.2/308/1
+#T P01/2 P01/13
+
+SR4.  Immediately after <open phigs>, the set of open archive
+files is empty.
+#F 1 211
+#D 4.6
+#S 6.5/314/1
+#T P01/3 P01/14
+
+SR5.  A successful <open archive file> sets the archive state to
+AROP.
+#F 135 203
+#D 1.4
+#S 4.4.7/32/5
+#T P01/6
+
+SR6.  A successful <open archive file> adds the specified file to
+the set of open archive files.
+#F 135 211
+#D 4.6
+#S n
+#T P01/7
+
+SR7.  A successful <open archive file> provides access to the
+archive file of the specified name through the specified
+identifier.
+#F 135 137 138 139 141-149
+#D 4.6 9.1
+#S 4.4.7/32/4
+#T P01/8
+
+SR8.  A successful <close archive file> on the last open archive
+file sets the archive state to ARCL, otherwise the state is left
+as AROP.
+#F 136 203
+#D 1.4
+#S 4.4.7/32/5
+#T P01/9
+
+SR9.  A successful <close archive file> removes the specified
+file from the set of open archive files.
+#F 136 211
+#D 4.6
+#S n
+#T P01/10 P01/11
+
+SR10. <Inquire archive state value> returns the current archive
+state.
+#F 203
+#D 1.4
+#S 4.4.7/32/5
+#T P01/1 P01/2 P01/6 P01/9 P01/12 P01/13
+
+SR11. <Inquire archive files> returns the set of open archive
+files.
+#F 211
+#D 4.6
+#S 4.4.7/32/5
+#T P01/3 P01/7 P01/11 P01/14
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    1: popph   <open phigs>
+  135: poparf  <open archive file>
+  136: pclarf  <close archive file>
+  137: parst   <archive structures>
+  138: parsn   <archive structure networks>
+  139: parast  <archive all structures>
+  141: prsid   <retrieve structure identifiers>
+  142: prest   <retrieve structures>
+  143: presn   <retrieve structure networks>
+  144: prast   <retrieve all structures>
+  145: prepan  <retrieve paths to ancestors>
+  146: prepde  <retrieve paths to descendants>
+  147: pdstar  <delete structures from archive>
+  148: pdsnar  <delete structure networks from archive>
+  149: pdasar  <delete all structures from archive>
+  203: pqars   <inquire archive state value>
+  205: pqphf   <inquire phigs facilities>
+  211: pqarf   <inquire archive files>
+ 
+  Data Structures ---
+  1  ...  operating_state
+  1.4  ...  archive_state
+  2  ...  phigs_description_table
+  2.4  ...  maximum_number_of_simultaneously_open_archive_files
+  4  ...  phigs_state_list
+  4.6  ...  set_of_open_archive_files
+  9  ...  archive
+  9.1  ...  archive_file
+ 
+LOCAL SUBROUTINES:
+AVARNM returns an available name for a new archive file.
+
+
+PROGRAM 1: Effect of <open archive file> and <close archive file>
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Throughout, use variable names:
+arid   : archive file identifier
+arnm   : archive file name
+mxarno : maximum number of simultaneously open archive files
+arstat : archive file state
+openok : <open archive file> ok flag
+closok : <close archive file> ok flag
+statok : archive state ok flag
+arset  : open archive file set ok flag
+accok  : access archive file ok flag
+acidls : actual open archive file id. list
+acnmls : actual open archive file name list
+exidls : expected open archive file id. list
+exnmls : expected open archive file name list
+arcnum : opened archive file counter
+struid : structure identifier
+custid : structure identifier list in CSS
+
+TEST: #SR 10
+      "Before opening PHIGS, <inquire archive state value> should
+       return the archive state as ARCL."
+<Inquire archive state value> to determine
+   arstat = archive file state
+pass/fail depending on (arstat = ARCL)
+
+<open phigs>
+
+TEST: #SR 3 10
+      "Immediately after <open phigs>, the archive state should
+       be reported as ARCL."
+<Inquire archive state value> to determine
+   arstat = archive file state
+pass/fail depending on (arstat = ARCL)
+
+TEST: #SR 4 11
+      "Immediately after <open phigs>, the set of open archive files
+       should be reported as empty."
+<Inquire archive files> to determine acidls
+pass/fail depending on (acidls is empty)
+
+TEST: #SR 1 2
+      "<Inquire phigs facilities> should report the maximum
+       number of simultaneously open archive files to be greater
+       than 0."
+<Inquire phigs facilities> to determine
+      mxarno = maximum number of simultaneously open archive files
+if (<Inquire phigs facilities> successfully reports mxarno > 0) then
+   pass
+else
+   fail
+   informative message about failure, skipping opening/closing tests
+   goto check_close
+endif
+
+openok = TRUE
+statok = TRUE
+arset  = TRUE
+accok  = TRUE
+do arcnum from 1 to mxarno step 1
+   <open archive file> with:
+      arid = arcnum + 10
+      arnm = name of a new archive file
+   if error signalled on open
+      informative message about failure to open arnm
+      openok = FALSE
+      goto end_open_loop
+   endif
+   <inquire archive state value> to determine
+      arstat = archive file state
+   if (arstat not= AROP)
+      statok = FALSE
+   endif
+   exidls (arcnum) = arid
+   exnmls (arcnum) = arnm
+   <Inquire archive files> to determine:
+      acidls = actual open archive file id. list
+      adnmls = actual open archive file name list
+   if (exidls(1:arcnum) and acidls contain different identifiers)
+      arset = FALSE
+   endif
+   if (exnmls(1:arcnum) and acnmls contain different names)
+      arset = FALSE
+   endif
+
+   empty out both CSS and archive file arid
+   <open structure> with struid = arcnum+20
+   <label> arcnum+30
+   <close structure>
+
+   <archive all structures> with arid
+   <delete all structures> (from CSS)
+   <retrieve all structures> with arid
+   <inquire structure identifiers> to determine:
+      custid = current structure identifier list in CSS
+   if (custid not= [arcnum+20])
+      accok = FALSE
+   endif
+end_open_loop:
+loop
+
+TEST: #SR 1 2
+      "Opening the maximum number of simultaneously open archive
+       files should be allowed."
+pass/fail depending on (openok)
+
+TEST: #SR 5 10
+      "A successful <open archive file> should set the archive state
+       to AROP."
+pass/fail depending on (statok)
+
+TEST: #SR 6 11
+      "A successful <open archive file> should add the specified file
+       to the set of open archive files."
+pass/fail depending on (arset)
+
+TEST: #SR 7
+      "A successful <open archive file> should provide access to the
+       archive file of the specified name through the specified
+       identifier."
+pass/fail depending on (accok)
+
+closok = TRUE
+statok = TRUE
+arset  = TRUE
+do arcnum from mxarno to 1 step -1
+   <close archive file> with:
+      arid = arcnum + 10
+   if error signalled on close
+      informative message about failure to close arid
+      closok = FALSE
+   endif
+   <Inquire archive state value> to determine
+      arstat = archive state value
+   if (arcnum = 1) then
+      if (arstat NOT = ARCL)
+         statok = FALSE
+      endif
+   else
+      if (arstat NOT = AROP)
+         statok = FALSE
+      endif
+   endif
+   <Inquire archive files> to determine:
+      acidls = actual open archive file id. list
+      adnmls = actual open archive file name list
+   if (exidls (1 : arcnum-1) and acidls contain different identifiers)
+      arset = FALSE
+   endif
+   if (exnmls (1 : arcnum-1) and acnmls contain different names)
+      arset = FALSE
+   endif
+loop
+
+TEST: #SR 8 10
+      "A successful <close archive file> on the last open archive
+       file should set the archive state to ARCL, but otherwise
+       leave the state as AROP."
+pass/fail depending on (statok)
+
+TEST: #SR 9
+      "Closing an archive file in the set of open archive files
+       should succeed."
+pass/fail depending on (closok)
+
+TEST: #SR 9 11
+      "A successful <close archive file> should remove the
+       specified file from the set of open archive files."
+pass/fail depending on (arset)
+
+check_close:
+<close phigs>
+
+TEST: #SR 10
+      "After closing PHIGS, <inquire archive state value> should
+       return the archive state as ARCL."
+<Inquire archive state value> to determine
+   arstat = archive file state
+pass/fail depending on (arstat = ARCL)
+
+<open phigs>
+
+TEST: #SR 3 10
+      "After closing and re-opening PHIGS, the archive state should
+       be reported as ARCL."
+<Inquire archive state value> to determine
+      arstat = archive file state
+pass/fail depending on (arstat = ARCL)
+
+TEST: #SR 4 11
+      "After closing and re-opening PHIGS, the set of open
+       archive files should be reported as empty."
+<Inquire archive files> to determine acidls
+pass/fail depending on (acidls is empty)
+
+<close phigs>
+
+END PROGRAM 1

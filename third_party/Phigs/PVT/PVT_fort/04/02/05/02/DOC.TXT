@@ -1,0 +1,2102 @@
+TITLE: Interior bundles
+
+MODULE#: 04.02.05.02
+
+DESCRIPTION:  This module tests the bundled entries and other
+workstation facilities for interior.  These entries control the
+appearance of fill area and fill area set when they are under
+bundled (as opposed to individual) control.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** ***   Interior index inquiry   *** *** *** ***
+
+SR1.  If current element is interior index then <inquire current
+element type and size> returns the element type as interior index
+and the appropriate element size.
+#F 303
+#D 7.3.2.1.4
+#S 4.4.4/29/5
+#T P01/1
+
+SR2.  If current element is interior index then <inquire current
+element content> returns the appropriate data for interior index.
+#F 304
+#D 7.3.2.1.4
+#S 4.4.4/29/5
+#T P01/2
+
+*** *** ***   Interior attribute traversal binding   *** *** ***
+
+SR3.  Upon traversal of a "fill area" or "fill area 3" element,
+the current interior index in the PTSL is bound to the resulting
+primitive.
+#F 28
+#D 3.5.1 7.3.1.9 7.3.1.10
+#S 4.5.2/38/3
+#T P10/1 P10/2 P10/3 P11/1 P11/2 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6
+   P12/7 P12/8 P13/1
+
+SR4.  Upon traversal of a "fill area set" or "fill area set 3"
+element, the current interior index in the PTSL is bound to the
+resulting primitive.
+#F 28
+#D 3.5.1 7.3.1.11 7.3.1.12
+#S 4.5.2/38/3
+#T P10/1 P10/2 P10/3 P11/1 P11/2 P12/5 P12/7 P12/8 P13/1
+
+*** *** ***   Interior index: element creation   *** *** ***
+
+SR5.  <Set interior index> creates a "set interior index"
+element (in the open structure), whose associated value is taken
+from the function's parameter.
+#F 28
+#D 7.3.2.1.4
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/1 P01/2 P11/1 P11/2 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P12/7
+   P12/8
+
+*** ***   Interior index: effect during traversal   *** ***
+
+SR6.  Upon traversal of a "set interior index" element, the
+current interior index entry in the PHIGS traversal state list
+(PTSL) is set to the element's associated value.
+#F 28
+#D 3.5.1 7.3.2.1.4
+#S 4.4.1/23/1 4.5.2/38/3
+#T P11/1 P11/2 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P12/7 P12/8 P13/1
+
+SR7.  When a fill area or fill area set is displayed, if its
+bound interior index is defined on the workstation, then the
+indicated bundle is the source for the bundled aspects of that
+interior.
+#F 28
+#D 3.5.1 5.12.1 5.12.2
+#S 4.5.2/38/7 4.5.2/39/7 4.5.8/58/2
+#T P10/1 P10/2 P10/3 P11/1 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P12/7
+   P12/8 P13/1
+
+SR8.  When a fill area or fill area set is displayed, if its
+bound interior index is undefined on the workstation, then bundle
+number 1 in the interior bundle table is the source for the
+bundled aspects of that interior.
+#F 28
+#D 3.5.1 5.12.1 5.12.2
+#S 4.5.2/38/7 4.5.2/39/7 4.5.2/43/3 4.5.8/58/2
+#T P11/2
+
+*** *** ***   Interior index: network traversal   *** *** ***
+
+SR9.  At the start of a top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current interior index of the PTSL is set to 1.
+#F
+#D 2.14.1 3.5.1
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P13/1
+
+SR10.  As part of the PTSL, the current interior index is saved
+(but not changed) by execute structure and then, upon completion
+of the sub-traversal of the invoked network, restored to the
+saved value.
+#F 113
+#D 3.5.1
+#S 4.4.3/28/1
+#T P13/1
+
+*** *** ***   Interior Representation   *** *** ***
+
+SR11.  <Set interior representation> causes an entry to be
+defined.
+#F 66
+#D 5.12.1 5.12.2.1
+#S 4.5.2/42/3 4.5.2/43/2
+#T P02/2 P02/3 P02/6 P02/7 P02/9 P02/10
+
+SR12.  <Set interior representation> sets the interior bundle's
+interior style, interior style index, and interior colour index.
+#F 66
+#D 5.12.2
+#S 4.5.2/42/3
+#T P01/3 P02/4 P02/8 P02/11
+
+SR13.  <Inquire list of interior indices> returns the list of
+defined interior indices.
+#F 228
+#D 5.12.1 5.12.2.1
+#S n
+#T P02/1 P02/2 P02/3 P02/5 P02/6 P02/7 P02/9 P02/10 P02/12
+
+SR14.  <Inquire interior representation> works for all defined
+entries.
+#F 228 229
+#D 5.12.1 5.12.2.1
+#S n
+#T P02/12
+
+SR15.  <Inquire interior representation> returns the interior
+bundle's interior style, interior style index, and interior
+colour index, as set when type of returned values specified as
+SET.
+#F 229
+#D 5.12.2
+#S 4.11/108/1
+#T P01/3 P02/4 P02/8 P02/11
+
+SR16.  <Inquire interior representation> returns the interior
+bundle's interior style, interior style index, and interior
+colour index, as realized when type of returned values specified as
+REALIZED.
+#F 229
+#D 5.12.2
+#S 4.11/108/1
+#T P02/5 P04/3 P06/1 P07/1 P07/3 P07/4 P07/5 P07/6 P08/4 P08/6 P09/1
+   P09/3
+
+SR17.  <Inquire interior representation> returns the
+representation for bundle number 1, if type of returned values is
+REALIZED, and bundle index is undefined.
+#F 228 229
+#D 5.12.2
+#S n
+#T P02/5
+
+*** *** ***   Maximum size of bundle table   *** *** ***
+
+SR18.  <Inquire workstation state table lengths> returns the
+maximum size of interior bundle table.
+#F 285
+#D 6.21.4
+#S n
+#T P03/1 P03/2
+
+SR19.  There are at least 20 settable entries available in
+the interior bundle table.
+#F 66 285
+#D 5.12 6.21.4
+#S 4.14/114/2 6.7/324/1
+#T P03/1
+
+*** *** ***   Predefined bundle facilities   *** *** ***
+
+SR20.  <Inquire interior facilities> returns the number of
+predefined interior bundle entries.
+#F 270
+#D 6.14.1.5
+#S n
+#T P04/1 P04/7
+
+SR21.  <Inquire predefined interior representation> returns the
+interior style, interior style index, and interior colour index
+for a predefined interior bundle.
+#F 271
+#D 6.14.2
+#S n
+#T P04/1 P04/2 P04/4 P04/5 P04/6 P04/8 P05/2 P10/1 P10/2 P10/3
+
+SR22.  All workstation types have at least 5 predefined interior
+bundles.
+#F 270 271
+#D 6.14.1.5 6.14.2
+#S 4.14/113/3 4.14/114/2 6.7/322/1
+#T P04/7
+
+SR23.  No two of the first 5 predefined interior bundles have
+identical sets of attributes.
+#F 271
+#D 6.14.2
+#S 4.5.2/42/3 4.14/113/3 4.14/114/2 6.7/322/1
+#T P04/8
+
+SR24.  The n predefined interior bundles in the Workstation
+Description Table (WDT) are indexed as 1-n.
+#F 271
+#D 6.14.2
+#S 6.7/322/1
+#T P04/1 P05/2
+#C The standard presumes this because in section 6.7 the predefined
+bundles in the WDT do not mention index as a data item, nor is there a
+way to get a list of these indices (<inquire interior facilities> gives
+the number of predefined bundles, but not a list thereof).
+
+SR25.  Immediately after <open workstation>, for each WDT
+predefined interior entry there exists a Workstation State List
+(WSL) interior entry with the same attributes, including the same
+interior index.
+#F 228 229 271 3
+#D 5.12.2 6.14.2
+#S 4.5.2/42/3 6.6/317/1 6.7/322/1
+#T P05/1 P05/2 P10/1 P10/2
+
+SR26.  Immediately after <open workstation>, the interior bundle
+table contains nothing but the entries initialized from the WDT
+predefined interior bundle table.
+#F 228 229 270 3
+#D 5.12.2 6.14.2
+#S 4.5.2/42/3 6.6/317/1 6.7/322/1
+#T P05/1
+
+*** *** ***   Validity of predefined bundles   *** *** ***
+
+SR27.  Each predefined interior bundle has an interior style
+within the list of available interior styles.
+#F 270 271
+#D 6.14.1.2 6.14.2.1
+#S 5.12.1/232/2
+#T P04/3 P04/4
+
+SR28.  Each predefined interior bundle with PATTERN interior
+style has an interior style index within range of the predefined
+pattern indices.
+#F 271 274
+#D 6.14.2.1 6.14.2.2 6.16.1.1
+#S 6.7/322/1
+#T P04/3 P04/5
+
+SR29.  Each predefined interior bundle with HATCH interior style
+has an interior style index within range of the predefined hatch
+indices.
+#F 270 271
+#D 6.14.1.4 6.14.2.1 6.14.2.2
+#S 6.7/322/1
+#T P04/3 P04/6
+
+SR30.  Each predefined interior bundle has a color index within
+range of the predefined color indices.
+#F 271 277
+#D 6.14.2.3 6.17.2.4
+#S 6.7/322/1
+#T P04/2 P04/3
+
+*** *** ***   interior style support   *** *** ***
+
+SR31.  The only valid values in the list of available interior
+styles are: HOLLOW, SOLID, PATTERN, HATCH, and EMPTY.
+#F 66 229 270 271
+#D 5.12.2.2 6.14.1.2 6.14.2.1
+#S 4.5.8/58/3 6.7/322/1
+#T P06/2
+
+SR32.  The list of available interior styles returned by <inquire
+interior facilities> must contain HOLLOW and EMPTY.
+#F 270
+#D 6.14.1.2
+#S 4.5.8/62/2 4.14/113/3
+#T P06/3
+
+SR33.  All the interior styles in the list of available interior
+styles are valid and realizable for the workstation.
+#F 66 270
+#D 6.14.1.2.1
+#S n
+#T P06/1
+
+SR34.  If PATTERN interior style is supported on the workstation,
+there must be at least 1 predefined pattern index.
+#F 270 274
+#D 6.14.1.2 6.16.1.1
+#S 4.14/114/2
+#T P06/4
+#X 04.02.05.04
+
+SR35.  When a fill area or fill area set is displayed, if its
+interior style ASF is bundled, then its interior style aspect is
+taken from the interior bundle determined by the interior index.
+#F 28 62 66
+#D 3.5.1 3.5.5 5.12.2.1 5.12.2.2
+#S 4.5.2/39/7 4.5.8/58/2
+#T P12/1 P12/2 P12/3 P12/4 P12/5 P12/6
+
+SR36.  When available on the workstation to which posted,
+interior styles appear as hollow, solid, pattern, hatch, and
+empty, in accordance with the intuitive description implied by
+the name of each style.
+#F
+#D 6.14.1.1 6.14.1.2
+#S 4.5.8/58/3
+#T P12/1
+#C See module 04.03.05 for a full specification.
+
+*** ***   interior style index support   *** ***
+
+SR37.  Except for pattern index, any interior style index,
+whether or not defined for that workstation, may be specified for
+an interior bundle when invoking <set interior representation>.
+#F 66
+#D 5.12.2.3
+#S n
+#T P07/7
+
+SR38.  Any positive pattern index, whether or not defined for
+that workstation, may be specified for an interior bundle when
+invoking <set interior representation>.
+#F 66
+#D 5.12.2.3
+#S n
+#T P07/2
+
+SR39.  When a fill area or fill area set is displayed, if its
+interior style index ASF is bundled, then its interior style
+index aspect is taken from the interior bundle determined by
+interior index.
+#F 28 62 66
+#D 3.5.1 3.5.6 5.12.2.1 5.12.2.3
+#S 4.5.2/39/7 4.5.8/58/2
+#T P12/2 P12/3 P12/4 P12/5 P12/6
+
+SR40.  For PATTERN and HATCH interior styles, when a fill area or
+fill area set is displayed, if its interior style index is
+defined on the workstation, then the interior style index is
+realized as itself.
+#F 66 229
+#D 5.12.2.3 5.14.2.1 6.14.1.4
+#S n
+#T P07/1 P07/6 P08/6 P12/2 P12/3 P12/5
+
+SR41.  For PATTERN and HATCH interior styles, when a fill area or
+fill area set is displayed, if its interior style index is
+undefined on the workstation and interior style index #1 is
+available, then it is realized as index #1.
+#F 66 229
+#D 5.12.2.3 5.14.2.1 6.14.1.4
+#S n
+#T P07/3 P07/4 P07/5 P08/4 P12/4 P12/6
+#X 04.02.05.04
+#C Pattern index #1 should always be available; see SRs in
+04.02.05.04.  Hatch index #1 may or may not be supported.  If
+not, then the effect of requesting an unavailable hatch style
+(either #1 or some other unsupported style) is workstation
+dependent.
+
+*** *** ***   hatch index support   *** *** ***
+
+SR42.  For workstations supporting HATCH interior style, at least
+3 hatch styles must be available.
+#F 270
+#D 6.14.1.2 6.14.1.3
+#S 4.14/114/2 6.7/322/1
+#T P08/2
+
+SR43.  If HATCH interior style is not available, the number of
+available hatch styles returned by <inquire interior facilities>
+is 0.
+#F 270
+#D 6.14.1.2 6.14.1.3
+#S n
+#T P08/1
+
+SR44.  For HATCH interior style, the absolute value of the number
+of available hatch styles types returned from <inquire interior
+facilities> indicates the length of the list of available hatch
+styles.
+#F 270
+#D 6.14.1.3 6.14.1.4
+#S 6.7/322/1
+#T P08/3
+
+SR45.  For HATCH interior style, if the number of available hatch
+styles types is positive, the list of available hatch styles
+contains any implementation dependent types.
+#F 270
+#D 6.14.1.3 6.14.1.4
+#S n
+#T P08/4
+
+SR46.  For HATCH interior style, if the number of available hatch
+styles is negative, the list of available hatch styles does not
+contain any implementation dependent types.
+#F 270
+#D 6.14.1.3 6.14.1.4
+#S n
+#T P08/5
+
+SR47.  For HATCH interior style, positive hatch styles are
+registered; non-positive hatch styles are implementation
+dependent.
+#F 270
+#D 6.14.1.4
+#S 4.5.8/61/2
+#T P08/4 P08/5 P12/2 P12/3
+
+SR48.  When available on the workstation to which posted, hatch
+styles greater than 0 appear as specified in the ISO register.
+#F
+#D 6.14.1.4
+#S 4.5.8/61/2
+#T P12/2
+
+SR49.  When available on the workstation to which posted, hatch
+styles less than 1 appear as specified in the implementor
+documentation.
+#F
+#D 6.14.1.4
+#S 4.1.1/15/1 4.5.8/62/1
+#T P12/3
+
+*** ***   interior color index support   *** ***
+
+SR50.  Any non-negative interior color index, whether or not
+defined for that workstation, may be specified for an interior
+bundle when invoking <set interior representation>.
+#F 66
+#D 5.12.2.4
+#S n
+#T P09/2 P12/7 P12/8
+
+SR51.  When a fill area or fill area set is displayed, if its
+interior color index ASF is bundled, then its interior color
+index is taken from the interior bundle determined by the
+interior index.
+#F 28 62 66
+#D 3.5.1 3.5.7 5.12.2.1 5.12.2.4
+#S 4.5.2/39/7 4.5.8/58/2
+#T P09/1 P09/3 P12/7 P12/8
+
+SR52.  When a fill area or fill area set is displayed, if its
+interior color index is available on the workstation, then the
+interior color index is realized as itself.
+#F 229 235
+#D 5.12.2.4 5.15.3
+#S 4.5.2/39/7 4.5.8/58/2 4.5.12/63/4
+#T P09/1 P12/7
+
+SR53.  When a fill area or fill area set is displayed, if its
+interior color index is undefined, then the interior color index
+is realized as color index 1.
+#F 229 235
+#D 5.12.2.4 5.15.3
+#S 4.5.2/39/7 4.5.2/43/3 4.5.8/58/2 4.5.12/63/4
+#T P09/3 P12/8
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+   28: psii    <set interior index>
+   62: psiasf  <set individual asf>
+   66: psir    <set interior representation>
+  113: pexst   <execute structure>
+  228: pqeii   <inquire list of interior indices>
+  229: pqir    <inquire interior representation>
+  235: pqeci   <inquire list of colour indices>
+  270: pqif    <inquire interior facilities>
+  271: pqpir   <inquire predefined interior representation>
+  274: pqpaf   <inquire pattern facilities>
+  277: pqcf    <inquire colour facilities>
+  285: pqwksl  <inquire workstation state table lengths>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.14  ...  default_interior_attributes
+  2.14.1  ...  default_interior_index
+  3  ...  phigs_traversal_state_list
+  3.5  ...  current_interior_attributes
+  3.5.1  ...  current_interior_index
+  3.5.5  ...  current_interior_style_asf
+  3.5.6  ...  current_interior_style_index_asf
+  3.5.7  ...  current_interior_colour_index_asf
+  5  ...  workstation_state_list
+  5.12  ...  interior_entry
+  5.12.1  ...  number_of_interior_bundle_table_entries
+  5.12.2  ...  interior_bundle_table
+  5.12.2.1  ...  interior_index
+  5.12.2.2  ...  interior_style
+  5.12.2.3  ...  interior_style_index
+  5.12.2.4  ...  interior_colour_index
+  5.14  ...  pattern_entry
+  5.14.2  ...  pattern_table
+  5.14.2.1  ...  pattern_index
+  5.15  ...  colour_entry
+  5.15.3  ...  colour_table
+  6  ...  workstation_description_table
+  6.14  ...  interior_entry
+  6.14.1  ...  interior_facilities
+  6.14.1.1  ...  number_of_available_interior_styles
+  6.14.1.2  ...  list_of_available_interior_styles
+  6.14.1.2.1  ...  interior_style
+  6.14.1.3  ...  number_of_available_hatch_styles
+  6.14.1.4  ...  list_of_available_hatch_styles
+  6.14.1.5  ...  number_of_predefined_interior_indices
+  6.14.2  ...  predefined_interior_bundle_table
+  6.14.2.1  ...  interior_style
+  6.14.2.2  ...  interior_style_index
+  6.14.2.3  ...  interior_colour_index
+  6.16  ...  pattern_entry
+  6.16.1  ...  pattern_facilities
+  6.16.1.1  ...  number_of_predefined_pattern_indices
+  6.17  ...  colour_entry
+  6.17.2  ...  colour_facilities
+  6.17.2.4  ...  number_of_predefined_colour_indices
+  6.21  ...  maximum_table_lengths
+  6.21.4  ...  maximum_number_of_interior_bundle_table_entries
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.9  ...  fill_area_3
+  7.3.1.10 ...  fill_area
+  7.3.1.11 ...  fill_area_set_3
+  7.3.1.12 ...  fill_area_set
+  7.3.2  ...  primitive_attributes
+  7.3.2.1  ...  bundle_index_attributes
+  7.3.2.1.4  ...  interior_index
+ 
+SEMANTIC CROSS-REFERENCES:
+  04.02.05.04/SR13 04.02.05.04/SR14
+ 
+LOCAL SUBROUTINES:
+
+DISINB selects SAMP predefined bundles at random from the
+interior bundle table which are distinct in all their attributes.
+If there are not SAMP completely distinct bundles, DISINB tries
+to maximize the number of different attributes.
+
+DRWINT draws a set of rectangles where the actual interiors are
+drawn using the specified bundle values, and a set of expected
+interiors are drawn using the attribute values returned by
+<inquire predefined interior representation>.  It draws the
+expected interior incorrectly at the specified position.
+
+
+PROGRAM 1: Simple setting and inquiring
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element content> throughout to determine:
+    celval = current element value as set by program
+    recval = auxiliary element values implied by the standard's
+             representation conventions.
+
+Use <inquire current element type and size> throughout to determine:
+    celsiz = current element size
+
+*** *** *** *** ***   Interior index   *** *** *** *** ***
+<set interior index>:
+    interior_index = 8
+
+TEST: #SR 1 5
+      "<Inquire current element type and size> should return interior
+       index as the type of the created element and the appropriate
+       element size."
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = interior_index
+   celsiz               = value specified by the standard)
+
+TEST: #SR 2 5
+      "<Inquire current element content> should return the standard
+       representation for the interior index value."
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 8 and
+   recval = auxiliary values specified by the standard)
+
+*** ***  interior representation set and inquire *** ***
+
+<set interior representation>:
+  index         = 2
+  style         = HOLLOW
+  style_index   = 1
+  colour        = 5
+<inquire interior representation> for index #2, as set
+
+TEST: #SR 12 15
+      "Interior attributes should be returned as set."
+pass/fail depending on
+   (style       = HOLLOW  and
+    style_index = 1       and
+    colour      = 5)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Setting entries of various kinds
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire workstation state table lengths> to determine maximum
+   number of entries:
+   mne = maximum number of entries
+
+*** *** *** *** ***    initialized entries   *** *** *** *** ***
+
+<inquire list of interior indices> to determine initialized entries
+   nie = number of initialized entries
+   aii = an initialized index
+TEST: #SR 13
+      "<Inquire list of interior indices> should return initialized
+       indices."
+if (<inquire list of interior indices> indicates error) then
+   fail
+   goto undefined_test
+else
+   pass
+endif
+
+initialized_test:
+
+<inquire interior representation> for index #aii, as set
+   establishes:
+      old_style
+      old_style_index
+      old_colour
+if old_style = HOLLOW then
+   new_style = EMPTY
+else
+   new_style = HOLLOW
+endif
+new_style_index = old_style_index + 1
+new_colour      = old_colour      + 1
+
+<set interior representation> sets:
+  index       = aii
+  style       = new_style
+  style_index = new_style_index
+  colour      = new_colour
+
+<inquire list of interior indices> returns defined list
+
+TEST: #SR 11 13
+      "Redefining a system-initialized entry should not change
+       the number of defined entries."
+pass/fail depending on (current number of entries = nie)
+
+TEST: #SR 11 13
+      "Initialized bundle entry should be reported as defined after
+       being set."
+if (defined list includes #aii) then
+   pass
+else
+   fail
+   goto undefined_test
+endif
+
+<inquire interior representation> for index# aii, as set
+TEST: #SR 12 15
+      "New values should be set for initialized bundle entry."
+pass/fail depending on
+   (style       = new_style    and
+    style_index = new_style_idx and
+    colour      = new_colour)
+
+*** *** *** ***    undefined entries   *** *** *** ***
+
+undefined_test:
+
+<inquire list of interior indices> returns defined list
+determine lowest undefined index (not in defined list) = lui
+determine current number defined entries = cnde
+
+TEST: #SR 13 16 17
+      "<Inquire interior representation> should return attributes for
+       bundle #1 when inquiring an undefined entry as REALIZED."
+<inquire interior representation> as REALIZED for index #lui
+   to get undefined_bundle.
+<inquire interior representation> as REALIZED for index #1
+   to get bundle #1.
+pass/fail depending on (undefined_bundle = bundle #1).
+
+If (number of initialized entries
+   >= max size of bundle table) then
+   skip rest of undefined_test; goto redefined_test
+endif
+
+If (number of initialized entries
+   >= max table size in test program) then
+   skip rest of undefined_test; goto redefined_test
+endif
+
+<set interior representation>:
+   index       = lui
+   style       = EMPTY
+   style_index = 1
+   colour      = 5
+
+<inquire list of interior indices> to determine
+   listot = total number of entries in list
+
+TEST: #SR 11 13
+      "Defining an undefined entry should increment the number
+       of defined entries."
+pass/fail depending on (listot = cnde + 1)
+
+TEST: #SR 11 13
+      "Undefined bundle entry should be reported as defined after set."
+if (resulting list of indices contains lui) then
+   pass
+else
+   fail
+   goto redefined_test
+endif
+
+<inquire interior representation> for index #lui, as set
+TEST: #SR 12 15
+      "New values should be set for undefined bundle entry."
+pass/fail depending on
+   (style       = EMPTY and
+    style_index = 1     and
+    colour      = 5)
+
+*** *** *** *** ***    redefined entries   *** *** *** *** ***
+
+redefined_test:
+
+dii  = defined interior index
+cnde = current number of defined entries
+
+<set interior representation>:
+   index       = dii
+   style       = HOLLOW
+   style_index = 2
+   colour      = 4
+
+new_style       = EMPTY
+new_style_index = 0
+new_colour      = 5
+
+<set interior representation>:
+   index       = dii
+   style       = new_style
+   style_index = new_style_index
+   colour      = new_colour
+
+<inquire list of interior indices> to determine
+   nnde = new number of defined entries
+
+TEST: #SR 11 13
+      "Redefining a user-defined entry should not change number
+       of defined entries."
+pass/fail depending on (nnde = cnde)
+
+TEST: #SR 11 13
+      "Redefined bundle entry should be reported as defined after
+       set."
+if (resulting list of indices contains dii) then
+   pass
+else
+   fail
+   goto end_redefined_test
+endif
+
+<inquire interior representation> for index #dii, as set
+TEST: #SR 12 15
+      "New values should be set for redefined bundle entry."
+pass/fail depending on
+   (style       = new_style       and
+    style_index = new_style_index and
+    colour      = new_colour)
+
+end_redefined_test:
+
+*** *** *** ***    access all defined entries   *** *** *** ***
+
+TEST: #SR 13 14
+      "<Inquire list of interior indices> and <inquire interior
+       representation> should detect all defined entries."
+Use <inquire list of interior indices> to get
+    list of defined indices
+if (non-zero error code) then
+   fail
+   goto end_access_all
+endif
+For each defined index, apply <inquire interior representation>
+   if (non-zero error code) then
+      fail
+      goto end_access_all
+   endif
+loop to next index
+pass
+
+end_access_all:
+
+END PROGRAM 2
+
+
+PROGRAM 3: Interior bundle table length
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire workstation state table lengths> to determine
+   mibe = maximum interior bundle entries
+
+TEST: #SR 18 19
+      "<Inquire workstation state table lengths> should report at least
+       20 entries as maximum size of interior bundle table."
+pass/fail depending on (mibe >= 20)
+
+Use <inquire list of interior indices> to determine
+   nde = number of defined entries and
+   mdii = maximum defined interior index
+nemp = number of empty entries = mibe - nde
+TEST: #SR 18
+      "The program should be able to define additional interior bundle
+       entries, up to the maximum."
+do ii = mdii+1, mdii+nemp
+   set interior bundle entry, with index = ii
+   if error signalled then
+      fail
+      goto done
+   endif
+loop
+
+pass
+
+done:
+
+END PROGRAM 3
+
+
+
+PROGRAM 4: Validity of predefined interior bundles
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+mpci = maximum predefined color index
+mppi = maximum predefined pattern index
+mphi = maximum predefined hatch index
+
+Use <inquire interior facilities> to determine
+   npe    = number of predefined entries
+   laints = list of available interior styles
+   lahats = list of available hatch styles
+
+colerr  = false = color error found yet
+rlzerr  = false = realized error found yet
+styerr  = false = interior style error found yet
+paterr  = false = pattern index error found yet
+haterr  = false = hatch index error found yet
+laserr  = false = style in list of available styles error found yet
+
+TEST: #SR 20 21 24
+      "<Inquire predefined interior representation> should be able to
+       access as many entries as reported by <inquire interior facilities>."
+do ii = 1 to npe
+   <inquire predefined interior representation> for ii to determine
+      ici = interior color index and
+      ints = interior style
+      styi = interior style index
+   if error then
+      fail
+      goto more_tests
+   endif
+
+   if ici < 0 or > mpci then
+      colerr = true
+      erici = erroneous ici
+   endif
+
+   set interior representation #3 to ints, styi, ici
+   inquire interior representation #3, as realized
+   if (reported aspects not= to ints, styi, ici) then
+      rlzerr = true
+      erbun  = ii
+   endif
+
+   if ints is not in laints then
+      laserr = true
+      erints = erroneous ints
+   endif
+
+   if ints = PATTERN then
+      if styi < 1 or > mppi then
+         paterr = true
+         erpat = erroneous styi
+      endif
+   endif
+
+   if ints = HATCH then
+      if styi not in lahats then
+         haterr = true
+         erhat = erroneous styi
+      endif
+   endif
+
+loop
+pass
+
+TEST: #SR 21 30
+      "All color indices in predefined interior bundles should themselves
+       be in the predefined color table."
+if colerr then
+   fail
+   message about erici
+else
+   pass
+endif
+
+TEST: #SR 16 27 28 29 30
+      "All aspects of all predefined interior bundles should be
+       reported as realizable by <inquire interior representation>."
+if rlzerr then
+   fail
+   message about erbun
+else
+   pass
+endif
+
+TEST: #SR 21 27
+      "All interior styles in predefined bundles should themselves be
+       in the list of available interior styles."
+if laserr then
+   fail
+   message about erints
+else
+   pass
+endif
+
+TEST: #SR 21 28
+      "For PATTERN interior style, all pattern indices in predefined interior
+       bundles should themselves be in the predefined pattern table."
+if paterr then
+   fail
+   message about erpat
+else
+   pass
+endif
+
+TEST: #SR 21 29
+      "For HATCH interior style, all hatch indices in predefined interior
+       bundles should themselves be in the list of available hatch styles."
+if haterr then
+   fail
+   message about erhat
+else
+   pass
+endif
+
+more_tests:
+
+TEST: #SR 20 22
+      "<Inquire interior facilities> should report at least 5 predefined
+       entries."
+if npe < 5 then
+   fail
+   goto done
+else
+   pass
+endif
+
+TEST: #SR 21 23
+      "The first five predefined interior bundle entries should all be
+       mutually distinguishable."
+do ii = 1 to 5
+   <inquire predefined interior representation> for index ii, determine
+    pdin = predefined interior style
+    pdsi = predefined interior style index
+    pdci = predefined interior color index
+   do ii2 = 1 to ii-1
+      if svpdin (ii2) = pdin  and
+         svpdsi (ii2) = pdsi  and
+         svpdci (ii2) = pdci  then
+          fail
+          message about ii, ii2
+          goto done
+      endif
+   loop
+   svpdin (ii) = pdin
+   svpdsi (ii) = pdsi
+   svpdci (ii) = pdci
+loop
+pass
+
+done:
+
+END PROGRAM 4
+
+
+PROGRAM 5: WSL interior bundles initialized properly
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+msgsuf = message suffix = "opening workstation."
+
+check_table:
+
+<open workstation>
+<inquire interior facilities> to determine
+   npe = number of predefined interior entries in WDT
+
+<inquire list of interior indices> to determine
+   sibt = size of WSL interior bundle table
+TEST: #SR 25 26
+      "WSL interior bundle table should be the same size as the
+       predefined interior bundle table after " + msgsuf
+if sibt not= npe then
+   fail
+   message about sibt and npe
+else
+   pass
+endif
+
+TEST: #SR 21 24 25
+      "Each WSL interior entry should have the same attributes as the
+       corresponding predefined interior entry after " + msgsuf
+do ii = 1 to min(npe,sibt)
+  <inquire predefined interior representation> for index ii, determine
+    pdin = predefined interior style
+    pdsi = predefined interior style index
+    pdci = predefined interior color index
+  <inquire interior representation> for index ii, determine
+    din = defined interior style
+    dsi = defined interior style index
+    dci = defined interior color index
+  if din = pdin and
+     dsi = pdsi and
+     dci = pdci then
+       OK so far
+  else
+     fail
+     message about ii
+     goto end_check
+  endif
+loop
+pass
+
+end_check:
+alter bundle table - insert new or different entry
+<close workstation>
+if (msgsuf = "opening workstation.") then
+   msgsuf = "re-opening workstation."
+   goto check_table
+endif
+
+END PROGRAM 5
+
+
+PROGRAM 6: Interior style facilities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+
+<inquire interior facilities> to determine
+   laints = list of available interior styles
+
+thisis              = current interior style
+style(HOLLOW:EMPTY) = false = keep track of styles
+styval              = true = style valid
+
+TEST: #SR 16 33
+      "All interior styles within the list of available interior styles
+       should be accepted as valid and realizable."
+do thisis for each element in laints
+   <set interior representation>, index #2, interior style = thisis
+   if rejected as invalid then
+     fail
+     message about thisis
+     goto next
+   endif
+   <inquire interior representation>, index #2, as realized to determine
+    rints = realized interior style
+    if rints not= thisis then
+       fail
+       message about thisis
+       goto next
+    endif
+loop
+pass
+
+next:
+
+do thisis for each element in laints
+   if HOLLOW <= thisis <= EMPTY then
+      style(thisis) = true
+   else
+      styval = false
+      message about thisis
+   endif
+loop
+
+TEST: #SR 31
+      "All interior styles in the list of available interior styles
+       should be of type HOLLOW, SOLID, PATTERN, HATCH, or EMPTY."
+pass/fail depending on (styval)
+
+TEST: #SR 32
+      "The list of available interior styles should contain HOLLOW
+       and EMPTY."
+pass/fail depending on (style(HOLLOW) and style(EMPTY))
+
+if style(PATTERN) = true then
+   TEST: #SR 34
+         "For PATTERN interior style, at least 1 predefined pattern
+          index should be available."
+   <inquire pattern facilities> to determine
+       npdpi = number of predefined pattern indices
+   pass/fail depending on (npdpi >= 1)
+endif
+
+END PROGRAM 6
+
+
+PROGRAM 7: Interior style index facilities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+styval = true = all interior style indices accepted as valid
+
+<inquire interior facilities> to determine
+  naints = number of available interior styles
+  laints = list of available interior styles
+  nahs   = number of available hatch styles
+
+loop thru nahs to determine
+  mhi    = maximum defined hatch index
+  undhat = mhi + 1 = undefined hatch index
+  goth1  = is hatch style #1 supported? = true/false
+
+do ise for each entry in laints
+   if ise = PATTERN then
+      loop thru pattern table to determine:
+         undpat = mpi + 1 = undefined style index
+      <set interior representation>, index #3, PATTERN,
+         interior style index = mpi
+      TEST: #SR 16 40
+            "For PATTERN interior style, <inquire interior representation>
+             should report a defined interior style index realized as
+             itself."
+      <inquire interior representation>, index #3 to determine
+         rstyi= realized interior style index
+      if rstyi = mpi then
+         pass
+      else
+         fail
+         message about rstyi
+      endif
+
+      TEST: #SR 38
+            "Any positive pattern index should be accepted
+             as valid."
+      <set interior representation>, index #3, PATTERN,
+         interior style index = undpat
+      if error signalled then
+         fail
+         message about undpat
+      else
+         pass
+      endif
+
+      TEST: #SR 16 41
+            "For PATTERN interior style, <inquire interior representation>
+             should report an undefined interior style index realized as 1."
+      <inquire interior representation>, index #3 to determine
+         rstyi = realized interior style index
+      if rstyi = 1 then
+         pass
+      else
+         fail
+         message about rstyi
+      endif
+
+   else
+
+      <set interior representation>, index #4, interior style = ise,
+         interior style index = undhat
+      if error signalled then
+         styval = false
+         message about undhat, ise
+      else
+         <set interior representation>, index #5, interior style = ise,
+            interior style index = -undhat
+         if error signalled then
+            styval = false
+            message about -undhat, ise
+         endif
+      endif
+
+      if ise = HATCH then
+         <inquire interior representation>, index #4 to determine
+            rstyi = realized interior style index
+         if (goth1) then
+            TEST: #SR 16 41
+                  "For HATCH interior style, <inquire interior
+                   representation> should report an undefined
+                   interior style index realized as #1, when hatch
+                   style #1 is supported on the workstation."
+            if rstyi = 1 then
+               pass
+            else
+               fail
+               message about rstyi
+            endif
+         else
+            TEST: #SR 16 41
+                  "For HATCH interior style, <inquire interior
+                   representation> should report an undefined
+                   interior style index realized as something
+                   other than itself or #1, when hatch style #1
+                   is not supported on the workstation."
+            if (rstyi = 1 or rstyi = undhat) then
+               fail
+               message about rstyi
+            else
+               pass
+            endif
+         endif
+
+         <set interior representation>, index #4, HATCH,
+            interior style index = mhi
+         TEST: #SR 16 40
+               "For HATCH interior style, <inquire interior representation>
+                should report a defined interior style index realized as
+                itself."
+         <inquire interior representation>, index #4 to determine
+            rstyi = realized interior style index
+         if rstyi = mhi then
+            pass
+         else
+            fail
+            message about rstyi
+         endif
+      endif
+
+   endif
+loop
+
+TEST: #SR 37
+      "Any value for interior style index (except for pattern
+       indices) should be accepted as valid."
+
+pass/fail depending on (styval)
+
+END PROGRAM 7
+
+
+
+PROGRAM 8: Interior style index: hatch
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+
+<inquire interior facilities> to determine
+   laints = list of available interior styles
+   nahs = number of available hatch styles
+if laints does not contain HATCH then
+   TEST: #SR 43
+         "If HATCH interior style is not available, <inquire interior
+          facilities> should report 0 available hatch styles."
+   pass/fail depending on (nahs = 0)
+   goto done
+endif
+
+TEST: #SR 42
+      "The absolute value of the number of available hatch styles
+       should be greater than or equal to 3."
+pass/fail depending on (abs(nahs) >= 3)
+
+errcod = false
+impdep = false
+
+do hsid = 1 to abs(nahs)
+   <inquire interior facilities> to determine
+      thishs = hsid'th hatch style
+   keep track of non-zero error indicators:
+   if errind not= 0 then
+      errcod = true
+      message about errind and hsid
+      goto loop
+   endif
+
+   keep track of implementation-dependent types (non-positives):
+   if thishs < 1 then
+      impdep = true
+   endif
+loop
+
+TEST: #SR 44
+      "All entries within the reported size of the list of available
+       hatch styles should be accessible."
+pass/fail depending on (NOT errcod)
+
+if nahs > 0 then (positive number of available hatch styles)
+   if impdep then
+      no test
+   else
+      TEST: #SR 16 41 45 47
+            "When system reports that no implementation-dependent
+             hatch styles are available, none should be."
+      do imphs = 0 to -3
+         <set interior representation>, index #1, hatch style = imphs
+         <inquire interior representation> to determine
+            rstyi = realized hatch style
+         if rstyi = imphs then
+            fail
+            message about imphs realized as itself
+            goto endimp
+         endif
+      loop
+      pass
+      endimp:
+   endif
+else (nahs <= 0)
+   TEST: #SR 46 47
+         "Negative number of available hatch styles should indicate that
+          list contains no implementation-dependent hatch styles."
+   pass/fail depending on (NOT impdep)
+endif
+
+TEST: #SR 16 40
+      "All entries within the list of available hatch styles
+       should be realizable."
+do hsid = 1 to abs(nahs)
+  thishs = hsid'th entry in the list of available hatch styles
+  <set interior representation>, index #3, hatch style = thishs
+  if rejected as invalid then
+     fail
+     message about thishs
+     goto done
+  endif
+  <inquire interior representation>, index #3, as realized to determine
+     rstyi = realized hatch style
+  if rstyi not= thishs then
+     fail
+     message about thishs and rstyi
+     goto done
+  endif
+loop
+pass
+
+done:
+
+END PROGRAM 8
+
+
+PROGRAM 9: Interior color index
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+loop thru color table to determine:
+  mci = maximum defined color index
+undci = mci + 1 = undefined color index
+
+<set interior representation>, index #5, interior color index = mci
+
+TEST: #SR 16 51 52
+      "<Inquire interior representation> should report a defined
+       interior color index realized as itself."
+<inquire interior representation>, index #5 to determine
+   rici = realized interior color index
+if rici = mci then
+   pass
+else
+   fail
+   message about rici
+endif
+
+TEST: #SR 50
+      "Any non-negative color index should be accepted as valid."
+<set interior representation>, index #5, interior color index = undci
+if error signalled then
+   fail
+   message about undci
+else
+   pass
+endif
+
+TEST: #SR 16 51 53
+      "<Inquire interior representation> should report an undefined
+       interior color index realized as 1."
+<inquire interior representation>, index #5 to determine
+   rici = realized interior color index
+if rici = 1 then
+   pass
+else
+   fail
+   message about rici
+endif
+
+END PROGRAM 9
+
+
+PROGRAM 10: Appearance of predefined interior bundles
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES 1-5: This
+screen displays 6 pairs (consisting of the first 5, with one
+repeated) of predefined interior bundles and individual
+interiors.  Identify the pair of interiors (fill areas) that is
+different.
+
+WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES > 5: This
+screen displays several pairs (at most 8) of predefined interior
+bundles and individual interiors.  Identify the pair of interiors
+(fill areas) that is different.
+
+PREDEFINED INTERIOR BUNDLES: This screen displays a sample (at
+most 8) of predefined interior bundles and their bundle values
+for interior style, interior style index, and color index, as
+reported by <inquire predefined interior representation>.  For
+each displayed bundle, verify that 1) the actual appearance of
+the interior agrees with the aspect values reported on the screen
+and 2) these both agree with any external documentation provided
+by the implementor.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+set pattern size to .03,.03
+
+use <inquire interior facilities> to determine:
+  nprei  = number of predefined bundles
+
+*** *** ***   predefined interior bundles 1-5   *** *** ***
+
+numbun = 6
+bundis = bundles to be displayed (1 to 5, with one repeated)
+bundif = location of repeated bundle identifier (so that all 5
+         may be verified)
+
+TEST: #SR 3 4 7 21 25
+      "Immediately after <open workstation>, the first 5 defined
+       interior bundles of the WSL should appear as specified in
+       the corresponding predefined interior bundles of the WDT."
+
+The actual results (interiors drawn from initial state of WSL)
+are drawn on the left side of the picture. The corresponding
+expected results (interiors with individual attributes taken
+from WDT) are drawn on the right side, except for one
+interior which will be different.
+
+display and label actual results from bundis.
+
+set interior style, interior style index and color
+   index ASF to individual
+
+for ix = 1, numbun
+   <inquire predefined interior representation> on index
+        bundis(ix), determine:
+      pdis  = predefined interior style
+      pdisi = predefined interior style index
+      pdci  = predefined interior color index
+    if (ix = bundif) then
+       if (pdis = HOLLOW) then
+          pdis = EMPTY
+       else
+          pdis = (pdis mod 5) + 1
+       endif
+       pdisi = (pdisi mod 4) + 1
+       pdci = (pdci mod 5) + 1
+    endif
+    draw interior with pdis, pdisi, pdci
+next ix
+
+OPQA/WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES 1-5:
+   Which pair of rectangles does NOT match?
+pass/fail depending on (operator selects bundif)
+
+*** *** ***   predefined interior bundles > 5   *** *** ***
+
+if nprei <= 5 then
+   skip to end_comp_tables
+endif
+
+numbun = min (8, nprei-5)
+bundis = distinct bundles to be displayed - randomly chosen
+         from [6,nprei] predefined bundles
+
+TEST: #SR 3 4 7 21 25
+      "Immediately after <open workstation>, the defined interior
+       bundles >5 of the WSL should appear as specified in the
+       corresponding predefined interior bundles of the WDT."
+
+The actual results (interiors drawn from initial state of WSL)
+are drawn on the left side of the picture. The corresponding
+expected results (interior with individual attributes copied
+from WDT) are drawn on the right side, except for one
+interior which will be different.
+
+display and label bundis
+
+bundif = randomly selected bundle from bundis
+set interior style, interior style index and color index
+   ASF to individual
+
+for ix = 1, numbun
+   <inquire predefined interior representation> on index
+        bundis(ix), determine
+      pdis  = predefined interior style
+      pdisi = predefined interior style index
+      pdci  = predefined interior color index
+    if (ix = bundif) then
+       if (pdis = HOLLOW) then
+          pdis = EMPTY
+       else
+          pdis = (pdis mode 5) + 1
+       endif
+       pdisi = (pdisi mod 4) + 1
+       pdci = (pdci mod 5) + 1
+    endif
+    draw interior with pdis, pdisi, pdci
+next ix
+
+OPQA/WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES > 5:
+   Which pair of rectangles does NOT match?
+pass/fail depending on (operator selects bundif)
+
+end_comp_tables:
+
+*** *** *** ***   predefined bundle descriptions   *** *** *** ***
+
+TEST: #SR 3 4 7 21
+      "The appearance of predefined interior bundles should agree
+       with the descriptions supplied by the implementor."
+
+numbun = min(8, nprei)
+bundis = distinct bundles to be displayed, sorted
+
+for ix = 1 to numbun
+   <inquire predefined interior representation> for ixth entry in
+    bundis to determine:
+      pdis  = interior style
+      pdisi = interior style index
+      pdci  = interior color index
+   display and label ixth entry in bundis and its pdis, pdisi, pdci
+next ix
+
+OPQA/PREDEFINED INTERIOR BUNDLES: Does the appearance of each
+  interior agree with the displayed aspect values for that bundle?
+if (operator responds "yes") then
+   OPQA/PREDEFINED INTERIOR BUNDLES: If the implementor provides
+      external documentation, is it consistent with the interior
+      appearance and displayed aspect values for every bundle
+      identifier?
+   pass/fail depending on (operator responds "yes")
+else
+   fail
+endif
+
+END PROGRAM 10
+
+
+PROGRAM 11: Interior bundle index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEFINED INTERIOR INDICES: All interiors but one are identical
+(drawn with the same attribues).  Identify the interior that is
+different.
+
+UNDEFINED INTERIOR INDICES: A circle is drawn with several
+rectangular interiors beneath it.  Normally, all of these will
+have the same attributes as the circle. Count up and report the
+number of rectangles which match the circle in interior style,
+interior style index (if applicable), and color.
+
+DESIGN:
+
+set all ASFs to BUNDLED, except edge flag
+set edge flag off to distinguish between hollow and empty styles
+set pattern size to .03,.03
+
+<inquire workstation state table lengths> to determine maximum
+   number of entries in interior table
+szbt   = maximum size of bundle table
+
+<inquire interior facilities> to determine
+   altsty = alternative interior style to hollow
+
+*** *** ***   interior index   *** *** ***
+
+TEST: #SR 3 4 5 6 7
+      "A defined interior index should cause the addressed
+       entry in the bundle table to be used when rendering an
+       interior."
+
+bundis = number of bundles to be displayed = min(8, szbt)
+initialize all of bundis to: interior style HOLLOW,
+                             interior style index 1
+                             color index 1
+
+bundif = randomly selected bundle from bundis
+set bundif = interior style       = altsty
+             interior style index = 2
+             color      = 2
+
+alternate between fill area and fill area set
+Display and label the interior for each bundle in bundis
+
+OPQA/DEFINED INTERIOR INDICES: which interior is different?
+pass/fail depending on (interior with attributes from bundle #bundif
+                        selected)
+
+TEST: #SR 3 4 5 6 8
+      "An undefined interior index should cause bundle number
+       1 in the interior bundle table to be used when rendering
+       an interior."
+
+set index #1 in bundle table to interior style       = altsty
+                                interior style index = 3
+                                interior color       = 3
+
+u1,u2,u3 = 3 undefined, positive indices - all greater than
+  maximum defined index in bundle table (szbt)
+explct = number of explicit interiors using bundle #1 = random integer
+   from 0 to 4
+
+draw circle with bundle index 1
+
+display interleaved:
+  three interiors using bundle index u1,u2,u3,
+  explct interiors using bundle index 1
+
+OPQA/UNDEFINED INTERIOR INDICES: How many of the rectangular
+  interiors have the same attributes as the circle?
+pass/fail depending on (response = 3+explct)
+
+END PROGRAM 11
+
+
+PROGRAM 12: Appearance of bundled attributes
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+INTERIOR STYLES: This screen should display examples of the
+available interior styles actually supported by the
+implementation.  You should not consider whether the mandatory
+styles (hollow and empty) are present, but simply whether each
+interior style is recognizable from the verbal description.
+Enter a list of integers which identify the interior styles in
+the same order as they appear in the prompt.
+
+REGISTERED HATCH STYLES: This screen displays a sample of
+supported registered hatch styles (at most 8).  For each
+displayed interior, look up its hatch style identifier in the ISO
+register and verify that the actual appearance of the hatch style
+agrees with the ISO specification.
+
+IMPLEMENTOR DEFINED HATCH STYLES: This screen displays a sample
+of implementor defined hatch styles (at most 8).  For each
+displayed interior, look up its hatch style identifier in the
+implementor's documentation and verify that the actual appearance
+of the hatch style agrees with the specification.
+
+UNSUPPORTED HATCH STYLES: This screen should display several
+interiors with a hatch style that corresponds to interior style
+index (hatch index) 1; and one interior with a different hatch
+style. Identify the interior with the different hatch style.
+
+DEFINED PATTERNS: All interiors but one are crawn with the same
+pattern. Identify the single interior drawn in the a different
+pattern style. NOTE: this tests the indices into the pattern
+table (similar to color).
+
+UNDEFINED PATTERNS: This screen should display several interiors
+with a pattern that corresponds to interior style index (pattern
+index) 1; and one interior with a different pattern. Identify the
+area with the different pattern.
+
+DEFINED INTERIOR COLOR INDICES: All interiors but one are drawn
+in the background color.  Identify the interior drawn in the
+default foreground color.
+
+UNDEFINED INTERIOR COLOR INDICES: A star is drawn with several
+triangular interiors beneath it.  Normally, all of these will be
+the same color as the star.  Count up and report the number of
+triangles which match the star in color.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+set pattern size to .03,.03
+
+use <inquire interior facilities> to determine:
+  nalis  = number of available (and legal) interior styles
+  lavis  = list of available interior styles
+  numhs  = number of available hatch styles
+  lavrhs = list of available registered (non-mandatory) hatch styles
+  lavihs = list of available implementor-defined hatch styles
+           (may be derived directly from hatch style value, if reported
+            number of hatch styles < 0)
+
+use <inquire workstation state table lengths> to determine:
+   szbt = size of interior bundle table
+
+*** *** ***   interior style   *** *** ***
+
+Use default background color=0, foreground=1
+
+for ix = 1, nalis
+   <set interior representation>:
+      index                = ix
+      interior style       = ixth entry in lavis
+      interior style index = 1
+      color                = 1
+next ix
+
+Display in random order bundles 1 thru nalis
+
+TEST: #SR 3 5 6 7 35 36
+      "The available interior styles should be recognizable from
+       their standard description."
+
+OPQA/INTERIOR STYLES: List, in order, the numeric labels for
+  interior styles: hollow, solid, hatch, pattern, empty.
+
+pass/fail depending on (all displayed interior styles correctly
+                        identified)
+
+*** *** ***   interior style index - HATCH   *** *** ***
+
+if (HATCH not available) then
+   message: hatch style not supported, skip tests
+   goto end_hatch
+endif
+
+regdx = size of lavrhs
+if regdx < 1 skip to neg_type
+
+numdis = min(regdx, 8, szbt)
+hatdis = numdis entries, randomly chosen from lavrhs
+
+for ix = 1, numdis
+   <set interior representation>:
+      index     = ix
+      interior style  = HATCH
+      hatch index     = ixth entry in hatdis
+      color     = 1
+next ix
+
+display in order and label bundles 1 thru numdis
+
+TEST: #SR 3 5 6 7 35 39 40 47 48
+      "The registered hatch styles (> 0) should agree with
+       their registered description."
+
+OPQA/REGISTERED HATCH STYLES: Is each hatch style depicted
+  according to its numeric identifier's specification in the ISO
+  register?
+pass/fail depending on (operator responds "yes")
+
+neg_type:
+
+impdx = size of lavihs
+if impdx < 1 goto unsupport_style
+
+numdis = min(impdx, 8, szbt)
+hatdis = numdis entries, randomly chosen from lavihs
+
+for ix = 1, numdis
+   <set interior representation>:
+      index     = ix
+      interior style = HATCH
+      hatch index    = ixth entry in hatdis
+      color     = 1
+next ix
+
+display in order and label bundles 1 thru numdis
+
+TEST: #SR 3 5 6 7 35 39 40 47 49
+      "Implementor-defined hatch styles (< 1) should agree with the
+       descriptions supplied by the implementor."
+
+OPQA/IMPLEMENTOR DEFINED HATCH STYLES: Is each hatch style depicted
+  according to its numeric identifier's specification in the
+  implementor documentation?
+pass/fail depending on (operator responds "yes")
+
+unsupport_style:
+
+if (hatch index 1 not available) then
+   message: No index #1, skip test of unsupported hatch style
+   goto end_hatch
+endif
+lunsup = list of (mostly) unsupported hatch styles contains:
+   a negative unsupported type, if available (< minimum in lavihs)
+   0, if not in lavihs
+   a positive unsupported type (> maximum in lavrhs)
+   1, (horizontal hatch)
+   a supported type, other than 1 (should be at least 2 others)
+
+for ix = 1, (size of lunsup)
+   <set interior representation>:
+      index = ix
+      interior style = HATCH
+      hatch index    = lunsup(ix)
+      color index    = 1
+next ix
+
+Display in random order bundles 1 thru (size of lunsup)
+
+TEST: #SR 3 5 6 7 35 39 41
+      "Unavailable hatch styles should be displayed as hatch style
+       1."
+
+OPQA/UNSUPPORTED HATCH STYLES: Which hatch style is not the
+  horizontal hatch style of index #1?
+pass/fail depending on (the non-hatch style 1 selected)
+
+end_hatch:
+
+*** *** ***   interior style index - PATTERN   *** *** ***
+
+if (PATTERN not available) then
+   message: skip tests, pattern not available
+   goto end_pattern
+endif
+
+TEST: #SR 3 4 5 6 7 35 39 40
+      "A defined pattern index should cause the addressed entry in
+       the pattern table to be used when rendering an interior
+       filled with pattern interior style."
+
+Set 5 patterns (use index 1-5): 4 identical and a random one
+  different
+
+for ix = 1, 5
+   <set interior representation>:
+      index = ix
+      interior style = PATTERN
+      pattern index  = ix
+      color index    = 1
+next ix
+
+display in order and label bundles 1 thru 5
+
+OPQA/DEFINED PATTERNS: Which pattern is different?
+pass/fail depending on (response = different pattern selected )
+
+
+lunsup = list of (mostly) unsupported pattern indices contains:
+   3 undefined pattern indices
+   1, (reset to checkerboard)
+   defined pattern #5 (set different from 1)
+
+for ix = 1, 5
+   <set interior representation>:
+      index = ix
+      interior style = PATTERN
+      pattern index  = lunsup(ix)
+      color index    = 1
+next ix
+
+Display in random order bundles 1 thru 5
+
+TEST: #SR 3 5 6 7 35 39 41
+      "Unavailable patterns should be displayed as pattern 1."
+
+OPQA/UNDEFINED PATTERNS: Which pattern is different?
+pass/fail depending on (response = bundle with defined index #5)
+
+end_pattern:
+
+
+*** *** ***   interior color index   *** *** ***
+
+TEST: #SR 3 4 5 6 7 50 51 52
+      "A defined interior color index should cause the addressed
+       entry in the color table to be used when rendering an
+       interior."
+
+bckcol = background color = realized color spec for entry #0
+forcol = foreground color = realized color spec for entry #1
+
+szcolt = maximum size of color table (including entry #0)
+numdis = number of interiors to be drawn = min(8, szcolt, szbt)
+facol  = random permutation of #0,#1, and numdis-2 random choices
+         from entries #2 to #szcolt-1
+visdx = from facol, randomly select an entry to be made visible
+        but not the one that contains 0, since this may not be
+        re-settable.
+
+for ix = 1 to numdis
+   set entry facol(ix) in color table to bckcol
+   <set interior representation>:
+      index          = ix
+      interior style = select among available interiors, but not
+                       EMPTY or PATTERN
+      interior style index = 1
+      color          = facol(ix)
+next ix
+
+set entry facol(visdx) in color table to forcol
+
+Display bundles 1 thru numdis using circular fill areas, and
+  label them
+
+OPQA/DEFINED INTERIOR COLOR INDICES: Which circle is visible?
+pass/fail depending on (response = interior colored by visdx)
+
+end_def_col:
+
+TEST: #SR 3 4 5 6 7 50 51 53
+      "An undefined interior color index should cause entry
+       number 1 in the color table to be used when rendering an
+       interior."
+
+set entry #1 in color table opposite from BCKCOL
+set entry #1 different from FORCOL - make sure undefined default
+  to *current* color-rep of #1, not just a predefined color.
+
+explct = number of explicit lines of color #1 = random integer
+   from 0 to min(4, szbt-3)
+u1,u2,u3 = 3 undefined, positive color indices - all greater
+  than maximum defined entry in color table
+
+draw star with color #1
+set up 3 bundles 1 thru 3 with color index = u1,u2,u3
+set up explct bundles with color index=1
+
+display in random order bundles #1 thru explct+3, using triangles
+
+OPQA/UNDEFINED INTERIOR COLOR INDICES: How many triangles are the
+  same color as the star?
+pass/fail depending on (response = 3+explct)
+
+END PROGRAM 12
+
+
+PROGRAM 13: Network inheritance and initialization of interior
+            index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR INTERIOR INDEX: This screen
+displays several left-right pairs of interiors.  Make sure that
+all pairs except one have matching interior styles, interior
+style index (if applicable) and colors.  Identify the
+non-matching pair.
+
+DESIGN:
+
+All test cases use same basic structure network for testing
+inheritance.  Five (distinct if possible) values for the
+attribute to be tested are set up and propagated throughout the
+network.  The first value is the system default from the PDT.
+Note that structure #104 is executed by both #103 and #101.
+Actual results are displayed on the left, expected results
+on the right, with the 14th deliberately made incorrect.
+
+default = val#1
+  |                  102
+  |                 /  prim 2
+  |               /    attr = val#3   val#3
+  V        val#1/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   attr = val#4
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  attr = val#2                                  prim 7    \ val#4
+  prim 10                                                   \
+  transform             val#2                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        attr = val#5
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+
+set all ASFs to BUNDLED
+set pattern size to .03,.03
+
+*** *** ***   inheritance for interior index *** *** ***
+
+call DISCOL to try to get 5 distinct foreground colors,
+  returning fcol = actual number of foreground colors
+colind(1:5) = [1,2,3,4,5]
+if (fcol < 5) then
+   copy 1st valid part of list to tail of list
+endif
+
+istydx = interior style index (will be reset if have HATCH)
+istydx(1:5) = [1,2,3,4,5]
+
+use <inquire interior facilities> to determine:
+  naints = number of available interior styles
+  got(HOLLOW:EMPTY) = true/false = which interior styles are available
+
+initialize lints = HOLLOW, EMPTY, HOLLOW, HOLLOW, HOLLOW
+                 = list of interior styles
+
+check which styles are available besides HOLLOW and EMPTY
+  and reset lints(3:5) accordingly
+
+nxtval = 3
+if got(solid) then
+   fill lints(nxtval:5) with solid
+   nxtval = nxtval + 1
+endif
+
+if got(hatch) then
+   fill lints(nxtval:5) with hatch
+   set istydx(nxtval:5) to distinct hatch indexes
+   nxtval = nxtval + 1
+endif
+
+if got(pattern) then
+   fill lints(nxtval:5) with pattern
+   set patterns nxtval-5 to distinct values
+endif
+
+set up bundles 1-5:
+
+   bundle
+   index     interior style  int style index    color index
+   ------    --------------  ---------------    -----------
+     1       lints(1)         istydx(1)         colind(1)
+     2       lints(2)         istydx(2)         colind(2)
+     3       lints(3)         istydx(3)         colind(3)
+     4       lints(4)         istydx(4)         colind(4)
+     5       lints(5)         istydx(5)         colind(5)
+
+randomize location of interiors
+set up CSS as described above
+set all ASFs to BUNDLED
+
+display 14 pairs of interiors, using bundles 1-5
+
+TEST: #SR 3 4 6 7 9 10
+      "The interior index should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR INTERIOR INDEX:
+  which pair of interiors does NOT match?
+pass/fail depending on (response = position of interior 14)
+
+END PROGRAM 13

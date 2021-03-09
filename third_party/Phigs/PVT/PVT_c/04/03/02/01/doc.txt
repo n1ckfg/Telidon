@@ -1,0 +1,529 @@
+TITLE: Setting and inquiring workstation colour
+
+MODULE#: 04.03.02.01
+
+DESCRIPTION: This module tests the ability to set and inquire
+the entries in the workstation state list (WSL) pertaining to
+colour.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** ***   set/inquire colour representation   *** *** ***
+
+SR1.  <Set colour representation> causes an entry in the colour
+table of the specified workstation to be defined.
+#F 69
+#D 5.15.2 5.15.3.1
+#S 4.5.12/63/7
+#T P01/2 P01/3 P01/6 P01/7 P01/9 P01/10 P04/1
+
+SR2.  <Set colour representation> associates an entry in the
+colour table with the colour described by the specified colour
+coordinates interpreted according to the current colour model of
+the specified workstation.
+#F 69
+#D 5.15.1 5.15.3.1 5.15.3.2
+#S 4.5.2/42/3 4.5.2/43/2 4.5.12/63/7 4.5.12/63/8
+#T P01/4 P01/8 P01/11 P04/1
+#C Note that the entry is associated with a colour per se,
+not simply with a set of colour coordinates.
+
+SR3.  <Inquire list of colour indices> returns the list of
+defined colour indices in the colour table.
+#F 235
+#D 5.15.2 5.15.3.1
+#S n
+#T P01/1 P01/2 P01/3 P01/5 P01/6 P01/7 P01/9 P01/10 P01/12
+
+SR4.  <Inquire colour representation> can access all defined
+entries in the colour table.
+#F 235 236
+#D 5.15.2 5.15.3.1 5.15.3.2
+#S 4.5.12/63/7
+#T P01/12
+
+SR5.  <Inquire colour representation> returns the colour
+associated with an entry in the colour table as closely as
+possible to the colour as originally set, when type of returned
+values is specified as SET.  The returned colour is described by
+a set of colour coordinates, to be interpreted according to the
+current colour model of the specified workstation.
+#F 72 236
+#D 5.15.1 5.15.3.1 5.15.3.2
+#S 4.5.12/63/7 4.5.12/63/8 4.11/108/1
+#T P01/4 P01/8 P01/11
+
+SR6.  <Inquire colour representation> returns the representation
+for colour index number 1, if type of returned values is
+REALIZED, and colour index is undefined.
+#F 235 236
+#D 5.15.2 5.15.3.1 5.15.3.2
+#S n
+#T P01/5
+
+SR7.  <Inquire workstation state table lengths> returns the
+maximum size of colour table.
+#F 285
+#D 6.21.7
+#S n
+#T P02/1 P02/2 P04/1
+
+SR8.  There must be at least two settable entries available in
+the colour table.
+#F 69 285
+#D 5.15.2 6.21.7
+#S 4.5.12/63/5 6.7/324/1
+#T P02/1
+
+*** *** *** ***   set/inquire colour model   *** *** *** ***
+
+SR9.  <Set colour model> sets the current colour model of the
+specified workstation.
+#F 72
+#D 5.15.1
+#S 4.5.12/63/8
+#T P03/2 P03/3
+
+SR10.  <Inquire colour model> returns the current colour model of
+the specified workstation.
+#F 234
+#D 5.15.1
+#S 4.5.12/63/8
+#T P03/1 P03/2 P03/3
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   69: pscr    <set colour representation>
+   72: pscmd   <set colour model>
+  234: pqcmd   <inquire colour model>
+  235: pqeci   <inquire list of colour indices>
+  236: pqcr    <inquire colour representation>
+  285: pqwksl  <inquire workstation state table lengths>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.15  ...  colour_entry
+  5.15.1  ...  current_colour_model
+  5.15.2  ...  number_of_colour_table_entries
+  5.15.3  ...  colour_table
+  5.15.3.1  ...  colour_index
+  5.15.3.2  ...  colour_specification
+  6  ...  workstation_description_table
+  6.21  ...  maximum_table_lengths
+  6.21.7  ...  maximum_number_of_colour_indices
+ 
+
+
+PROGRAM 1: Setting and inquiring colour table
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<set colour model> to RGB
+  This statement is NOT meant to test <set colour model>, but is
+  necessary to give meaningful value to colour specifications used
+  in <set colour representation>
+
+<inquire workstation state table lengths> to determine maximum
+   number of entries in workstation's colour table:
+   mne = maximum number of entries
+
+*** *** *** *** ***    initialized entries   *** *** *** *** ***
+
+<inquire list of colour indices> to determine initialized entries
+   nie = number of initialized entries
+   aii = an initialized index
+TEST: #SR 3
+      "<Inquire list of colour indices> should return initialized
+       indices."
+if (<inquire list of colour indices> indicates error) then
+   fail
+   goto undefined_test
+else
+   pass
+endif
+
+initialized_test:
+
+<inquire colour representation> for index# aii, as set
+   determines:
+      old_red
+      old_green
+      old_blue
+if old_red < .5 then
+   new_red = old_red + .25
+else
+   new_red = old_red -.15
+endif
+if old_green < .5 then
+   new_green = old_green + .25
+else
+   new_green = old_green -.15
+endif
+if old_blue < .5 then
+   new_blue = old_blue + .25
+else
+   new_blue = old_blue -.15
+endif
+
+<set colour representation> sets:
+  index          = aii
+  RGB colour spec = (new_red, new_green, new_blue)
+
+<inquire list of colour indices> returns defined list
+
+TEST: #SR 1 3
+      "Re-defining a system-initialized entry should not change
+       the number of defined entries."
+pass/fail depending on (current number of entries = nie)
+
+TEST: #SR 1 3
+      "Initialized table entry should be reported as defined after
+       being set."
+if (defined list includes #aii) then
+   pass
+else
+   fail
+   goto undefined_test
+endif
+
+<inquire colour representation> for index# aii, as SET
+   to determine RGB colour_spec
+TEST: #SR 2 5
+      "New values should be set for initialized table entry."
+pass/fail depending on
+   (RGB colour_spec = (new_red, new_green, new_blue))
+
+*** *** *** *** ***    undefined entries   *** *** *** *** ***
+
+undefined_test:
+
+If (number of initialized entries
+   >= max table size in test program) then
+   skip rest of undefined_test; goto redefined_test
+endif
+
+<inquire list of colour indices> returns defined list
+determine lowest undefined index (not in defined list) = lui
+determine current number defined entries = cnde
+
+TEST: #SR 3 6
+      "<Inquire colour representation> should return attributes for
+       colour index #1 when inquiring an undefined entry as REALIZED."
+<inquire colour representation> as REALIZED for index #lui
+   to get colour_spec for undefined_entry.
+<inquire colour representation> as REALIZED for index #1
+   to get colour_spec for index #1.
+pass/fail depending on
+   (colour_spec for undefined_entry = colour_spec for index #1).
+
+If (number of initialized entries
+   >= max size of colour table) then
+   skip rest of undefined_test; goto redefined_test
+endif
+
+<set colour representation>:
+   index          = lui
+   RGB colour_spec = (.85, .27, .76)
+
+<inquire list of colour indices> to determine
+   listot = total number of entries in list
+
+TEST: #SR 1 3
+      "Defining an undefined entry should increment the number
+       of defined entries."
+pass/fail depending on (listot = cnde + 1)
+
+TEST: #SR 1 3
+      "Undefined table entry should be reported as defined after set."
+if (resulting list of indices contains lui) then
+   pass
+else
+   fail
+   goto redefined_test
+endif
+
+<inquire colour representation> for index# lui, as SET
+   to determine RGB colour_spec
+TEST: #SR 2 5
+      "New values should be set for undefined table entry."
+pass/fail depending on RGB colour_spec = (.85, .27, .76)
+
+*** *** *** *** ***    redefined entries   *** *** *** *** ***
+
+redefined_test:
+
+dci  = defined colour index
+cnde = current number of defined entries
+
+<set colour representation>:
+   index          = dci
+   RGB colour_spec = (0.0, 1.0, 0.0)
+
+new_red     =  1.0
+new_green   =  1.0
+new_blue    =  1.0
+
+<set colour representation>:
+   index          = dci
+   RGB colour_spec = (new_red, new_green, new_blue)
+
+<inquire list of colour indices> to determine
+   nnde = new number of defined entries
+
+TEST: #SR 1 3
+      "Re-defining a user-defined entry should not change number
+       of defined entries."
+pass/fail depending on (nnde = cnde)
+
+TEST: #SR 1 3
+      "Redefined table entry should be reported as defined after
+       set."
+if (resulting list of indices contains dci) then
+   pass
+else
+   fail
+   goto end_redefined_test
+endif
+
+<inquire colour representation> for index #dci, as SET
+   to determine RGB colour_spec
+TEST: #SR 2 5
+      "New values should be set for redefined table entry."
+pass/fail depending on
+   (RGB colour_spec = (new_red, new_green, new_blue))
+
+end_redefined_test:
+
+*** *** *** *** ***    access all defined entries   *** *** *** *** ***
+
+TEST: #SR 3 4
+      "<Inquire list of colour indices> and <inquire colour
+       representation> should detect all defined entries."
+Use <inquire list of colour indices> to get
+    list of defined indices
+if (non-zero error code) then
+   fail
+   goto end_access_all
+endif
+For each defined index, apply <inquire colour representation>
+   if (non-zero error code) then
+      fail
+      goto end_access_all
+   endif
+loop to next index
+pass
+
+end_access_all:
+
+END PROGRAM 1
+
+
+PROGRAM 2: Colour table length
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire workstation state table lengths> to determine
+   mcte = maximum colour table entries
+
+TEST: #SR 7 8
+      "<Inquire workstation state table lengths> should report at least
+       2 entries as maximum size of colour table."
+pass/fail depending on (mcte >= 2)
+
+Use <inquire list of colour indices> to determine
+   nde = number of defined entries and
+   mdci = maximum defined colour index
+nemp = number of empty entries = mcte - nde
+TEST: #SR 7
+      "The program should be able to define additional colour table
+       entries, up to the maximum."
+do ci = mdci+1, mdci+nemp
+   set colour table entry, with index = ci
+   if error signalled then
+      fail
+      goto done
+   endif
+loop
+
+pass
+
+done:
+
+END PROGRAM 2
+
+
+PROGRAM 3: Setting and inquiring colour model
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+*** *** *** *** Initial colour model *** *** *** ***
+
+TEST: #SR 10
+      "<Inquire colour model> should be able to determine the
+       initial colour model."
+<Inquire colour model> to determine
+   inimod = initial colour model
+pass/fail depending on (no error returned)
+
+if inimod = RGB then
+   newmod = CIE
+else
+   newmod = RGB
+endif
+<set colour model> newmod
+<inquire colour model> to determine curmod
+TEST: #SR 9 10
+      "<Set colour model> should be able to change colour model
+       from its default setting."
+pass/fail depending on (newmod = curmod)
+
+*** *** *** *** Redefined colour model *** *** *** ***
+
+if curmod = RGB then
+   newmod = CIE
+else
+   newmod = RGB
+endif
+<set colour model> newmod
+<inquire colour model> to determine curmod
+TEST: #SR 9 10
+      "<Set colour model> should be able to set colour model
+       and then re-set it."
+pass/fail depending on (newmod = curmod)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Simultaneous use of all color table entries
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+USE OF ENTIRE COLOUR TABLE: Five of the six labelled squares
+should contain a square grid of polymarkers of a single color.
+Identify the square containing a different display.
+
+DESIGN:
+
+inquire color representation #0 as realized to determine
+  bckcol = background color
+inquire color representation #1 as realized to determine
+  forcol = foreground color
+inquire workstation state table lengths to determine
+  colsiz = number of settable entries in color table
+maxci = maximum color index = colsiz-1
+
+TEST: #SR 1 2 7
+      "All the entries within the reported size of the color
+       table should be usable and effective."
+
+set all even entries = background color
+         odd entries = foreground color:
+for ix = 2 to maxci by 2
+   set color representation for #ix to bckcol
+next ix
+for ix = 3 to maxci by 2
+   set color representation for #ix to forcol
+next ix
+
+sqside = integer number of polymarkers per side of square array
+       = sqrt(colsiz/4 + 1) + 1
+(this ensures all color slots will be used)
+side1 = 0.1
+side2 = 0.9
+sqinc = increment for square = (side2-side1) / (sqside-1)
+mrksiz = polymarker size in WC = min(0.05, 0.1 * sqinc)
+set polymarker size = mrksiz (in WC)
+
+set polymarker style = plus (+)
+(this prevents overwriting by markers in the background color)
+
+divide screen up into six labelled square areas
+perm = randomize order from 1 to 6
+nxtcol = next color index to use = 0
+
+for ix = 1 to 6
+   window = perm(ix)
+   set tranformation to scale unit square into this window
+
+   if (window = 1) then
+      simulate incorrect display:
+      ngsq = window
+      set polymarker color = 1
+      siz = 0
+      for xloc = side1 to (side2 + 0.5*sqinc) by sqinc
+      for yloc = side1 to (side2 + 0.5*sqinc) by sqinc
+         siz = siz+1
+         xa(siz) = xloc
+         ya(siz) = yloc
+      next yloc
+      next xloc
+      put a polymarker at a non-aligned position:
+      siz = siz+1
+      xa(siz) = side1 + sqinc * ((random integer from 0 to sqside-2) + 0.5)
+      ya(siz) = side1 + sqinc * ((random integer from 0 to sqside-2) + 0.5)
+      display polymarker: siz, xa,ya
+   elseif (window = 2) then
+      simulate correct display:
+      set polymarker color = 1
+      siz = 0
+      for xloc = side1 to (side2 + 0.5*sqinc) by sqinc
+      for yloc = side1 to (side2 + 0.5*sqinc) by sqinc
+         siz = siz+1
+         xa(siz) = xloc
+         ya(siz) = yloc
+      next yloc
+      next xloc
+      display polymarker: siz, xa,ya
+   else
+      draw an actual grid:
+      for xloc = side1 to (side2 + 0.5*sqinc) by sqinc
+      for yloc = side1 to (side2 + 0.5*sqinc) by sqinc
+         visible aligned marker:
+         if (nxtcol < maxci) then
+            nxtcol = nxtcol+1
+         else
+            nxtcol = 1
+         endif
+         set polymarker color = nxtcol
+         xa(1) = xloc
+         ya(1) = yloc
+         display single polymarker: xa,ya
+
+         invisible mis-aligned marker:
+         if (nxtcol < maxci) then
+            nxtcol = nxtcol+1
+         else
+            nxtcol = 0
+         endif
+         set polymarker color = nxtcol
+         xa(1) = side1 + sqinc * ((random integer from 0 to sqside-2) +
+                                   random from 0.3 to 0.7)
+         ya(1) = side1 + sqinc * ((random integer from 0 to sqside-2) + )
+                                   random from 0.3 to 0.7)
+         display single polymarker: xa,ya
+      next yloc
+      next xloc
+   endif
+next ix
+
+OPQA/USE OF ENTIRE COLOUR TABLE: Which area does NOT contain a
+  <sqside> by <sqside> square grid of polymarkers of a single
+  colour?
+pass/fail depending on (operator response = ngsq)
+
+END PROGRAM 4

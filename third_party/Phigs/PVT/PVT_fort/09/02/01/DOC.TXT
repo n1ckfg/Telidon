@@ -1,0 +1,744 @@
+TITLE: Operating state error indicators
+
+MODULE#: 09.02.01
+
+DESCRIPTION: This module tests that the functions which require a set of
+operating states set the specified state error to the error indicator if
+they are executed in an incorrect state.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  If functions <translate 3>-<evaluate view mapping matrix>,
+<inquire list of available workstation types>-<inquire conflict
+resolution>, <inquire more simultaneous events>, <inquire workstation
+category>-<inquire open structure>, <inquire element type and
+size>-<incremental spatial search>, <inquire error handling mode> are
+called, and the state is not (PHOP, *,*,*), then the error indicator
+is set to 2.
+#F 91-110 204-212 215 253-301 305-312 314
+#D 1.1
+#S 4.11/108/1 5.12.1/232/1
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P01/18 P01/19 P01/20
+   P01/21 P01/22 P01/23 P01/24 P01/25 P01/26 P01/27 P01/28 P01/29
+   P01/30 P01/31 P01/32 P01/33 P01/34 P01/35 P01/36 P01/37 P01/38
+   P01/39 P01/40
+
+SR2.  If functions <inquire workstation connection and type>-<inquire
+string device state>, <inquire input queue overflow> are called, and
+the state is not (PHOP, WSOP, *, *), then the error indicator is set
+to 3.
+#F 216-252 313
+#D 1.1 1.2
+#S 4.11/108/1 5.12.1/232/1
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11
+   P02/12 P02/13 P02/14 P02/15 P02/16 P02/17 P02/18 P02/19 P02/20
+   P02/21 P02/22 P02/23 P02/24 P02/25
+
+SR3.  If functions <inquire element pointer>-<inquire current element
+pointer> are called, and the state is not (PHOP, *, STOP, *), then the
+error indicator is set to 5.
+#F 302-304
+#D 1.1 1.3
+#S 4.11/108/1 5.12.1/232/1
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+
+SR4.  If functions <inquire all conflicting structures>, <inquire
+conflicting structures in network> are called, and the state is not
+(PHOP, *, *, AROP), then the error indicator is set to 7.
+#F 213 214
+#D 1.1 1.4
+#S 4.11/108/1 5.12.1/232/1
+#T P04/1 P04/2 P04/3 P04/4
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   91: ptr3    <translate 3>
+   92: ptr     <translate>
+   93: psc3    <scale 3>
+   94: psc     <scale>
+   95: prox    <rotate x>
+   96: proy    <rotate y>
+   97: proz    <rotate z>
+   98: pro     <rotate>
+   99: pcom3   <compose matrix 3>
+  100: pcom    <compose matrix>
+  101: ptp3    <transform point 3>
+  102: ptp     <transform point>
+  103: pbltm3  <build transformation matrix 3>
+  104: pbltm   <build transformation matrix>
+  105: pcotm3  <compose transformation matrix 3>
+  106: pcotm   <compose transformation matrix>
+  107: pevom3  <evaluate view orientation matrix 3>
+  108: pevom   <evaluate view orientation matrix>
+  109: pevmm3  <evaluate view mapping matrix 3>
+  110: pevmm   <evaluate view mapping matrix>
+  204: pqewk   <inquire list of available workstation types>
+  205: pqphf   <inquire phigs facilities>
+  206: pqgsef  <inquire generalized structure element facilities>
+  207: pqmclf  <inquire modelling clipping facilities>
+  208: pqedm   <inquire edit mode>
+  209: pqopwk  <inquire set of open workstations>
+  210: pqsid   <inquire structure identifiers>
+  211: pqarf   <inquire archive files>
+  212: pqcnrs  <inquire conflict resolution>
+  213: pqcst   <inquire all conflicting structures>
+  214: pqcstn  <inquire conflicting structures in network>
+  215: pqsim   <inquire more simultaneous events>
+  216: pqwkc   <inquire workstation connection and type>
+  217: pqevwi  <inquire list of view indices>
+  218: pqvwr   <inquire view representation>
+  219: pqhrm   <inquire hlhsr mode>
+  220: pqpost  <inquire posted structures>
+  221: pqdus   <inquire display update state>
+  222: pqepli  <inquire list of polyline indices>
+  223: pqplr   <inquire polyline representation>
+  224: pqepmi  <inquire list of polymarker indices>
+  225: pqpmr   <inquire polymarker representation>
+  226: pqetxi  <inquire list of text indices>
+  227: pqtxr   <inquire text representation>
+  228: pqeii   <inquire list of interior indices>
+  229: pqir    <inquire interior representation>
+  230: pqeedi  <inquire list of edge indices>
+  231: pqedr   <inquire edge representation>
+  232: pqepai  <inquire list of pattern indices>
+  233: pqpar   <inquire pattern representation>
+  234: pqcmd   <inquire colour model>
+  235: pqeci   <inquire list of colour indices>
+  236: pqcr    <inquire colour representation>
+  237: pqhlft  <inquire highlighting filter>
+  238: pqivft  <inquire invisibility filter>
+  239: pqwkt3  <inquire workstation transformation 3>
+  240: pqwkt   <inquire workstation transformation>
+  241: pqlcs3  <inquire locator device state 3>
+  242: pqlcs   <inquire locator device state>
+  243: pqsks3  <inquire stroke device state 3>
+  244: pqsks   <inquire stroke device state>
+  245: pqvls3  <inquire valuator device state 3>
+  246: pqvls   <inquire valuator device state>
+  247: pqchs3  <inquire choice device state 3>
+  248: pqchs   <inquire choice device state>
+  249: pqpks3  <inquire pick device state 3>
+  250: pqpks   <inquire pick device state>
+  251: pqsts3  <inquire string device state 3>
+  252: pqsts   <inquire string device state>
+  253: pqwkca  <inquire workstation category>
+  254: pqdsp3  <inquire display space size 3>
+  255: pqdsp   <inquire display space size>
+  256: pqhrif  <inquire hlhsr facilities>
+  257: pqvwf   <inquire view facilities>
+  258: pqpvwr  <inquire predefined view representation>
+  259: pqwkcl  <inquire workstation classification>
+  260: pqdswa  <inquire dynamics of workstation attributes>
+  261: pqddus  <inquire default display update state>
+  262: pqplf   <inquire polyline facilities>
+  263: pqpplr  <inquire predefined polyline representation>
+  264: pqpmf   <inquire polymarker facilities>
+  265: pqppmr  <inquire predefined polymarker representation>
+  266: pqtxf   <inquire text facilities>
+  267: pqptxr  <inquire predefined text representation>
+  268: pqanf   <inquire annotation facilities>
+  269: pqtxx   <inquire text extent>
+  270: pqif    <inquire interior facilities>
+  271: pqpir   <inquire predefined interior representation>
+  272: pqedf   <inquire edge facilities>
+  273: pqpedr  <inquire predefined edge representation>
+  274: pqpaf   <inquire pattern facilities>
+  275: pqppar  <inquire predefined pattern representation>
+  276: pqcmdf  <inquire colour model facilities>
+  277: pqcf    <inquire colour facilities>
+  278: pqpcr   <inquire predefined colour representation>
+  279: pqegd3  <inquire list of available generalized drawing primitives 3>
+  280: pqegdp  <inquire list of available generalized drawing primitives>
+  281: pqgdp3  <inquire generalized drawing primitive 3>
+  282: pqgdp   <inquire generalized drawing primitive>
+  283: pqegse  <inquire list of available generalized structure elements>
+  284: pqdp    <inquire number of display priorities supported>
+  285: pqwksl  <inquire workstation state table lengths>
+  286: pqdstr  <inquire dynamics of structures>
+  287: pqli    <inquire number of available logical input devices>
+  288: pqdlc3  <inquire default locator device data 3>
+  289: pqdlc   <inquire default locator device data>
+  290: pqdsk3  <inquire default stroke device data 3>
+  291: pqdsk   <inquire default stroke device data>
+  292: pqdvl3  <inquire default valuator device data 3>
+  293: pqdvl   <inquire default valuator device data>
+  294: pqdch3  <inquire default choice device data 3>
+  295: pqdch   <inquire default choice device data>
+  296: pqdpk3  <inquire default pick device data 3>
+  297: pqdpk   <inquire default pick device data>
+  298: pqdst3  <inquire default string device data 3>
+  299: pqdst   <inquire default string device data>
+  300: pqwkpo  <inquire set of workstations to which posted>
+  301: pqopst  <inquire open structure>
+  302: pqep    <inquire element pointer>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+  305: pqets   <inquire element type and size>
+  306: pqeco   <inquire element content>
+  307: pqstst  <inquire structure status>
+  308: pqpan   <inquire paths to ancestors>
+  309: pqpde   <inquire paths to descendants>
+  310: pels    <element search>
+  311: piss3   <incremental spatial search 3>
+  312: piss    <incremental spatial search>
+  313: pqiqov  <inquire input queue overflow>
+  314: pqerhm  <inquire error handling mode>
+ 
+  Data Structures ---
+  1  ...  operating_state
+  1.1  ...  system_state
+  1.2  ...  workstation_state
+  1.3  ...  structure_state
+  1.4  ...  archive_state
+ 
+
+
+PROGRAM 1: Error indicator = 2
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Close phigs after initializing to test if functions 98,99,102,103,106,107,
+110,204-205,207-212,253,254,257-259,261,264,266,269,270,272,275-277,282-286,
+301,305-308,310 set number 2 to the error indicator: ignoring function,
+function requires state (PHOP,*,*,*).
+
+<close phigs>
+
+<rotate>
+TEST: #SR 1
+      "If <rotate> is called and PHIGS is closed, it should return error
+       indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<compose matrix 3>
+TEST: #SR 1
+      "If <compose matrix 3> is called and PHIGS is closed, it should return
+       error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<transform point>
+TEST: #SR 1
+      "If <transform point> is called and PHIGS is closed, it should return
+       error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<build transformation matrix 3>
+TEST: #SR 1
+      "If <build transformation matrix 3> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<compose transformation matrix>
+TEST: #SR 1
+      "If <compose transformation matrix> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<evaluate view orientation matrix 3>
+TEST: #SR 1
+      "If <evaluate view orientation matrix 3> is called and PHIGS is closed,
+       it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<evaluate view mapping matrix>
+TEST: #SR 1
+      "If <evaluate view mapping matrix> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire list of available workstation types>
+TEST: #SR 1
+      "If <inquire list of available workstation types> is called and PHIGS
+       is closed, it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire phigs facilities>
+TEST: #SR 1
+      "If <inquire phigs facilities> is called and PHIGS is closed, it should
+       return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire modelling clipping facilities>
+TEST: #SR 1
+      "If <inquire modelling clipping facilities> is called and PHIGS is
+       closed, it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire edit mode>
+TEST: #SR 1
+      "If <inquire edit mode> is called and PHIGS is closed, it should return
+       error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire set of open workstation>
+TEST: #SR 1
+      "If <inquire set of open workstations> is called and PHIGS is closed,
+       it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire structure identifiers>
+TEST: #SR 1
+      "If <inquire structure identifiers> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire archive files>
+TEST: #SR 1
+      "If <inquire archive files> is called and PHIGS is closed, it should
+       return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire conflict resolution>
+TEST: #SR 1
+      "If <inquire conflict resolution> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire workstation category>
+TEST: #SR 1
+      "If <inquire workstation category> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire display space size 3>
+TEST: #SR 1
+      "If <inquire display space size 3> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire view facilities>
+TEST: #SR 1
+      "If <inquire view facilities> is called and PHIGS is closed, it should
+       return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire predefined view representation>
+TEST: #SR 1
+      "If <inquire predefined view representation> is called and PHIGS is
+       closed, it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire workstation classification>
+TEST: #SR 1
+      "If <inquire workstation classification> is called and PHIGS is closed,
+       it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire default display update state>
+TEST: #SR 1
+      "If <inquire default display update state> is called and PHIGS is
+       closed, it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire polymarker facilities>
+TEST: #SR 1
+      "If <inquire polymarker facilities> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire text facilities>
+TEST: #SR 1
+      "If <inquire text facilities> is called and PHIGS is closed, it should
+       return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire text extent>
+TEST: #SR 1
+      "If <inquire text extent> is called and PHIGS is closed, it should
+       return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire interior facilities>
+TEST: #SR 1
+      "If <inquire interior facilities> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire edge facilities>
+TEST: #SR 1
+      "If <inquire edge facilities> is called and PHIGS is closed, it should
+       return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire predefined pattern representation>
+TEST: #SR 1
+      "If <inquire predefined pattern representation> is called and PHIGS
+       is closed, it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire colour model facilities>
+TEST: #SR 1
+      "If <inquire colour model facilities> is called and PHIGS is closed,
+       it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire colour facilities>
+TEST: #SR 1
+      "If <inquire colour facilities> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire generalized drawing primitive>
+TEST: #SR 1
+      "If <inquire generalized drawing primitive> is called and PHIGS is
+       closed, it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire list of available generalized structure elements>
+TEST: #SR 1
+      "If <inquire list of available generalized structure elements> is called
+       and PHIGS is closed, it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire number of display priorities supported>
+TEST: #SR 1
+      "If <inquire number of display priorities supported> is called and PHIGS
+       is closed, it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire workstation state table lengths>
+TEST: #SR 1
+      "If <inquire workstation state table lengths> is called and PHIGS is
+       closed, it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire dynamics of structures>
+TEST: #SR 1
+      "If <inquire dynamics of structures> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire open structure>
+TEST: #SR 1
+      "If <inquire open structure> is called and PHIGS is closed, it should
+       return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire element type and size>
+TEST: #SR 1
+      "If <inquire element type and size> is called and PHIGS is
+       closed, it should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<iqnuire element content>
+TEST: #SR 1
+      "If <inquire element content> is called and PHIGS is closed, it should
+       return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire structure status>
+TEST: #SR 1
+      "If <inquire structure status> is called and PHIGS is closed, it should
+       return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<inquire paths to ancestors>
+TEST: #SR 1
+      "If <inquire paths to ancestors> is called and PHIGS is closed, it
+       should return error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+<element search>
+TEST: #SR 1
+      "If <element search> is called and PHIGS is closed, it should return
+       error indicator = 002."
+pass/fail depending on (returned error indicator = 2)
+
+END PROGRAM 1
+
+
+
+PROGRAM 2: Error indicator = 3
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Close phigs to test if functions 217,219,221,223,224,227,228,231,232,234,236,
+237,240 set number 3 to the error indicator, then open phigs and not open any
+workstation to test if functions 216,218,220,222,225,226,229,230,233,235,238,
+239,313 set number 3 to the error indicator: ignoring function, function
+requires state (PHOP,WKOP,*,*).
+
+<close phigs>
+
+<inquire list of view indices>
+TEST: #SR 2
+      "If <inquire list of view indices> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire hlhsr mode>
+TEST: #SR 2
+      "If <inquire hlhsr mode> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire display update state>
+TEST: #SR 2
+      "If <inquire display update state> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire polyline representation>
+TEST: #SR 2
+      "If <inquire polyline representation> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire list of polymarker indices>
+TEST: #SR 2
+      "If <inquire list of polymarker indices> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire text representation>
+TEST: #SR 2
+      "If <inquire text representation> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire list of interior indices>
+TEST: #SR 2
+      "If <inquire list of interior indices> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire edge representation>
+TEST: #SR 2
+      "If <inquire edge representation> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire list of pattern indices>
+TEST: #SR 2
+      "If <inquire list of pattern indices> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire colour mode>
+TEST: #SR 2
+      "If <inquire colour model> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire colour representation>
+TEST: #SR 2
+      "If <inquire colour representation> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire highlighting filter>
+TEST: #SR 2
+      "If <inquire highlighting filter> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire workstation transformation>
+TEST: #SR 2
+      "If <inquire workstation transformation> is called and PHIGS is closed, it
+       should return error indicator = 003."
+pass/fail depending on (returned error indicator = 3)
+
+<open phigs>
+
+<inquire workstation connection and type>
+TEST: #SR 2
+      "If <inquire workstation connection and type> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire view representation>
+TEST: #SR 2
+      "If <inquire view representation> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire posted structures>
+TEST: #SR 2
+      "If <inquire posted structures> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire list of polyline indices>
+TEST: #SR 2
+      "If <inquire list of polyline indices> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire polymarker representation>
+TEST: #SR 2
+      "If <inquire polymarker representation> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire list of text indices>
+TEST: #SR 2
+      "If <inquire list of text indices> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire interior representation>
+TEST: #SR 2
+      "If <inquire interior representation> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire list of edge indices>
+TEST: #SR 2
+      "If <inquire list of edge indices> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire pattern representation>
+TEST: #SR 2
+      "If <inquire pattern representation> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire list of colour indices>
+TEST: #SR 2
+      "If <inquire list of colour indices> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire invisibility filter>
+TEST: #SR 2
+      "If <inquire invisibility filter> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+<inquire workstation transformation 3>
+TEST: #SR 2
+      "If <inquire workstation transformation 3> is called and PHIGS is
+       open but no workstation is open, it should return error indicator =
+       003."
+pass/fail depending on (returned error indicator = 3)
+
+
+END PROGRAM 2
+
+
+
+PROGRAM 3: Error indicator = 5
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Close phigs to test if functions 302-304 set number 5 to the error indicator,
+then open phigs and not open structure to test if functions 302-304
+set number 5 to the error indicator: ignoring function, function
+requires state (PHOP,*,STOP,*)
+
+<close phigs>
+
+<inquire element pointer>
+TEST: #SR 3
+      "If <inquire element pointer> is called and PHIGS is closed, it
+       should return error indicator = 005."
+pass/fail depending on (returned error indicator = 5)
+
+<inquire current element type and size>
+TEST: #SR 3
+      "If <inquire current element type and size> is called and PHIGS is
+       closed, it should return error indicator = 005."
+pass/fail depending on (returned error indicator = 5)
+
+<inquire current element content>
+TEST: #SR 3
+      "If <inquire current element content> is called and PHIGS is closed,
+       it should return error indicator = 005."
+pass/fail depending on (returned error indicator = 5)
+
+<open phigs>
+
+<inquire element pointer>
+TEST: #SR 3
+      "If <inquire element pointer> is called and PHIGS is open but no
+       structure is open, it should return error indicator = 005."
+pass/fail depending on (returned error indicator = 5)
+
+<inqurie current element type and size>
+TEST: #SR 3
+      "If <inquire current element type and size> is called and PHIGS is
+       open but no structure is open, it should return error indicator =
+       005."
+pass/fail depending on (returned error indicator = 5)
+
+<inquire current element content>
+TEST: #SR 3
+      "If <inquire current element content> is called and PHIGS is open
+       but no structure is open, it should return error indicator = 005."
+pass/fail depending on (returned error indicator = 5)
+
+END PROGRAM 3
+
+
+
+PROGRAM 4: Error indicator = 7
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Close phigs to test if functions 213, 214 set number 7 to the error indicator,
+then open phigs and not open any archive file to test if functions 213, 214
+set number 7 to the error indicator: ignoring function, function
+requires state (PHOP,*,*,AROP)
+
+<close phigs>
+
+<inquire all conflicting structures>
+TEST: #SR 4
+      "If <inquire all conflicting structures> is called and PHIGS is closed,
+       it should return error indicator = 007."
+pass/fail depending on (returned error indicator = 7)
+
+<inquire conflicting structures in network>
+TEST: #SR 4
+      "If <inquire conflicting structures in network> is called and PHIGS is
+       closed, it should return error indicator = 007."
+pass/fail depending on (returned error indicator = 7)
+
+<open phigs>
+
+<inquire all conflicting structures>
+TEST: #SR 4
+      "If <inquire all conflicting structures> is called and PHIGS is open
+       but no archive file is open, it should return error indicator = 007."
+pass/fail depending on (returned error indicator = 7)
+
+<inquire conflicting structures in network>
+TEST: #SR 4
+      "If <inquire conflicting structures in network> is called and
+       PHIGS is open but no archive file is open, it should return error
+       indicator = 007."
+pass/fail depending on (returned error indicator = 7)
+
+END PROGRAM 4
+
+

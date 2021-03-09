@@ -1,0 +1,347 @@
+TITLE: Polyline
+
+MODULE#: 04.01.01
+
+DESCRIPTION: This module tests that polylines are rendered
+correctly and that a program can set up a polyline element in the
+CSS, which will create a primitive upon traversal.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** ***   <Polyline 3>   *** *** *** *** ***
+
+SR1.  <Polyline 3> creates a polyline 3 element in the CSS;
+elements with fewer than two points are valid.
+#F 9
+#D 7.3.1.1
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/1 P01/2 P01/3 P01/4 P02/1 P02/2 P02/3 P02/4 P02/5
+
+SR2.  If current element is polyline 3 then <inquire current
+element type and size> returns the element type as polyline 3 and
+the appropriate element size.
+#F 303
+#D 7.3.1.1
+#S 4.4.4/29/5
+#T P01/1 P01/3
+
+SR3.  If current element is polyline 3 then <inquire current
+element content> returns the appropriate data for polyline 3.
+#F 304
+#D 7.3.1.1
+#S 4.4.4/29/5
+#T P01/2 P01/4
+
+*** *** *** *** ***   <Polyline>   *** *** *** *** ***
+
+SR4.  <Polyline> creates a polyline element in the CSS; elements
+with fewer than two points are valid.
+#F 10
+#D 7.3.1.2
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/5 P01/6 P01/7 P01/8 P02/1 P02/2 P02/3 P02/4 P02/5
+
+SR5.  If current element is polyline then <inquire current
+element type and size> returns the element type as polyline and
+the appropriate element size.
+#F 303
+#D 7.3.1.2
+#S 4.4.4/29/5
+#T P01/5 P01/7
+
+SR6.  If current element is polyline then <inquire current
+element content> returns the appropriate data for polyline.
+#F 304
+#D 7.3.1.2
+#S 4.4.4/29/5
+#T P01/6 P01/8
+
+SR7. <Polyline> and <polyline_3> primitives are specified by an
+ordered list of 2D or 3D points, expressed in modelling
+coordinates (MC).  The primitive is rendered by connecting each
+pair of successive MC points with a straight line segment.
+#F 9 10
+#D 7.3.1.1 7.3.1.2
+#S 4.5.1/34/1
+#T P02/1 P02/2 P02/3 P02/4 P02/5
+#C A list containing fewer than two points has no pairs of points
+and therefore has no visual effect.
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    9: ppl3    <polyline 3>
+   10: ppl     <polyline>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.1  ...  polyline_3
+  7.3.1.2  ...  polyline
+ 
+
+
+PROGRAM 1: Polyline element
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> throughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+*** *** *** *** ***   Polyline 3   *** *** *** *** ***
+
+n = 5
+xarr = 2.33 55.55 -4.4   123.0  0.0
+yarr = 0.0  3.2   -99.99 3.2e22 -2.2e-22
+zarr = 4.44 0.0   0.0    5.5    22.22
+
+<polyline 3> with n, xarr, yarr, zarr
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       polyline 3 as the type of the created element and the
+       appropriate element size for a multipoint element."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = polyline 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for a multipoint polyline 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+<polyline 3> with 1, xarr, yarr, zarr
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       polyline 3 as the type of the created element and the
+       appropriate element size for a single point element."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = polyline 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for a single point polyline 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+*** *** *** *** ***   Polyline   *** *** *** *** ***
+
+<polyline> with n, xarr, yarr
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       polyline as the type of the created element and the
+       appropriate element size for a multipoint element."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = polyline and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 4 6
+      "<Inquire current element content> should return the standard
+       representation for a multipoint polyline."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+<polyline> with 1, xarr, yarr
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       polyline as the type of the created element and the
+       appropriate element size for a single point element."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = polyline and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 4 6
+      "<Inquire current element content> should return the standard
+       representation for a single point polyline."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Appearance of polylines
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEGENERATE POLYLINES: Some of the 6 labelled squares contain
+a single point polyline, others contain a visible primitive
+(including a single dot polylmarker).  Identify all the squares
+in which no primitive is visible.
+
+TWO-POINT POLYLINES: All the squares should contain a single line
+segment.  All but one should have their endpoints accurately
+circled by a polymarker.  Identify the line segment which is not
+accurately marked.
+
+MULTI-POINT POLYLINES: All the squares should contain a pentagon
+with one side missing.  Identify the pentagon whose missing side
+is different from that of the others.
+
+GEOMETRY OF 3D POLYLINES: All the squares should contain a
+polyline with multiple line segments.  All but one should have
+their vertices accurately circled by a polymarker.  Identify the
+polyline which is not accurately marked.
+
+GEOMETRY OF 2D POLYLINES: Same as GEOMETRY OF 3D POLYLINES,
+above.
+
+DESIGN:
+
+set polymarker scale factor to reasonable size = 0.02 in WC
+
+Divide screen up into 6 square labelled areas for all tests
+
+sider = list of 6 sides from which cube may be viewed =
+  front,back,left,right,top,bottom
+
+TEST: #SR 1 4 7
+      "A <polyline> or <polyline 3> primitive with fewer than two
+       points should have no visual effect."
+
+ran6 = random order for 1-6
+numemp = number of empty squares = random from 2 to 4
+for ix = 1 to 6
+   this = ran6(ix)
+   if (this > numemp+1) then
+      draw a single dot polymarker in area #ix
+   elseif (this = numemp+1) then
+      draw a single cross polymarker in area #ix
+   elseif (this = numemp) then
+      draw a single point 2D polyline in area #ix
+   else
+      draw a single point 3D polyline in area #ix
+   endif
+next ix
+OPQA/DEGENERATE POLYLINES: List all the empty squares (caution:
+  some squares may contain a dot-polymarker).
+pass/fail depending on:
+   (operator identifies the squares with single point polylines)
+
+TEST: #SR 1 4 7
+      "A <polyline> or <polyline 3> primitive with two points
+       should be rendered as a single straight line segment
+       connecting those points."
+
+ngsq = no-good square = random integer from 1 to 6
+
+for ix = 1 to 6
+   rotate to view from sider(ix)
+   if (ix <= 2) then
+      draw two-point 2D polyline in square #ix (OK viewed from
+         front or back only)
+   else
+      draw two-point 3D polyline in square #ix
+   endif
+
+   if (ix = ngsq) then
+      use 2D circle polymarker to mark expected vertices inaccurately
+   else
+      use 2D circle polymarker to mark expected vertices correctly
+   endif
+next ix
+OPQA/TWO-POINT POLYLINES: Which square contains something other
+  than a single line segment with circled endpoints?
+pass/fail depending on: (operator identifies square #ngsq)
+
+
+TEST: #SR 1 4 7
+      "A <polyline> or <polyline 3> primitive with a list of more
+       than two points should be rendered by connecting each pair
+       of adjacent points by a single straight line segment."
+
+opensd = side of pentagon to leave open = random from 1 to 5
+
+ran6 = random order for 1-6
+for ix = 1 to 6
+   this = ran6(ix)
+   if (this <= 2) then
+      draw 2D pentagon with open side = opensd, using one
+        polyline for each segment
+   elseif (this <= 5) then
+      draw 3D pentagon with open side = opensd, using one
+        polyline for whole figure
+   else
+      draw 2D pentagon with open side not= opensd
+   endif
+next ix
+
+OPQA/MULTI-POINT POLYLINES: Which pentagon is open on a different side?
+pass/fail depending on:
+   (operator identifies square with open side not= opensd)
+
+
+TEST: #SR 1 4 7
+      "The appearance of a <polyline 3> primitive should reflect
+       its 3D geometry after being transformed."
+
+ngsq = no-good square = random integer from 1 to 6
+generate 3D list of points, visually distinct from any side for
+  3D polyline
+
+for ix = 1 to 6
+   rotate to view from sider(ix)
+   display the 3D polyline in square #ix
+   calculate expected position of vertices
+   if (ix = ngsq) then
+      distort expected vertices
+   endif
+   use 2D circle polymarker to mark expected vertices
+next ix
+
+OPQA/GEOMETRY OF 3D POLYLINES: Which polyline does NOT have
+   all its vertices circled?
+pass/fail depending on:
+   (operator identifies square #ngsq)
+
+TEST: #SR 1 4 7
+      "The appearance of a <polyline> primitive should reflect
+       its 2D geometry after being transformed."
+
+ngsq = no-good square = random integer from 1 to 6
+generate non-linear 2D list of points distinct from any side for
+  2D polyline
+
+for ix = 1 to 6
+   rotate 45 degrees around x and y axis into unit cube to show
+      z-values
+   rotate to view from sider(ix)
+   display the 2D polyline in square #ix
+   calculate expected position of vertices
+   if (ix = ngsq) then
+      distort expected vertices
+   endif
+   use 2D circle polymarker to mark expected vertices
+next ix
+
+OPQA/GEOMETRY OF 2D POLYLINES: Which polyline does NOT have
+   all its vertices circled?
+pass/fail depending on:
+   (operator identifies square #ngsq)
+
+END PROGRAM 2

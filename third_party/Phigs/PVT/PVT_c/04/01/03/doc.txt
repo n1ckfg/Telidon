@@ -1,0 +1,348 @@
+TITLE: Text
+
+MODULE#: 04.01.03
+
+DESCRIPTION: This module tests that text primitives are rendered
+correctly and that a program can set up a text element in the
+CSS, which will create a primitive upon traversal.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** ***   <Text 3 element>   *** *** *** *** ***
+
+SR1.   <Text 3> creates a text 3 element in the CSS.
+#F 13
+#D 7.3.1.5
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/1 P01/2
+
+SR2.   If current element is text 3 then <inquire current element
+type and size> returns the element type as text 3 and the
+appropriate element size.
+#F 303
+#D 7.3.1.5
+#S 4.4.4/29/5
+#T P01/1
+
+SR3.   If current element is text 3 then <inquire current element
+content> returns the appropriate data for text 3.
+#F 304
+#D 7.3.1.5
+#S 4.4.4/29/5
+#T P01/2
+
+*** *** *** *** ***   <Text element>   *** *** *** *** ***
+
+SR4.   <Text> creates a text element in the CSS.
+#F 14
+#D 7.3.1.6
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/3 P01/4
+
+SR5.   If current element is text then <inquire current element
+type and size> returns the element type as text and the
+appropriate element size.
+#F 303
+#D 7.3.1.6
+#S 4.4.4/29/5
+#T P01/3
+
+SR6.   If current element is text then <inquire current element
+content> returns the appropriate data for text.
+#F 304
+#D 7.3.1.6
+#S 4.4.4/29/5
+#T P01/4
+
+*** *** *** *** ***   Character sets   *** *** *** *** ***
+
+SR7.  <Inquire PHIGS facilities> reports the list of available
+character sets.
+#F 205
+#D 2.6 2.7
+#S n
+#T P01/5 P01/6
+#X 01
+
+SR8.  The first entry in the list of available character sets is
+ASCII, which is identified as zero.
+#F 205
+#D 2.6 2.7
+#S 4.5.1/35/2 4.5.5/47/4 6.3/309/1
+#T P01/6
+
+*** *** *** *** ***   Display of text   *** *** *** *** ***
+
+SR9. The <text> and <text_3> primitives are rendered by
+displaying the specified character string in the position and
+orientation indicated by the text position and effective text
+direction vectors.
+#F 9 10
+#D 7.3.1.5 7.3.1.6
+#S 4.5.1/34/1
+#T P02/1 P02/2 P02/3
+#X 04.02.03.01
+
+SR10. The <text> primitive has zero as its implicit position in
+the z-dimension of MC space, and implicit text direction vectors
+of (1,0,0) and (0,1,0).
+#F 10
+#D 7.3.1.6
+#S 4.5.1/34/1
+#T P02/2 P02/3
+#X 04.02.03.01
+
+SR11. The <text 3> primitive uses (1,0,0) and (0,1,0) as its text
+direction vectors if the explicit vectors fail to define a plane.
+#F 9
+#D 7.3.1.5
+#S 4.5.1/34/1
+#T P02/2
+#X 04.02.03.01
+#C The explicit vectors are degenerate of either is zero, or if
+one is parallel to the other.
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    9: ppl3    <polyline 3>
+   10: ppl     <polyline>
+   13: ptx3    <text 3>
+   14: ptx     <text>
+  205: pqphf   <inquire phigs facilities>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.6  ...  number_of_available_character_sets
+  2.7  ...  list_of_available_character_sets
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.5  ...  text_3
+  7.3.1.6  ...  text
+ 
+SEMANTIC CROSS-REFERENCES:
+  04.02.03.01/SR01 04.02.03.01/SR02
+ 
+
+
+PROGRAM 1: Text element
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> throughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+*** *** *** *** ***   Text 3   *** *** *** *** ***
+
+text position:
+   xcord = 2.33
+   ycord = -4.4
+   zcord = 3.2e22
+1st text direction vector:
+   xfdv = -99.99
+   yfdv = 0.0
+   zfdv = 3.2e-13
+2nd text direction vector:
+   xsdv = 7.30
+   ysdv = -9876.5
+   zsdv = -99e-9
+chastr = '*#Testing#* ..123'
+
+<text 3> with xcord,ycord,zcord, xfdv,yfdv,zfdv, xsdv,ysdv,zsdv, chastr
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       text 3 as the type of the created element and the
+       appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = text 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for text 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+*** *** *** *** ***   Text   *** *** *** *** ***
+
+<text> with xcord, ycord, chastr
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       text as the type of the created element and the
+       appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = text and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 4 6
+      "<Inquire current element content> should return the standard
+       representation for text."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+*** *** *** *** ***   Character sets   *** *** *** *** ***
+
+TEST: #SR 7
+      "<Inquire phigs facilities> should be able to report the
+       list of available character sets."
+<inquire phigs facilities> to determine
+   lacs = list of available character sets
+pass/fail depending on successful execution of <inquire phigs facilities>
+
+TEST: #SR 7 8
+      "The first entry in the list of available character sets
+       should be zero."
+pass/fail depending on (first entry of lacs = 0)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Appearance of text primitives
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+CHARACTER CONTENT: Two alphabetic text primitives are displayed
+successively.  The operator must identify the sequence of
+characters in each.
+
+DEGENERATE TEXT DIRECTION VECTORS: Several lines of text are
+displayed.  All but one should have a normal horizontal
+orientation and similar size.  Identify the one line which is
+askew.
+
+TEXT DIRECTION VECTORS: Several boxes containing text are
+displayed.  All but one should appear as a single text primitive.
+Identify the one box containing overlapping primitives.
+
+DESIGN:
+
+default attributes:
+font = 1
+precision = STROKE
+text alignment = CENTRE,HALF
+
+throughout TDV = text direction vectors
+
+*** *** *** ***   character content   *** *** *** ***
+
+TEST: #SR 9
+      "A displayed text primitive should contain the specified
+       character string."
+
+set character height = 0.05
+set text font = 2
+chstr = string of 5 randomly chosen upper-case letters
+
+display <text 3> consisting of chstr:
+  position = 0.5,0.5,0.5
+  TDV = (1,0,0), (0,1,0)
+
+OPQA/CHARACTER CONTENT: Enter the displayed character string.
+
+if (operator response not= chstr) then
+   fail
+   goto end_char
+endif
+
+set text font = 1
+chstr = string of 5 randomly chosen lower-case letters
+
+display <text> consisting of chstr:
+  position = 0.5,0.5
+
+OPQA/CHARACTER CONTENT: Enter the displayed character string.
+pass/fail depending on (operator response = chstr)
+
+end_char:
+
+*** *** *** ***   degenerate vectors   *** *** *** ***
+
+TEST: #SR 9 10 11
+      "The values (1,0,0) and (0,1,0) should be used as text
+       direction vectors for all 2D text primitives and also when
+       the explicit vectors of a 3D text primitive fail to define
+       a plane."
+
+In random order, display on 6 lines:
+
+               1st vector   2nd vector
+3D text "ABC"  (0,0,0)      (2,3,4)
+3D text "ABC"  (0,0,0)      (0,0,0)
+3D text "ABC"  (3,4,5)      (0,0,0)
+3D text "ABC"  (1,-2,3)     (3,-6,9) (parallel vectors)
+3D text "ABC"  (8,1,0)      (-1,8,0) (not horizontal)
+2D text "ABC"   n.a.         n.a.
+
+OPQA/DEGENERATE TEXT DIRECTION VECTORS: Which text line is
+  different?
+pass/fail depending on
+  (operator response = line containing non-horizontal text)
+
+*** *** *** ***   effect of text direction vectors   *** *** *** ***
+
+TEST: #SR 9 10
+      "A displayed text primitive should be rotated around the
+       text position as specified by the first and second text
+       direction vectors."
+
+Divide screen up into 6 square labelled areas
+ngsq = no-good square containing error = random from 1 to 6
+chstr = "ABC"
+zmid = 0.5
+
+for ix = 1 to 6
+   xmid,ymid = center of box #ix
+   pick random rotation:
+      rotx = random from -45.0 to 45.0 degrees
+      roty = random from -45.0 to 45.0 degrees
+      rotz = random from 0 to 360 degrees
+   xf = transformation for rotation, centered at 0,0,0
+   calculate equivalent TDVs:
+   tdv1x,tdv1y,tdv1z = (1,0,0) transformed by xf
+   tdv2x,tdv2y,tdv2z = (0,1,0) transformed by xf
+
+   apply identity matrix as modelling transformation
+   draw <text 3> chstr
+      position: xmid,ymid,zmid
+      TDV: tdv1,tdv2
+
+   if (ix = ngsq) rotz = rotz + 5 degrees
+   xf = transformation for rotx,roty,rotz,
+        centered at xmid,ymid,0
+        then shift by 0.5 in z-direction
+
+   apply xf as modelling transformation
+   if (ix <= 3) then
+      draw <text 3> chstr
+         position: xmid,ymid,0
+         TDV: (1,0,0) (0,1,0)
+   else
+      draw <text> chstr
+         position: xmid,ymid
+   endif
+next ix
+
+OPQA/TEXT DIRECTION VECTORS: Which box contains overlapping text?
+pass/fail depending on
+  (operator response = box #ngsq)
+
+END PROGRAM 2

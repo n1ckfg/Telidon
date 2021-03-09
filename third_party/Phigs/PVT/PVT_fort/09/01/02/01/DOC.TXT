@@ -1,0 +1,865 @@
+TITLE: Workstation errors handled by user
+
+MODULE#: 09.01.02.01
+
+DESCRIPTION: This module tests that the functions related to workstation
+generate the specified workstation error messages if they are executed in
+incorrect conditions. The error is handled by a user defined error handling
+subroutine. Also, this module tests the requirement that no side effects
+are generated.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  If function <open workstation> is called, and the specified
+connection identifier is not recognized by the implementation, then
+error 50 or 55 is generated and the function is ignored.
+#F 3
+#D 1.2 8.1
+#S 4.12/109/6
+#T
+
+SR2.  If function <open workstation> is called, and the specified
+workstation type is not recongnized by the implementation, then error
+52 or 55 is generated and the function is ignored.
+#F 3
+#D 1.2 2.2 8.1
+#S 4.12/109/6
+#T P01/1 P01/2
+
+SR3.  If function <open workstation> is called, and the specified
+workstation identifier already is in use, then error 53 is generated
+and the function is ignored.
+#F 3
+#D 1.2 4.1.1 5.1 8.1
+#S 4.12/109/6
+#T P02/1 P02/2
+
+SR4.   If functions <close workstation>-<messages>, <set polyline
+representation>-<set colour model>, <set hlhsr mode>, <set view representation
+3>-<set workstation viewport>, <post structure>-<unpost all structures>, <set
+pick filter>-<sample string>, <flush device events>, <write item to metafile>-
+<read item from metafile> are called , and the specified workstation is not
+open, then error 54 or 3 is generated and the function is ignored.
+#F 4-8 63-72 74 84-90 132-134 151-185 187 196-198
+#D 1.2 8.1
+#S 4.12/109/6
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9 P03/10 P03/11
+   P03/12 P03/13 P03/14 P03/15 P03/16 P03/17 P03/18 P03/19 P03/20
+   P03/21 P03/22 P03/23
+
+SR5.   If function <open workstation> is called, and the specified workstation
+cannot be opened for an implementation reason, then error 55, 50 or 52 is
+generated and the function is ignored.
+#F 3
+#D 1.2 8.1
+#S 4.12/109/6
+#T
+
+SR6.   If function <write item to metafile> is called, and the specified
+workstation is not of category MO, then error 56 is generated and the function
+is ignored.
+#F 196
+#D 6.1 6.2 8.1
+#S 4.12/109/6
+#T P04/1
+
+SR7.   If functions <set view representation 3>-<set workstation viewport>
+are called, and the specified workstation is of category MI, then error
+57 is generated and the function is ignored.
+#F 84-90
+#D 6.1 6.2 8.1
+#S 4.12/109/6
+#T P05/1 P05/2 P05/3 P05/4 P05/5
+
+SR8.   If functions <get item type from metafile>-<read item from metafile>
+are called, and the  specified workstation is not of category MI, then error
+58 is generated and the function is ignored.
+#F 197-198
+#D 6.1 6.2 8.1
+#S 4.12/109/6
+#T P06/1
+
+SR9.   If functions <redraw all structures>-<set display update state>, <set
+polyline representation>-<set colour mode>, <set hlhsr filter>, <post
+stucture>-<unpost all structures> are called, and the specified workstation
+does not have output capability, then error 59 is generated and the function
+is ignored.
+#F 5-7 63-72 74 132-134
+#D 6.1 6.2 8.1
+#S 4.12/109/6
+#T P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8
+
+SR10.  If functions <set pick filter>, <initialize pick 3>, <initialize pick>,
+<set pick mode>, <request stroke>, <request pick>, <sample pick> are called,
+and the specified workstation is not of category OUTIN, then error 60 is
+generated and the function is ignored.
+#F 151 160 161 168 173 176 184
+#D 6.1 6.2 8.1
+#S 4.12/109/6
+#T P08/1
+
+SR11.  If functions <initialize locator 3>-<initialize choice>, <intialize
+string 3>-<set choice mode>, <set string mode>-<request stroke 3>, <request
+valuator>, <request choice>, <request string>-<sample choice>, <sample string>,
+<flush device events> are called, and the specified workstation is neither
+of category INPUT nor of category OUTIN, then error 61 is generated and the
+function is ignored.
+#F 152-159 162-167 169-172 174 175 177-183 185 187
+#D 6.1 6.2 8.1
+#S 4.12/109/6
+#T P09/1
+
+SR12.  If function <open workstation> is called, and opening this workstation
+would exceed the maximum number of simultaneously open workstation, then error
+63 is generated and the function is ignored.
+#F 3
+#D 1.2 2.3 8.1
+#S 4.12/109/6
+#T P10/1 P10/2
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+    4: pclwk   <close workstation>
+    5: prst    <redraw all structures>
+    6: puwk    <update workstation>
+    7: psdus   <set display update state>
+    8: pmsg    <message>
+   63: psplr   <set polyline representation>
+   64: pspmr   <set polymarker representation>
+   65: pstxr   <set text representation>
+   66: psir    <set interior representation>
+   67: psedr   <set edge representation>
+   68: pspar   <set pattern representation>
+   69: pscr    <set colour representation>
+   70: pshlft  <set highlighting filter>
+   71: psivft  <set invisibility filter>
+   72: pscmd   <set colour model>
+   74: pshrm   <set hlhsr mode>
+   84: psvwr3  <set view representation 3>
+   85: psvwr   <set view representation>
+   86: psvtip  <set view transformation input priority>
+   87: pswkw3  <set workstation window 3>
+   88: pswkw   <set workstation window>
+   89: pswkv3  <set workstation viewport 3>
+   90: pswkv   <set workstation viewport>
+  132: ppost   <post structure>
+  133: pupost  <unpost structure>
+  134: pupast  <unpost all structures>
+  151: pspkft  <set pick filter>
+  152: pinlc3  <initialize locator 3>
+  153: pinlc   <initialize locator>
+  154: pinsk3  <initialize stroke 3>
+  155: pinsk   <initialize stroke>
+  156: pinvl3  <initialize valuator 3>
+  157: pinvl   <initialize valuator>
+  158: pinch3  <initialize choice 3>
+  159: pinch   <initialize choice>
+  160: pinpk3  <initialize pick 3>
+  161: pinpk   <initialize pick>
+  162: pinst3  <initialize string 3>
+  163: pinst   <initialize string>
+  164: pslcm   <set locator mode>
+  165: psskm   <set stroke mode>
+  166: psvlm   <set valuator mode>
+  167: pschm   <set choice mode>
+  168: pspkm   <set pick mode>
+  169: psstm   <set string mode>
+  170: prqlc3  <request locator 3>
+  171: prqlc   <request locator>
+  172: prqsk3  <request stroke 3>
+  173: prqsk   <request stroke>
+  174: prqvl   <request valuator>
+  175: prqch   <request choice>
+  176: prqpk   <request pick>
+  177: prqst   <request string>
+  178: psmlc3  <sample locator 3>
+  179: psmlc   <sample locator>
+  180: psmsk3  <sample stroke 3>
+  181: psmsk   <sample stroke>
+  182: psmvl   <sample valuator>
+  183: psmch   <sample choice>
+  184: psmpk   <sample pick>
+  185: psmst   <sample string>
+  187: pflush  <flush device events>
+  196: pwitm   <write item to metafile>
+  197: pgtitm  <get item type from metafile>
+  198: prditm  <read item from metafile>
+ 
+  Data Structures ---
+  1  ...  operating_state
+  1.2  ...  workstation_state
+  2  ...  phigs_description_table
+  2.2  ...  list_of_available_workstation_types
+  2.3  ...  maximum_number_of_simultaneously_open_workstations
+  4  ...  phigs_state_list
+  4.1  ...  set_of_open_workstations
+  4.1.1  ...  workstation_identifier
+  5  ...  workstation_state_list
+  5.1  ...  workstation_identifier
+  6  ...  workstation_description_table
+  6.1  ...  workstation_type
+  6.2  ...  workstation_category
+  8  ...  phigs_error_state_list
+  8.1  ...  error_state
+ 
+
+
+PROGRAM 1: Error 52 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+This is a passive test, but take care to invoke it so as to link
+in the standard PVT user-defined error handler.  Since this is
+the mode in which the non-error-handling tests are executed, this
+program should be invoked in the normal way.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Use <inquire list of available workstation types> to determine
+  mxtype = maximum workstation type
+
+<open workstation> using type = mxtype+1: signals error
+
+TEST: #SR 2
+      "If <open workstation> signals an error because the workstation
+       type is not recognized by the implementation, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 2
+      "If <open workstation> is called and the workstation type is not
+       recognized by the implementation, it should return error code
+       052 and/or 055, function identifier 002, and the current error
+       file identifier to the user defined error handler."
+
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error 53 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+<open workstation> twice with same parameters to test if error 53 is
+  generated: ignoring function, workstation identifier already is in use.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+nwkall = number of accessible workstations
+ignok = true
+for ix = 1, nwkall
+   <open workstation> on workstation #ix with owkid, oconid, owtype
+   <open workstation> with owkid, oconid, owtype: signals error
+   <inquire set of open workstations> to determine number and
+      identity of open workstation: numowk and opwkid
+   if (system state = PHIGS-open and workstation state = open and
+       numowk = 1 and opwkid = owkid) then
+      OK so far
+   else
+      ignok = false
+   endif
+   <close workstation> on workstation #ix with owkid
+next ix
+
+TEST: #SR 3
+      "If <open workstation> signals an error because the specified
+       workstation identifier is in use, it should not cause any
+       other effect."
+pass/fail depending on (ignok)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+for ix = 1, nwkall
+   TEST: #SR 3
+         "If <open workstation> is called and the specified workstation
+          identifier is in use, it should return error code 053,
+          function identifier 002, and the current error file
+          identifier to the user defined error handler."
+   pass/fail depending on (next entry in error table = expected values)
+next ix
+
+END PROGRAM 2
+
+
+PROGRAM 3: Error 54 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled, (as noted by the
+tag "signals error"), the user-defined error handler saves the error code,
+function identifier, and error file identifier in an error table.
+
+Not open workstation with workstation identifier wkid to test if
+functions 3,4,5,64,67,68,73,83,85,112 with workstation identifier wkid
+generate error 54: ignoring function, the specified workstation is not open.
+Then open workstation with wkid to test if function 4,6,67,87,111 with
+workstation identifier wkid+1 generate error 54.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+wkid = workstation identifier for primary workstation
+<close workstation> with wkid: signals error
+TEST: #SR 4
+      "If <close workstation> signals an error because the specified
+       workstation is not open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<redraw all structures> with wkid, PALWAY: signals error
+TEST: #SR 4
+      "If <redraw all structures> signals an error because the specified
+       workstation is not open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<update workstation> with wkid, PPERFO: signals error
+TEST: #SR 4
+      "If <update workstation> signals an error because the specified
+       workstation is not open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+<set text representation> with wkid,1,1,PSTRP,1.0,0.1,1: signals error
+TEST: #SR 4
+      "If <set text representation> signals an error because the specified
+       workstation is not open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed)
+
+colia(1,1) = pattern colour index array
+colia = {1, 1}
+<set pattern representation> with wkid,1,1,1,1,1,1,1,colia: signals error
+
+cspec = colour specification
+cspec = {1.,0.,0.,0.,0.,1.}
+<set colour representation> with wkid, 1, 6, cspec: signals error
+<set hlhsr mode> with wkid, 0: signals error
+
+vwormt = view orientation matrix
+set vwormt(4,4) to identity matrix
+vwmpmt = view mapping matrix
+set vwmpmp(4,4) to identity matrix
+vwcplm = view clipping limit
+set vwcplm(6) to {0.,1.,0.,1.,0.,1.}
+xyclpi = x-y clipping indicator
+set xyclpi to  clipping
+bclipi = back clipping indicator
+set bclipi to clipping
+fclipi = front clipping indicator
+set fclipi to clipping
+<set view representation 3> with wkid, 1, vwormt, vwmpmt, vwcplm, xyclpi,
+                                 bclipi, fclipi: signals error
+<set view transformation input priority> with wkid, 1, 1, higher: signals error
+<open structure> 101
+<unpost structure> with wkid, 101: signals error
+TEST: #SR 4
+      "If <unpost structure> signals an error because the specified
+       workstation is not open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = closed and
+                        structure state = open)
+<close structure>
+
+<open workstation> with wkid, conid, wtype
+<redraw all structures> with wkid+1: signals error
+<inquire set of open workstations> to determine number (numowk)
+   and identity (opwkid) of open workstations
+TEST: #SR 4
+      "If <redraw all structures> signals an error because the specified
+       workstation is not open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        numowk = 1 and opwkid = wkid)
+
+<set display update state> with wkid+1: signals error
+<set pattern representation> with wkid+1,1,1,1,1,1,1,1,colia: signals error
+<set workstation window> with wkid+1,0.,1.,0.,1.: signals error
+<inquire set of open workstations> to determine number (numowk)
+   and identity (opwkid) of open workstations
+TEST: #SR 4
+      "If <set workstation window> signals an error because the specified
+       workstation is not open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        numowk = 1 and opwkid = wkid)
+
+<open structure> 101
+<post structure> with wkid+1: signals error
+
+<inquire set of open workstations> to determine number (numowk)
+   and identity (opwkid) of open workstations
+TEST: #SR 4
+      "If <post structure> signals an error because the specified workstation
+       is not open, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        numowk = 1 and opwkid = wkid)
+
+<close structure>
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 4
+      "If <close workstation> is called and the specified workstation is not
+       open, it should return error code 054 and/or 003, function
+       identifier 003, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <redraw all structures> is called and the specified workstation
+       is not open, it should return error code 054 and/or 003, function
+       identifier 004, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <update workstation> is called and the specified workstation is not
+       open, it should return error code 054 and/or 003, function identifier
+       005, and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set text representation> is called and the specified workstation is
+       not open, it should return error code 054 and/or 003, function
+       identifier 064, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set pattern representation> is called and the specified
+       workstation is not open, it should  return error code 054 and/or 003,
+       function identifier 067, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set colour representation> is called and the specified workstation
+       is not open, it should return error code 054 and/or 003, function
+       identifier 068, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set hlhsr mode> is called and the specified workstation is
+       not open, it should return error code 054 and/or 003, function
+       identifier 073, and the current error file identifier to the
+       user defined error handler."
+
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set view representation 3> is called and the specified workstation
+       is not open, it should return error code 054 and/or 003, function
+       identifier 083, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set view transformation input priority> is called and the specified
+       workstation is not open, it should return error code 054 and/or 003,
+       function identifier 085, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <unpost structure> is called and the specified workstation is not
+       open, it should return error code 054 and/or 003, function identifier
+       112, and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <redraw all structures> is called and the specified workstation
+       is not open, it should return error code 054 and/or 003, function
+       identifier 004, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set display update state> is called and the specified workstation
+       is not open, it should return error code 054 and/or 003, function
+       identifier 006, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set pattern representation> is called and the specified workstation
+       is not open, it should return error code 054 and/or 003, function
+       identifier 067, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set workstation window> is called and the specified workstation
+       is not open, it should return error code 054 and/or 003, function
+       identifier 087, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <post structure> is called and the specified workstation is not
+       open, it should return error code 054 and/or 003, function identifier
+       111, and the current error file identifier to the user defined
+       error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Error 56 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for program 1.
+
+DESIGN:
+
+TEST: #SR 6
+      "Test for error 56 (writing to workstation not of category MO)
+       not yet available."
+pass
+
+END PROGRAM 4
+
+
+PROGRAM 5: Error 57 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled, (as noted by the
+tag "signals error"), the user-defined error handler saves the error code,
+function identifier, and error file identifier in an error table.
+
+Check the category of all accessible workstations. For all workstations
+with category of MI, test if functions 84, 85, 87 and 89 generate
+error 57: ignoring function, the specified workstation is
+of category MI. If there is no workstation with the category of MI,
+skip the test.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+call MULTWS to get number of workstations with category MI: nwkmi
+if (nwkmi = 0)
+   informational message: There is no accessible workstation with
+       category of MI, the test is skipped.
+   return
+endif
+
+call MULTWS to get an MI workstation:
+   workstation identifier: owkid
+   connection identifier:  oconid
+   workstation type:       owtype
+
+rotmt2 = identity matrix
+mapmt2 = identity matrix
+limit2 = {0.,1.,0.,1.}
+
+<open workstation> with owkid,  oconid, owtype
+<set view representation> with owkid,1,rotmt2,mapmt2,limit2,0:
+        signals error
+TEST: #SR 7
+      "If <set view representation> signals an error because the specified
+       workstation is of category MI, it should not cause any other
+       effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open)
+
+<set view transformation input priority> with owkid, 1, 1, higher:
+        signals error
+<set workstation window> with owkid, limit: signals error
+limit2 = {0.,1.,0.,1.}
+<set workstation viewport> with owkid, limit2: signals error
+<close workstation> owkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 7
+      "If <set view representation> is called and the specified
+       workstation is of category MI, it should return error code
+       057, function identifier 084, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <set view transformation input priority> is called and
+       the specified workstation is of category MI, it should
+       return error code 057, function identifier 085, and the
+       current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <set workstation window> is called and the specified
+       workstation is of category MI, it should return error code
+       057, function identifier 087, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <set workstation viewport> is called and the specified
+       workstation is of category MI, it should return error code
+       057, function identifier 089, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Error 58 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for program 1.
+
+DESIGN:
+
+TEST: #SR 8
+      "Test for error 58 (metafile retrieval from workstation not of
+       category MI) not yet available."
+pass
+
+END PROGRAM 6
+
+
+PROGRAM 7: Error 59 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled, (as noted by the
+tag "signals error"), the user-defined error handler saves the error code,
+function identifier, and error file identifier in an error table.
+
+Check the category of all accessible workstations. For all workstations
+with category of neither OUTPUT, OUTIN nor MO, test if functions 5,62,64,
+66,70 generate error 59: ignoring function, the specified workstation
+does not have output capability. If there is no workstation with the
+category of neither OUTPUT, OUTIN nor MO, skip the test.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+call MULTWS to get number of workstations with category of neither
+OUTPUT, OUTIN, nor MO: nwknot
+if (nwknot = 0)
+     call INMSG ('There is no workstation with category of
+                  OUTPUT, OUTIN or MO, this test is skipped.')
+     return
+endif
+
+call MULTWS to get random
+            workstation identifier: owkid
+            connection identifier:  oconid
+            workstation type:       owtype
+
+<open workstation> with owkid, oconid, owtype
+<update workstation> with owkid: signals error
+
+<set polyline representation> with owkid, 1, 1, 1.0, 1: signals error
+<set text representation> with owkid, 1, 1, STRING, 1.0, 1.0, 0:
+     signals error
+<set edge representation> with owkid,1,OFF,1,1.0,0: signals error
+
+inclusive set 2 = inset2 = {1,5,2}
+exclusive set 2 = exset2 = {4}
+<set invisibility filter> with owkid, inset2, exset2:
+  signals error
+
+<set colour model> with owkid, RGB: signals error
+<open structure> 101
+<post structure> with owkid, 100, 0.5: signals error
+TEST: #SR 9
+      "If <post structure> signals an error because the workstation
+       type does not have output capability, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        structure state = open)
+<close structure>
+<close workstation> owkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 9
+      "If <update workstation> is called and the workstation type
+       does not have output capability, it should return error code
+       059, function identifier 005, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 9
+      "If <set polyline representation> is called and the
+       workstation type does not have output capability, it should
+       return error code 059, function identifier 062, and the
+       current error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 9
+      "If <set text representation> is called and the workstation
+       type does not have output capability, it should return error
+       code 059, function identifier 064, and the current error
+       file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 9
+      "If <set edge representation> is called and the workstation
+       type does not have output capability, it should return error
+       code 059, function identifier 066, and the current error
+       file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 9
+      "If <set invisibility filter> is called and the workstation
+       type does not have output capability, it should return error
+       code 059, function identifier 070, and the current error
+       file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 9
+      "If <set colour model> is called and the workstation type
+       does not have output capability, it should return error code
+       059, function identifier 071, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 9
+      "If <post structure> is called and the workstation type does
+       not have output capability, it should return error code 059,
+       function identifier 111, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 7
+
+
+PROGRAM 8: Error 60 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+TEST: #SR 10
+      "Test for error 60 (using pick on workstation not of category
+       OUTIN) not yet available."
+pass
+
+END PROGRAM 8
+
+
+PROGRAM 9: Error 61 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+TEST: #SR 11
+      "Test for error 61 (graphical input from workstation not of
+       category OUTIN or INPUT) not yet available."
+pass
+
+END PROGRAM 9
+
+
+PROGRAM 10: Error 63 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+
+Throughout this program, every time an error is signalled, (as noted by the
+tag "signals error"), the user-defined error handler saves the error code,
+function identifier, and error file identifier in an error table.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+call MULTWS to get number of all accessible workstations: nwkall
+Use <inquire phigs facilities> to determine:
+   maxwk = maximum number of simultanenously open workstations
+
+If (nwkall <= maxwk) then
+    call INMSG ('The number of all accessible workstations
+                 is less than or equal to maximum number of
+                 simultaneously open workstations, this test is skipped.)
+    return
+endif
+
+for ix = 1 to maxwk+1
+   call MULTWS to get
+      workstation identifier: owkid
+      connection identifier:  oconid
+      workstation type:       owtype
+   if (ix <= maxwk) then
+      <open workstation> with owkid, oconid, owtype
+   else
+      <open workstation> with owkid, oconid, owtype: signals error
+   endif
+next ix
+
+<inquire set of open workstations> to get # open workstations
+TEST: #SR 12
+      "If <open workstation> signals an error because it would
+       exceed the maximum number of simultaneously
+       open workstations, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        # open workstations = maxwk)
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 12
+      "If <open workstation> is called and it would exceed the maximum
+       number of simultaneously open workstations, it should return
+       error code 063, function identifier 002, and the current error
+       file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 10
+

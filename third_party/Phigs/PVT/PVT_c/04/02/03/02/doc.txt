@@ -1,0 +1,2896 @@
+TITLE: Text - workstation support
+
+MODULE#: 04.02.03.02
+
+DESCRIPTION: This module tests the bundled entries and other
+workstation facilities for text.  These entries control the
+appearance of text when they are under bundled (as opposed to
+individual) control.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** ***   text index inquiry   *** *** ***
+
+SR1. If current element is text index then <inquire current
+element type and size> returns the element type as text index and
+the appropriate size.
+#F 303
+#D 7.3.2.1.3
+#S 4.4.4/29/5
+#T P01/1
+
+SR2. If current element is text index then <inquire current
+element content> returns the appropriate data for text index.
+#F 304
+#D 7.3.2.1.3
+#S 4.4.4/29/5
+#T P01/2
+
+*** *** *** ***   Text index   *** *** *** ***
+
+SR3.  Upon traversal of a "text" or "text 3" element, the current
+text index in the PTSL is bound to the resulting primitive.
+#F 27
+#D 7.3.1.5 7.3.1.6 3.3.1
+#S 4.5.2/38/3
+#T P10/1 P10/2 P10/3 P11/1 P11/2 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6
+   P13/1 P13/2 P13/3 P13/4 P13/5 P13/6 P15/1 P15/2 P15/3 P15/4 P16/1
+   P16/2 P17/1
+
+SR4. <Set text index> creates a "set text index" element (in the
+open structure), whose associated value is taken from the
+function's parameter.
+#F 27
+#D 7.3.2.1.3
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/1 P01/2 P11/1 P11/2
+
+SR5.  Upon traversal of a "set text index" element, the current
+text index entry in the PHIGS traversal state list (PTSL) is set
+to the element's associated value.
+#F 27
+#D 3.3.1 7.3.2.1.3
+#S 4.4.1/23/1 4.5.2/38/3
+#T P11/1 P11/2 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P13/1 P13/2 P13/3
+   P13/4 P13/5 P13/6 P15/1 P15/2 P15/3 P15/4 P16/1 P16/2 P17/1
+
+SR6.  When a text primitive is displayed, if its bound text index
+is defined on the workstation, then the indicated bundle is the
+source for the bundled aspects of that primitive.
+#F 27
+#D 3.3.1 5.11.1 5.11.2
+#S 4.5.2/38/7 4.5.2/39/7 4.5.5/44/10
+#T P10/1 P10/2 P10/3 P11/1 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P13/1
+   P13/2 P13/3 P13/4 P13/5 P13/6 P15/1 P15/2 P15/3 P15/4 P16/1 P16/2
+   P17/1
+
+SR7.  When a text primitive is displayed, if its bound text index
+is undefined on the workstation, then bundle number 1 in the text
+bundle table is the source for the bundled aspects of that
+primitive.
+#F 27
+#D 3.3.1 5.11.1 5.11.2
+#S 4.5.2/38/7 4.5.2/39/7 4.5.2/43/3 4.5.5/44/10
+#T P11/2
+
+*** *** ***   Text index: network traversal   *** *** ***
+
+SR8.  At the start of a top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current text index of the PTSL is set to 1.
+#F
+#D 2.12.1 3.3.1
+#S 4.4.3/26/2 4.4.3/28/1 6.3/309/1
+#T P17/1
+
+SR9.  As part of the PTSL, the current text index is saved (but
+not changed) by execute structure and then, upon completion of
+the sub-traversal of the invoked network, restored to the saved
+value.
+#F 113
+#D 3.3.1
+#S 4.4.3/28/1
+#T P17/1
+
+*** *** ***   Text representation   *** *** ***
+
+SR10.  <Set text representation> causes an entry to be defined.
+#F 65
+#D 5.11.1 5.11.2.1
+#S 4.5.2/42/3 4.5.2/43/2
+#T P02/2 P02/3 P02/6 P02/7 P02/9 P02/10
+
+SR11.  <Set text representation> sets the text bundle's text
+font, text precision, character expansion factor, character
+spacing, and text colour index.
+#F 65
+#D 5.11.2
+#S 4.5.2/42/3
+#T P01/3 P02/4 P02/8 P02/11
+
+SR12.  <Inquire list of text indices> returns the list of defined
+text indices.
+#F 226
+#D 5.11.1 5.11.2.1
+#S n
+#T P02/1 P02/2 P02/3 P02/5 P02/6 P02/7 P02/9 P02/10 P02/12
+
+SR13.  <Inquire text representation> works for all defined
+entries.
+#F 226 227
+#D 5.11.1 5.11.2.1
+#S n
+#T P02/12
+
+SR14.  <Inquire text representation> returns the bundle's text
+font, text precision, character expansion factor, character
+spacing, and text colour index as set, when type of returned
+values specified as SET.
+#F 227
+#D 5.11.2
+#S 4.11/108/1
+#T P01/3 P02/4 P02/8 P02/11
+
+SR15.  <Inquire text representation> returns the bundle's text
+font, text precision, character expansion factor, character
+spacing, and text colour index as realized, when type of returned
+values specified as REALIZED.
+#F 227
+#D 5.11.2
+#S 4.11/108/1
+#T P02/5 P04/5 P06/5 P06/8 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10 P08/2
+   P09/1 P09/3
+
+SR16.  <Inquire text representation> returns the representation
+for bundle number 1, if type of returned values is REALIZED, and
+bundle index is undefined.
+#F 226 227
+#D 5.11.2
+#S n
+#T P02/5
+
+*** *** ***   Maximum Size of Bundle Table   *** *** ***
+
+SR17.  <Inquire workstation state table lengths> returns the
+maximum size of text bundle table.
+#F 285
+#D 6.21.3
+#S n
+#T P03/1 P03/2
+
+SR18.  There are at least 20 settable entries available in the
+text bundle table.
+#F 65 285
+#D 5.11 6.21.3
+#S 4.14/114/2 6.7/324/1
+#T P03/1
+
+*** *** ***   Predefined Bundle Facilities   *** *** ***
+
+SR19.  <Inquire text facilities> returns the number of predefined
+text bundle entries.
+#F 266
+#D 6.12.1.9
+#S n
+#T P04/1 P04/6
+
+SR20.  <Inquire predefined text representation> returns the font,
+precision, character expansion factor, character spacing, and
+text color index for a predefined text bundle.
+#F 267
+#D 6.12.2
+#S n
+#T P04/1 P04/2 P04/3 P04/4 P04/7 P05/2 P10/1 P10/2 P10/3
+
+SR21.  All workstation types have at least 6 predefined text
+bundles.
+#F 266 267
+#D 6.12.1.9 6.12.2
+#S 4.14/113/3 4.14/114/2 6.7/322/1
+#T P04/6
+
+SR22.  No two of the first 6 predefined text bundles have
+identical sets of attributes.
+#F 267
+#D 6.12.2
+#S 4.5.2/42/3 4.14/113/3 4.14/114/2 6.7/322/1
+#T P04/7
+
+SR23.  The n predefined text bundles in the Workstation
+Description Table (WDT) are indexed as 1-n.
+#F 267
+#D 6.12.2
+#S 6.7/322/1
+#T P04/1 P05/2
+#C The standard presumes this because in section 6.7 the
+predefined bundles in the WDT do not mention index as a data
+item, nor is there a way to get a list of these indices (<inquire
+text facilities> gives the number of predefined bundles, but not
+a list thereof).
+
+SR24.  Immediately after <open workstation>, for each WDT
+predefined text entry there exists a Workstation State List (WSL)
+text entry with the same attributes, including the same text
+index.
+#F 226 227 267 3
+#D 5.11.2 6.12.2
+#S 4.5.2/42/3 6.6/317/1 6.7/322/1
+#T P05/1 P05/2 P10/1 P10/2
+
+SR25.  Immediately after <open workstation>, the text bundle
+table contains nothing but the entries initialized from the WDT
+predefined text bundle table.
+#F 226 227 266 3
+#D 5.11.2 6.12.2
+#S 4.5.2/42/3 6.6/317/1 6.7/322/1
+#T P05/1
+
+*** *** ***   Validity of Predefined Bundles   *** *** ***
+
+SR26. The text font and precision pair of every predefined text
+bundle is among those available for that workstation type.
+#F 266 267
+#D 6.12.1.1 6.12.1.2 6.12.2.1 6.12.2.2
+#S 5.12.1/232/2
+#T P04/2 P04/5
+
+SR27. If a predefined text bundle specifies text precision of
+STRING or CHAR, then its character expansion factor is among
+those explicitly available for that workstation type.
+#F 266 267
+#D 6.12.1.6 6.12.1.7 6.12.1.8 6.12.2.2 6.12.2.3
+#S 5.12.1/232/2
+#T P04/3 P04/5
+#C For STROKE precision, character expansion is applied exactly.
+
+SR28.  Each predefined text bundle has a realizable value for
+character spacing, given its text precision.
+#F 227 267
+#D 6.12.2.2 6.12.2.4
+#S 5.12.1/232/2
+#T P04/5
+
+SR29.  Each predefined text bundle has a color index within range
+of the predefined color indices.
+#F 267 277
+#D 6.12.2.5 6.17.2.4
+#S 6.7/322/1
+#T P04/4 P04/5
+
+*** *** ***   Font Precision Pairs Support   *** *** ***
+
+SR30.  The list of text font and precision pairs returned by
+<inquire text facilities> contains font 1 and font 2.
+#F 266
+#D 6.12.1.2
+#S 4.5.5/47/4 4.14/113/2
+#T P06/1
+
+SR31.  The list of text font and precision pairs contains STROKE
+precision for font 1 and font 2.
+#F 266
+#D 6.12.1.2.1
+#S 4.5.5/47/4 4.5.5/48/5 4.5.16/65/5 4.14/114/2
+#T P06/2
+
+SR32.  Every workstation directly supports at least one STRING
+precision font.
+#F 65 266
+#D 5.11.2.3 6.12.1.2
+#S 4.14/114/2
+#T P06/3
+
+SR33.  Every workstation directly supports at least one CHAR
+precision font.
+#F 65 266
+#D 5.11.2.3 6.12.1.2
+#S 4.14/114/2
+#T P06/4
+
+SR34.  The valid values for text precision are: STRING, CHAR, or
+STROKE.
+#F 65 227 266 267
+#D 5.11.2.3 6.12.1.2.1 6.12.2.2
+#S 4.5.5/47/5
+#T P06/6 P12/1 P12/2 P12/3 P12/4 P12/5
+
+SR35.  All text font precision pairs in the list of text font and
+precision pairs are valid and realizable for the workstation.
+#F 65 227 266
+#D 5.11.2.2 5.11.2.3 6.12.1.2
+#S n
+#T P06/5
+
+SR36.  If a font is available at a given precision, it is also
+available at all lower precisions.
+#F 65 266
+#D 5.11.2.2 5.11.2.3 6.12.1.2.1
+#S 4.5.5/48/5
+#T P06/7 P06/8
+
+SR37.  The highest precision available for a font is always
+reported in the list of text font and precision pairs.
+#F 266
+#D 6.12.1.2.1
+#S n
+#T P06/7 P06/8
+
+SR38.  When a text primitive is displayed, if its text font ASF
+is bundled, then its text font aspect is taken from the text
+bundle determined by the text index.
+#F 27 62 65
+#D 3.3.1 3.3.7 5.11.2.1 5.11.2.2
+#S 4.5.2/39/7 4.5.5/44/10
+#T P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P13/1 P13/2 P13/3 P13/4 P13/5
+   P13/6
+#C Only valid text fonts may be set in text bundles, so that
+the font must be available.
+
+SR39.  When a text primitive is displayed, if its text precision
+ASF is bundled, then its requested text precision is taken from
+the text bundle determined by the text index.
+#F 27 62 65
+#D 3.3.1 3.3.8 5.11.2.1 5.11.2.3
+#S 4.5.2/39/7 4.5.5/44/10
+#T P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P13/1 P13/2 P13/3 P13/4 P13/5
+   P13/6 P14/1
+
+SR40.  When a text primitive is displayed, then the appearance of
+the text font agrees with the implementor documentation and, if
+the text font is greater than 2, with the ISO register.
+#F 65 266
+#D 5.11.2.2 6.12.1.1 6.12.1.2
+#S 4.1.1/15/1 4.1.2/15/2 4.5.2/39/7 4.5.5/44/10 4.5.5/47/4 4.5.5/48/6
+#T P12/1 P12/2 P12/3 P12/4 P12/5 P13/1 P13/2 P13/3 P13/4
+#C For registered fonts, the details of character shapes may be
+set by the implementor, even though the basic character set is
+specified.
+
+SR41. Text fonts 1 and 2 both contain all the ASCII characters,
+i.e. those defined within ANSI X3.4-1986.
+#F
+#D 2.7
+#S 4.5.5/47/4 4.5.5/48/5
+#T P12/1 P12/2 P12/3 P12/4 P13/6
+
+SR42. Text fonts 1 and 2 are visually distinguishable.
+#F
+#D
+#S 4.5.5/47/4 4.5.5/48/5
+#T P12/5
+
+SR43. For all text fonts, a character body in TLC, before
+application of character up vector, is a rectangle generally
+surrounding the character, aligned such that the top, cap, half,
+base, and bottom lines are all parallel to the TLC x-axis and the
+left, centre, and right lines are all parallel to the TLC y-axis.
+#F
+#D
+#S 4.5.5/48/6 4.5.5/48/7
+#T P12/6 P13/5
+#C A small part of a kerned character may lie slightly outside
+its character body.
+
+SR44.  All text fonts are either monospaced or proportionately
+spaced.  All character bodies within a monospaced font have the
+same font nominal height and the same font nominal width.  All
+character bodies within a proportionately spaced font have the
+same font nominal height.
+#F
+#D
+#S 4.5.5/48/6
+#T P12/6 P13/5
+#C In monospaced fonts, the nominal height need not equal the
+nominal width.  Font nominal height and width is the size, in
+TLC, of the character bodies of a given font as set by the
+character height and width aspects, before the application of
+other text aspects and before the effect of the transformation
+pipeline.
+
+SR45. Text font 1 is monospaced.
+#F
+#D
+#S 4.5.5/48/5 4.14/113/3
+#T P12/6 P15/1 P15/2
+
+SR46. If a requested character in a text primitive is not
+available within the font, an implementation dependent
+representation is generated to so indicate.
+#F
+#D
+#S 4.5.5/47/4
+#T P13/6
+
+SR47.  A valid text precision (one that may be set by <set text
+representation>, together with the specified text font) is
+realized as itself or some higher precision.
+#F 65 227 266
+#D 5.11.2.3 6.12.1.1 6.12.1.2
+#S 4.5.5/48/5
+#T P06/7 P06/8 P14/1
+
+SR48. For text precision = STRING, the text string as a whole is
+displayed with the appropriate text font and the nearest DC
+character expansion factor available on the workstation, based on
+the first character in the text string.
+#F
+#D 6.12.1.6 6.12.1.7 6.12.1.8
+#S 4.5.5/47/5 4.5.5/48/3 4.5.5/49/5
+#T P13/2 P13/4 P14/1
+#C In the case where STRING is used as a result of coercion from
+an unavailable font and precision, then the actual font (1) may
+differ from the requested font.  See SRs below for details of
+coercion of character height and expansion factor.
+
+SR49. For text precision = CHAR, each character of the text is
+displayed with the requested text font and the nearest DC
+character expansion factor available on the workstation.
+Character spacing and text alignment aspects are applied exactly.
+#F
+#D 6.12.1.6 6.12.1.7 6.12.1.8
+#S 4.5.5/47/5 4.5.5/48/3 4.5.5/49/5
+#T P08/2 P13/2 P13/4 P14/1
+#C See SRs below for details of coercion of character height and
+expansion factor.
+
+SR50. For text precision = STROKE, text is displayed with all
+text aspects applied exactly.
+#F
+#D
+#S 4.5.5/48/1 4.5.5/49/5
+#T P08/2 P12/6 P13/5 P15/1 P15/2 P15/3 P15/4
+
+*** ***   Character Expansion Factor Support   *** ***
+
+SR51.  <Inquire text facilities> describes the realizable
+character expansion factors for a specified workstation type, via
+the number of available character expansion factors, minimum
+character expansion factor and maximum character expansion
+factor.
+#F 266
+#D 6.12.1.6 6.12.1.7 6.12.1.8
+#S n
+#T P07/1 P07/2 P07/3 P07/4
+
+SR52.  The minimum character expansion factor and maximum
+character expansion factor are both positive.
+#F 266
+#D 6.12.1.7 6.12.1.8
+#S 6.7/322/1
+#T P07/2
+
+SR53.  All workstation types support at least one character
+expansion factor for STRING and CHAR precisions.
+#F 65 266
+#D 6.12.1.6
+#S 4.14/114/2 6.7/322/1
+#T P07/3
+
+SR54.  The range of character expansion factors returned by
+<Inquire text facilities> is for font 1.
+#F 266
+#D 6.12.1.7 6.12.1.8
+#S n
+#T P07/6 P07/7 P07/8 P07/9
+
+SR55.  The workstation supports a continuous range of character
+expansion factors for CHAR and STRING precision, if the number of
+available character expansion factors is 0.
+#F 65 227 266
+#D 6.12.1.6
+#S 6.7/322/1
+#T P07/3 P07/10
+
+SR56.  Any character expansion factor, whether or not realized
+exactly (by the workstation), may be specified for a text bundle
+when invoking <set text representation>.
+#F 65
+#D 5.11.2.4
+#S n
+#T P07/4
+
+SR57.  When a text primitive is displayed, if its character
+expansion factor ASF is bundled, then its TLC character expansion
+factor is taken from the text bundle determined by the text
+index.
+#F 27 62 65
+#D 3.3.1 3.3.9 5.11.2.1 5.11.2.4
+#S 4.5.2/39/7 4.5.5/44/10
+#T P12/6 P13/5 P14/1 P15/1 P15/2 P15/3 P15/4
+
+SR58. The magnitude of the TLC character expansion factor
+specifies the amount by which the font nominal width/height ratio
+of individual TLC character bodies is multiplied to yield the
+actual TLC width/height ratio.
+#F 269
+#D
+#S 4.5.5/45/2 4.5.5/45/4 5.4.2/138/6
+#T P12/6 P13/5 P14/1 P15/1 P15/2 P15/3 P15/4
+
+SR59.  When a text primitive is displayed, then the actual DC
+character expansion factor used when displaying the text is the
+nearest available to the requested DC character expansion factor
+resulting from its TLC character expansion factor (after
+undergoing modelling, viewing and workstation transformations).
+The requested DC character expansion factor equals the requested
+DC width to height ratio times the character's font nominal
+height to width ratio.
+#F 266
+#D 5.11.2.4 6.12.1.6 6.12.1.7 6.12.1.8
+#S 4.5.5/49/2 4.5.5/49/4 4.5.5/49/5 5.4.2/138/6 4.5.5/47/5
+#T P07/5 P07/6 P07/7 P07/8 P07/9 P14/1 P15/1 P15/2 P15/3 P15/4
+#S 4.14/114/2 5.4.2/138/6
+#C Character expansion factor may be approximated only for STRING
+or CHAR text precision; STROKE precision implies exact
+realization.  See the SRs on text precision, above.  Of course,
+by the above rule, if a requested expansion factor is available
+on the workstation, then the result is exact for any precision.
+Note also that requested DC expansion factor may well differ from
+nominal TLC expansion factor, since it reflects both that nominal
+factor and the effects of modelling and viewing transformation.
+For instance, in the case of a horizontal text string, if the
+nominal factor is 2.0 and a modelling transformation scales X
+(but not Y) by 3.0, the effective requested DC expansion factor
+will be 6.0.
+
+*** *** ***   Character Spacing Support   *** *** ***
+
+SR60.  Any character spacing value, whether or not realized
+exactly (by the workstation), may be specified for a text bundle
+when invoking <set text representation>.
+#F 65
+#D 5.11.2.5
+#S n
+#T P08/1 P08/2
+
+SR61.  When a text primitive is displayed, if its character
+spacing ASF is bundled, then its requested character spacing is
+taken from the text bundle determined by the text index.
+#F 27 62 65
+#D 3.3.1 3.3.10 5.11.2.1 5.11.2.5
+#S 4.5.2/39/7 4.5.5/44/10
+#T P12/6 P13/5 P15/1 P15/2 P15/3 P15/4
+#C See SRs above on text precision for derivation of actual
+character from requested character spacing.  For STROKE and CHAR
+precision, the requested character spacing is realized exactly.
+
+SR62. Character spacing specifies the TLC distance (positive) or
+overlap (negative) between adjacent character bodies, expressed
+in units of the font nominal character height.
+#F 269
+#D
+#S 4.5.5/45/3
+#T P12/6 P13/5 P15/1 P15/2 P15/3 P15/4
+
+*** *** ***   Text Color Index Support   *** *** ***
+
+SR63.  Any non-negative text color index, whether or not defined
+for that workstation, may be specified for a text bundle when
+invoking <set text representation>.
+#F 65
+#D 5.11.2.6
+#S n
+#T P09/2 P16/2
+
+SR64.  When a text primitive is displayed, if its text colour
+index ASF is bundled, then its requested text colour index is
+taken from the text bundle determined by the text index.
+#F 27 62 65
+#D 3.3.1 3.3.11 5.11.2.1 5.11.2.6
+#S 4.5.2/39/7 4.5.5/44/10
+#T P16/1 P16/2
+
+SR65.  When text is displayed, if its requested text colour index
+is defined on the workstation, then the text colour index is
+realized as itself.
+#F 227 235
+#D 5.11.2.6 5.15.3
+#S 4.5.2/39/7 4.5.5/44/10 4.5.12/63/4
+#T P09/1 P16/1
+
+SR66.  When text is displayed, if its requested text colour index
+is not defined on the workstation, then the text colour index is
+realized as number 1.
+#F 227 235
+#D 5.11.2.6 5.15.3
+#S 4.5.2/39/7 4.5.2/43/3 4.5.5/44/10 4.5.12/63/4
+#T P09/3 P16/2
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+   27: pstxi   <set text index>
+   62: psiasf  <set individual asf>
+   65: pstxr   <set text representation>
+  113: pexst   <execute structure>
+  226: pqetxi  <inquire list of text indices>
+  227: pqtxr   <inquire text representation>
+  235: pqeci   <inquire list of colour indices>
+  266: pqtxf   <inquire text facilities>
+  267: pqptxr  <inquire predefined text representation>
+  269: pqtxx   <inquire text extent>
+  277: pqcf    <inquire colour facilities>
+  285: pqwksl  <inquire workstation state table lengths>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.7  ...  list_of_available_character_sets
+  2.12 ...  default_text_attributes
+  2.12.1  ...  default_text_index
+  3  ...  phigs_traversal_state_list
+  3.3  ...  current_text_attributes
+  3.3.1  ...  current_text_index
+  3.3.7  ...  current_text_font_asf
+  3.3.8  ...  current_text_precision_asf
+  3.3.9  ...  current_character_expansion_factor_asf
+  3.3.10 ...  current_character_spacing_asf
+  3.3.11 ...  current_text_colour_index_asf
+  5  ...  workstation_state_list
+  5.11  ...  text_entry
+  5.11.1  ...  number_of_text_bundle_table_entries
+  5.11.2  ...  text_bundle_table
+  5.11.2.1  ...  text_index
+  5.11.2.2  ...  text_font
+  5.11.2.3  ...  text_precision
+  5.11.2.4  ...  character_expansion_factor
+  5.11.2.5  ...  character_spacing
+  5.11.2.6  ...  text_colour_index
+  5.15  ...  colour_entry
+  5.15.3  ...  colour_table
+  6  ...  workstation_description_table
+  6.12  ...  text_entry
+  6.12.1  ...  text_facilities
+  6.12.1.1  ...  number_of_text_font_and_precision_pairs
+  6.12.1.2  ...  list_of_text_font_and_precision_pairs
+  6.12.1.2.1  ...  text_font_and_precision_pair
+  6.12.1.6  ...  number_of_available_character_expansion_factors
+  6.12.1.7  ...  minimum_character_expansion_factor
+  6.12.1.8  ...  maximum_character_expansion_factor
+  6.12.1.9  ...  number_of_predefined_text_indices
+  6.12.2  ...  predefined_text_bundle_table
+  6.12.2.1  ...  text_font
+  6.12.2.2  ...  text_precision
+  6.12.2.3  ...  character_expansion_factor
+  6.12.2.4  ...  character_spacing
+  6.12.2.5  ...  text_colour_index
+  6.17  ...  colour_entry
+  6.17.2  ...  colour_facilities
+  6.17.2.4  ...  number_of_predefined_colour_indices
+  6.21  ...  maximum_table_lengths
+  6.21.3  ...  maximum_number_of_text_bundle_table_entries
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.5  ...  text_3
+  7.3.1.6  ...  text
+  7.3.2  ...  primitive_attributes
+  7.3.2.1  ...  bundle_index_attributes
+  7.3.2.1.3  ...  text_index
+ 
+LOCAL SUBROUTINES:
+
+DISTXB selects SAMP predefined bundles at random from the text
+bundle table which are distinct in all their attributes.  If
+there are not SAMP completely distinct bundles, DISTXB tries to
+maximize the number of different attributes.
+
+DRWTXT draws a set of text primitives where the actual texts are
+drawn using the specified bundle values, and a set of expected
+text primitives are drawn using the attribute values returned by
+<inquire predefined text representation>.  It draws the expected
+text primitive incorrectly at the specified position.
+
+
+PROGRAM 1: Simple setting and inquiring
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element content> throughout to determine:
+    celval = current element value as set by program
+    recval = auxiliary element values implied by the standard's
+             representation conventions.
+
+Use <inquire current element type and size> throughout to determine:
+    celsiz = current element size
+
+*** *** *** *** ***   Text index   *** *** *** *** ***
+<set text index>:
+    text_index = 4
+
+TEST: #SR 1 4
+      "<Inquire current element type and size> should return text
+       index as the type of the created element and the appropriate
+       element size."
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = text_index
+   celsiz               = value specified by the standard)
+
+TEST: #SR 2 4
+      "<Inquire current element content> should return the standard
+       representation for the text index value."
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 4 and
+   recval = auxiliary values specified by the standard)
+
+*** ***  text representation set and inquire *** ***
+
+<set text representation>:
+  index     = 2
+  font      = 2
+  precision = stroke
+  chexpand  = 2.0
+  chspace   = 0.5
+  colour    = 5
+<inquire text representation> for index #2, as set
+
+TEST: #SR 11 14
+      "Text attributes should be returned as set."
+pass/fail depending on
+   (font      = 2      and
+    precision = stroke and
+    chexpand  = 2.0    and
+    chspace   = 0.5    and
+    colour    = 5)
+
+END PROGRAM 1
+
+PROGRAM 2: Setting entries of various kinds
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire workstation state table lengths> to determine maximum
+   number of entries:
+   mne = maximum number of entries in text bundle table
+
+*** *** *** ***    initialized entries   *** *** *** ***
+
+<inquire list of text indices> to determine initialized entries
+   nie = number of initialized entries
+   aii = an initialized index
+TEST: #SR 12
+      "<Inquire list of text indices> should return initialized
+       indices."
+if (<inquire list of text indices> indicates error) then
+   fail
+   goto undefined_test
+else
+   pass
+endif
+
+initialized_test:
+
+<inquire text representation> for index# aii, as set
+  establishes:
+    old_font
+    old_precision
+    old_chexpand
+    old_chspace
+    old_colour
+if old_font = 1 then
+   new_font = 2
+else
+   new_font = 1
+endif
+if old_precision = stroke then
+   new_precision = string
+else
+   new_precision = stroke
+endif
+new_chexpand = old_chexpand + 0.5
+new_chspace  = old_chspace  + 0.25
+new_colour   = old_colour   + 1
+
+<set text representation> sets:
+  index = aii
+  font      = new_font
+  precision = new_precision
+  chexpand  = new_chexpand
+  chspace   = new_chspace
+  colour    = new_colour
+
+<inquire list of text indices> returns defined list
+
+TEST: #SR 10 12
+      "Redefining a system-initialized entry should not change
+       the number of defined entries."
+pass/fail depending on (current number of entries = nie)
+
+TEST: #SR 10 12
+      "Initialized bundle entry should be reported as defined
+       after being set."
+if (defined list includes #aii) then
+   pass
+else
+   fail
+   goto undefined_test
+endif
+
+<inquire text representation> for index# aii, as set
+TEST: #SR 11 14
+      "New values should be set for initialized bundle entry."
+pass/fail depending on
+   (font      = new_font      and
+    precision = new_precision and
+    chexpand  = new_chexpand  and
+    chspace   = new_chspace   and
+    colour    = new_colour)
+
+*** *** *** ***    undefined entries   *** *** *** ***
+
+undefined_test:
+
+<inquire list of text indices> returns defined list
+determine lowest undefined index (not in defined list) = lui
+determine current number defined entries = cnde
+
+TEST: #SR 12 15 16
+      "<Inquire text representation> should return attributes for
+       bundle #1 when inquiring an undefined entry as REALIZED."
+<inquire text representation> as REALIZED for index #lui
+  to get undefined_bundle.
+<inquire text representation> as REALIZED for index #1
+  to get bundle #1.
+pass/fail depending on (undefined_bundle = bundle #1).
+
+If (number of initialized entries
+    >= max size of bundle table) then
+    skip rest of undefined_test; goto redefined_test
+endif
+
+If (number of initialized entries
+    >= max table size in test program) then
+    skip rest of undefined_test; goto redefined_test
+endif
+
+<set text representation>:
+  index     = lui
+  font      = 1
+  precision = char
+  chexpand  = 1.75
+  chspace   = 0.0
+  colour    = 5
+
+<inquire list of text indices> to determine
+  listot = total number of entries in list
+
+TEST: #SR 10 12
+      "Defining an undefined entry should increment the number of
+       defined entries."
+pass/fail depending on (listot = cnde + 1)
+
+TEST: #SR 10 12
+      "Undefined bundle entry should be reported as defined after
+       set."
+if (resulting list of indices contains lui) then
+   pass
+else
+   fail
+   goto redefined_test
+endif
+
+<inquire text representation> for index #lui, as set
+TEST: #SR 11 14
+      "New values should be set for undefined bundle entry."
+pass/fail depending on
+   (font      = 1    and
+    precision = char and
+    chexpand  = 1.75 and
+    chspace   = 0.0  and
+    colour    = 5)
+
+*** *** *** ***    redefined entries   *** *** *** ***
+
+redefined_test:
+
+dpi  = defined text index
+cnde = current number of defined entries
+
+<set text representation>:
+  index     = dpi
+  font      = 2
+  precision = string
+  chexpand  = 0.75
+  chspace   = 0.2
+  colour    = 4
+
+new_font      = 1
+new_precision = stroke
+new_chexpand  = 1.5
+new_chspace   = 0.4
+new_colour    = 5
+
+<set text representation>:
+  index     = dpi
+  font      = new_font
+  precision = new_precision
+  chexpand  = new_chexpand
+  chspace   = new_chspace
+  colour    = new_colour
+
+<inquire list of text indices> to determine
+  nnde = new number of defined entries
+
+TEST: #SR 10 12
+      "Redefining an entry should not change the number of
+       defined entries."
+pass/fail depending on (nnde = cnde)
+
+TEST: #SR 10 12
+      "Redefined bundle entry should be reported as defined after
+       set."
+if (resulting list of indices contains dpi) then
+   pass
+else
+   fail
+   goto end_redefined_test
+endif
+
+<inquire text representation> for index #dpi, as set
+TEST: #SR 11 14
+      "New values should be set for redefined bundle entry."
+pass/fail depending on
+   (font      = new_font      and
+    precision = new_precision and
+    chexpand  = new_chexpand  and
+    chspace   = new_chspace   and
+    colour    = new_colour)
+
+end_redefined_test:
+
+*** *** ***    access all defined entries   *** *** ***
+
+TEST: #SR 12 13
+      "<Inquire list of text indices> and <inquire text
+       representation> should detect all defined entries."
+Use <inquire list of text indices> to get
+    list of defined indices
+if (non-zero error code) then
+   fail
+   go to end_access_all
+endif
+For each defined index, apply <inquire text representation>
+   if (non-zero error code) then
+      fail
+      go to end_access_all
+   endif
+loop to next index
+pass
+
+end_access_all
+
+END PROGRAM 2
+
+
+PROGRAM 3: Text bundle table length
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire workstation state table lengths> to determine
+   mtbe = maximum text bundle entries
+
+TEST: #SR 17 18
+      "<Inquire workstation state table lengths> should report at
+       least 20 entries as maximum size of text bundle table."
+pass/fail depending on (mtbe >= 20)
+
+Use <inquire list of text indices> to determine
+   nde = number of defined entries and
+   mtxi = maximum defined text index
+nemp = number of empty entries = mtbe - nde
+TEST: #SR 17
+      "The program should be able to define additional text
+       bundle entries, up to the maximum."
+do txi = mtxi+1, mtxi+nemp
+   set text bundle entry, with index = txi
+   if error signalled then
+      fail
+      goto done
+   endif
+loop
+
+pass
+
+done:
+
+END PROGRAM 3
+
+
+PROGRAM 4: Validity of predefined text bundles
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+mpci = maximum predefined color index
+
+Use <inquire text facilities> to determine
+   npe    = number of predefined entries
+   listfp = list of available font-precision pairs
+   mincex = minimum character expansion factor
+   maxcex = maximum character expansion factor
+
+fperr  = false = font/precision error found yet
+cexerr = false = character expansion factor error found yet
+colerr = false = color error found yet
+rlzerr  = false = realized error found yet
+
+TEST: #SR 19 20 23
+      "<Inquire predefined text representation> should be able to
+       access as many entries as reported by <inquire text
+       facilities>."
+do txi = 1 to npe
+   <inquire predefined text representation> for txi to determine
+      pfont = predefined font
+      pprec = predefined precision
+      pcex  = predefined character expansion factor
+      pcsp  = predefined character spacing
+      txci  = text color index
+   if error then
+      fail
+      goto more_tests
+   endif
+
+   if (pfont,pprec) not in listfp then
+      fperr = true
+      erfont = erroneous pfont
+      erprec = erroneous pprec
+   endif
+
+   if pprec not= STROKE and (pcex < mincex or > maxcex) then
+      cexerr = true
+      ercex  = erroneous pcex
+   endif
+
+   if txci < 0 or > mpci then
+      colerr = true
+      ertxci = erroneous txci
+   endif
+
+   set text representation #3 to (pfont,pprec,pcex,pcsp,txci)
+   inquire text representation #3, as realized
+   if (reported aspects not= pfont,pprec,pcex,pcsp,txci) then
+      rlzerr = true
+      erbun  = ii
+   endif
+
+loop
+pass
+
+TEST: #SR 20 26
+      "All font-precision pairs in predefined text bundles should
+       be supported by an entry in the list of text
+       font-precision pairs."
+if fperr then
+   fail
+   message about erfont, erprec
+else
+   pass
+endif
+
+TEST: #SR 20 27
+      "All character expansion factors in predefined text bundles
+       should be within the reported minimum and maximum
+       character expansion factors for non-STROKE precision."
+if cexerr then
+   fail
+   message about ercex
+else
+   pass
+endif
+
+TEST: #SR 20 29
+      "All color indices in predefined text bundles should
+       themselves be in the predefined color table."
+if colerr then
+   fail
+   message about ertxci
+else
+   pass
+endif
+
+TEST: #SR 15 26 27 28 29
+      "All aspects of all predefined text bundles should be
+       reported as realizable by <inquire text representation>."
+if rlzerr then
+   fail
+   message about erbun
+else
+   pass
+endif
+
+more_tests:
+
+TEST: #SR 19 21
+      "<Inquire text facilities> should report at least 6
+       predefined entries."
+if npe < 6 then
+   fail
+   goto done
+else
+   pass
+endif
+
+TEST: #SR 20 22
+      "The first six predefined text bundle entries should all be
+       mutually distinguishable."
+do txi = 1 to 6
+   <inquire predefined text rep> for index txi, determine
+    pdfn = predefined font
+    pdpr = predefined precision
+    pdxp = predefined character expansion factor
+    pdsp = predefined character spacing
+    pdci = predefined text color index
+   do txi2 = 1 to txi-1
+      if svpdfn (txi2) = pdfn  and
+         svpdpr (txi2) = pdpr  and
+         svpdxp (txi2) = pdxp  and
+         svpdsp (txi2) = pdsp  and
+         svpdci (txi2) = pdci    then
+          fail
+          message about txi, txi2
+          goto done
+      endif
+   loop
+   svpdfn (txi) = pdfn
+   svpdpr (txi) = pdpr
+   svpdxp (txi) = pdxp
+   svpdsp (txi) = pdsp
+   svpdci (txi) = pdci
+loop
+pass
+
+done:
+
+END PROGRAM 4
+
+
+PROGRAM 5: WSL text bundles initialized properly
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+msgsuf = message suffix = "opening workstation."
+
+check_table:
+
+<open workstation>
+
+<inquire text facilities> to determine
+   npe = number of predefined text entries in WDT
+
+<inquire list of text indices> to determine
+   stbt = size of WSL text bundle table
+
+TEST: #SR 24 25
+      "WSL text bundle table should be the same size as the
+       predefined text bundle table after " + msgsuf
+if stbt not= npe then
+   fail
+   message about spbt and npe
+else
+   pass
+endif
+
+TEST: #SR 20 23 24
+      "Each WSL text entry should have the same attributes as the
+       corresponding predefined text entry after " + msgsuf
+do txi = 1 to min(npe, stbt)
+   <inquire predefined text rep> for index txi, determine
+    pdfn = predefined font
+    pdpr = predefined precision
+    pdxp = predefined character expansion factor
+    pdsp = predefined character spacing
+    pdci = predefined text color index
+   <inquire text representation> for index txi, determine
+    dfn = defined font
+    dpr = defined precision
+    dxp = defined character expansion factor
+    dsp = defined character spacing
+    dci = defined text color index
+   if dfn = pdft and
+      dre = pdpr and
+      dxp = pdex and
+      dsp = pdsp and
+      dci = pdci    then
+     OK so far
+   else
+     fail
+     message about txi
+     goto end_check
+   endif
+loop
+pass
+
+end_check:
+
+alter bundle table - insert new or different entry
+<close workstation>
+if (msgsuf = "opening workstation.") then
+   msgsuf = "re-opening workstation."
+   goto check_table
+endif
+
+END PROGRAM 5
+
+
+PROGRAM 6: Text font and precision support
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire text facilities> to determine
+  lfnprp = list of font/precision pairs
+  fnt(1 and 2) = false
+  strk(1 and 2) = false = STROKE precisions for font 1 or 2
+
+strgae = false = STRING precision available directly
+charae = false = CHAR precision available directly
+
+do for each element in lfnprp
+  thisfn = current font of font/prec pair
+  thispr = current precision of font/prec pair
+  check for font 1 and 2
+  if thisfn = 1 or 2 then
+     fnt(thisfn) = true
+     check precision of font 1 or 2
+     if thispr = STROKE then
+       strk(thisfn) = true
+     endif
+  endif
+
+  check for 1 STRING precision
+  <set text representation> on index #1, thisfn, STRING precision
+  <inquire text representation> on index #1 as realized to determine
+     rpr = reported precision
+  if rpr = STRING then
+    strgae = true
+  endif
+  check for 1 CHAR precision
+  if thispr < CHAR then
+     goto getnxt
+  <set text representation> on index #2, thisfn, CHAR precision
+  <inquire text representation> on index #2 as realized to determine
+     rpr = reported precision
+  if rpr = CHAR then
+    charae = true
+  endif
+
+getnxt:
+loop
+
+TEST: #SR 30
+      "The list of available font/precision pairs should contain
+       font 1 and font 2."
+pass/fail depending on (fnt(1) and fnt(2))
+
+TEST: #SR 31
+      "Stroke precision should be available for both font 1 and
+       font 2."
+pass/fail depending on (strk(1) and strk(2))
+
+TEST: #SR 32
+      "At least 1 STRING precision font should be available
+       directly."
+pass/fail depending on (strgae)
+
+TEST: #SR 33
+      "At least 1 CHAR precision font should be available
+       directly."
+pass/fail depending on (charae)
+
+preval = true = precision valid
+TEST: #SR 15 35
+      "All text font/precision pairs within the list of available
+       font/precision pairs should be valid and available directly."
+do for each element in lfnprp
+   thisfn = the font of fnpr
+   thispr = the prec of fnpr
+   if thispr not STRING, CHAR or STROKE then
+      preval = false
+      message about thispr
+   endif
+   <set text representation>, index #2, thisfn, thispr
+   if rejected as invalid then
+     fail
+     message about thisfn/thispr
+     goto more
+   endif
+   <inquire text representation>, index #2, as realized to determine
+    rfn = realized font
+    rpr = realized precision
+    if rfn not= thisfn then
+       fail
+       message about thisfn and rfn
+       goto more
+    endif
+    if rpr not= thispr then
+       fail
+       message about thispr and rpr
+       goto more
+    endif
+loop
+pass
+
+more:
+
+TEST: #SR 34
+      "All precisions in the list of text font and precision
+       pairs should be of type STRING, CHAR, or STROKE."
+pass/fail depending on (preval)
+
+precok = true
+fontok = true
+canset = true
+for each font/prec pair (thisfn, thispr) in lfnpr
+   for tstpr = STRING to thispr
+      <set text representation> index #1, thisfn, tstpr
+      if error signaled
+         canset = false
+         message about can't set thisfn, thispr
+         goto endtc
+      endif
+      <inquire text representation>, index #1, as realized to determine
+       rfn = realized font
+       rpr = realized precision
+
+       if rfn not= thisfn
+          fontok = false
+          message about rfn, thisfn
+          goto endtc
+       endif
+       if rpr < tstpr
+          precok = false
+          message about rpr, tstpr
+          goto endtc
+       endif
+   loop
+loop
+
+endtc:
+
+TEST: #SR 36 37 47
+      "If a given font/precision pair is reported as supported,
+       then that font should be available in all lower or equal
+       precisions."
+pass/fail depending on (canset)
+
+TEST: #SR 15 36 37 47
+      "A valid font/precision pair should be realized as that
+       font and at an equal or higher precision."
+pass/fail depending on (fontok and precok)
+
+END PROGRAM 6
+
+
+PROGRAM 7: Character expansion factor support
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire text facilities> to determine
+naexp = # available character expansion factors
+minexp = minimum character expansion factor
+maxexp = maximum character expansion factor
+lfnprp = list of font/precision pairs
+
+TEST: #SR 51
+      "Maximum character expansion factor should not be less than
+       the minimum character expansion factor."
+pass/fail depending on (maxexp >= minexp)
+
+TEST: #SR 51 52
+      "The minimum and maximum character expansion factors should
+       be positive."
+pass/fail depending on (minexp and maxexp > 0)
+
+TEST: #SR 51 53 55
+      "The reported number of available character expansion
+       factors should be at least 0."
+pass/fail depending on (naexp >= 0)
+
+TEST: #SR 51 56
+      "All character expansion factors should be accepted as valid."
+
+lchexp = list of three out-of-range character expansion factors
+       = minexp/10, maxexp*10, -10.0
+
+prec = STRING
+for ix = 1 to 3
+   if (ix=3) then prec = CHAR
+   <set text representation> index #ix:
+      font      = 1
+      precision = prec
+      expansion = lchexp(ix)
+      spacing   = 0
+      color     = 1
+   if error signaled then
+      fail
+      message about character expansion factor and errsig
+      goto end_bad_exp
+   endif
+next ix
+pass
+
+end_bad_exp:
+
+TEST: #SR 15 59
+      "For STROKE precision, any character expansion factor
+       should be realized as the absolute value of itself."
+
+for ix = 1 to 3
+   <set text representation> index #2:
+      font      = 1
+      precision = STROKE
+      expansion = lchexp(ix)
+      spacing   = 0
+      color     = 1
+   <inquire text representation> index #2, as realized to determine
+      rexp = realized character expansion factor
+   if (rexp not= abs(lchecp(ix))) then
+      fail
+      message about rexp
+      goto end_stroke
+   endif
+next ix
+pass
+
+end_stroke:
+
+<set text representation> index 1, font 1, STRING, chexp = minexp/10
+<inquire text representation> for rpr, rexp = reported chexp factor
+if rpr = STRING
+   TEST: #SR 15 54 59
+         "For font 1 and STRING precision realized directly, the
+          absolute value of all character expansion factors less
+          than the minimum character expansion factor should be
+          realized as the minimum character expansion factor."
+   pass/fail depending on (rexp= minexp)
+endif
+
+<set text representation> index 2, font 1, CHAR, chexp = minexp/10
+<inquire text representation> for rpr, rexp = reported chexp factor
+if rpr = CHAR
+   TEST: #SR 15 54 59
+         "For font 1 and CHAR precision realized directly, the
+          absolute value of all character expansion factors less
+          than the minimum character expansion factor should be
+          realized as the minimum character expansion factor."
+   pass/fail depending on (rexp = minexp)
+endif
+
+<set text representation> index 1, font 1, STRING, chexp = -maxexp*10
+<inquire text representation> for rpr, rexp = reported chexp factor
+if rpr = STRING
+   TEST: #SR 15 54 59
+         "For font 1 and STRING precision realized directly, the
+          absolute value of all character expansion factors
+          greater than the maximum character expansion factor
+          should be realized as the maximum character expansion
+          factor."
+   pass/fail depending on (rexp= maxexp)
+endif
+
+<set text representation> index 2, font 1, CHAR, chexp = -maxexp*10
+<inquire text representation> for rpr, rexp = reported chexp factor
+if rpr = CHAR
+   TEST: #SR 15 54 59
+         "For font 1 and CHAR precision realized directly, the
+          absolute value of all character expansion factors
+          greater than the maximum character expansion factor
+          should be realized as the maximum character expansion
+          factor."
+   pass/fail depending on (rexp = maxexp)
+endif
+
+if naexp not= 0 goto done
+TEST: #SR 15 55
+      "For continuous character expansion factors, a character
+       expansion factor within the min-max range should be
+       realized as itself."
+do expi minexp to maxexp by (maxexp-minexp)/10.01
+   <set text representation> index #6, font 1, STRING, expi
+   <inq text representation> to determine rexp
+   if rexp not= expi
+      fail
+      goto done
+   endif
+loop
+pass
+
+done:
+
+END PROGRAM 7
+
+
+PROGRAM 8: Character spacing support
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+
+TEST: #SR 60
+      "All character spacing values should be accepted as valid."
+<set text representation> index #3, font1, STRING, chsp = -3.032
+if error signaled then
+   goto errval
+endif
+<set text representation> index #4, font1, STRING, chsp = 0.35
+if error signaled then
+   goto errval
+endif
+<set text representation> index #5, font1, STRING, chsp = 11.121
+if error signaled then
+   goto errval
+endif
+pass
+goto nxttc
+
+errval:
+fail
+message about character expansion factor and errsig
+
+nxttc:
+
+TEST: #SR 15 49 50 60
+      "For CHAR and STROKE precisions, a character spacing value
+       should be realized as itself."
+do spi = -1 to 2 by .25
+   <set text representation> index #3, font 1, CHAR, chsp = spi
+   <inq text representation> to determine
+      rsp = realized CHAR spacing factor
+   if rsp not= spi then
+      fail
+      goto done
+   endif
+   <set text representation> index #6, font 1, STROKE, chsp = spi
+   <inq text representation> to determine
+      rsp2 = realized CHAR spacing factor
+   if rsp2 not= spi then
+      fail
+      goto done
+   endif
+loop
+pass
+
+done:
+
+END PROGRAM 8
+
+
+PROGRAM 9: Text color index support
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+loop thru color table to determine:
+  mci   = maximum defined color index
+undci = mci + 1 = undefined color index
+
+<set text representation>, index #6, text color index = mci
+
+TEST: #SR 15 65
+      "<Inquire text representation> should report a defined
+       text color index realized as itself."
+<inquire text representation>, index #6 to determine
+   rtxci = realized text color index
+if rtxci = mci then
+   pass
+else
+   fail
+   message about rtxci
+endif
+
+TEST: #SR 63
+      "Any non-negative color index should be accepted as valid."
+<set text representation>, index #6, text color index = undci
+if error signalled then
+   fail
+   message about undci
+else
+   pass
+endif
+
+TEST: #SR 15 66
+      "<Inquire text representation> should report an undefined
+       text color index realized as 1."
+<inquire text representation>, index #6 to determine
+   rtxci = realized text color index
+if rtxci = 1 then
+   pass
+else
+   fail
+   message about rtxci
+endif
+
+END PROGRAM 9
+
+
+PROGRAM 10: Appearance of predefined text bundles
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES 1-6: This
+screen displays 7 pairs (consisting of the first 6, with one
+repeated) of predefined text bundles and individual text
+attributes.  Identify the pair of text primitives that is
+different.
+
+WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES > 6: This
+screen displays several pairs (at most 8) of predefined text
+bundles and individual text attributes.  Identify the pair of
+text primitives that is different.
+
+PREDEFINED TEXT BUNDLES: This screen displays a sample (at most
+8) of predefined text bundles and their bundle values for font,
+precision, expansion, spacing, and color, as reported by <inquire
+predefined text representation>.  For each displayed bundle,
+verify that 1) the actual appearance of the text agrees with the
+aspect values reported on the screen and 2) these both agree with
+any external documentation provided by the implementor.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+use <inquire text facilities> to determine:
+  nprei  = number of predefined bundles
+
+*** *** ***   predefined text bundles 1-6   *** *** ***
+
+numbun = 7
+bundis = bundles to be displayed (1 to 6, with one repeated)
+bundif = location of repeated bundle identifier (so that all 6
+         may be verified)
+
+TEST: #SR 3 6 20 24
+      "Immediately after <open workstation>, the first 6 defined
+       text bundles of the WSL should appear as specified in
+       the corresponding predefined text bundles of the WDT."
+
+The actual results (text primitives drawn from initial state of WSL)
+are drawn on the left side of the picture. The corresponding
+expected results (text primitives with individual attributes taken
+from WDT) are drawn on the right side, except for one
+text primitive which will be different.
+
+actual:
+for ix = 1 to numbun
+   display and label text "Bundles 1-6", under control of bundles
+     in bundis(ix)
+next ix
+
+expected:
+set font, precision, expansion, spacing, and color ASF to individual
+for ix = 1 to numbun
+   <inquire predefined text representation> on index
+        bundis(ix), determine:
+      pdfn = font
+      pdpr = precision
+      pdex = expansion
+      pdsp = spacing
+      pdci = color index
+
+   if (ix = bundif) then
+      if (pdfn = 1) then
+         pdfn = 2
+      else
+         pdfn = 1
+      endif
+   endif
+   draw text with pdfn, pdpr, pdex, pdsp, pdci
+next ix
+
+OPQA/WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES 1-6:
+   Which pair of text primitives does NOT match?
+pass/fail depending on (operator selects bundif)
+
+*** *** ***   predefined text bundles > 6   *** *** ***
+
+if nprei <= 6 then
+   skip to end_comp_tables
+endif
+
+numbun = min (8, nprei-6)
+bundis = distinct bundles to be displayed - randomly chosen
+         from [7,nprei] predefined bundles
+
+TEST: #SR 3 6 20 24
+      "Immediately after <open workstation>, the defined text
+       bundles > 6 of the WSL should appear as specified in the
+       corresponding predefined text bundles of the WDT."
+
+The actual results (text primitives drawn from initial state of WSL)
+are drawn on the left side of the picture.  The corresponding
+expected results (text primitive with individual attributes copied
+from WDT) are drawn on the right side, except for one
+text primitive which will be different.
+
+actual:
+for ix = 1 to numbun
+   display and label text "Bundles > 6", under control of bundles
+     in bundis(ix)
+next ix
+
+expected:
+set font, precision, expansion, spacing, and color ASF to individual
+for ix = 1 to numbun
+   <inquire predefined text representation> on index
+        bundis(ix), determine:
+      pdfn = font
+      pdpr = precision
+      pdex = expansion
+      pdsp = spacing
+      pdci = color index
+
+   if (ix = bundif) then
+      if (pdfn = 1) then
+         pdfn = 2
+      else
+         pdfn = 1
+      endif
+   endif
+   draw text with pdfn, pdpr, pdex, pdsp, pdci
+next ix
+
+OPQA/WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES > 6:
+   Which pair of text primitives does NOT match?
+pass/fail depending on (operator selects bundif)
+
+end_comp_tables:
+
+*** *** *** ***   predefined bundle descriptions   *** *** *** ***
+
+TEST: #SR 3 6 20
+      "The appearance of predefined text bundles should agree
+       with the descriptions supplied by the implementor."
+
+numbun = min(8, nprei)
+bundis = distinct bundles to be displayed, sorted
+
+use two loops here so that plain text can be used for labelling
+
+set all ASFs to BUNDLED
+for ix = 1 to numbun
+   draw text "Phigs" using bundle bundis(ix)
+next ix
+
+set all ASFs to INDIVIDUAL
+for ix = 1 to numbun
+   <inquire predefined text representation> on index
+    bundis(ix) to determine:
+      pdfn = font
+      pdpr = precision
+      pdex = expansion
+      pdsp = spacing
+      pdci = color index
+   display and label values for pdfn, pdpr, pdex, pdsp, pdci
+next ix
+
+OPQA/PREDEFINED TEXT BUNDLES: Does the appearance of each
+  text primitive agree with the displayed aspect values for that
+  bundle?
+if (operator responds "yes") then
+   OPQA/PREDEFINED TEXT BUNDLES: If the implementor provides
+       external documentation, is it consistent with the
+       appearance of the text primitive and with the displayed
+       aspect values for every bundle identifier?
+   pass/fail depending on (operator responds "yes")
+else
+   fail
+endif
+
+END PROGRAM 10
+
+
+PROGRAM 11: Text bundle index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEFINED TEXT INDICES: All text primitives but one are identical
+(drawn with the same attributes).  Identify the text primitive
+that is different.
+
+UNDEFINED TEXT INDICES: A reference text primitive is drawn above
+a line with several other text primitives beneath it.  Normally,
+all of these will have the same attributes as the reference text
+primitive.  Count up and report the number of text primitives
+below the line which match the reference text primitive in font,
+precision, expansion, spacing, and color.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+<inquire workstation state table lengths> to determine
+   szbt = maximum size of text bundle table
+
+*** *** ***   text index   *** *** ***
+
+TEST: #SR 3 4 5 6
+      "A defined text index should cause the addressed entry in
+       the bundle table to be used when rendering a text
+       primitive."
+
+bundis = number of bundles to be displayed = min(8, szbt)
+set all text bundles in bundis to:
+   font      = 1
+   precision = STROKE
+   expansion = 0.7
+   spacing   = 0.1
+   color     = 1
+
+bundif = randomly selected bundle from bundis
+set text bundle #bundif to:
+   font      = 2
+   precision = STROKE
+   expansion = 1.1
+   spacing   = 0.1
+   color     = 1
+
+Display and label the text primitive for each bundle in bundis
+
+OPQA/DEFINED TEXT INDICES: which text primitive is different?
+pass/fail depending on (text primitive with attributes from
+                        bundle #bundif selected)
+
+TEST: #SR 3 4 5 7
+      "An undefined text index should cause bundle number 1 in
+       the text bundle table to be used when rendering a text
+       primitive."
+
+set text bundle #1 to:
+   font      = 2
+   precision = STROKE
+   expansion = 0.8
+   spacing   = 0.2
+   color     = 2
+
+u1,u2,u3 = 3 undefined, positive indices - all greater than
+  maximum defined index in bundle table (szbt)
+explct = number of explicit text primitives using bundle #1 =
+   random integer from 0 to 4
+
+draw reference text primitive "Test text" with bundle #1 near top
+  of display
+
+draw line underneath
+
+display interleaved, below line:
+  three text primitives "Test text" using bundle index u1,u2,u3,
+  explct text primitives "Test text" using bundle index 1
+
+OPQA/UNDEFINED TEXT INDICES: How many of the text primitives
+  below the line have the same text attributes as the reference
+  text primitive above it?
+pass/fail depending on (response = 3+explct)
+
+END PROGRAM 11
+
+
+PROGRAM 12: Appearance of text fonts 1 and 2
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+ASCII SPECIAL CHARACTERS: Each numbered character should be
+recognizable from its name in the prompt.  Respond by entering
+a list of numeric labels, in the same order as requested by the
+prompt. For instance if the screen shows:
+   1: (
+   2: *
+   3: &
+and the prompt asks for <asterisk>, <ampersand>, <opening
+parenthesis>, the correct response is 2,3,1.  All 33 special
+characters are checked for all three precisions in fonts 1 and 2,
+so there will be several prompts for this heading.
+
+ASCII UPPERCASE LETTERS: All 26 uppercase letters and one
+lowercase letter should be displayed.  Identify the position of
+the lowercase letter.  Character positions are displayed to the
+left of each of the strings.  For example, in this line:
+   9-16: DTSRFkCB
+the lowercase "k" is in position 14.  As above, this test is
+executed for all three precisions in fonts 1 and 2.
+
+ASCII LOWERCASE LETTERS: All 26 lowercase letters and one
+uppercase letter should be displayed.  Identify the position of
+the uppercase letter.  Character positions are displayed to the
+left of each of the strings.  As above, this test is executed for
+all three precisions in fonts 1 and 2.
+
+ASCII DIGITS: All 10 digits and one non-digit should be
+displayed.  Identify the position of the non-digit. Character
+positions are displayed to the left of each of the strings.  As
+above, this test is executed for all three precisions in fonts 1
+and 2.
+
+DISTINGUISHABILITY OF FONTS 1 AND 2: For each of the three
+precisions, five lines are displayed, four in one font (1 or 2)
+and one in the other font.  Identify the line in the distinctive
+font.
+
+FONT 1 MONOSPACED: Each line has a character string with some
+leading potentially narrow characters and trailing potentially
+wide characters.  In every string but one, each of its characters
+should line up between the vertical lines.  Identify the one
+string where this is not so.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+set up array for ASCII characters and names:
+ascch = all special characters =  !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+
+ascnm = names of all special characters
+      = space, exclamation point, double quote, pound sign,
+   dollar sign, percent sign, ampersand, apostrophe, left
+   parenthesis, right parenthesis, asterisk, plus sign, comma, dash,
+   period, slash, colon, semi-colon, less-than sign, equals,
+   greater-than sign, question mark, at sign, left bracket, back
+   slash, right bracket, carat, underline, single opening quote,
+   left curly brace, vertical bar, right curly brace, tilde
+
+TEST: #SR 3 5 6 34 38 39 40 41
+      "Fonts 1 and 2 should both contain all the ASCII special
+       characters, in any precision."
+
+grpsiz = how many characters to display at a time = 6
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_spec
+    set text rep #3: font, precision, expansion, spacing, color
+                     font, prec       1.0        0.1      1
+    set text index = 3
+    perm = array to randomize order of the 33 characters
+    for ix = 0 to 32 by grpsiz
+       display next grpsiz randomly ordered characters starting
+          from ascch(perm(ix+1))
+       OPQA/ASCII SPECIAL CHARACTERS: Identify, in order, the following
+          characters: ascnm(perm(ix+1)) to ascnm(perm(ix+grpsiz))
+       if (operator response incorrect) then
+          fail
+          goto end_ascii_special
+       endif
+    next ix
+end_fp_spec:
+next prec
+next font
+
+pass
+
+end_ascii_special:
+
+upper  = uppercase characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+noncap = a lowercase letter randomly chosen from "bdfhkt"
+tststr = test string = noncap + upper
+
+TEST: #SR 3 5 6 34 38 39 40 41
+      "Fonts 1 and 2 should both contain all the ASCII uppercase
+       letters, in any precision."
+
+set text index = 2
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_upper
+    set text rep #2: font, precision, expansion, spacing, color
+                     font, prec       1.0        0.1      1
+    perm = array to randomize order of the 27 characters
+    display tststr in random order
+    OPQA/ASCII UPPERCASE LETTERS: which character is NOT an
+      uppercase letter?
+    if (operator fails to identify noncap) then
+       fail
+       goto end_ascii_upper
+    endif
+end_fp_upper:
+next prec
+next font
+
+pass
+
+end_ascii_upper:
+
+lower  = lowercase characters = 'abcdefghijklmnopqrstuvwxyz'
+nonlow = an uppercase letter randomly chosen from upper
+tststr = test string = nonlow + lower
+
+TEST: #SR 3 5 6 34 38 39 40 41
+      "Fonts 1 and 2 should both contain all the ASCII lowercase
+       letters, in any precision."
+
+set text index = 3
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_lower
+    set text rep #3: font, precision, expansion, spacing, color
+                     font, prec       1.0        0.1      1
+    perm = array to randomize order of the 27 characters
+    display tststr in random order
+    OPQA/ASCII LOWERCASE LETTERS: which character is NOT a
+      lowercase letter?
+    if (operator fails to identify nonlow) then
+       fail
+       goto end_ascii_lower
+    endif
+end_fp_lower:
+next prec
+next font
+
+pass
+
+end_ascii_lower:
+
+digit  = digit characters = '0123456789'
+nondig = one non-digit randomly chosen from "CEISZ"
+tststr = test string = nondig + digit
+
+TEST: #SR 3 5 6 34 38 39 40 41
+      "Fonts 1 and 2 should both contain all the ASCII digit
+       characters, in any precision."
+
+set text index = 4
+for font = 1 to 2
+for prec = STRING, CHAR, STROKE
+    if (font,prec not directly available) goto end_fp_digit
+    set text rep #4: font, precision, expansion, spacing, color
+                     font, prec       1.0        0.1      1
+    perm = array to randomize order of the 11 characters
+    display tststr in random order
+    OPQA/ASCII DIGITS: which character is NOT a digit?
+    if (operator fails to identify nondig) then
+       fail
+       goto end_ascii_digit
+    endif
+end_fp_digit:
+next prec
+next font
+
+pass
+
+end_ascii_digit:
+
+TEST: #SR 3 5 6 34 38 39 40 42
+      "Text fonts 1 and 2 should be visually distinguishable in
+       any precision."
+
+fonta = random integer, 1 or 2
+fontb = 3 - fonta
+numlin = 5
+for prec = STRING, CHAR, STROKE
+    txdif = random integer from 1 to numlin
+    fonta = 3 - fonta
+    fontb = 3 - fontb
+    set text rep #2: font,   precision, expansion, spacing, color
+                     1       prec       1.0        0.1      1
+    set text rep #1: font,   precision, expansion, spacing, color
+                     2       prec       1.0        0.1      1
+
+    for ix = 1 to numlin
+       if (ix = txdif) then
+          set text index = fontb
+       else
+          set text index = fonta
+       endif
+       display "Test" at next location
+    next ix
+    OPQA/DISTINGUISHABILITY OF FONTS 1 AND 2: Which line has a
+       different font?
+    if (operator response does not indicate location txdif) then
+       fail
+       goto end_distin
+    endif
+next prec
+
+pass
+
+end_distin:
+
+TEST: #SR 3 5 6 38 39 43 44 45 50 57 58 61 62
+      "In text font 1, all character bodies affected by the same
+       character height, character expansion factor, and
+       character spacing should have the same width."
+
+set text alignment = LEFT,BASE
+
+Use <inquire text extent> to determine
+  ncwh = nominal character width/height ratio for font 1
+
+numlin = number of lines to display = 6
+ngline = incorrect line = random number from 1 to numlin
+
+display labels for all numlin lines to be shown
+
+chsp = character spacing = 0.2
+for ix = 1 to numlin
+  chht   = random value from .2/numlin to .6/numlin
+  chexp  = random value from .3 to 3
+  chsiz  = horizontal distance per character
+         = chht * (ncwh*chexp + chsp)
+  numch  = number of characters this string = .6 / chsiz
+  make sure numch between 4 and 25, else pick new values
+  numnar = number of narrow characters = numch/2
+  distrg = display string = numnar narrow characters
+    followed by (numch-numnar) wide characters
+  set character height = chht
+  set text index = ix
+  set text rep #ix: font,   precision, expansion, spacing, color
+                    1,      STROKE,    chexp,     chsp,    1
+  display distrg at location ix
+  if (ix = ngline) then
+     offact = offset factor = .80 or 1.20
+  else
+     offact = offset factor = 1.00
+  endif
+
+  draw vertical lines between characters, assuming that chht,
+    chsp, and chexp are in effect, distorted by offact
+next ix
+
+OPQA/FONT 1 MONOSPACED: In which line are the characters NOT
+  located between the separators?
+pass/fail depending on (operator indicates location ngline)
+
+END PROGRAM 12
+
+
+PROGRAM 13: Appearance of all text fonts
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+NON-MANDATORY REGISTERED TEXT FONTS: These screens display a
+sample of supported registered text fonts (at most 8).  For each
+displayed line, look up its text font identifier in the ISO
+register and verify that the actual appearance of the text agrees
+with the ISO specification.
+
+IMPLEMENTOR DEFINED TEXT FONTS: These screens display a sample of
+implementor defined text fonts (at most 8).  For each displayed
+line, look up its text font identifier in the implementor's
+documentation and verify that the actual appearance of the text
+agrees with the specification.  Also verify that font identifiers
+are described in a workstation independent way, i.e. the same
+identifier must not specify different fonts for different
+workstation types.
+
+UNIFORM HEIGHT FOR CHARACTER BODIES: Each column has a character
+string composed of some short characters followed by some tall
+characters.  In every string but one, each of its characters
+should line up between the horizontal lines.  Identify the one
+string where this is not so.
+
+IDENTIFY UNREPRESENTED CHARACTER CODES: You must enter a list of
+integers for which font 1 or 2 has no graphic representation.  If
+this is an ASCII machine, values between 0 and 31 may qualify.
+Any entries beyond the first 6 are ignored.  If all values
+are representable, indicate the null list by entering "n".
+Since the entered character codes will be used by the program
+to generate a text primitive, do not enter any codes which will
+cause the implementation to take some special action.
+
+APPEARANCE OF UNREPRESENTED CHARACTER CODES:  The implementation
+must provide a special representation or symbol to indicate the
+presence of character codes within a text string for which the
+font has no normal representation.  Identify all and only the
+positions in the displayed text string which contain this
+distinctive symbol.  There may be different symbols for different
+non-representable codes.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+use <inquire text facilities> to determine
+  lposfn = list of positive fonts and highest available precision
+           for each, other than fonts 1 and 2
+  lnegfn = list of non-positive fonts and highest available precision
+           for each
+  lstrk  = list of fonts available in STROKE precision
+
+chstr = character string = AaZz09$;^}
+lcc = list of character codes = codes for chstr
+
+if (lposfn empty)
+   informative message: no non-mandatory text fonts
+   goto end_pos
+endif
+
+TEST: #SR 3 5 6 38 39 40
+      "All positive text fonts should appear as specified in the
+       ISO register."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lposfn > 8) then
+   ldisp = 8 randomly chosen from lposfn
+else
+   ldisp = all of lposfn
+endif
+
+display lcc
+display chstr for each font in ldisp, using a text representation
+  with that font's associated precision
+label each chstr
+
+OPQA/NON-MANDATORY REGISTERED TEXT FONTS: do all displayed,
+  labelled text fonts agree with the corresponding description in
+  the ISO register?
+pass/fail depending on (operator responds "yes")
+
+TEST: #SR 3 5 6 38 39 40 48 49
+      "All positive text fonts should appear as specified in the
+       ISO register, even when less precision is requested than
+       is available for the font."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lposfn > 8) then
+   ldisp = 8 randomly chosen from lposfn
+else
+   ldisp = all of lposfn
+endif
+
+display lcc
+display chstr for each font in ldisp, using a text representation
+  with a precision less than that font's associated precision (or
+  equal if STRING)
+label each chstr
+
+OPQA/NON-MANDATORY REGISTERED TEXT FONTS: do all displayed,
+  labelled text fonts agree with the corresponding description in
+  the ISO register?
+pass/fail depending on (operator responds "yes")
+
+end_pos:
+
+if (lnegfn empty)
+   informative message: no non-mandatory text fonts
+   goto end_font_id
+endif
+
+TEST: #SR 3 5 6 38 39 40
+      "All non-positive text fonts should appear as specified in
+       the implementor's documentation."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lnegfn > 8) then
+   ldisp = 8 randomly chosen from lnegfn
+else
+   ldisp = lnegfn
+endif
+
+display lcc
+display chstr for each font in ldisp, using a text representation
+  with that font's associated precision
+label each chstr
+
+OPQA/IMPLEMENTOR DEFINED TEXT FONTS: Do all displayed, labelled
+  text fonts agree with the corresponding description in the
+  implementor documentation?
+pass/fail depending on (operator responds "yes")
+
+TEST: #SR 3 5 6 38 39 40 48 49
+      "All non-positive text fonts should appear as specified in
+       the implementor's documentation, even when less precision
+       is requested than is available for the font."
+
+ldisp = list of fonts to be displayed
+if (number of entries in lnegfn > 8) then
+   ldisp = 8 randomly chosen from lnegfn
+else
+   ldisp = lnegfn
+endif
+
+display lcc
+display chstr for each font in ldisp, using a text representation
+  with a precision less than that font's associated precision (or
+  equal if STRING)
+label each chstr
+
+OPQA/IMPLEMENTOR DEFINED TEXT FONTS: Do all displayed, labelled
+  text fonts agree with the corresponding description in the
+  implementor documentation?
+pass/fail depending on (operator responds "yes")
+
+if (ldisp = all of lnegfn)
+   all negative fonts displayed already
+   goto end_font_id
+endif
+
+end_font_id:
+
+TEST: #SR 3 5 6 38 39 43 44 50 57 58 61 62
+      "In each text font, all character bodies affected by the
+       same character height, character expansion factor, and
+       character spacing should have the same height."
+
+set text alignment = LEFT,TOP
+set text path = DOWN
+
+numcol = number of columns to display = 6
+ngcol  = incorrect column = random number from 1 to numcol
+
+display labels for all numcol columns to be shown
+
+chsp = character spacing = 0.4
+for ix = 1 to numcol
+  txfnt  = random value from lstrk
+  Use <inquire text extent> to determine
+    ncsh = nominal vertical character body size /
+           requested character height
+           for txfnt
+  chht   = random value from .2/numcol to .6/numcol
+  chexp  = random value from .3 to 3
+  chsiz  = vertical distance per character
+         = chht * (ncsh + chsp)
+  numch  = number of characters this string = vert-space / chsiz
+  make sure numch between 4 and 25, else pick new values
+
+  numsht = number of short characters = numch/2
+  distrg = display string = numsht short characters
+    followed by (numch-numsht) tall characters
+
+  set character height = chht
+  set text index = ix
+  set text rep #ix: font,   precision, expansion, spacing, color
+                    txfnt,  STROKE,    chexp,     chsp,    1
+
+  display distrg in column ix
+  if (ix = ngcol) then
+     offact = offset factor = .80 or 1.20
+  else
+     offact = offset factor = 1.00
+  endif
+
+  draw horizontal lines between characters, assuming that chht,
+    chsp, and chexp are in effect, distorted by offact
+next ix
+
+OPQA/UNIFORM HEIGHT FOR CHARACTER BODIES: In which column are the
+  characters NOT aligned between the separators?
+pass/fail depending on (operator indicates location ngcol)
+
+OPQA/IDENTIFY UNREPRESENTED CHARACTER CODES: Enter list of 6 or
+fewer character codes for which font 1 has no representation (n
+if none).
+
+unr1ls = operator response
+
+OPQA/IDENTIFY UNREPRESENTED CHARACTER CODES: Enter list of 6 or
+fewer character codes for which font 2 has no representation (n
+if none).
+
+unr2ls = operator response
+
+if (unr1ls and unr2ls empty) then
+   informative message: cannot test SR46, no unrepresentable
+      character codes in fonts 1 or 2
+   goto end_unrep
+endif
+
+TEST: #SR 3 5 6 38 39 41 46
+      "There should be an implementation dependent way to depict a
+       character code for which a font has no graphic
+       representation."
+
+if (unr1ls empty) then
+   goto do_f2
+endif
+
+set text index = 1
+for prec = STRING,CHAR,STROKE
+   str = random mix of ASCII and unrepresented character codes
+   set text rep #1: font,   precision, expansion, spacing, color
+                    1,      prec,      1.0,       0.2,     1
+   display str, using index #1
+
+   OPQA/APPEARANCE OF UNREPRESENTED CHARACTER CODES: The
+   implementation has a special symbol to indicate the
+   presence of non-representable character codes within
+   a text string.  List, in order, all the character positions
+   containing this special symbol.
+
+   if (operator response incorrect) then
+      fail
+      goto end_unrep
+   endif
+next precision
+
+if (unr2ls empty) then
+   pass
+   goto end_unrep
+endif
+
+do_f2:
+set text index = 1
+for prec = STRING,CHAR,STROKE
+   str = random mix of ASCII and unrepresented character codes
+   set text rep #1: font,   precision, expansion, spacing, color
+                    2,      prec,      1.0,       0.2,     1
+   display str, using index #1
+
+   OPQA/APPEARANCE OF UNREPRESENTED CHARACTER CODES: The
+   implementation has a special symbol to indicate the
+   presence of non-representable character codes within
+   a text string.  List, in order, all the character positions
+   containing this special symbol.
+
+   if (operator response incorrect) then
+      fail
+      goto end_unrep
+   endif
+next precision
+pass
+
+end_unrep:
+
+END PROGRAM 13
+
+
+PROGRAM 14: Appearance of character expansion factor for STRING
+            and CHAR precision
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 39 47 48 49 57 58 59
+      "Test cases for the visual effect of the approximated text
+       attribute character expansion factor in STRING and CHAR
+       precision are not yet available."
+pass
+
+END PROGRAM 14
+
+
+PROGRAM 15: Appearance of character expansion factor and
+            character spacing
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+CHARACTER EXPANSION AND SPACING IN HORIZONTAL TEXT: Several
+horizontal lines containing a text string are drawn with various
+values for the character attributes.  The expected character body
+positions are outlined with a dotted line and a dashed baseline
+is drawn, usually of different colors than the text itself.
+Identify the single line in which the characters either do NOT
+fall within the dotted boxes or are NOT aligned on the baseline.
+Since the boxes are character bodies, they are bounded by the
+topline and bottomline, and thus may be somewhat larger
+vertically than the enclosed character.  In the case of
+overlapping characters due to negative character spacing,
+half-boxes are drawn, so that the boxes themselves don't overlap.
+
+CHARACTER EXPANSION AND SPACING IN VERTICAL TEXT: Same as above,
+except that the text choices are vertical columns, not horizontal
+lines.  Note that the expected position is aligned on the
+vertical centerline (not left- or right-justified); the actual
+characters, therefore, must not appear to the left or right of
+the expected box.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+use <inquire text extent> with
+  text font                  = 1
+  character height           = 1
+  character spacing          = 0
+  character expansion factor = 1
+  text string                = "WWiig!"
+to determine
+  ncbht = nominal character body height
+  ncbwd = nominal character body width
+
+set text path = RIGHT
+numlin = number of lines = 6
+ngline = random number from 1 to numlin
+for ix = 1 to numlin
+   randomly select, to fit on one line
+      chht  = character height
+      chexp = expansion factor
+      chsp  = character spacing
+
+   set character height = chht
+   set text index = ix
+   set text rep #ix: font,   precision, expansion, spacing, color
+                     1,      STROKE,    chexp,     chsp,    1
+
+   calculate expected character boxes
+   if (ix = ngline) then
+      distort character boxes
+   endif
+   draw in character boxes, using dotted line style, color #2
+
+   display text "WWiig!" on line ix
+next ix
+
+TEST: #SR 3 5 6 45 50 57 58 59 61 62
+      "The size and shape of a text string displayed with STROKE
+       precision in a monospaced font on a horizontal text path
+       should conform exactly to the character height, expansion
+       factor, and spacing in effect."
+
+OPQA/CHARACTER EXPANSION AND SPACING IN HORIZONTAL TEXT:
+  In which line are the characters of the text string NOT aligned
+  within dotted character boxes and on the dashed baseline?
+pass/fail depending on (operator picks location ngline)
+
+set text path = DOWN
+numcol = number of columns = 6
+ngcol  = random number from 1 to numcol
+for ix = 1 to numcol
+   randomly select, to fit in one column
+      chht  = character height
+      chexp = expansion factor
+      chsp  = character spacing
+
+   set character height = chht
+   set text index = ix
+   set text rep #ix: font,   precision, expansion, spacing, color
+                     1,      STROKE,    chexp,     chsp,    1
+
+   calculate expected character boxes
+   if (ix = ngcol) then
+      distort character boxes
+   endif
+   draw in character boxes, using dotted line style, color #2
+   display text "WWiig!" in column ix
+next ix
+
+TEST: #SR 3 5 6 45 50 57 58 59 61 62
+      "The size and shape of a text string displayed with STROKE
+       precision in a monospaced font on a vertical text path
+       should conform exactly to the character height, expansion
+       factor, and spacing in effect."
+
+OPQA/CHARACTER EXPANSION AND SPACING IN VERTICAL TEXT:
+  In which column are the characters of the text string NOT
+  aligned within dotted character boxes and on the dashed
+  centerline?
+pass/fail depending on (operator picks location ngcol)
+
+bestfn = a stroke text font other than 1, preferably not #2 and
+         not monospaced
+
+bestsc = best score so far for font properties = -1
+bestfn = best font so far = -1
+for ix = each available non-#1 stroke font
+   thisfn = ixth font from <inquire text facilities>
+   use <inquire text extent> with
+     text font                  = thisfn
+     character height           = 1
+     character spacing          = 0
+     character expansion factor = 1
+     text string                = "WWW"
+   to determine
+     tcbhtw = nominal character body height for W
+     tcbwdw = nominal character body width for W
+
+   use <inquire text extent> with
+     text font                  = thisfn
+     character height           = 1
+     character spacing          = 0
+     character expansion factor = 1
+     text string                = "iii"
+   to determine
+     tcbhti = nominal character body height for i
+     tcbwdi = nominal character body width for i
+
+   if (thisfn = 2) then
+      fnscor = score for this font = 0
+   else
+      fnscor = score for this font = 1
+   endif
+
+   if (ncbwdi approx= ncbwdw) then
+      do nothing
+   else
+      add 2 to fnscor
+   endif
+
+   if (fnscor > bestsc) then
+      best font so far:
+      bestsc = fnscor
+      bestfn = thisfn
+      ncbhtw = tcbhtw
+      ncbwdw = tcbwdw
+      ncbhti = tcbhti
+      ncbwdi = tcbwdi
+      if (fnscor .ge. 3) then
+         got a non-2, non-monospaced font: goto got_font
+      endif
+   endif
+next stroke font
+
+if (bestsc <= -1) then
+   message: skipping tests for proportionately spaced fonts; none
+            available.
+   goto endit
+endif
+
+got_font:
+
+set text path = LEFT
+numlin = number of lines = 6
+ngline = random number from 1 to numlin
+for ix = 1 to numlin
+   randomly select, to fit on one line
+      chht  = character height
+      chexp = expansion factor
+      chsp  = character spacing
+
+   set character height = chht
+   set text index = ix
+   set text rep #ix: font,   precision, expansion, spacing, color
+                     bestfn, STROKE,    chexp,     chsp,    1
+
+   calculate expected character boxes
+   if (ix = ngline) then
+      distort character boxes
+   endif
+   draw in character boxes, using dotted line style, color #2
+   display text "WWiiiW" on line ix
+next ix
+
+TEST: #SR 3 5 6 50 57 58 59 61 62
+      "The size and shape of a text string displayed with STROKE
+       precision in any font on a horizontal text path should
+       conform exactly to the character height, expansion factor,
+       and spacing in effect."
+
+OPQA/CHARACTER EXPANSION AND SPACING IN HORIZONTAL TEXT:
+  In which line are the characters of the text string NOT aligned
+  within dotted character boxes and on the dashed baseline?
+pass/fail depending on (operator picks location ngline)
+
+set text path = UP
+numcol = number of columns = 6
+ngcol  = random number from 1 to numcol
+for ix = 1 to numcol
+   randomly select, to fit in one column
+      chht  = character height
+      chexp = expansion factor
+      chsp  = character spacing
+
+   set character height = chht
+   set text index = ix
+   set text rep #ix: font,   precision, expansion, spacing, color
+                     bestfn, STROKE,    chexp,     chsp,    1
+
+   calculate expected character boxes
+   if (ix = ngcol) then
+      distort character boxes
+   endif
+   draw in character boxes, using dotted line style, color #2
+   display text "WWiiiW" in column ix
+next ix
+
+TEST: #SR 3 5 6 50 57 58 59 61 62
+      "The size and shape of a text string displayed with STROKE
+       precision in any font on a vertical text path should
+       conform exactly to the character height, expansion factor,
+       and spacing in effect."
+
+OPQA/CHARACTER EXPANSION AND SPACING IN VERTICAL TEXT:
+  In which column are the characters of the text string NOT
+  aligned within dotted character boxes and on the dashed
+  centerline?
+pass/fail depending on (operator picks location ngcol)
+
+endit:
+
+END PROGRAM 15
+
+
+PROGRAM 16: Appearance of text color index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEFINED TEXT COLOR INDICES: All text lines but one are drawn in
+the background color.  Identify the single text line drawn in the
+default foreground color.
+
+UNDEFINED TEXT COLOR INDICES: A star is drawn with several
+horizontal text lines beneath it.  Normally, all of these will be
+the same color as the star.  Count up and report the number of
+text lines that match the star in color.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+
+TEST: #SR 3 5 6 64 65
+      "A defined text color index should cause the addressed
+       entry in the color table to be used when rendering a
+       text primitive."
+
+bckcol = background color = realized color spec for entry #0
+forcol = foreground color = realized color spec for entry #1
+
+szcolt = maximum size of color table (including entry #0)
+numlin = number of text lines to be drawn = min(8, szcolt)
+lncol  = random permutation of #0,#1, and numlin-2 random choices
+         from entries #2 to #szcolt-1
+visdx = from lncol, randomly select an entry to be made visible
+        but not the one that contains 0, since this may not be
+        re-settable.
+
+for ix = 1 to numlin
+   set entry lncol(ix) to bckcol
+   randomly pick prec = precision, to ensure no interaction
+
+   set text index = ix
+   set text rep #ix color = lncol(ix)
+
+   draw text line #ix, using text rep #ix
+next ix
+
+set entry lncol(visdx) to forcol
+
+OPQA/DEFINED TEXT COLOR INDICES: which text line is visible?
+pass/fail depending on (response = text line colored by visdx)
+
+end_def_col:
+
+TEST: #SR 3 5 6 63 64 66
+      "An undefined text color index should cause entry
+       number 1 in the color table to be used when rendering a
+       text primitive."
+
+set entry #1 in color table opposite from BCKCOL
+set entry #1 different from FORCOL - make sure that the undefined
+  entries default to *current* color-rep of #1, not just a
+  predefined color.
+
+set polyline index = 1
+set polyline rep #1: type, width, color
+                     1,    3.0,   1
+draw star, using polyline rep #1
+
+u1,u2,u3 = 3 undefined, positive color indices - all greater
+  than maximum defined entry in color table
+explct = number of explicit text lines of color #1 = random integer
+   from 0 to 4
+
+set text rep #1: color = u1
+set text rep #2: color = u2
+set text rep #3: color = u3
+set text rep #4: color = 1
+
+display interleaved:
+  three text lines of color u1,u2,u3 (using text rep #1,2,3)
+  explct text lines of color #1 (using text rep #4)
+
+OPQA/UNDEFINED TEXT COLOR INDICES: how many text lines are the
+  same color as the star?
+pass/fail depending on response = 3+explct
+
+END PROGRAM 16
+
+
+PROGRAM 17: Network inheritance and initialization of text
+            index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR TEXT INDEX: This screen
+displays several left-right pairs of text primitives.  Make sure
+that all pairs except one have matching font, precision,
+expansion, spacing, and color.  Identify the non-matching pair.
+
+DESIGN:
+
+All test cases use same basic structure network for testing
+inheritance.  Five (distinct if possible) values for the
+attribute to be tested are set up and propagated throughout the
+network.  The first value is the system default from the PDT.
+Note that structure #104 is executed by both #103 and #101.
+Actual results are displayed on the left, expected results
+on the right, with the 14th deliberately made incorrect.
+
+default = val#1
+  |                  102
+  |                 /  prim 2
+  |               /    attr = val#3   val#3
+  V        val#1/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   attr = val#4
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  attr = val#2                                  prim 7    \ val#4
+  prim 10                                                   \
+  transform             val#2                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        attr = val#5
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+
+set all ASFs to BUNDLED
+
+*** *** ***   inheritance for text index   *** *** ***
+
+call DISCOL to try to get 5 distinct foreground colors,
+  returning fcol = actual number of foreground colors
+colind(1:5) = [1,2,3,4,5]
+if (fcol < 5) then
+   copy 1st valid part of list to tail of list
+endif
+
+set up bundles 1-5:
+
+   bundle
+   index    font  precision  expansion  spacing  color
+   ------   ----  ---------  ---------  -------  -----
+     1        1   STROKE         1.0       0.0   colind(1)
+     2        2   STROKE         1.0       0.3   colind(2)
+     3        1   STROKE         0.7       0.3   colind(3)
+     4        2   STROKE         0.7       0.0   colind(4)
+     5        1   STROKE         1.3       0.0   colind(5)
+
+randomize location of text primitives
+
+set up CSS as described above
+
+display 14 pairs of text primitives, "ABC", using bundles 1-5
+
+TEST: #SR 3 5 6 8 9
+      "The text index should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR TEXT INDEX:
+  which pair of text primitives does NOT match?
+pass/fail depending on (response = position of text 14)
+
+END PROGRAM 17

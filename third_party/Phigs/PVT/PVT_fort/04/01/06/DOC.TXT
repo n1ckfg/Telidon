@@ -1,0 +1,540 @@
+TITLE: Fill area set
+
+MODULE#: 04.01.06
+
+DESCRIPTION: This module tests that fill area sets are rendered
+correctly and that a program can set up a fill area set element in the
+CSS, which will create a primitive upon traversal.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** ***   <Fill area set 3>   *** *** *** *** ***
+
+SR1.  <Fill area set 3> creates a fill area set 3 element in the
+CSS; elements whose subareas have fewer than three vertices are
+valid.
+#F 19
+#D 7.3.1.11
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/1 P01/2 P01/3 P01/4 P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2
+
+SR2.  If current element is fill area set 3 then <inquire current
+element type and size> returns the element type as fill area set
+3 and the appropriate element size.
+#F 303
+#D 7.3.1.11
+#S 4.4.4/29/5
+#T P01/1 P01/3
+
+SR3.  If current element is fill area set 3 then <inquire current
+element content> returns the appropriate data for fill area set
+3.
+#F 304
+#D 7.3.1.11
+#S 4.4.4/29/5
+#T P01/2 P01/4
+
+*** *** *** *** ***   <Fill area set>   *** *** *** *** ***
+
+SR4.  <Fill area set> creates a fill area set element in the CSS;
+elements whose subareas have fewer than three vertices are valid.
+#F 20
+#D 7.3.1.12
+#S 4.4.1/22/3 4.5.1/34/1
+#T P01/5 P01/6 P01/7 P01/8 P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2
+
+SR5.  If current element is fill area set then <inquire current
+element type and size> returns the element type as fill area set
+and the appropriate element size.
+#F 303
+#D 7.3.1.12
+#S 4.4.4/29/5
+#T P01/5 P01/7
+
+SR6.  If current element is fill area set then <inquire current
+element content> returns the appropriate data for fill area set.
+#F 304
+#D 7.3.1.12
+#S 4.4.4/29/5
+#T P01/6 P01/8
+
+SR7. <Fill area set> and <fill area set_3> primitives are
+specified by a set of ordered lists of 2D or 3D points, expressed
+in modelling coordinates (MC).  The primitive is rendered as a
+collection of closed polygonal subareas, each of whose vertices
+are the points in each of the lists.
+#F 19 20
+#D 7.3.1.11 7.3.1.12
+#S 4.5.1/34/1
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P03/1 P03/2
+#C A subarea containing fewer than three vertices has no area and
+therefore has no visual effect.  The visual effect of degenerate
+subareas with more than two points, or of non-planar fill area
+sets is not specified by the standard.
+
+SR8.  The interior of a fill area set is determined by the number
+of intersections between a straight line drawn from a given point
+to infinity in the plane of the primitive and the subarea
+boundaries.  If the number of intersections is odd, the point is
+in the interior, otherwise it is outside.
+#F 19 20
+#D 7.3.1.11 7.3.1.12
+#S 4.5.1/35/6
+#T P03/1 P03/2
+#C Note that the above definition is NOT equivalent to the union
+of the interiors of the subareas.
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   19: pfas3   <fill area set 3>
+   20: pfas    <fill area set>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.11 ...  fill_area_set_3
+  7.3.1.12 ...  fill_area_set
+ 
+
+
+PROGRAM 1: Fill area set element
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> throughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+*** *** *** *** ***   Fill area set 3   *** *** *** *** ***
+
+<fill area set 3> with 3 subareas
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       fill area set 3 as the type of the created element and the
+       appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = fill area set 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for a fill area set 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+valets = true = valid current element type and size
+valec = true = valid current element content
+for ix = 0 to 2
+   if (ix = 0) then
+      <fill area set 3> with
+            subarea1=2 points, subarea2=1 point, subarea3=0 points
+   else
+      <fill area set 3> with
+            subarea1=ix points, subarea2=ix points, subarea3= ix points
+   endif
+
+   <inquire current element type and size> to set celtyp, celsiz
+   if (celtyp not= fill area set 3 or celsiz not= values
+       specified by the standard and language binding) then
+      valets = false
+   endif
+
+   <inquire current element content> to set celcon
+   if (celcon not= representation as specified by the standard
+       and language binding) then
+      valec = false
+   endif
+next ix
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       fill area set 3 as the type of the created element and the
+       appropriate element size for an element with subareas with
+       0, 1, and/or 2 points."
+pass/fail depending on (valets)
+
+TEST: #SR 1 3
+      "<Inquire current element content> should return the standard
+       representation for a <fill area set 3> whose subareas have 0,
+       1, and/or 2 points."
+pass/fail depending on (valec)
+
+*** *** *** *** ***   Fill area set   *** *** *** *** ***
+
+<fill area set> with 3 subareas
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       fill area set as the type of the created element and the
+       appropriate element size for a multipoint element."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = fill area set and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 4 6
+      "<Inquire current element content> should return the standard
+       representation for a multipoint fill area set."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+valets = true = valid current element type and size
+valec = true = valid current element content
+degen = empty, 1 and 2 point fill area set
+for ix = 0 to 2
+   if (ix = 0) then
+      <fill area set> with
+            subarea1=2 points, subarea2=1 point, subarea3=0 points
+   else
+      <fill area set> with
+            subarea1=ix points, subarea2=ix points, subarea3= ix points
+   endif
+
+   <inquire current element type and size> to set celtyp, celsiz
+   if (celtyp not= fill area set or celsiz not= values specified
+       by the standard and language binding) then
+      valets = false
+   endif
+
+   <inquire current element content> to set celcon
+   if (celcon not= representation as specified by the standard
+       and language binding) then
+      valec = false
+   endif
+next ix
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       fill area set as the type of the created element and the
+       appropriate element size for an element with subareas with
+       0, 1, and/or 2 points."
+pass/fail depending on (valets)
+
+TEST: #SR 4 6
+      "<Inquire current element content> should return the standard
+       representation for a <fill area set> whose subareas have 0,
+       1, and/or 2 points."
+pass/fail depending on (valec)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Appearance of fill area sets
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEGENERATE FILL AREA SETS: Some of the 6 labelled squares contain
+a fill area set with zero-, one-, or two-point subareas.  Others
+contain a visible primitive (including a single dot polylmarker).
+Identify all the squares in which no primitive is visible.
+
+ORDER OF VERTICES: All the squares except one should contain a
+closed rectangle and pentagon.  Identify the square that does not
+contain these figures.
+
+FILL AREA SET CLOSURE: All the squares should contain a closed
+pentagon.  Some fill area sets are explicitly closed, others are
+implicitly closed.  Identify the pentagon which is not closed.
+
+GEOMETRY OF 3D FILL AREA SETS: All the squares should contain a
+fill area set with multiple vertices.  All but one should have
+their vertices accurately circled by a polymarker.  Identify the
+fill area set which is not accurately marked.
+
+GEOMETRY OF 2D FILL AREA SETS: Same as GEOMETRY OF 3D FILL AREA
+SETS, above.
+
+DESIGN:
+
+set polymarker scale factor to reasonable size = 0.02 in WC
+use interior style HOLLOW throughout
+
+Divide screen up into 6 square labelled area sets for all tests
+
+sider = list of 6 sides from which cube may be viewed =
+  front,back,left,right,top,bottom
+
+TEST: #SR 1 4 7
+      "A <fill area set> or <fill area set 3> subarea with fewer
+       than three points should have no visual effect."
+
+ran6 = random order for 1-6
+numemp = number of empty squares = random from 2 to 4
+for ix = 1 to 6
+   this = ran6(ix)
+   if (this > numemp+1) then
+      draw a single dot polymarker in square #ix
+   elseif (this = numemp+1) then
+      draw a single line segment in square #ix
+   elseif (this = numemp) then
+      draw a 2D fill area set with 0, 1, and 2 point subareas in
+      square #ix
+   elseif (this = numemp-1)
+      draw a two point 3D fill area set in square #ix
+   else
+      draw a 3D fill area set with 0, 1, and 2 point subareas in
+      square #ix
+   endif
+next ix
+OPQA/DEGENERATE FILL AREA SETS: List all the empty squares.
+pass/fail depending on:
+   (operator identifies the squares with zero, one, or two point
+    fill area sets)
+
+TEST: #SR 1 4 7
+      "A <fill area set> or <fill area set 3> primitive with multiple
+       vertices should be rendered as a collection of subareas.  Each
+       subarea should be rendered by connecting the points in the order
+       that the points are given in the point list."
+
+ran6 = random order for 1-6
+for ix = 1 to 6
+   this = ran6(ix)
+   this:
+       1   - use polylines to draw a rectangle and a 5 point star
+       2   - draw 2D rectangle and pentagon, clockwise
+       3   - draw 2D rectangle and pentagon, counterclockwise
+       4   - draw 3D rectangle and pentagon, clockwise
+       5,6 - draw 3D rectangle and pentagon, counterclockwise
+next ix
+
+OPQA/ORDER OF VERTICES: Which square does NOT contain a closed
+  rectangle and pentagon?
+pass/fail depending on (operator identifies square with star)
+
+TEST: #SR 1 4 7
+      "The subareas with a list of more than two points in a
+       <fill area set> or <fill area set 3> primitive should be
+       rendered as closed polygonal areas."
+
+ran6 = random order for 1-6
+one subarea per fill area set for this test
+
+for ix = 1 to 6
+   this = ran6(ix)
+   this:
+       1   - draw a pentagon with polyline and leave one side open
+       2   - draw 3D pentagon with 6 points (explicit close, last=first point)
+       3   - draw 2D pentagon with 6 points (explicit close, last=first point)
+       4   - draw 2D pentagon with 5 points (implicit close)
+       5,6 - draw 3D pentagon with 5 points (implicit close)
+next ix
+
+OPQA/FILL AREA SET CLOSURE: Which pentagon is open?
+pass/fail depending on (operator identifies pentagon with open side)
+
+TEST: #SR 1 4 7
+      "The appearance of a <fill area set 3> primitive should reflect
+       its 3D geometry after being transformed."
+
+ngsq = no-good square = random integer from 1 to 6
+set up fill area set with a triangle and a pentagon as subareas
+for each coordinate, z = .5*x + .5*y
+
+for ix = 1 to 6
+   rotate to view from sider(ix)
+   display the 3D fill area set in square #ix
+   calculate expected position of vertices
+   if (ix = ngsq) then
+      distort expected vertices
+   endif
+   use 2D circle polymarker to mark expected vertices
+next ix
+
+OPQA/GEOMETRY OF 3D FILL AREA SETS: Which fill area set does NOT
+   have all its vertices circled?
+pass/fail depending on (operator identifies square #ngsq)
+
+TEST: #SR 1 4 7
+      "The appearance of a <fill area set> primitive should reflect
+       its 2D geometry after being transformed."
+
+ngsq = no-good square = random integer from 1 to 6
+set up fill area set with a triangle and a pentagon as subareas
+(same x,y coordinates as above)
+
+for ix = 1 to 6
+   rotate 45 degrees around x and y axis into unit cube to show
+      z-values
+   rotate to view from sider(ix)
+   display the 2D fill area set in square #ix
+   calculate expected position of vertices
+   if (ix = ngsq) then
+      distort expected vertices
+   endif
+   use 2D circle polymarker to mark expected vertices
+next ix
+
+OPQA/GEOMETRY OF 2D FILL AREA SETS: Which fill area set does NOT have
+   all its vertices circled?
+pass/fail depending on:
+   (operator identifies square #ngsq)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Appearance of fill area set interiors
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+INTERIOR OF SELF-OVERLAPPING FILL AREA SETS: All the squares
+should contain a multipoint fill area set with the interiors
+filled.  Identify the fill area set whose interior is filled
+different from that of the others.
+
+INTERIOR OF CONCAVE FILL AREA SETS: Same as INTERIOR OF
+SELF-OVERLAPPING FILL AREA SETS, above.
+
+DESIGN:
+
+<inquire interior facilities> to determine if
+   solid, hatch, pattern interior style is supported:
+if (SOLID, HATCH, or PATTERN is not available)
+   message: cannot test interior filling algorithm
+   goto end_it_all
+endif
+
+if (HATCH available) then
+   ihat = hatch style picked by operator, preferably dense and
+          diagonal
+endif
+if (PATTERN available) then
+   ipat = 1
+   define pattern #ipat as simple checkerboard pattern
+   set pattern size to reasonable value
+endif
+
+Divide screen up into 6 square labelled area sets for all tests
+
+*** *** ***   interior of self-overlapping fill area set   *** *** ***
+
+fillok = true
+
+The border of each subarea denoted by same digit.  "F" indicates
+should be filled, "N" not filled.
+
+11111111111111111111111111111
+1                           1
+1  F                        1
+1     11111111111111111     1
+1     1               1     1
+1     1   N     222222+22222+2222222222
+1     1         2     1     1         2
+1     1         2  F  1  N  1         2
+1     1         2     1     1         2
+1     1   222222222222+22222+22222    2
+1     1   2     2     1     1    2    2
+1     1   2  F  2  N  1  F  1    2    2
+1     1   2     2     1     1    2    2
+1     1111+11111+111111111111    2    2
+1         2     2     1          2    2
+1         2  N  2  F  1          2    2
+1         2     2     1          2    2
+1111111111+11111+111111    N     2    2
+          2     2                2    2
+          2     2                2    2
+          2     222222222222222222    2
+          2                           2
+          2                        F  2
+          2                           2
+          22222222222222222222222222222
+
+
+for each available intsty = SOLID, HATCH, PATTERN
+   ran6 = random order for 1-6
+   set interior style = intsty
+   if (intsty=HATCH) then
+      set interior style index = ihat
+   elseif (intsty=PATTERN) then
+      set interior style index = ipat
+   endif
+   for ix = 1 to 6
+      this = ran6(ix)
+      this:
+          1 - simulate the figure, filling in the wrong interiors
+          2 - simulate the figure, filled correctly
+          3 - generate the overlapping 3D fill area
+          4 - generate the overlapping 3D fill area,
+              reverse order of point list
+          5 - generate the overlapping 2D fill area
+          6 - generate the overlapping 2D fill area,
+              reverse order of point list
+   next ix
+
+   OPQA/INTERIOR OF SELF-OVERLAPPING FILL AREA SETS: Which figure
+      is different?
+   if (operator selects #1) then
+      OK so far
+   else
+      fillok = false
+      message about failure for intsty
+   endif
+next intsty
+
+TEST: #SR 1 4 7 8
+      "The interiors of a self-overlapping fill area set
+       should be filled correctly."
+pass/fail depending on (fillok)
+
+*** *** ***   interior of concave fill area set   *** *** ***
+
+fillok = true
+set up coordinates for spiral fill area
+for each available intsty = SOLID, HATCH, PATTERN
+   ran6 = random order for 1-6
+   set interior style = intsty
+   if (intsty=HATCH) then
+      set interior style index = ihat
+   elseif (intsty=PATTERN) then
+      set interior style index = ipat
+   endif
+   for ix = 1 to 6
+      this = ran6(ix)
+      this:
+          1 - simulate the figure, filling in the wrong interiors
+          2 - simulate the figure, filled correctly
+          3 - generate the spiral 3D fill area
+          4 - generate the spiral 3D fill area,
+              reverse order of point list
+          5 - generate the spiral 2D fill area
+          6 - generate the spiral 2D fill area,
+              reverse order of point list
+   next ix
+
+   OPQA/INTERIOR OF CONCAVE FILL AREA SETS: Which figure is
+      different?
+   if (operator selects #1) then
+      OK so far
+   else
+      fillok = false
+      message about failure for intsty
+   endif
+next intsty
+
+TEST: #SR 1 4 7 8
+      "The interiors of a concave spiral fill area set should be
+       filled correctly."
+pass/fail depending on (fillok)
+
+end_it_all:
+
+END PROGRAM 3

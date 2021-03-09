@@ -1,0 +1,24 @@
+      SUBROUTINE XPOPPH (ERRPRM, MEMPRM)
+
+C XPOPPH serves to open PHIGS on the system under test.
+
+      COMMON /GLOBNU/ CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT, DUMRL
+      INTEGER         CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT(20), ERRIND
+      REAL    DUMRL(20)
+
+      COMMON /GLOBCH/ PIDENT,    GLBERR,    TSTMSG,     FUNCID,
+     1                DUMCH
+      CHARACTER       PIDENT*40, GLBERR*60, TSTMSG*900, FUNCID*80,
+     1                DUMCH(20)*20
+
+      INTEGER     ERRPRM, MEMPRM
+
+      CALL POPPH (ERRPRM, MEMPRM)
+
+      END

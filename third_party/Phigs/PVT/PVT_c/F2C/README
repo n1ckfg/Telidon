@@ -1,0 +1,145 @@
+Change of policy: to get f2c source by ftp, you must
+use anonymous ftp to netlib.att.com (and cd /netlib/f2c).
+[1]  If your compiler does not recognize ANSI C headers,
+     compile with KR_headers defined:  either add -DKR_headers
+     to the definition of CFLAGS in the makefile, or insert
+
+     #define KR_headers
+
+     at the top of f2c.h and fmtlib.c .
+
+[2]  If your system's sprintf does not work the way ANSI C
+     specifies -- specifically, if it does not return the
+     number of characters transmitted -- then insert the line
+
+     #define USE_STRLEN
+
+     at the end of fmt.h .  This is necessary with at least 
+     some versions of Sun software.
+
+[3]  If you have a really ancient K&R C compiler that does not understand
+     void, add -Dvoid=int to the definition of CFLAGS in the makefile.
+
+[4]  If your system lacks onexit() and you are not using an ANSI C
+     compiler, then you should compile main.c with NO_ONEXIT defined.
+     See the comments about onexit in the makefile.
+
+[5]  f2c.h defines several types, e.g., real, integer, doublereal.
+     The definitions in f2c.h are suitable for most machines, but if
+     your machine has sizeof(double) > 2*sizeof(long), you may need
+     to adjust f2c.h appropriately.  f2c assumes
+          sizeof(doublecomplex) = 2*sizeof(doublereal)
+             sizeof(doublereal) = sizeof(complex)
+             sizeof(doublereal) = 2*sizeof(real)
+                   sizeof(real) = sizeof(integer)
+                   sizeof(real) = sizeof(logical)
+                   sizeof(real) = 2*sizeof(shortint)
+     EQUIVALENCEs may not be translated correctly if these
+     assumptions are violated.
+
+[6]  There exists a C compiler that objects to the lines
+           typedef VOID C_f;  /* complex function */
+           typedef VOID H_f;  /* character function */
+           typedef VOID Z_f;  /* double complex function */
+     in f2c.h .  If yours is such a compiler, do two things:
+       1. Complain to your vendor about this compiler bug.
+       2. Find the line
+           #define VOID void
+           in f2c.h and change it to
+           #define VOID int
+
+[7]  If your system lacks /usr/include/local.h ,
+     then one exists in this directory.  An appropriate 
+     local.h may simply be empty, or it may #define VAX 
+     or #define CRAY (or whatever else you must do to make 
+     fp.h work right).  Alternatively, edit fp.h to suite your machine.
+
+[8]  If your system lacks /usr/include/fcntl.h , then you
+     should simply create an empty fcntl.h in this directory.
+     If your compiler then complains about creat and open not
+     having a prototype, compile with OPEN_DECL defined.
+     On many systems, open and creat are declared in fcntl.h .
+
+
+[9]  If your system's fopen does not like the ANSI binary
+     reading and writing modes "rb" and "wb", then you should
+     compile open.c with NON_ANSI_RW_MODES #defined.
+
+[10] If you get error messages about references to cf->_ptr
+     and cf->_base when compiling wrtfmt.c and wsfe.c or to
+     stderr->_flag when compiling err.c, then insert the line
+
+     #define NON_UNIX_STDIO
+
+     at the beginning of fio.h, and recompile everything (or
+     at least those modules that contain NON_UNIX_STDIO).
+
+[11] Unformatted sequential records consist of a length of record
+     contents, the record contents themselves, and the length of
+     record contents again (for backspace).  Prior to 17 Oct. 1991,
+     the length was of type int; now it is of type long, but you
+     can change it back to int by inserting
+
+     #define UIOLEN_int
+     
+     at the beginning of fio.h.  This affects only sue.c and uio.c .
+
+[12] You may need to supply the following non-ANSI routines:
+     fstat(int fileds, struct stat *buf) is similar
+     to stat(char *name, struct stat *buf), except that
+     the first argument, fileds, is the file descriptor
+     returned by open rather than the name of the file.
+     fstat is used in the system-dependent routine
+     canseek (in the libI77 source file err.c), which
+     is supposed to return 1 if it's possible to issue
+     seeks on the file in question, 0 if it's not; you may
+     need to suitably modify err.c .  On non-UNIX systems,
+     you can avoid references to fstat and stat by compiling
+     with NON_UNIX_STDIO defined; in that case, you may need
+     to supply access(char *Name,0), which is supposed to
+     return 0 if file Name exists, nonzero otherwise.
+
+[13] char * mktemp(char *buf) is supposed to replace the
+     6 trailing X's in buf with a unique number and then
+     return buf.  The idea is to get a unique name for
+     a temporary file.
+
+[14] On non-UNIX systems, you may need to change a few other,
+     e.g.: the form of name computed by mktemp() in endfile.c and
+     open.c; the use of the open(), close(), and creat() system
+     calls in endfile.c, err.c, open.c; and the modes in calls on
+     fopen() and fdopen() (and perhaps the use of fdopen() itself
+     -- it's supposed to return a FILE* corresponding to a given
+     an integer file descriptor) in err.c and open.c (component ufmt
+     of struct unit is 1 for formatted I/O -- text mode on some systems
+     -- and 0 for unformatted I/O -- binary mode on some systems).
+     Compiling with -DNON_UNIX_STDIO omits all references to creat()
+     and almost all references to open() and close(), the exception
+     being in the function f__isdev() (in open.c).
+
+[15] By default, Fortran I/O units 5, 6, and 0 are pre-connected to
+     stdin, stdout, and stderr, respectively.  You can change this
+     behavior by changing f_init() in err.c to suit your needs.
+     Note that f2c assumes READ(*... means READ(5... and WRITE(*...
+     means WRITE(6... .  Moreover, an OPEN(n,... statement that does
+     not specify a file name (and does not specify STATUS='SCRATCH')
+     assumes FILE='fort.n' .  You can change this by editing open.c
+     and endfile.c suitably.
+
+
+[16] If you are running on a VMS system, add the following:
+
+     #define VAX
+     #define NON_UNIX_STDIO
+
+     to local.h , and recompile everything. NOTE: on some older
+     systems, item 6 may need to be done.
+
+     create a dummy fcntl.h in the current directory. Use the
+     file makefile.vms as your .com file.
+
+
+BUGS:	Please send bug reports (including the shortest example
+	you can find that illustrates the bug) to research!dmg
+	or dmg@research.att.com .  You might first check whether
+	the bug goes away when you turn optimization off.

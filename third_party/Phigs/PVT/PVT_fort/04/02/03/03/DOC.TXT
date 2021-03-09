@@ -1,0 +1,1800 @@
+TITLE: Inquire text extent
+
+MODULE#: 04.02.03.03
+
+DESCRIPTION: This module tests the behavior of the <inquire text
+extent> function.  In the SR's, all references to text attributes
+refer to the parameters of the function, not to elements within
+the CSS or to text bundle tables.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** ***   Input parameters   *** *** ***
+
+SR1.  Text font specifies which font of the given workstation type
+is used to generate the virtual text string from which the text
+extent rectangle is computed.
+#F 269
+#D 6.12.1.1 6.12.1.2
+#S 4.5.5/45/2 4.5.7/55/7
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P05/1 P05/2 P05/3 P05/5 P05/6 P05/8
+   P05/9
+
+SR2.  For all text fonts, a character body in TLC is a rectangle
+generally surrounding the character, aligned such that the top,
+cap, half, base, and bottom lines are all parallel to the TLC
+x-axis and the left, centre, and right lines are all parallel to
+the TLC y-axis.
+#F
+#D
+#S 4.5.5/48/6 4.5.5/48/7
+#T P01/4 P01/5 P04/3 P04/4 P05/1 P05/2 P05/3 P05/5 P05/6 P05/8 P05/9
+   P06/1 P06/2 P06/3
+#C A small part of a kerned character may lie slightly outside
+its character body.
+
+SR3.  All text fonts are either monospaced or proportionately
+spaced.  All character bodies within a monospaced font have the
+same font nominal height and the same font nominal width.  All
+character bodies within a proportionately spaced font have the
+same font nominal height.
+#F
+#D
+#S 4.5.5/48/6
+#T P01/1 P01/2 P01/4 P05/1 P05/2 P05/3 P05/5 P05/6 P05/8 P05/9
+#C In monospaced fonts, the nominal height need not equal the
+nominal width.  Font nominal height and width is the size, in
+TLC, of the character bodies of a given font as set by the
+character height and width aspects.
+
+SR4.  Text font 1 is monospaced.
+#F 269
+#D
+#S 4.5.5/48/5 4.5.5/48/6 4.14/113/3
+#T P01/1 P01/2 P01/5
+
+SR5.  For text font 1, the results are workstation independent.
+#F 269
+#D
+#S 4.5.7/55/7
+#T P01/5
+
+SR6.  The magnitude of the character expansion factor specifies
+the amount by which the font nominal width/height ratio of
+individual TLC character bodies is multiplied to yield the actual
+TLC width/height ratio.
+#F 269
+#D
+#S 4.5.5/45/2 4.5.5/45/4 5.4.2/138/6
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/15 P02/16 P02/17 P02/18
+   P02/19 P02/20 P02/21 P02/22 P02/23 P03/1 P03/2 P03/3 P03/4 P03/5
+   P03/6 P03/15 P03/16 P03/17 P03/18 P03/19 P03/20 P03/21 P03/22 P03/23
+   P05/4 P05/5 P05/6 P05/7 P05/8 P05/9 P06/1 P06/2 P06/3
+
+SR7.  Character spacing specifies the TLC distance (positive) or
+overlap (negative) between adjacent character bodies, expressed
+in units of the font nominal character height.
+#F 269
+#D
+#S 4.5.5/45/3 4.5.5/51/1 4.5.5/52/1 4.5.7/57/1
+#T P02/13 P02/14 P02/15 P02/16 P02/17 P02/18 P02/19 P02/20 P02/21
+   P02/22 P02/23 P03/13 P03/14 P03/15 P03/16 P03/17 P03/18 P03/19
+   P03/20 P03/21 P03/22 P03/23 P05/5 P05/6 P05/8 P05/9 P06/1 P06/2
+   P06/3
+
+SR8.  The magnitude of the character height specifies, in TLC, the
+font nominal height (from baseline to capline) of a capital
+letter.
+#F 269
+#D
+#S 4.5.5/45/2 4.5.5/46/1 4.5.5/48/7 5.4.2/140/1
+#T P02/7 P02/8 P02/9 P02/10 P02/11 P02/12 P02/15 P02/16 P02/17 P02/18
+   P02/19 P02/20 P02/21 P02/22 P02/23 P03/7 P03/8 P03/9 P03/10 P03/11
+   P03/12 P03/15 P03/16 P03/17 P03/18 P03/19 P03/20 P03/21 P03/22
+   P03/23 P04/1 P05/4 P05/5 P05/6 P05/7 P05/8 P05/9 P06/1 P06/2 P06/3
+#C Character height is measured in TLC, along the character up
+vector.
+
+SR9.  The font nominal width in TLC of a character within a
+text primitive is given by the font's intrinsic width to height
+ratio for that character times the magnitude of the character
+height.
+#F 269
+#D 6.12.1.2.1
+#S 4.5.5/44/9 4.5.5/45/2 5.4.2/140/1
+#T P01/4 P02/7 P02/8 P02/9 P02/10 P02/11 P02/12 P02/15 P02/16 P02/17
+   P02/18 P02/19 P02/20 P02/21 P02/22 P02/23 P03/7 P03/8 P03/9 P03/10
+   P03/11 P03/12 P03/15 P03/16 P03/17 P03/18 P03/19 P03/20 P03/21
+   P03/22 P03/23 P05/5 P05/6 P05/8 P05/9
+#C Since character height also sets the character width
+attribute, it is in effect a scaling factor for the entire
+character.
+
+SR10.  The text path specifies the writing direction within the
+TLC text plane for the text string (i.e. the direction in which
+successive character bodies are appended) as follows: RIGHT:
+positive x-axis, LEFT: negative x-axis, UP: positive y-axis,
+DOWN: negative x-axis.
+#F 269
+#D
+#S 4.5.5/45/2
+#T P01/1 P01/2 P01/4 P02/2 P02/4 P02/6 P02/8 P02/10 P02/12 P02/14
+   P02/16 P02/18 P02/20 P02/22 P03/2 P03/4 P03/6 P03/8 P03/10 P03/12
+   P03/14 P03/16 P03/18 P03/20 P03/22 P04/3 P04/4 P04/5 P04/6 P04/7
+   P05/4 P05/5 P05/6 P05/7 P05/8 P05/9 P06/1 P06/2 P06/3
+
+SR11.  The text alignment specifies which horizontal and vertical
+location within the text rectangle is to coincide with the TLC
+origin by shifting the text rectangle within the text plane.  For
+all text paths, alignments LEFT, RIGHT, BOTTOM, and TOP refer to
+the left, right, bottom, and top edges of the rectangle, and
+CENTRE refers to the horizontal location midway between the left
+and right edges.  For horizontal text paths, CAP, HALF, and BASE
+refer to the capline, halfline, and baseline of the whole text
+string.  For vertical text paths, CAP refers to the capline of
+the topmost character, BASE refers to the baseline of the
+bottommost character, and HALF refers to the vertical location
+midway between the halflines of the topmost and bottommost
+characters.
+#F 269
+#D
+#S 4.5.5/45/4 4.5.5/45/6 4.5.5/46/1
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P04/6 P04/7 P05/5 P05/6 P05/8 P05/9
+   P06/2 P06/3
+
+SR12.  The effect of NORMAL as the horizontal or vertical
+component of text alignment is equivalent to one of the other
+defined values for text alignment and depends on text path as
+follows:
+text path  |  (horizontal, vertical)
+-----------+------------------------
+RIGHT      |  (LEFT,       BASE)
+LEFT       |  (RIGHT,      BASE)
+UP         |  (CENTRE,     BASE)
+DOWN       |  (CENTRE,     TOP)
+#F 269
+#D
+#S 4.5.5/46/3 4.5.5/47/1
+#T P04/3 P04/4 P04/5 P04/6 P06/3
+
+
+*** *** ***   Implicit text attributes   *** *** ***
+
+SR13.  In <inquire text extent>, the implicit text position is
+(0,0), the implicit character up vector is (0,1), and the
+implicit text precision is STROKE.
+#F 269
+#D
+#S 4.5.7/55/7 4.5.7/56/1
+#T P01/3 P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7 P02/8 P02/9 P02/10
+   P02/11 P02/12 P02/13 P02/14 P02/15 P02/16 P02/17 P02/18 P02/19
+   P02/20 P02/21 P02/22 P02/23 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+   P03/7 P03/8 P03/9 P03/10 P03/11 P03/12 P03/13 P03/14 P03/15 P03/16
+   P03/17 P03/18 P03/19 P03/20 P03/21 P03/22 P03/23 P04/3 P04/4 P04/5
+   P04/6 P04/7 P05/5 P05/6 P05/8 P05/9
+
+SR14.  For text precision = STROKE, text is displayed with all
+text aspects applied exactly.
+#F 269
+#D
+#S 4.5.5/48/1 4.5.5/49/5
+#T P02/3 P02/4 P02/5 P02/6 P02/9 P02/10 P02/11 P02/12 P03/3 P03/4
+   P03/5 P03/6 P03/9 P03/10 P03/11 P03/12 P05/5 P05/6 P05/8 P05/9
+#C Minima and maxima for character expansion factor and character
+height are not applied.
+
+*** *** ***   Output parameters   *** *** ***
+
+SR15.  For horizontal text paths, the left (right) edge of the
+text extent rectangle (expressed in TLC) coincides with the left
+(right) edge of the leftmost (rightmost) character of the text
+string, as it would be generated for the implicit and specified
+attributes and workstation type.   Its top and bottom edges
+coincide with the top and bottom edges of the character bodies.
+#F 269
+#D 6.12.1.2.1
+#S 4.5.5/45/4 4.5.7/55/7 4.5.7/56/2
+#T P01/1 P01/4 P01/5 P02/1 P02/3 P02/5 P02/7 P02/9 P02/11 P02/13 P02/15
+   P02/17 P02/19 P02/21 P02/23 P04/3 P04/4 P05/1 P05/3 P05/4 P05/5
+   P06/1
+#C The height of the character bodies for the specified font is
+determined by the character height parameter.  Within a font, all
+character bodies have the same nominal height, but not
+necessarily the same nominal width; see SR3.  Since the data type
+of the returned rectangle is B (bounds), the first value in each
+dimension is always less than or equal to the second.  Since the
+characters are aligned on the baseline, their top (bottom) edges
+are all colinear.
+
+SR16.  For vertical text paths, the top (bottom) edge of the text
+extent rectangle (expressed in TLC) coincides with the top
+(bottom) edge of the topmost (bottommost) character of the text
+string, as it would be generated for the implicit and specified
+attributes and workstation type.  Its width is the width of the
+widest character body within the font as determined by character
+height and as modified by the character expansion factor
+parameter.  Its left and right edges are equidistant from the
+centreline along which the character bodies are aligned.
+#F 269
+#D 6.12.1.2.1
+#S 4.5.5/45/4 4.5.7/55/7 4.5.7/56/2
+#T P01/2 P01/4 P01/5 P03/1 P03/3 P03/5 P03/7 P03/9 P03/11 P03/13 P03/15
+   P03/17 P03/19 P03/21 P03/23 P04/3 P04/4 P04/6 P04/7 P05/1 P05/2
+   P05/7 P05/8 P06/1
+#C Within a font, all character bodies have the same height, but
+not necessarily the same width; see SR3.  Since the data type of
+the returned rectangle is B (bounds), the first value in each
+dimension is always less than or equal to the second.  Note that
+the width of a vertical rectangle depends on the text font as a
+whole and not directly on the various sizes of the individual
+characters contained in the text string.
+
+
+SR17.  The location of the concatenation point (CP), expressed in
+TLC, for zero character spacing depends on text path as follows:
+-------------------------------------------------------------------
+text path  |  horizontal-CP               vertical-CP
+-----------+-------------------------------------------------------
+RIGHT      |  right edge of text extent   text-position (zero)
+LEFT       |  left edge of text extent    text-position (zero)
+DOWN       |  text-position (zero)        bottom edge of text extent
+UP         |  text-position (zero)        baseline of next character
+#F 269
+#D
+#S 4.5.7/56/3 4.5.7/56/4 4.5.7/57/1
+#T P02/2 P02/4 P02/6 P02/8 P02/10 P02/12 P02/14 P02/16 P02/18 P02/20
+   P02/22 P03/2 P03/4 P03/6 P03/8 P03/10 P03/12 P03/14 P03/16 P03/18
+   P03/20 P03/22 P04/5 P05/4 P05/6 P05/7 P05/9 P06/3
+#C "Baseline of next character" means that if the text string had
+contained one additional character at its end, this would be the
+location of the baseline of that character.  This is implied
+because the program must specify a NORMAL vertical component for
+text alignment for vertical text paths to perform concatenation
+properly.  For text path = UP, this means that the next text
+string will be aligned on the baseline of the next character.
+
+SR18.  The location of the concatenation point includes character
+spacing after the last character in text string in the direction
+of the TEXT PATH.
+#F 269
+#D
+#S 4.5.7/56/3 4.5.7/57/1
+#T P02/14 P02/16 P02/18 P02/20 P02/22 P03/14 P03/16 P03/18 P03/20
+   P03/22 P04/5 P05/4 P05/6 P05/7 P05/9 P06/3
+
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  269: pqtxx   <inquire text extent>
+ 
+  Data Structures ---
+  6  ...  workstation_description_table
+  6.12  ...  text_entry
+  6.12.1  ...  text_facilities
+  6.12.1.1  ...  number_of_text_font_and_precision_pairs
+  6.12.1.2  ...  list_of_text_font_and_precision_pairs
+  6.12.1.2.1  ...  text_font_and_precision_pair
+ 
+SEMANTIC CROSS-REFERENCES:
+  02.03.03/SR15
+ 
+LOCAL SUBROUTINES: The programs in this module use the following
+subroutines:
+
+CHTXRC: Computes expected results for various parameter values
+which affect the size of the text extent rectangle and the
+concatenation point.  Computation is based on deviation from
+nominal width and length of entire string.  Therefore, CHTXRC may
+be used for non-monospaced fonts.
+
+CHMONO: Computes expected results for various parameter values
+which affect the size of the text extent rectangle and the
+concatenation point.  Computation is based on deviation from
+nominal character size in text path dimension and thickness of
+entire string in other dimension.  Therefore, CHMONO is valid
+only when every character in the string has the same size.
+
+TXCOMP: Compares actual and expected values for results of
+<inquire text extent> and reports results in two logical
+variables.  TXCOMP tests both text paths for the given
+orientation, i.e. LEFT and RIGHT for horizontal, UP and DOWN
+for vertical.
+
+
+PROGRAM 1: Text font in <inquire text extent>
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+open primary workstation
+Establish specwt = specific primary workstation type
+
+Throughout, use variable names:
+font:  text font
+chxp:  character expansion factor
+chsp:  character spacing
+chh:   character height
+txp:   text path
+txal:  text alignment
+str:   character string
+
+For approximate equality:
+abstol = absolute tolerance = .02
+reltol = relative tolerance = .02
+
+<Inquire text extent> with:
+   font  = 1
+   chxp  = 1.0
+   chsp  = 0.0
+   chh   = 1.0
+   txp   = RIGHT
+   txal  = LEFT, BOTTOM
+   str   = "Text extent"
+   to determine txexrx(2) = right side = rectangle width
+            and txexry(2) = top side = rectangle height
+schw = standard character width = abs(txexrx(2) - txexrx(1)) / 11
+schh = standard character width = abs(txexry(2) - txexry(1))
+
+TEST: #SR 1 3 4 10 15
+      "For a horizontal text path, the width of a character
+       string in font 1 should be proportional to the number of
+       characters it contains."
+<Inquire text extent> as before, but with:
+   str   = "WWWW"
+   to determine txexrx(2) = right side
+wwid = txexrx(2)
+
+<Inquire text extent> as before, but with:
+   txp   = LEFT
+   str   = "..."
+   to determine txexrx(2) = right side
+pwid = txexrx(2)
+
+<Inquire text extent> as before, but with:
+   str   = "  "
+   to determine txexrx(2) = right side
+bwid = txexrx(2)
+
+pass/fail depending on (wwid approx= 4*schw and
+                        pwid approx= 3*schw and
+                        bwid approx= 2*schw )
+
+TEST: #SR 1 3 4 10 16
+      "For a vertical text path, the width of a character
+       string in font 1 should always be the width of a single
+       character."
+<Inquire text extent> as before, but with:
+   txp   = DOWN
+   str   = "WWW"
+   to determine txexrx(2) = right side
+wwid = txexrx(2)
+
+<Inquire text extent> as before, but with:
+   txp   = DOWN
+   str   = "...."
+   to determine txexrx(2) = right side
+pwid = txexrx(2)
+
+<Inquire text extent> as before, but with:
+   txp   = UP
+   str   = "     "
+   to determine txexrx(2) = right side
+bwid = txexrx(2)
+
+pass/fail depending on (wwid approx= schw and
+                        pwid approx= schw and
+                        bwid approx= schw )
+
+TEST: #SR 1 13
+      "All fonts reportedly available in stroke precision should
+       be valid for use with <inquire text extent>."
+Use <inquire text facilities> using specwt to determine
+   lstfnt = list of fonts available in STROKE precision
+for each fntx in lstfnt
+   <Inquire text extent> with:
+      font  = fntx
+      chxp  = 1.0
+      chsp  = 0.0
+      chh   = 1.0
+      txp   = RIGHT
+      txal  = LEFT, BOTTOM
+      str   = "Text extent"
+   if (error reported) then
+      fail
+      goto end_valid_fonts
+   endif
+next fntx
+pass
+
+end_valid_fonts:
+
+TEST: #SR 1 2 3 9 10 15 16
+      "For any font, the nominal width of any rectangle whose text
+       path is vertical should equal the nominal width of the widest
+       character in the font."
+
+maxcc = maximum valid character code = 255
+
+for each fntx in lstfnt
+   <Inquire text extent> with:
+      font  = fntx
+      chxp  = 1.0, chsp  = 0.0, chh   = 1.0
+      txp   = DOWN
+      txal  = LEFT, BOTTOM
+      str   = "."
+   to determine vw = width of vertical rectangle
+   if (error reported) then
+      goto next_font
+   endif
+
+   result = all characters so far are narrower = "L"
+   for cc = character code from 0 to maxcc
+      chcc = character for cc
+      <Inquire text extent> with:
+         font  = fntx
+         chxp  = 1.0, chsp  = 0.0, chh   = 1.0
+         txp   = RIGHT
+         txal  = LEFT, BOTTOM
+         str   = chcc
+      to determine hw = width of horizontal rectangle
+      if (error reported) then
+         goto next_char
+      endif
+
+      if (hw app= vw) then
+         result = some character of equal width exists = "E"
+      elseif (hw > vw) then
+         fail
+         message: failed on fntx, chcc: character too wide
+         goto end_other_fonts
+      endif
+next_char:
+   next cc
+   if (result = "L") then
+      fail
+      message: failed on fntx: all characters too narrow
+      goto end_other_fonts
+   endif
+
+next_font:
+next fntx
+pass
+
+end_other_fonts:
+
+TEST: #SR 1 2 4 5 15 16
+      "Font 1 should generate character bodies of the same height
+       and width for all workstation types."
+close primary workstation (because may not be able to open
+  several simultaneously)
+
+test other specific types:
+for each accessible secondary output workstation = wkid2
+   <open workstation>  wkid2
+   <inquire workstation connection and type>
+      to determine spec2 = specific type
+   <inquire text extent> with:
+      wktype = spec2
+      font   = 1
+      chxp   = 1.0
+      chsp   = 0.0
+      chh    = 1.0
+      txp    = RIGHT
+      txal   = LEFT, BOTTOM
+      str    = "......."
+      to determine txexrx(2) = right side = rectangle width
+               and txexry(2) = top side = rectangle height
+   <close workstation>  wkid2
+   if (error reported or txexrx(2) not approx= 7*schw) then
+                      or txexry(2) not approx=   schh) then
+      fail
+      message about spec2 as failed type
+      goto end_other_types
+   endif
+next wkid2
+
+test generic types:
+<inquire list of available workstation types>
+   to determine lavtyp = list of generic workstation types
+for each gentyp in lavtyp
+   <inquire text extent> with:
+      wktype = gentyp
+      font   = 1
+      chxp   = 1.0
+      chsp   = 0.0
+      chh    = 1.0
+      txp    = UP
+      txal   = LEFT, BOTTOM
+      str    = "WWWWW"
+      to determine txexrx(2) = right side = rectangle width
+               and txexry(2) = top side = rectangle height
+   if (error 51 reported) then
+      goto skip_gentyp
+   endif
+   if (error reported or txexrx(2) not approx=   schw) then
+                      or txexry(2) not approx= 5*schh) then
+      fail
+      message about gentyp as failed type
+      goto end_other_types
+   endif
+skip_gentyp:
+next gentyp
+pass
+
+end_other_types:
+
+END PROGRAM 1
+
+
+PROGRAM 2: Text rectangle size and concatenation point
+           for horizontal text orientation
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Open primary workstation
+Establish specwt = specific primary workstation type
+
+Throughout, use variable names:
+wktype: workstation type
+font:   text font
+chxp:   character expansion factor
+chsp:   character spacing
+chh:    character height
+txp:    text path
+txal:   text alignment
+str:    character string
+
+<inquire text facilities> to determine:
+   mnchxp = minimum character expansion factor
+   mxchxp = maximum character expansion factor
+   mnchh  = minimum character height
+   mxchh  = maximum character height
+
+<Inquire text extent> with:
+   wktype = specwt
+   font   = a randomly selected font; non-monospaced if possible
+   chxp   = 1.0
+   chsp   = 0.0
+   chh    = 1.0
+   txp    = RIGHT
+   txal   = LEFT, BOTTOM
+   str    = "Inquire text extent"
+to determine:
+   nomw   = nominal width  = abs (txexrx(2) - txexrx(1))
+   nomh   = nominal height = abs (txexry(2) - txexry(1))
+
+*** *** ***   character expansion factor   *** *** ***
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = 1.7
+   chsp = 0
+   chh  = 1.0
+   to determine: rectok, ccpok
+
+TEST: #SR 6 13 15
+      "The width of a text rectangle with zero character spacing
+       and a horizontal text path should expand in
+       proportion to the character expansion factor."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 10 13 17
+      "With zero character spacing and a horizontal text path, the
+       concatenation point of a text rectangle should reflect its
+       expansion in proportion to the character expansion factor."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = 1.7 * mxchxp
+   chsp = 0
+   chh  = 1.0
+   to determine: rectok, ccpok
+
+TEST: #SR 6 13 14 15
+      "The width of a text rectangle with zero character spacing
+       and a horizontal text path should expand in proportion to
+       the character expansion factor, even when it exceeds the
+       maximum for the workstation type."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 10 13 14 17
+      "With zero character spacing and a horizontal text path, the
+       concatenation point of a text rectangle should reflect its
+       expansion in proportion to the character expansion factor,
+       even when it exceeds the maximum for the workstation type."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = 0.6 * mnchxp
+   chsp = 0
+   chh  = 1.0
+   to determine: rectok, ccpok
+
+TEST: #SR 6 13 14 15
+      "The width of a text rectangle with zero character spacing
+       and a horizontal text path should expand in proportion to
+       the character expansion factor, even when it is less than
+       the minimum for the workstation type."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 10 13 14 17
+      "With zero character spacing and a horizontal text path, the
+       concatenation point of a text rectangle should reflect its
+       expansion in proportion to the character expansion factor,
+       even when it is less than the minimum for the workstation
+       type."
+pass/fail depending on (ccpok)
+
+
+*** *** ***   character height   *** *** ***
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = 1.0
+   chsp = 0
+   chh  = 1.9
+   to determine: rectok, ccpok
+
+TEST: #SR 8 9 13 15
+      "The size of a text rectangle with character spacing = 0,
+       character expansion factor = 1, and a horizontal text path
+       should expand in proportion to the character height."
+pass/fail depending on (rectok)
+
+TEST: #SR 8 9 10 13 17
+      "With character spacing = 0, character expansion factor =
+       1, and a horizontal text path, the concatenation point of a
+       text rectangle should reflect its expansion in proportion
+       to the character height."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = 1.0
+   chsp = 0
+   chh  = 1.9 * mxchh
+   to determine: rectok, ccpok
+
+TEST: #SR 8 9 13 14 15
+      "The size of a text rectangle with character spacing = 0,
+       character expansion factor = 1, and a horizontal text path
+       should expand in proportion to the character height,
+       even when it exceeds the maximum for the workstation
+       type."
+pass/fail depending on (rectok)
+
+TEST: #SR 8 9 10 13 14 17
+      "With character spacing = 0, character expansion factor =
+       1, and a horizontal text path, the concatenation point of a
+       text rectangle should reflect its expansion in proportion
+       to the character height, even when it exceeds the maximum
+       for the workstation type."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = 1.0
+   chsp = 0
+   chh  = 0.6 * mnchh
+   to determine: rectok, ccpok
+
+TEST: #SR 8 9 13 14 15
+      "The size of a text rectangle with character spacing = 0,
+       character expansion factor = 1, and a horizontal text path
+       should expand in proportion to the character height,
+       even when it is less than the minimum for the workstation
+       type."
+pass/fail depending on (rectok)
+
+TEST: #SR 8 9 10 13 14 17
+      "With character spacing = 0, character expansion factor =
+       1, and a horizontal text path, the concatenation point of a
+       text rectangle should reflect its expansion in proportion
+       to the character height, even when it is less than the
+       minimum for the workstation type."
+pass/fail depending on (ccpok)
+
+
+*** *** ***   character spacing   *** *** ***
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = 1.0
+   chsp = 0.3
+   chh  = 1.0
+   to determine: rectok, ccpok
+
+TEST: #SR 7 13 15
+      "The width of a text rectangle with character expansion
+       factor = 1, character height = 1, and a horizontal text
+       path should increase by the character spacing times one
+       less than the number of characters."
+pass/fail depending on (rectok)
+
+TEST: #SR 7 10 13 17 18
+      "With character expansion factor = 1, character height = 1,
+       and a horizontal text path, the concatenation point of a
+       text rectangle should reflect its increased size due to
+       character spacing."
+pass/fail depending on (ccpok)
+
+*** *** ***   combined attributes   *** *** ***
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = 35.3
+   chsp = 6.2
+   chh  = 21.1
+   to determine: rectok, ccpok
+
+TEST: #SR 6 7 8 9 13 15
+      "The size of a text rectangle with a horizontal text path
+       should reflect the combined effects of large values for
+       character expansion factor, character spacing, and
+       character height."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 7 8 9 10 13 17 18
+      "With large values for character expansion factor,
+       character spacing, and character height, and a horizontal
+       text path, the concatenation point of a text rectangle
+       should reflect its increased size."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = .035
+   chsp = .0062
+   chh  = .021
+   to determine: rectok, ccpok
+
+TEST: #SR 6 7 8 9 13 15
+      "The size of a text rectangle with a horizontal text path
+       should reflect the combined effects of small values for
+       character expansion factor, character spacing, and
+       character height."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 7 8 9 10 13 17 18
+      "With small values for character expansion factor,
+       character spacing, and character height, and a horizontal
+       text path, the concatenation point of a text rectangle
+       should reflect its decreased size."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = -8.035
+   chsp =  -.51
+   chh  =   .021
+   to determine: rectok, ccpok
+
+TEST: #SR 6 7 8 9 13 15
+      "The size of a text rectangle with a horizontal text path
+       should reflect the combined effects of negative values for
+       character expansion factor and character spacing."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 7 8 9 10 13 17 18
+      "With negative values for character expansion factor and
+       character spacing, and a horizontal text path, the concatenation
+       point of a text rectangle should reflect its altered size."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp = 28.035
+   chsp = -2.13
+   chh  =  -.021
+   to determine: rectok, ccpok
+
+TEST: #SR 6 7 8 9 13 15
+      "The size of a text rectangle with a horizontal text path
+       should reflect the combined effects of negative values for
+       character spacing and character height."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 7 8 9 10 13 17 18
+      "With negative values for character spacing and character
+       height, and a horizontal text path, the concatenation point of
+       a text rectangle should reflect its altered size."
+pass/fail depending on (ccpok)
+
+*** *** ***   Excessive character spacing   *** *** ***
+
+<Inquire text extent> with:
+   wktype = specwt
+   font   = 2
+   chxp   = 1.0
+   chsp   = 0.0
+   chh    = 1.0
+   txp    = RIGHT
+   txal   = LEFT, BOTTOM
+   str    = "qqqq"
+to determine:
+   nomcw  = nominal character width  = abs (txexrx(2) - txexrx(1)) / 4
+   nomh   = nominal string height    = abs (txexry(2) - txexry(1))
+
+call CHMONO with: nomcw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp =  6.35
+   chsp = -8.51 * abs(chxp * nomcw)
+   chh  =  -.021
+   to determine: rok1, ccpok1
+
+call CHMONO with: nomcw, nomh, specwt, font, str unchanged
+   txor = horizontal
+   chxp =  -.065
+   chsp = -1.01 * abs(chxp * nomcw)
+   chh  = -7.21
+   to determine: rok2, ccpok2
+
+TEST: #SR 6 7 8 9 13 15
+      "The size of a text rectangle with a horizontal text path
+       should reflect the effect of negative character spacing
+       of greater magnitude than the expanded width of a single
+       character."
+pass/fail depending on (rok1 and rok2)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Text rectangle size and concatenation point
+           for vertical text orientation
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Open primary workstation
+Establish specwt = specific primary workstation type
+
+Throughout, use variable names:
+wktype: workstation type
+font:   text font
+chxp:   character expansion factor
+chsp:   character spacing
+chh:    character height
+txp:    text path
+txal:   text alignment
+str:    character string
+
+<inquire text facilities> to determine:
+   mnchxp = minimum character expansion factor
+   mxchxp = maximum character expansion factor
+   mnchh  = minimum character height
+   mxchh  = maximum character height
+
+<Inquire text extent> with:
+   wktype = specwt
+   font   = a randomly selected font; non-monospaced if possible
+   chxp   = 1.0
+   chsp   = 0.0
+   chh    = 1.0
+   txp    = DOWN
+   txal   = LEFT, BOTTOM
+   str    = "Inquire text extent"
+to determine:
+   nomw   = nominal width  = abs (txexrx(2) - txexrx(1))
+   nomh   = nominal height = abs (txexry(2) - txexry(1))
+
+*** *** ***   character expansion factor   *** *** ***
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp = 1.7
+   chsp = 0
+   chh  = 1.0
+   to determine: rectok, ccpok
+
+TEST: #SR 6 13 16
+      "The width of a text rectangle with zero character spacing
+       and a vertical text path should expand in proportion to
+       the character expansion factor."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 10 13 17
+      "With zero character spacing and a vertical text path, the
+       concatenation point of a text rectangle should be
+       unaffected by its expansion in proportion to the character
+       expansion factor."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp = 1.7 * mxchxp
+   chsp = 0
+   chh  = 1.0
+   to determine: rectok, ccpok
+
+TEST: #SR 6 13 14 16
+      "The width of a text rectangle with zero character spacing
+       and a vertical text path should expand in proportion to
+       the character expansion factor, even when it exceeds the
+       maximum for the workstation type."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 10 13 14 17
+      "With zero character spacing and a vertical text path, the
+       concatenation point of a text rectangle should be
+       unaffected by its expansion in proportion to the character
+       expansion factor, even when it exceeds the maximum for the
+       workstation type."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp = 0.6 * mnchxp
+   chsp = 0
+   chh  = 1.0
+   to determine: rectok, ccpok
+
+TEST: #SR 6 13 14 16
+      "The width of a text rectangle with zero character spacing
+       and a vertical text path should expand in proportion to
+       the character expansion factor, even when it is less than
+       the minimum for the workstation type."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 10 13 14 17
+      "With zero character spacing and a vertical text path, the
+       concatenation point of a text rectangle should be
+       unaffected by its expansion in proportion to the character
+       expansion factor, even when it is less than the minimum
+       for the workstation type."
+pass/fail depending on (ccpok)
+
+
+*** *** ***   character height   *** *** ***
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp = 1.0
+   chsp = 0
+   chh  = 1.9
+   to determine: rectok, ccpok
+
+TEST: #SR 8 9 13 16
+      "The size of a text rectangle with character spacing = 0,
+       character expansion factor = 1, and a vertical text path
+       should expand in proportion to the character height."
+pass/fail depending on (rectok)
+
+TEST: #SR 8 9 10 13 17
+      "With character spacing = 0, character expansion factor =
+       1, and a vertical text path, the concatenation point of a
+       text rectangle should reflect its expansion in proportion
+       to the character height."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp = 1.0
+   chsp = 0
+   chh  = 1.9 * mxchh
+   to determine: rectok, ccpok
+
+TEST: #SR 8 9 13 14 16
+      "The size of a text rectangle with character spacing = 0,
+       character expansion factor = 1, and a vertical text path
+       should expand in proportion to the character height,
+       even when it exceeds the maximum for the workstation
+       type."
+pass/fail depending on (rectok)
+
+TEST: #SR 8 9 10 13 14 17
+      "With character spacing = 0, character expansion factor =
+       1, and a vertical text path, the concatenation point of a
+       text rectangle should reflect its expansion in proportion
+       to the character height, even when it exceeds the maximum
+       for the workstation type."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp = 1.0
+   chsp = 0
+   chh  = 0.6 * mnchh
+   to determine: rectok, ccpok
+
+TEST: #SR 8 9 13 14 16
+      "The size of a text rectangle with character spacing = 0,
+       character expansion factor = 1, and a vertical text path
+       should expand in proportion to the character height,
+       even when it is less than the minimum for the workstation
+       type."
+pass/fail depending on (rectok)
+
+TEST: #SR 8 9 10 13 14 17
+      "With character spacing = 0, character expansion factor =
+       1, and a vertical text path, the concatenation point of a
+       text rectangle should reflect its expansion in proportion
+       to the character height, even when it is less than the
+       minimum for the workstation type."
+pass/fail depending on (ccpok)
+
+
+*** *** ***   character spacing   *** *** ***
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp = 1.0
+   chsp = 0.3
+   chh  = 1.0
+   to determine: rectok, ccpok
+
+TEST: #SR 7 13 16
+      "The height of a text rectangle with character expansion
+       factor = 1, character height = 1, and a vertical text
+       path should increase by the character spacing times one
+       less than the number of characters."
+pass/fail depending on (rectok)
+
+TEST: #SR 7 10 13 17 18
+      "With character expansion factor = 1, character height = 1,
+       and a vertical text path, the concatenation point of a
+       text rectangle should reflect its increased size due to
+       character spacing."
+pass/fail depending on (ccpok)
+
+*** *** ***   combined attributes   *** *** ***
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp = 35.3
+   chsp = 6.2
+   chh  = 21.1
+   to determine: rectok, ccpok
+
+TEST: #SR 6 7 8 9 13 16
+      "The size of a text rectangle with a vertical text path
+       should reflect the combined effects of large values for
+       character expansion factor, character spacing, and
+       character height."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 7 8 9 10 13 17 18
+      "With large values for character expansion factor,
+       character spacing, and character height, and a vertical
+       text path, the concatenation point of a text rectangle
+       should reflect its increased size."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp = .035
+   chsp = .0062
+   chh  = .021
+   to determine: rectok, ccpok
+
+TEST: #SR 6 7 8 9 13 16
+      "The size of a text rectangle with a vertical text path
+       should reflect the combined effects of small values for
+       character expansion factor, character spacing, and
+       character height."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 7 8 9 10 13 17 18
+      "With small values for character expansion factor,
+       character spacing, and character height, and a vertical
+       text path, the concatenation point of a text rectangle
+       should reflect its decreased size."
+pass/fail depending on (ccpok)
+
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp = -8.035
+   chsp =  -.09
+   chh  =   .021
+   to determine: rectok, ccpok
+
+TEST: #SR 6 7 8 9 13 16
+      "The size of a text rectangle with a vertical text path
+       should reflect the combined effects of negative values for
+       character expansion factor and character spacing."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 7 8 9 10 13 17 18
+      "With negative values for character expansion factor and
+       character spacing, and a vertical text path, the concatenation
+       point of a text rectangle should reflect its altered size."
+pass/fail depending on (ccpok)
+
+call CHTXRC with: nomw, nomh, specwt, font, str unchanged
+   txor = vertical
+   chxp =   .035
+   chsp =  -.03
+   chh  = -9.02
+   to determine: rectok, ccpok
+
+TEST: #SR 6 7 8 9 13 16
+      "The size of a text rectangle with a vertical text path
+       should reflect the combined effects of negative values for
+       character spacing and character height."
+pass/fail depending on (rectok)
+
+TEST: #SR 6 7 8 9 10 13 17 18
+      "With negative values for character spacing and character
+       height, and a vertical text path, the concatenation point of
+       a text rectangle should reflect its altered size."
+pass/fail depending on (ccpok)
+
+*** *** ***   Excessive character spacing   *** *** ***
+
+<Inquire text extent> with:
+   wktype = specwt
+   font   = 2
+   chxp   = 1.0
+   chsp   = 0.0
+   chh    = 1.0
+   txp    = DOWN
+   txal   = LEFT, BOTTOM
+   str    = "qqqq"
+to determine:
+   nomchh  = nominal character height = abs (txexry(2) - txexry(1)) / 4
+   nomw    = nominal string width     = abs (txexrx(2) - txexrx(1))
+
+call CHMONO with: nomchh, nomw, specwt, font, str unchanged
+   txor = vertical
+   chxp =  6.35
+   chsp = -8.51 * nomchh
+   chh  =  -.021
+   to determine: rok1, ccpok1
+
+call CHMONO with: nomchh, nomw, specwt, font, str unchanged
+   txor = vertical
+   chxp =  -.065
+   chsp = -1.01 * nomchh
+   chh  = -7.21
+   to determine: rok2, ccpok2
+
+TEST: #SR 6 7 8 9 13 16
+      "The size of a text rectangle with a vertical text path
+       should reflect the effect of negative character spacing
+       of greater magnitude than the height of a single
+       character."
+pass/fail depending on (rok1 and rok2)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Text alignment
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Open primary workstation
+Establish specwt = specific primary workstation type
+
+<Inquire text extent> with:
+   font  = 2 (ASCII font)
+   chxp  = 1.3
+   chsp  = 0.4
+   chh   = 3.4
+   txp   = RIGHT
+   txal  = 1st: CENTER,CAP
+           2nd: CENTER,HALF
+           3rd: CENTER,BASE
+   str   = "NIST"
+to determine:
+   vloc(cap)  = cap  location of rectangle bottom = txexry(1)
+   vloc(half) = half location of rectangle bottom = txexry(1)
+   vloc(base) = base location of rectangle bottom = txexry(1)
+
+For approximate equality:
+abstol = absolute tolerance = .02 * chh
+reltol = relative tolerance = .02
+
+TEST: #SR 8 11
+      "Character height should set the distance between the CAP
+       and BASE lines of a capital letter."
+pass/fail depending on (vloc(base)-vloc(cap) approx= chh)
+
+TEST: #SR 11
+      "Text alignment for HALF should be approximately halfway
+       between CAP and BASE."
+pass/fail depending on
+   (.7*vloc(base) + .3*vloc(cap) > vloc(half) and
+    .3*vloc(base) + .7*vloc(cap) < vloc(half))
+
+
+chh = default character height = 4.4
+For approximate equality:
+abstol = absolute tolerance = .02 * chh
+reltol = relative tolerance = .02
+
+Set horizontal and vertical limits for reasonable fraction
+of text rectangle indicated by text alignment:
+
+           low  high
+horlim:   ----  ----
+  left    -.01   .01
+  center   .49   .51
+  right    .99  1.01
+verlim:
+  top      .99  1.01
+  cap      .60  1.01
+  half     .20   .80
+  base     .01   .40
+  bottom  -.01   .01
+
+for txp = RIGHT,LEFT,UP,DOWN
+   <inquire text extent> with:
+      wktype = specwt
+      font   = 2 (ASCII font)
+      chxp   = -0.33
+      chsp   = -0.1
+      chh    = as is
+      txp    = as is
+      txal   = LEFT, BOTTOM
+      str    = "W.j "
+   to determine:
+      nomw   = nominal width  = abs (txexrx(2) - txexrx(1))
+      nomh   = nominal height = abs (txexry(2) - txexry(1))
+      nomcpx = nominal concatenation x-offset
+      nomcpy = nominal concatenation y-offset
+
+   calculate NORMAL alignment, based on this txp:
+   if     (txp = RIGHT) then
+      nhoral = LEFT
+      nveral = BASE
+   elseif (txp = LEFT) then
+      nhoral = RIGHT
+      nveral = BASE
+   elseif (txp = UP) then
+      nhoral = CENTER
+      nveral = BASE
+   elseif (txp = DOWN) then
+      nhoral = CENTER
+      nveral = TOP
+   else
+      Abort: illegal text path
+   endif
+
+   for htxal = NORMAL, LEFT, CENTER, RIGHT
+      calculate actual horizontal alignment:
+      if (htxal = NORMAL) then
+         ahtxal = nhoral
+      else
+         ahtxal = htxal
+      endif
+      for vtxal = NORMAL, TOP, CAP, HALF, BASE, BOTTOM
+         calculate actual vertical alignment:
+         if (vtxal = NORMAL) then
+            avtxal = nveral
+         else
+            avtxal = vtxal
+         endif
+         conmsg = "When text path is " + txp + " and text alignment
+                   is (" + htxal + "," + vtxal ") "
+         <inquire text extent> with wktype, font, chxp, chsp,
+               chh, txp, str unchanged, but
+            txal = htxal,vtxal
+         to determine rectangle:
+            reclox = txexrx(1)
+            rechix = txexrx(2)
+            recloy = txexry(1)
+            rechiy = txexry(2)
+         and concatenation point:
+            cpx, cpy
+
+         TEST: #SR 2 10 11 12 13 15 16
+               conmsg + " the size of the text extent rectangle
+                should be unaffected."
+         pass/fail depending on ((rechix-reclox) approx= nomw and
+                                 (rechiy-recloy) approx= nomh)
+
+         TEST: #SR 2 10 11 12 13 15 16
+               conmsg + " the location of the text extent
+                rectangle should be shifted as indicated by
+                the text alignment."
+         calculate low, high fraction of rectangle:
+         frlox =    -reclox / nomw
+         frhix = 1 - rechix / nomw
+         frloy =    -recloy / nomh
+         frhiy = 1 - rechiy / nomh
+
+         pass/fail depending on
+            (horlim (ahtxal,  low) <= frlox and
+             horlim (ahtxal, high) >= frlox and
+             horlim (ahtxal,  low) <= frhix and
+             horlim (ahtxal, high) >= frhix and
+             verlim (avtxal,  low) <= frloy and
+             verlim (avtxal, high) >= frloy and
+             verlim (avtxal,  low) <= frhiy and
+             verlim (avtxal, high) >= frhiy )
+
+         if (txp = LEFT or RIGHT) then
+            expcpx = nomcpx + reclox
+            expcpy = 0
+         else (txp is vertical)
+            expcpx = 0
+            expcpy = nomcpy + recloy
+         endif
+
+         TEST: #SR 10 11 12 13 17 18
+               conmsg + " the concatenation point should be
+                shifted along the text path dimension by the same
+                amount as the text extent rectangle."
+         pass/fail depending on
+            (cpx approx= expcpx and
+             cpy approx= expcpy)
+
+         save vertical displacements:
+         vertab (vtxal) = recloy
+      next vtxal
+
+      vermsg = "When text path is " + txp + " and horizontal text
+                alignment is " + htxal + ", "
+
+      TEST: #SR 10 11 12 13 16
+            vermsg + " then NORMAL vertical alignment should have the
+             same effect as " + nveral + "."
+      pass/fail depending on (vertab(NORMAL) approx= vertab(nveral))
+
+      TEST: #SR 10 11 13 16
+            vermsg + " then vertical alignments TOP, CAP, HALF,
+             BASE, and BOTTOM should cause increasing vertical
+             displacements."
+      pass/fail depending on
+         ( vertab(TOP)  <= vertab(CAP) < vertab(HALF) <
+           vertab(BASE) <  vertab(BOTTOM) )
+
+   next htxal
+next txp
+
+END PROGRAM 4
+
+
+PROGRAM 5: Text extent results derived from nominal character
+           sizes
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Open primary workstation
+Establish specwt = specific primary workstation type
+
+font = a randomly selected font; non-monospaced if possible
+
+for text path = RIGHT,LEFT,UP,DOWN
+   <inquire text extent> to determine:
+      ncw,nch = nominal character body width,height
+         for "W", ".", " "
+
+   ncww = nominal character body width for "W", horizontal path
+   ncwp = nominal character body width for ".", horizontal path
+   ncwb = nominal character body width for " ", horizontal path
+
+   mincw = minimum value for ncw for vertical paths
+   maxcw = maximum value for ncw for vertical paths
+
+   minch = minimum value for nch for all paths
+   maxch = maximum value for nch for all paths
+next text path
+
+TEST: #SR 1 2 3 15 16
+      "The nominal height of all character bodies for a given
+       font should be equal, regardless of text path."
+if (minch approx= maxch) then
+   pass
+   nomch = nominal character body height = (minch+maxch) / 2
+else
+   fail
+endif
+
+TEST: #SR 1 2 3 16
+      "The nominal rectangle width of all vertical text paths for
+       a given font should be equal."
+if (mincw approx= maxcw) then
+   pass
+   nomvw = nominal width of vertical path = (mincw+maxcw) / 2
+else
+   fail
+endif
+
+TEST: #SR 1 2 3 15
+      "The nominal rectangle width for a given font and text
+       string should be equal for all horizontal text paths."
+pass/fail depending on
+   (ncww for path:LEFT approx= ncww for path:RIGHT and
+    ncwp for path:LEFT approx= ncwp for path:RIGHT and
+    ncwb for path:LEFT approx= ncwb for path:RIGHT)
+
+if (any of three previous tests failed) then
+  message: no more tests, cannot determine nominal sizes
+  goto end_prog
+endif
+
+get nominal displacements for vertical text alignments:
+  vtab(TOP,CAP,HALF,BASE,BOTTOM) = vertical offsets
+
+testr = test text string = "WW   ...."
+
+*** *** *** *** ***   horizontal text paths   *** *** *** *** ***
+
+locok = true
+ccpok = true
+negok = true
+
+nomrx,nomry = nominal horizontal rectangle size
+     based on ncw,nch, ncww,ncwp,ncwb
+for horizontal text paths
+for all text alignments (txal)
+  chht,chxp,chsp = some random values for character height,
+    expansion factor, and spacing
+
+  calculate expected value for:
+     xlo,xhi,ylo,yhi = position of text extent rectangle
+     ccpx,ccpy       = concatenation point
+  <inquire text extent> with specwt, font, chxp, chsp,
+        chht, txp, txal, testr
+  to determine actual rectangle:
+     txexrx(1), txexrx(2), txexry(1), txexry(2)
+  and concatenation point:
+     acpx, acpy
+
+  chht2 = chht
+  chxp2 = chxp
+  randomly, do one of the following:
+     a) chht2 = -chht2
+     b) chxp2 = -chxp2
+     c) chht2 = -chht2
+        chxp2 = -chxp2
+
+  <inquire text extent> with specwt, font, chxp2, chsp,
+        chht2, txp, txal, testr
+  to determine actual rectangle, but with negative values for
+  chxp and/or chht:
+     t2exrx(1), t2exrx(2), t2exry(1), t2exry(2)
+  and concatenation point:
+     a2cpx, a2cpy
+
+  if (1st actual rectangle not= 2nd  or
+      1st concatenation point not= 2nd) then
+     message: negative values failed using font, chxp, chsp, chht,
+              txp, txal
+     negok = false
+  endif
+
+  For approximate equality:
+  abstol = absolute tolerance = .02*chh
+  reltol = relative tolerance = .02
+
+  if actual rectangle not= expected then
+     message: rectangle failed using font, chxp, chsp, chht,
+              txp, txal
+     locok = false
+  endif
+
+  if actual concatenation point not= expected then
+     message: concatenation point failed using font, chxp, chsp,
+              chht, txp, txal
+     ccpok = false
+  endif
+next alignment
+next text path
+
+TEST: #SR 6 8 10 15 17 18
+      "Negating the character height or expansion factor should
+       not change the location of a horizontal text extent
+       rectangle nor its associated concatenation point."
+pass/fail depending on (negok)
+
+TEST: #SR 1 2 3 6 7 8 9 10 11 13 14 15
+      "For any valid parameter values, the location of a
+       horizontal text extent rectangle should be as derived
+       from nominal character body sizes and from nominal text
+       alignments."
+pass/fail depending on (locok)
+
+TEST: #SR 1 2 3 6 7 8 9 10 11 13 14 17 18
+      "For any valid parameter values, the location of the
+       concatenation point following a horizontal text extent
+       rectangle should be as derived from nominal character body
+       sizes and from nominal text alignments."
+pass/fail depending on (ccpok)
+
+*** *** *** *** ***   vertical text paths   *** *** *** *** ***
+
+locok = true
+ccpok = true
+negok = true
+
+nomrx,nomry = nominal vertical rectangle size
+     based on ncw,nch, ncww,ncwp,ncwb
+for vertical text paths
+for all text alignments (txal)
+  chht,chxp,chsp = some random values for character height,
+    expansion factor, and spacing
+
+  calculate expected value for:
+     xlo,xhi,ylo,yhi = position of text extent rectangle
+     ccpx,ccpy       = concatenation point
+  <inquire text extent> with specwt, font, chxp, chsp,
+        chht, txp, txal, testr
+  to determine actual rectangle:
+     txexrx(1), txexrx(2), txexry(1), txexry(2)
+  and concatenation point:
+     acpx, acpy
+
+  chht2 = chht
+  chxp2 = chxp
+  randomly, do one of the following:
+     a) chht2 = -chht2
+     b) chxp2 = -chxp2
+     c) chht2 = -chht2
+        chxp2 = -chxp2
+  <inquire text extent> with specwt, font, chxp2, chsp,
+        chht2, txp, txal, testr
+  to determine actual rectangle, but with negative values for
+  chxp and/or chht:
+     t2exrx(1), t2exrx(2), t2exry(1), t2exry(2)
+  and concatenation point:
+     a2cpx, a2cpy
+
+  if (1st actual rectangle not= 2nd  or
+      1st concatenation point not= 2nd) then
+     message: negative values failed using font, chxp, chsp, chht,
+              txp, txal
+     negok = false
+  endif
+
+  For approximate equality:
+  abstol = absolute tolerance = .02*chh
+  reltol = relative tolerance = .02
+
+  if actual rectangle not= expected then
+     message: rectangle failed using font, chxp, chsp, chht,
+              txp, txal
+     locok = false
+  endif
+
+  if actual concatenation point not= expected then
+     message: concatenation point failed using font, chxp, chsp,
+              chht, txp, txal
+     ccpok = false
+  endif
+next alignment
+next text path
+
+TEST: #SR 6 8 10 16 17 18
+      "Negating the character height or expansion factor should
+       not change the location of a vertical text extent
+       rectangle nor its associated concatenation point."
+pass/fail depending on (negok)
+
+TEST: #SR 1 2 3 6 7 8 9 10 11 13 14 16
+      "For any valid parameter values, the location of a
+       vertical text extent rectangle should be as derived
+       from nominal character body sizes and from nominal text
+       alignments."
+pass/fail depending on (locok)
+
+TEST: #SR 1 2 3 6 7 8 9 10 11 13 14 17 18
+      "For any valid parameter values, the location of the
+       concatenation point following a vertical text extent
+       rectangle should be as derived from nominal character body
+       sizes and from nominal text alignments."
+pass/fail depending on (ccpok)
+
+endprog:
+
+END PROGRAM 5
+
+
+PROGRAM 6: Appearance of text extent rectangle
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+ACCURACY OF TEXT EXTENT: Several text primitives are displayed.
+All but one should be correctly surrounded by its text extent
+rectangle, drawn with a solid polyline.  For horizontal
+primitives, the left (right) edge of the rectangle should
+coincide with the left (right) edge of the leftmost (rightmost)
+character of the text string, and the top and bottom edges with
+the top and bottom edges of the character bodies (which may be
+somewhat larger than the characters themselves).  Check
+especially that the bottom of the "g" in "Phigs" is enclosed.
+For vertical text paths, the top (bottom) edge of the rectangle
+should coincide with the top (bottom) edge of the topmost
+(bottommost) character of the text string, and its left and right
+edges should be equidistant from the centreline along which the
+character bodies are aligned.  A vertical rectangle may be wider
+than necessary, but must completely enclose the characters.
+Identify the one rectangle which does NOT properly enclose a text
+primitive.
+
+ACCURACY OF VERTICAL ALIGNMENTS: Several text primitives
+consisting of capital letters are displayed.  All but one of
+these primitives should be properly aligned with a dotted
+capline, a dashed-dotted halfline and a dashed baseline. For
+horizontal text paths, all the characters in the text string have
+the same capline, halfline, and baseline.  For vertical text
+paths, the capline should apply to the topmost character,
+baseline to the bottommost character, and the halfline should be
+midway between the halflines of the topmost and bottommost
+characters.  The capline and baseline should coincide with the
+top and bottom edges of the appropriate characters (not the
+character bodies).  The halfline should be at a reasonable
+intermediate position.  Identify the one primitive which is NOT
+properly aligned.
+
+ACCURACY OF CONCATENATION POINT: Several pairs of text primitives
+are drawn, the second member of each pair using the concatenation
+point from the first.  The resulting display should appear to be
+a single text primitive in which the characters are aligned and
+separated (or overlapped) by consistent spacing. Identify the one
+primitive in which the characters are NOT aligned and evenly
+separated.
+
+DESIGN:
+
+Open primary workstation
+Establish specwt = specific primary workstation type
+
+Message to operator: The tests in this program require careful
+visual inspection; see OPERATOR SCRIPT in documentation.
+
+testr = "Phigs...rules!"
+testv = "UPPER CASE"
+testC = "HXHXHXHXHXHX"
+
+font = 2 (ASCII, possibly non-monospaced)
+default text alignment = CENTRE,TOP
+
+numrec = number of text extent rectangles per screen = 6
+for all text paths, txp = RIGHT,LEFT,UP,DOWN
+   namtxp = name of text path
+
+*** *** *** *** ***   text extent rectangle   *** *** *** *** ***
+
+   ngrec = incorrect entry = random choice between 1 and numrec
+   set text path = txp
+
+   for ix = 1 to numrec
+      chht,chxp,chsp = some random values for character height,
+        expansion factor, and spacing
+
+      draw and label a text extent rectangle (horizontal or vertical,
+         depending on txp)
+
+      <inquire text extent> with specwt, font, chxp, chsp,
+         chht, txp, txal=[CENTRE,TOP], testr
+      to determine text extent rectangle
+
+      apply scale and shift transformation to put testr in next
+         text extent rectangle
+
+      if (ix = ngrec) then
+         apply additional distorting transformation
+      endif
+      display text primitive = testr
+      restore identity local transformation
+   next ix
+
+   TEST: #SR 2 6 7 8 10 15 16
+         "<Inquire text extent> should accurately report the size
+          and position of text primitives when text path = " +
+          namtxp + "."
+   OPQA/ACCURACY OF TEXT EXTENT: Which rectangle does NOT
+      properly enclose a text primitive?
+   pass/fail depending on (operator indicates entry #ngrec)
+
+   clear contents of rectangles, but leave rectangles themselves
+
+*** *** *** *** ***   vertical alignment   *** *** *** *** ***
+
+   ngrec = incorrect entry = random choice between 1 and numrec
+   set text path = txp
+   for ix = 1 to numrec
+      chht,chxp,chsp = some random values for character height,
+        expansion factor, and spacing
+
+      for txalv = TOP,CAP,HALF,BASE
+         <inquire text extent> with specwt, font, chxp, chsp,
+            chht, txp, txal=[CENTRE,txalv], testv
+         to determine text extent rectangle and location of
+            topline, capline,halfline,baseline
+         if (txalv = TOP) then
+            apply scale and shift transformation to put testv in
+               next text extent rectangle
+         else
+            valoc(txalv) = top of rectangle
+                         = location of cap,half,base lines
+         endif
+      next txalv
+      draw expected capline,halfline,baseline
+      if (ix = ngrec) then
+         apply additional distorting transformation
+      endif
+      display text primitive = testv
+      restore identity local transformation
+   next ix
+
+   TEST: #SR 2 6 7 8 10 11
+         "<Inquire text extent> should accurately report the
+          vertical alignment values for text primitives when
+          text path = " + namtxp + "."
+   OPQA/ACCURACY OF VERTICAL ALIGNMENTS: Which text primitive
+     does NOT have a properly aligned capline (dotted),
+     halfline (dashed-dotted), or baseline (dashed)?
+
+   pass/fail depending on (operator indicates entry #ngrec)
+
+   clear screen
+
+*** *** *** *** ***   concatenation point   *** *** *** *** ***
+
+   ngrec = incorrect entry = random choice between 1 and numrec
+   set text path = txp
+
+   pick text alignment:
+   txalh,txalv = NORMAL,NORMAL
+   if (txp is horizonatl) then
+      txalv = HALF
+   else
+      txalh = RIGHT
+   endif
+   set text alignment to txalh,txalv
+
+   for ix = 1 to numrec
+      chht,chxp,chsp = some random values for character height,
+        expansion factor, and spacing
+
+      <inquire text extent> with specwt, font, chxp, chsp,
+         chht, txp, txal=[txalh,txalv], testc
+      to determine text extent rectangle
+
+      apply scale and shift transformation to put testc in next
+         labelled location
+
+      display left part of testc
+
+      if (ix = ngrec) then
+         distort concatenation point
+      endif
+
+      <inquire text extent> with specwt, font, chxp, chsp,
+         chht, txp, txal=[txalh,txalv], left part of testc
+      to determine concatenation point = ccpx,ccpy
+
+      display right part of testc
+      restore identity local transformation
+   next ix
+
+   TEST: #SR 2 6 7 8 10 11 12 17 18
+         "<Inquire text extent> should accurately report the
+          concatenation point when text path = " + namtxp + "."
+   OPQA/ACCURACY OF CONCATENATION POINT: In which text primitive
+     are the characters NOT aligned and evenly separated?
+
+   pass/fail depending on (operator indicates entry #ngrec)
+
+   clear screen
+
+next text path
+
+END PROGRAM 6

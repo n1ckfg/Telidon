@@ -1,0 +1,114 @@
+C  *********************************************************
+C  *                                                       *
+C  *    TEST NUMBER: 09.02.02/01                           *
+C  *    TEST TITLE : Error indicator = 52                  *
+C  *                                                       *
+C  *    PHIGS Validation Tests, produced by NIST           *
+C  *                                                       *
+C  *********************************************************
+
+      COMMON /GLOBNU/ CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT, DUMRL
+      INTEGER         CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT(20), ERRIND
+      REAL    DUMRL(20)
+
+      COMMON /GLOBCH/ PIDENT,    GLBERR,    TSTMSG,     FUNCID,
+     1                DUMCH
+      CHARACTER       PIDENT*40, GLBERR*60, TSTMSG*900, FUNCID*80,
+     1                DUMCH(20)*20
+
+      COMMON /ERRINF/ ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR,
+     1                USRERR, ERRSAV,      FUNSAV,      FILSAV,
+     2                EFCNT, EFID
+      INTEGER         ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR(10),
+     1                USRERR, ERRSAV(200), FUNSAV(200), FILSAV(200),
+     2                EFCNT, EFID(100)
+      COMMON /ERRCHR/ CURCON,     ERRSRS,    ERRMRK,    ERFLNM,
+     1                CONTAB
+      CHARACTER       CURCON*200, ERRSRS*40, ERRMRK*20, ERFLNM*80,
+     1                CONTAB(40)*150
+
+      INTEGER    WKTYPE, IVAL1,IVAL2,IVAL3,IVAL4,IVAL5,IVAL6,IDUM1,IX
+      INTEGER    IVAL7,IVAL8,IVAL9,IVAL10,IVAL11,IVAL12,NMTYPE,THIS
+      INTEGER    IA5(5)
+      REAL    RVAL1,RVAL2,RVAL3,RVAL4,RA6(6),RA9(9),RA44(4,4)
+      REAL    RB44(4,4),RA2(2),RB2(2)
+
+      CALL INITGL ('09.02.02/01')
+      CALL XPOPPH (ERRFIL, MEMUN)
+      CURCON = 'the workstation type is not recognized by the '//
+     1         'implementation'
+      CALL SETVS ('52', EXPERR, EXPSIZ)
+      ERRSRS = '2'
+
+      CALL PQEWK (1, ERRIND, NMTYPE, WKTYPE)
+      CALL CHKINQ ('pqewk', ERRIND)
+      DO 50 IX = 2, NMTYPE
+         CALL PQEWK (IX, ERRIND, IDUM1, THIS)
+         CALL CHKINQ ('pqewk', ERRIND)
+         IF (THIS.GT.WKTYPE) WKTYPE = THIS
+50    CONTINUE
+      WKTYPE = WKTYPE + 1
+
+      CALL RQWKCA (WKTYPE, ERRIND, IVAL1)
+
+      CALL RQDSP (WKTYPE, ERRIND, IVAL1, RVAL1, RVAL2, IVAL2, IVAL3)
+
+      CALL RQHRIF (WKTYPE, 0, ERRIND, IVAL1, IVAL2)
+
+      CALL RQVWF (WKTYPE, ERRIND, IVAL1)
+
+      CALL RQPVWR (WKTYPE, 1, ERRIND, RA44, RB44, RA6, IVAL1, IVAL2,
+     1             IVAL3)
+
+      CALL RQWKCL (WKTYPE, ERRIND, IVAL1)
+
+      CALL RQDSWA (WKTYPE, ERRIND, IVAL1, IVAL2, IVAL3, IVAL4, IVAL5,
+     1             IVAL6, IVAL7, IVAL8, IVAL9, IVAL10,IVAL11, IVAL12)
+
+      CALL RQDDUS (WKTYPE, ERRIND, IVAL1, IVAL2)
+
+      CALL RQPLF (WKTYPE, 0, ERRIND, IVAL1, IVAL2, IVAL3, RVAL1, RVAL2,
+     1            RVAL3, IVAL4)
+
+      CALL RQPPMR (WKTYPE, 1, ERRIND, IVAL1, RVAL1, IVAL2)
+
+      CALL RQTXF (WKTYPE,0,ERRIND,IVAL1,IVAL2,IVAL3,IVAL4,RVAL1,RVAL2,
+     1            IVAL3,RVAL3, RVAL4, IVAL4)
+
+      CALL RQTXX (WKTYPE,1,0.1,0.1,0.3,1,1,1,'TEXT',ERRIND,RA2,RB2,
+     1            RVAL1, RVAL2)
+
+      CALL RQIF (WKTYPE, 0,0,ERRIND, IVAL1,IVAL2,IVAL3,IVAL4,IVAL5)
+
+      CALL RQPEDR (WKTYPE,1, ERRIND,IVAL1,IVAL2,RVAL1,IVAL3)
+
+      CALL RQPAF (WKTYPE,ERRIND,IVAL1)
+
+      CALL RQCMDF (WKTYPE, 1, ERRIND, IVAL1, IVAL2, IVAL3)
+
+      CALL RQCF (WKTYPE, ERRIND, IVAL1, IVAL2, IVAL3, RA9)
+
+      CALL RQEGDP (WKTYPE,0, ERRIND, IVAL1, IVAL2)
+
+      CALL RQGDP3 (WKTYPE, 1, ERRIND, IVAL1, IA5)
+
+      CALL RQEGSE (WKTYPE, 0, ERRIND, IVAL1, IVAL2)
+
+      CALL RQDP (WKTYPE, ERRIND, IVAL1)
+
+      CALL RQWKSL (WKTYPE, ERRIND, IVAL1, IVAL2, IVAL3, IVAL4,
+     1             IVAL5, IVAL6, IVAL7, IVAL8)
+
+      CALL RQDSTR (WKTYPE, ERRIND, IVAL1, IVAL2, IVAL3, IVAL4, IVAL5)
+
+      CALL ENDIT
+
+      END
+
+

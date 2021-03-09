@@ -1,0 +1,2072 @@
+TITLE: Change structure identifier and references
+
+MODULE#: 02.01.03.03
+
+DESCRIPTION:
+This module tests the effects of <Change Structure Identifier and
+References>.  Changes which occur to the original structure, the
+resulting structure and the state of the CSS are examined.
+
+The following truth table applies when the original and resulting
+identifier are different.  The information regarding changes to
+the CSS network may be derived from the "Org Cont", "Res Cont"
+and NON-EXIST of the resulting state of the truth table.
+
+
+             INITIAL STATE       | |        RESULTING STATE
+---------------------------------| |----------------------------------------
+TC | Org  | Org   : Res  | Res   | |Org  |Org  | Org   : Res  | Res | Res
+ # | Stat | Post  : Stat | Post  | |Stat |Cont | Post  : Stat | Cont| Post
+---+-----------------------------| |----------------------------------------
+ 1 |  NON-EXIST   : NON-EXIST    | |  NON-EXIST        : clos | emp | npt-N
+ 2 |  NON-EXIST   : clos | npt-N | |  NON-EXIST        : clos | emp | npt-N
+ 3 |  NON-EXIST   : clos | pst-R | |  NON-EXIST        : clos | emp | pst-R
+ 4 |  NON-EXIST   : open | npt-N | |  NON-EXIST        : open | emp | npt-N
+ 5 |  NON-EXIST   : open | pst-R | |  NON-EXIST        : open | emp | pst-R
+                                 | |
+ 6 | clos | npt-N : NON-EXIST    | |  NON-EXIST        : clos | org | npt-N
+ 7 | clos | npt-N : clos | npt-N | |  NON-EXIST        : clos | org | npt-N
+ 8 | clos | npt-N : clos | pst-R | |  NON-EXIST        : clos | org | pst-R
+ 9 | clos | npt-N : open | npt-N | |  NON-EXIST        : open | org | npt-N
+10 | clos | npt-N : open | pst-R | |  NON-EXIST        : open | org | pst-R
+                                 | |
+11 | clos | pst-O : NON-EXIST    | |  NON-EXIST        : clos | org | pst-O
+12 | clos | pst-O : clos | npt-N | |  NON-EXIST        : clos | org | pst-O
+13 | clos | pst-O : clos | pst-R | |  NON-EXIST        : clos | org | pst-R
+14 | clos | pst-O : open | npt-N | |  NON-EXIST        : open | org | pst-O
+15 | clos | pst-O : open | pst-R | |  NON-EXIST        : open | org | pst-R
+                                 | |
+16 | open | npt-N : NON-EXIST    | |open | emp | npt-N : clos | org | npt-N
+17 | open | npt-N : clos | npt-N | |open | emp | npt-N : clos | org | npt-N
+18 | open | npt-N : clos | pst-R | |open | emp | npt-N : clos | org | pst-R
+                                 | |
+19 | open | pst-O : NON-EXIST    | |open | emp | npt-N : clos | org | pst-O
+20 | open | pst-O : clos | npt-N | |open | emp | npt-N : clos | org | pst-O
+21 | open | pst-O : clos | pst-R | |open | emp | npt-N : clos | org | pst-R
+
+Explanation of columns:
+TC#              Test case number
+
+INITIAL STATE    Indicates the state of the original and resulting
+                 structure before the execution of the <change structure
+                 identifier and references> function.
+
+   NON-EXIST        The original or resulting structure does not
+                    exist in the CSS at the time the <change structure
+                    identifier and references> function is executed.
+
+   Org or Res Stat  open  The structure is open at the time the <change
+                          structure identifier and references> function
+                          is executed.
+                    clos  The structure is closed at the time the <change
+                          structure identifier and references> function
+                          is executed.
+
+   Org or Res Post  pst   The structure is posted to some workstation
+                          at the time the <change structure identifer
+                          and references> function is executed.
+                          O - The posting priority of original structure at
+                              the time the <change structure identifier and
+                              references> function is executed.
+                          R - The posting priority of resulting structure at
+                              the time the <change structure identifier and
+                              references> function is executed.
+                    npt   The structure is not posted to any workstation
+                          at the time the <change structure identifier and
+                          references> function is executed.
+                          N - There is no posting priority associated with
+                              original or resulting structure.
+
+
+RESULTING STATE  Indicates the state of the original and resulting
+                 structure after the execution of the <change structure
+                 identifier and references> function.
+
+   NON-EXIST        No structure exists with the original identifier
+                    in the CSS after the <change structure identifier
+                    and references> function is executed.
+
+   Org Stat    open  The structure with the original structure
+                     identifier is open after the <change structure
+                     identifier and references> function is executed.
+               clos  The structure with the original structure
+                     identifier is closed after the <change structure
+                     identifier and references> function is executed.
+
+   Org Cont    emp   The structure with the original identifier is
+                     empty after the <change structure identifier
+                     and references> function is executed.
+
+   Org Post    npt   The original structure identifier is not posted to
+                     any workstation after the <change structure
+                     identifier and references> function is executed.
+                     N - There is no posting priority associated with
+                         original structure after execution of the
+                         <change structure identifier and references>
+                         function.
+
+   --------------------------------------------------------------
+
+   Res Stat    open  The structure with the resulting structure
+                     identifier is open after the <change structure
+                     identifier and references> function is executed.
+               clos  The structure with the resulting structure
+                     identifier is closed after the <change structure
+                     identifier and references> function is executed.
+
+   Res Cont    org   The contents, if any, of the resulting structure
+                     are replaced by the contents of original structure
+                     after the <change structure identifier and
+                     references> function is executed.
+               emp   The structure with the resulting structure
+                     identifier is empty after the <change structure
+                     identifer and references> function is executed.
+
+   Res Post    pst   After execution of the <change structure identifier
+                     and references> function, the resulting structure
+                     identifier is posted to the same workstation(s) it
+                     was before, and also to any workstations to which
+                     the original structure identifier was posted.
+                     O - The resulting structure identifier is posted with
+                         the priority of original structure after execution
+                         of <change structure identifier and references>.
+                     R - The resulting structure is posted with unchanged
+                         priority after execution of <change structure
+                         identifier and references>.
+               npt   The resulting structure identifier is not posted
+                     to the any workstation after the <change structure
+                     identifier and references> function is executed.
+                     N - There is no posting priority associated with
+                         resulting structure after execution of the
+                         <change structure identifier and references>
+                         function.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  When the original and resulting structure identifiers
+differ, <change structure identifier and references> causes the
+transition from the initial state to the resulting state as described
+in the truth table.
+#F 131
+#D 7 7.1 7.2 7.3.4 1.3 4.2 5.7
+#S 4.4.5/30/1
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P01/18 P01/19 P01/20
+   P01/21 P01/22 P01/23 P01/24 P01/25 P01/26 P01/27 P01/28 P01/29
+   P01/30 P01/31 P01/32 P01/33 P01/34 P01/35 P01/36 P01/37 P01/38
+   P01/39 P01/40 P01/41 P01/42
+#X 05.03
+
+SR2.  <Change structure identifier and references> creates an empty
+structure when the original and resulting structure identifier are
+the same and the common structure does not exist.
+#F 131
+#D 7 7.1
+#S 4.4.5/30/1
+#T P02/1 P02/2
+
+SR3.  When the original and resulting structure identifier are the same
+and the common structure exists, then no action is performed by execution
+of <change structure identifier and references>.
+#F 131
+#D 7 7.1 7.2 1.3 4.2 5.7
+#S 4.4.5/30/1
+#T P02/3 P02/4 P02/5 P02/6 P02/7 P02/8 P02/9 P02/10
+
+SR4.  When the original and resulting identifier are the same and
+the existing common structure is open, then the element position
+of the structure remains as is after execution of <change
+structure identifier and references>.
+#F 131
+#D 4.3
+#S n
+#T P03/1 P03/2
+
+SR5.  When the original and resulting structure identifiers differ and
+the original structure is open after execution of <change structure
+identifier and references>, then the element pointer is positioned at 0.
+#F 131
+#D 4.3
+#S n
+#T P03/3
+
+SR6.  When the original and resulting structure identifiers differ
+and the resulting structure is open after execution of <change
+structure identifer and references>, then the element pointer is
+positioned at the last element (0 if the structure is empty).
+#F 131
+#D 4.3
+#S n
+#T P03/4 P03/5 P03/6
+
+SR7.   <Change structure identifier and references> replaces all
+structure invocations of original structure with invocations of
+resulting structure.
+#F 131 130
+#D 7.1 7.3.4
+#S 4.4.5/30/1
+#T P01/2 P01/4 P01/6 P01/8 P01/10 P01/12 P01/14 P01/16 P01/18 P01/20
+   P01/22 P01/24 P01/26 P01/28 P01/30 P01/32 P01/34 P01/36 P01/38
+   P01/40 P01/42
+
+SR8.   When the resulting structure is referenced then <change
+structure identifier and references> causes those references to
+remain as is.
+#F 131 130
+#D 7.1 7.3.4
+#S 4.4.5/30/1
+#T P01/2 P01/4 P01/6 P01/8 P01/10 P01/12 P01/14 P01/16 P01/18 P01/20
+   P01/22 P01/24 P01/26 P01/28 P01/30 P01/32 P01/34 P01/36 P01/38
+   P01/40 P01/42
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  130: pcstrf  <change structure references>
+  131: pcstir  <change structure identifier and references>
+ 
+  Data Structures ---
+  1  ...  operating_state
+  1.3  ...  structure_state
+  4  ...  phigs_state_list
+  4.2  ...  name_of_open_structure
+  4.3  ...  element_pointer
+  5  ...  workstation_state_list
+  5.7  ...  list_of_posted_structures
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.2  ...  list_of_workstations_to_which_posted
+  7.3  ...  list_of_structure_elements
+  7.3.4  ...  execute_structure
+ 
+SEMANTIC CROSS-REFERENCES:
+  02.01.01/SR07
+ 
+LOCAL SUBROUTINES:  The programs in this module use special-purpose
+subroutines:
+
+1. TSTCIR performs a test case for one of the change structure
+functions.  Based on the input parameters, it sets up a test
+message, executes the appropriate function, examines the result,
+and issues pass or fail.
+
+2. ELSTR creates a substring consisting of integer pairs to
+represent the contents of a structure.  Within each pair, the
+first value indicates the element type (execute structure or
+label) and the second value indicates the element content.
+
+3. TCSCIR returns a substring used in the formulation of the test
+message.  The substring indicates the precondition and expected
+postcondition of a particular structure.  The structure can be
+non-existent, opened or closed, referenced or not referenced,
+posted or not posted, and empty or with the contents of original
+structure.
+
+4. ACTST returns the actual state of a structure.  The structure
+can be non-existent, opened or closed, posted or not posted, and
+empty or with the contents of original structure or some other
+contents.
+
+
+Calling structure:
+
+                       TSTCID
+                      /   |  \
+                     /    |   \
+                    /     |    \
+                   /      |     \
+                ELSTR  TCSCID  ACTST
+
+PROGRAM 1: <Change structure identifier and references> where
+           the original and resulting structures differ
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+The following is the "standard" CSS network for module 02.01.03.  This
+CSS network will be used throughout to test the resulting state of the
+CSS after execution of the <change structure identifier and references>
+function. Before each test case the CSS state is completely reset.
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115
+
+set priorities:
+orgpri = 0.1
+respri = 0.2
+
+*** *** *** *** *** test case 1 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = NON-EXISTENT and the
+       resulting structure = NON-EXISTENT) should yield the expected
+       results of (original structure = NON-EXISTENT and resulting
+       structure = CLOSED, EMPTY, and NOT-POSTED) after execution of
+       the function as stated by test condition 1 of the truth table."
+
+orgid = 300
+resid = 350
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = NON-EXISTENT and the
+       resulting structure = NON-EXISTENT) should change the CSS in
+       accordance with the substitution of the resulting identifier
+       for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140   350
+           |              / | \     |    /|        |     |
+           |2            /  |  \    |   / |       1|     |0
+           |           1/  2|  5\  2|  /3 |5       |     |
+           |           /    |    \  | /   |        |     |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** test case 2 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = NON-EXISTENT and the
+       resulting structure = CLOSED and NOT-POSTED) should yield the
+       expected results of (original structure = NON-EXISTENT and
+       resulting structure = CLOSED, EMPTY, and NOT-POSTED) after
+       execution of the function as stated by test condition 2 of the
+       truth table."
+
+orgid = 300
+resid = 120
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = NON-EXISTENT and the
+       resulting structure = CLOSED and NOT-POSTED) should change the
+       CSS in accordance with the substitution of the resulting
+       identifier for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102           130      140     120
+           |              / | \          /|        |       |
+           |2            /  |  \        / |       1|       |0
+           |           1/  2|  5\      /3 |5       |       |
+           |           /    |    \    /   |        |
+          103         /     |     \  /    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** test case 3 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = NON-EXISTENT and the
+       resulting structure = CLOSED and POSTED with old resulting
+       priority) should yield the expected results of (original
+       structure = NON-EXISTENT and resulting structure = CLOSED,
+       EMPTY, and POSTED with old resulting priority) after execution
+       of the function as stated by test condition 3 of the truth
+       table."
+
+orgid = 300
+resid = 108
+<post structure> resid, respri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = NON-EXISTENT and the
+       resulting structure = CLOSED and POSTED with old resulting
+       priority) should change the CSS in accordance with the
+       substitution of the resulting identifier for the original
+       identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |2  / |       1|
+           |           1/  2|  5\   |  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |
+                             |
+                             |3
+                             |
+                             |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+
+*** *** *** *** *** test case 4 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = NON-EXISTENT and the
+       resulting structure = OPEN and NOT-POSTED) should yield the
+       expected results of (original structure = NON-EXISTENT and
+       resulting structure = OPEN, EMPTY, and NOT-POSTED) after
+       execution of the function as stated by test condition 4 of the
+       truth table."
+
+orgid = 300
+resid = 108
+<open structure> resid
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = NON-EXISTENT and the
+       resulting structure = OPEN and NOT-POSTED) should change the
+       CSS in accordance with the substitution of the resulting
+       identifier for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |2  / |       1|
+           |           1/  2|  5\   |  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |
+                             |
+                             |3
+                             |
+                             |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+
+*** *** *** *** *** test case 5 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = NON-EXISTENT and the
+       resulting structure = OPEN and POSTED with old resulting
+       priority) should yield the expected results of (original
+       structure = NON-EXISTENT and resulting structure = OPEN, EMPTY,
+       and POSTED with old resulting priority) after execution of the
+       function as stated by test condition 5 of the truth table."
+
+orgid = 300
+resid = 120
+<open structure> resid
+<post structure> resid, respri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = NON-EXISTENT and the
+       resulting structure = OPEN and POSTED with old resulting
+       priority) should change the CSS in accordance with the
+       substitution of the resulting identifier for the original
+       identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102           130      140     120
+           |              / | \          /|        |       |
+           |2            /  |  \        / |       1|       |0
+           |           1/  2|  5\      /3 |5       |       |
+           |           /    |    \    /   |        |
+          103         /     |     \  /    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** test case 6 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and NOT-POSTED
+       and the resulting structure = NON-EXISTENT) should yield the
+       expected results of (original structure = NON-EXISTENT and
+       resulting structure = CLOSED, ORIGINAL, and NOT-POSTED) after
+       execution of the function as stated by test condition 6 of the
+       truth table."
+
+orgid = 130
+resid = 350
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and NOT-POSTED
+       and the resulting structure = NON-EXISTENT) should change the
+       CSS in accordance with the substitution of the resulting
+       identifier for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   350      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** test case 7 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and NOT-POSTED
+       and the resulting structure = CLOSED and NOT-POSTED) should
+       yield the expected results of (original structure =
+       NON-EXISTENT and resulting structure = CLOSED, ORIGINAL, and
+       NOT-POSTED) after execution of the function as stated by test
+       condition 7 of the truth table."
+
+orgid = 120
+resid = 130
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and NOT-POSTED
+       and the resulting structure = CLOSED and NOT-POSTED) should
+       change the CSS in accordance with the substitution of the
+       resulting identifier for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     130            140
+           |              / | \     |              |
+           |2            /  |  \    |             1|
+           |           1/  2|  5\  2|              |
+           |           /    |    \  |              |
+          103         /     |     \ |             142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** test case 8 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and NOT-POSTED
+       and the resulting structure = CLOSED and POSTED with old
+       resulting priority) should yield the expected results of
+       (original structure = NON-EXISTENT and resulting structure =
+       CLOSED, ORIGINAL, and POSTED with old resulting priority) after
+       execution of the function as stated by test condition 8 of the
+       truth table."
+
+orgid = 108
+resid = 104
+<post structure> resid, respri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and NOT-POSTED
+       and the resulting structure = CLOSED and POSTED with old
+       resulting priority) should change the CSS in accordance with
+       the substitution of the resulting identifier for the original
+       identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101             \        120   130      140
+           |                102     |    /|        |
+           |2               | |\5   |   / |       1|
+           |               2| | \  2|  /3 |5       |
+           |                | |  \  | /   |        |
+          103               | |   \ |/    |       142
+                            | |1  106   107
+                  109     105 |    |    / /\
+                   |       /|\ \   |   / /  \
+                  0|     1/ | \ \ 1| 1/ /4   \5
+                   |     /  | 2\ \ | / /      \
+                        /   |   \ \|/ /       113
+                      110   |    \104
+                            |      |
+                            |      |2
+                            |3     |
+                            |      |
+                            |     111
+                            |    / |
+                            |  1/  |
+                            |  /  3|
+                            | /    |
+                           114   115   )
+
+*** *** *** *** *** test case 9 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and NOT-POSTED
+       and the resulting structure = OPEN and NOT-POSTED) should yield
+       the expected results of (original structure = NON-EXISTENT and
+       resulting structure = OPEN, ORIGINAL, and NOT-POSTED) after
+       execution of the function as stated by test condition 9 of the
+       truth table."
+
+
+orgid = 106
+resid = 113
+<open structure> resid
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and NOT-POSTED
+       and the resulting structure = OPEN and NOT-POSTED) should
+       change the CSS in accordance with the substitution of the
+       resulting identifier for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    / |        |
+           |2            /  |  \    |   /  |       1|
+           |           1/  2|  5\  2|  /3  |5       |
+           |           /    |    \  | /    |        |
+          103         /     |     \ |/  5  |       142
+                   104     105     113<---107
+                   | |       |     |     / /
+                  2| |5     /|\    |    / /
+                   | |    1/ | \2 1|  1/ /4
+                   109    /  |  \  |  / /
+                         /   |   \ |/ /
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** test case 10 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and NOT-POSTED
+       and the resulting structure = OPEN and POSTED with old
+       resulting priority) should yield the expected results of
+       (original structure = NON-EXISTENT and resulting structure =
+       OPEN, ORIGINAL, and POSTED with old resulting priority) after
+       execution of the function as stated by test condition 10 of the
+       truth table."
+
+orgid = 130
+resid = 120
+<open structure> resid
+<post structure> resid, respri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and NOT-POSTED
+       and the resulting structure = OPEN and POSTED with old
+       resulting priority) should change the CSS in accordance with
+       the substitution of the resulting identifier for the original
+       identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102           120      140
+           |              / | \          /|        |
+           |2            /  |  \        / |       1|
+           |           1/  2|  5\      /3 |5       |
+           |           /    |    \    /   |        |
+          103         /     |     \  /    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** test case 11 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and POSTED with
+       old original priority and the resulting structure =
+       NON-EXISTENT) should yield the expected results of (original
+       structure = NON-EXISTENT and resulting structure = CLOSED,
+       ORIGINAL, and POSTED with old original priority) after
+       execution of the function as stated by test condition 11 of the
+       truth table."
+
+orgid = 107
+resid = 350
+<post structure> orgid, orgpri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and POSTED
+       with old original priority and the resulting structure =
+       NON-EXISTENT) should change the CSS in accordance with the
+       substitution of the resulting identifier for the original
+       identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   350
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** test case 12 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and POSTED with
+       old original priority and the resulting structure = CLOSED and
+       NOT-POSTED) should yield the expected results of (original
+       structure = NON-EXISTENT and resulting structure = CLOSED,
+       ORIGINAL, and POSTED with old original priority) after
+       execution of the function as stated by test condition 12 of the
+       truth table."
+
+orgid = 120
+resid = 104
+<post structure> orgid, orgpri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and POSTED
+       with old original priority and the resulting structure = CLOSED
+       and NOT-POSTED) should change the CSS in accordance with the
+       substitution of the resulting identifier for the original
+       identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \      1
+          101              102---->104   130      140
+           |                | \     |    /|        |
+           |2               |  \    |   / |       1|
+           |               2|  5\  2|  /3 |5       |
+           |                |    \  | /   |        |
+          103               |     \ |/    |       142
+                   109     105     106   107
+                    |        |     |    / /\
+                   0|       /|\    |   / /  \
+                    |     1/ | \2 1| 1/ /4   \5
+                          /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** test case 13 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and POSTED with
+       old original priority and the resulting structure = CLOSED and
+       POSTED with old resulting priority) should yield the expected
+       results of (original structure = NON-EXISTENT and resulting
+       structure = CLOSED, ORIGINAL, and POSTED with old resulting
+       priority) after execution of the function as stated by test
+       condition 13 of the truth table."
+
+orgid = 130
+resid = 105
+<post structure> orgid, orgpri
+<post structure> resid, respri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and POSTED
+       with old original priority and the resulting structure = CLOSED
+       and POSTED with old resulting priority) should change the CSS
+       in accordance with the substitution of the resulting identifier
+       for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \         2
+          101              102---------->105      140
+           |              /   \          /|        |
+           |2            /     \   120  / |       1|
+           |           1/      5\   |  /3 |5       |
+           |           /         \ 2| /   |        |
+          103         /           \ |/    |       142
+                   104             106   107
+                   | |             |    / /\
+                  2| |5            |   / /  \
+                   | |            1| 1/ /4   \5
+                   109             | / /      \
+                                   |/ /       113
+                       110        108
+                        |          |
+                        |0         |2
+                        |          |
+                        |          |
+                                  111
+                                 / |
+                               1/  |
+                               /  3|
+                              /    |
+                            114   115   )
+
+*** *** *** *** *** test case 14 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and POSTED with
+       old original priority and the resulting structure = OPEN and
+       NOT-POSTED) should yield the expected results of (original
+       structure = NON-EXISTENT and resulting structure = OPEN,
+       ORIGINAL, and POSTED with old original priority) after
+       execution of the function as stated by test condition 14 of the
+       truth table."
+
+orgid = 105
+resid = 104
+<post structure> orgid, orgpri
+<open structure> resid
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and POSTED
+       with old original priority and the resulting structure = OPEN
+       and NOT-POSTED) should change the CSS in accordance with the
+       substitution of the resulting identifier for the original
+       identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |               | |\     |    /|        |
+           |2              | | \5   |   / |       1|
+           |              1| |2 \  2|  /3 |5       |
+           |               | |   \  | /   |        |
+          103              | |    \ |/    |       142
+                   109     104     106   107
+                    |        |     |    / /\
+                   0|       /|\    |   / /  \
+                    |     1/ | \2 1| 1/ /4   \5
+                    |     /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** test case 15 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and POSTED with
+       old original priority and the resulting structure = OPEN and
+       POSTED with old resulting priority) should yield the expected
+       results of (original structure = NON-EXISTENT and resulting
+       structure = OPEN, ORIGINAL, and POSTED with old resulting
+       priority) after execution of the function as stated by test
+       condition 15 of the truth table."
+
+orgid = 142
+resid = 120
+<post structure> orgid, orgpri
+<open structure> resid
+<post structure> resid, respri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = CLOSED and POSTED
+       with old original priority and the resulting structure = OPEN
+       and POSTED with old resulting priority) should change the CSS
+       in accordance with the substitution of the resulting identifier
+       for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102           130       140
+           |              / | \          /|         |
+           |2            /  |  \        / |        1|
+           |           1/  2|  5\      /3 |5        |
+           |           /    |    \    /   |         |
+          103         /     |     \  /    |        120
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+
+*** *** *** *** *** test case 16 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and NOT-POSTED
+       and the resulting structure = NON-EXISTENT) should yield the
+       expected results of (original structure = OPEN, EMPTY, and
+       NOT-POSTED and resulting structure = CLOSED, ORIGINAL, and
+       NOT-POSTED) after execution of the function as stated by test
+       condition 16 of the truth table."
+
+orgid = 107
+resid = 350
+<open structure> orgid
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and NOT-POSTED
+       and the resulting structure = NON-EXISTENT) should change the
+       CSS in accordance with the substitution of the resulting
+       identifier for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   350
+                   | |       |     |    / /\          107
+                  2| |5     /|\    |   / /  \          |
+                   | |    1/ | \2 1| 1/ /4   \5        |0
+                   109    /  |  \  | / /      \        |
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+
+*** *** *** *** *** test case 17 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and NOT-POSTED
+       and the resulting structure = CLOSED and NOT-POSTED) should
+       yield the expected results of (original structure = OPEN,
+       EMPTY, and NOT-POSTED and resulting structure = CLOSED,
+       ORIGINAL, and NOT-POSTED) after execution of the function as
+       stated by test condition 17 of the truth table."
+
+orgid = 106
+resid = 113
+<open structure> orgid
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and NOT-POSTED
+       and the resulting structure = CLOSED and NOT-POSTED) should
+       change the CSS in accordance with the substitution of the
+       resulting identifier for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    / |        |
+           |2            /  |  \    |   /  |       1|
+           |           1/  2|  5\  2|  /3  |5       |
+           |           /    |    \  | /    |        |
+          103         /     |     \ |/  5  |       142
+                   104     105     113<---107
+                   | |       |     |     / /
+                  2| |5     /|\    |    / /       106
+                   | |    1/ | \2 1|  1/ /4        |
+                   109    /  |  \  |  / /          |0
+                         /   |   \ |/ /            |
+                       110   |    108              |
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+
+*** *** *** *** *** test case 18 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and NOT-POSTED
+       and the resulting structure = CLOSED and POSTED with old
+       resulting priority) should yield the expected results of
+       (original structure = OPEN, EMPTY, and NOT-POSTED and resulting
+       structure = CLOSED, ORIGINAL, and POSTED with old resulting
+       priority) after execution of the function as stated by test
+       condition 18 of the truth table."
+
+orgid = 108
+resid = 104
+<open structure> orgid
+<post structure> resid, respri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and NOT-POSTED
+       and the resulting structure = CLOSED and POSTED with old
+       resulting priority) should change the CSS in accordance with
+       the substitution of the resulting identifier for the original
+       identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101             \        120   130      140
+           |                102     |    /|        |
+           |2               | |\5   |   / |       1|
+           |               2| | \  2|  /3 |5       |
+           |                | |  \  | /   |        |
+          103               | |   \ |/    |       142
+                            | |1  106   107
+                  109     105 |    |    / /\
+                   |       /|\ \   |   / /  \        108
+                  0|     1/ | \ \ 1| 1/ /4   \5       |
+                   |     /  | 2\ \ | / /      \       |0
+                        /   |   \ \|/ /       113     |
+                      110   |    \104
+                            |      |
+                            |      |2
+                            |3     |
+                            |      |
+                            |     111
+                            |    / |
+                            |  1/  |
+                            |  /  3|
+                            | /    |
+                           114   115   )
+
+
+
+*** *** *** *** *** test case 19 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and POSTED with
+       old original priority and the resulting structure =
+       NON-EXISTENT) should yield the expected results of (original
+       structure = OPEN, EMPTY, and NOT-POSTED and resulting structure
+       = CLOSED, ORIGINAL, and POSTED with old original priority)
+       after execution of the function as stated by test condition 19
+       of the truth table."
+
+orgid = 120
+resid = 300
+<open structure> orgid
+<post structure> orgid, orgpri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and POSTED with
+       old original priority and the resulting structure =
+       NON-EXISTENT) should change the CSS in accordance with the
+       substitution of the resulting identifier for the original
+       identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     300   130      140    120
+           |              / | \     |    /|        |      |
+           |2            /  |  \    |   / |       1|     0|
+           |           1/  2|  5\  2|  /3 |5       |      |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115  )
+
+
+*** *** *** *** *** test case 20 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and POSTED with
+       old original priority and the resulting structure = CLOSED and
+       NOT-POSTED) should yield the expected results of (original
+       structure = OPEN, EMPTY, and NOT-POSTED and resulting structure
+       = CLOSED, ORIGINAL, and POSTED with old original priority)
+       after execution of the function as stated by test condition 20
+       of the truth table."
+
+orgid = 130
+resid = 105
+<open structure> orgid
+<post structure> orgid, orgpri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and POSTED with
+       old original priority and the resulting structure = CLOSED and
+       NOT-POSTED) should change the CSS in accordance with the
+       substitution of the resulting identifier for the original
+       identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \         2
+          101              102---------->105      140
+           |              /   \          /|        |
+           |2            /     \   120  / |       1|
+           |           1/      5\   |  /3 |5       |
+           |           /         \ 2| /   |        |
+          103         /           \ |/    |       142
+                   104             106   107
+                   | |             |    / /\
+                  2| |5            |   / /  \
+                   | |            1| 1/ /4   \5
+                   109             | / /      \
+                                   |/ /       113
+                       110        108               130
+                        |          |                 |
+                        |0         |2                |0
+                        |          |                 |
+                        |          |                 |
+                                  111
+                                 / |
+                               1/  |
+                               /  3|
+                              /    |
+                            114   115   )
+
+
+*** *** *** *** *** test case 21 *** *** *** *** ***
+
+TEST: #SR 1
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and POSTED with
+       old original priority and the resulting structure = CLOSED and
+       POSTED with old resulting priority) should yield the expected
+       results of (original structure = OPEN, EMPTY, and NOT-POSTED
+       and resulting structure = CLOSED, ORIGINAL, and POSTED with old
+       resulting priority) after execution of the function as stated
+       by test condition 21 of the truth table."
+
+orgid = 105
+resid = 104
+<open structure> orgid
+<post structure> orgid, orgpri
+<post structure> resid, respri
+<change structure identifier and references> orgid, resid
+pass/fail depending on structure status expected results = actual results
+
+TEST: #SR 1 7 8
+      "<Change structure identifier and references> with the
+       precondition being (original structure = OPEN and POSTED with
+       old original priority and the resulting structure = CLOSED and
+       POSTED with old resulting priority) should change the CSS in
+       accordance with the substitution of the resulting identifier
+       for the original identifier."
+
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |               | |\     |    /|        |
+           |2              | | \5   |   / |       1|
+           |              1| |2 \  2|  /3 |5       |
+           |               | |   \  | /   |        |
+          103              | |    \ |/    |       142
+                   109     104     106   107
+                    |        |     |    / /\
+                   0|       /|\    |   / /  \
+                    |     1/ | \2 1| 1/ /4   \5      105
+                    |     /  |  \  | / /      \       |
+                         /   |   \ |/ /       113     | 0
+                       110   |    108                 |
+                             |     |                  |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+END PROGRAM 1
+
+
+PROGRAM 2: Changing a structure identifier and references when
+           the original and resulting identifier are the same
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+The following is the "standard" CSS network for module 02.01.03.  This
+CSS network will be used throughout to test the resulting state of the
+CSS after execution of the <change structure identifier and references>
+function.  Before each test case the CSS state is completely reset.
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115
+
+*** *** *** ***   Common structure = NON-EXISTENT   *** *** *** ***
+
+TEST: #SR 2
+      "<Change structure identifier and references> where the original
+       and resulting identifier are the same and the common structure
+       does not exist should create an empty structure."
+
+comstr = 300
+<change structure identifier and references> comstr, comstr
+Use <inquire structure status> to determine
+    strsti = structure status indicator
+pass/fail depending on (strsti = EMPTY)
+
+TEST: #SR 2
+      "<Change structure identifier and references> where the original
+       and resulting identifier are the same and the common structure
+       does not exist should create an empty structure thus changing
+       the contents of the CSS."
+
+pass/fail depending on (CSS =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140         300
+           |              / | \     |    /|        |           |
+           |2            /  |  \    |   / |       1|           |0
+           |           1/  2|  5\  2|  /3 |5       |           |
+           |           /    |    \  | /   |        |           |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+
+*** *** *** *** *** Common structure = closed, not posted *** *** *** *** ***
+
+TEST: #SR 3
+      "<Change structure identifier and references> where the original
+       and resulting identifier are the same and the common structure
+       is closed and not posted should result in the structure being
+       closed, contents unchanged, and not posted."
+
+comstr = 120
+<change structure identifier and references> comstr, comstr
+
+use <inquire open structure> to determine
+    stype  = open structure status
+use <inquire posted structures> to determine
+    pstnum = number of posted structures
+
+pass/fail depending on (stype  =  NONE
+                        pstnum =  0
+                        comstr contents = AS IS)
+
+TEST: #SR 3
+      "<Change structure identifier and references> where the original
+       and resulting identifier are the same and the common structure
+       is closed and not posted should have no effect on the contents
+       of the CSS."
+
+pass/fail depending on (CSS =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+*** *** *** *** *** Common structure = closed, posted *** *** *** *** ***
+
+TEST: #SR 3
+      "<Change structure identifier and references> where the original
+       and resulting identifier are the same and the common structure
+       is closed and posted should result in the structure being closed,
+       contents unchanged, and posted."
+
+comstr = 108
+compri = .47
+<post structure> comstr, compri
+<change structure identifier and references> comstr, comstr
+
+use <inquire open structure> to determine
+    stype  = open structure status
+use <inquire posted structures> to determine
+    pststr = posted structure
+    pstnum = number of posted structures
+    priori = priority of posted structure
+
+pass/fail depending on (stype  =  NONE
+                        pstnum =  1
+                        pststr =  comstr
+                        priori =  compri
+                        comstr contents = AS IS)
+
+TEST: #SR 3
+      "<Change structure identifier and references> where the original
+       and resulting identifier are the same and the common structure
+       is closed and posted should have no effect on the contents of
+       the CSS."
+
+pass/fail depending on (CSS =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+
+*** *** *** *** *** Common structure = opened, posted *** *** *** *** ***
+
+TEST: #SR 3
+      "<Change structure identifier and references> where the original
+       and resulting identifier are the same and the common structure
+       is opened and posted should result in the structure being opened,
+       contents unchanged, and posted."
+
+comstr = 120
+<open structure> comstr
+compri = .47
+<post structure> comstr, compri
+<change structure identifier and references> comstr, comstr
+
+use <inquire open structure> to determine
+    opnstr = open structure
+    stype  = open structure status
+use <inquire posted structures> to determine
+    pststr = posted structure
+    pstnum = number of posted structures
+    priori = priority of posted structure
+
+pass/fail depending on (stype  = OPEN
+                        opnstr = comstr
+                        pstnum = 1
+                        pststr = comstr
+                        priori = compri
+                        comstr contents = AS IS)
+
+TEST: #SR 3
+      "<Change structure identifier and references> where the original
+       and resulting identifier are the same and the common structure
+       is opened and posted should have no effect on the contents of
+       the CSS."
+
+pass/fail depending on (CSS =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+
+*** *** *** *** *** Common structure = opened, not posted *** *** *** *** ***
+
+TEST: #SR 3
+      "<Change structure identifier and references> where the original
+       and resulting identifier are the same and the common structure
+       is opened and not posted should result in the structure
+       being opened, contents unchanged, and not posted."
+
+comstr = 108
+<open structure> comstr
+<change structure identifier and references> comstr, comstr
+
+use <inquire open structure> to determine
+    opnstr = open structure
+    stype  = open structure status
+use <inquire posted structures> to determine
+    pstnum = number of posted structures
+
+pass/fail depending on (stype  = OPEN
+                        opnstr = comstr
+                        pstnum = 0
+                        comstr contents AS IS)
+
+TEST: #SR 3
+      "<Change structure identifier and references> where the original
+       and resulting identifier are the same and the common structure
+       is opened and not posted should have no effect on the contents
+       of the CSS."
+
+pass/fail depending on (CSS =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115   )
+
+
+END PROGRAM 2
+
+PROGRAM 3: Effects of <change structure identifier and references>
+           on the element pointer
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+The following is the "standard" CSS network for module 02.01.03.
+This CSS network will be used throughout to test the resulting
+state of the CSS after execution of the <change structure
+identifier and references> function.  Before each test case the CSS
+state is completely reset.
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115
+
+Structure 111 in the CSS is set up as follows:
+
+                                111
+                                 |
+       -----------------------------------------------------------
+      |         | |         |      |      |     \  |  /         | |
+      |1       2| |10       |3     |4     |5    6\ |8/11       7| |9
+      |         | |         |      |      |       \|/           | |
+     114        940        115    942    916      947           955
+
+The nodes on the graph numbered 114 and 115 represent the
+structure elements associated with <execute structure>.  The nodes
+between (900 and 999) represent the structure elements associated
+with <label> .  The arcs (1-11) represent the position of the
+<execute structure> or <label> element within the structure.
+
+
+TEST: #SR 4
+      "If the original and resulting identifier are the same and the
+       common structure is open and empty after execution of <change
+       structure identifier and references> then the element pointer
+       should be at zero."
+
+comstr = 142
+<open structure> comstr
+<change structure identifier and references> comstr, comstr
+pass/fail depending on (element pointer = 0)
+<close structure>
+
+TEST: #SR 4
+      "If the original and resulting identifier are the same and the
+       common structure is open and not empty after execution of
+       <change structure identifier and references> then the element
+       pointer should remain at its current position."
+
+set edit mode to REPLACE
+comstr = 111
+<open structure> comstr
+set element pointer to 4
+<change structure identifier and references> comstr, comstr
+pass/fail depending on (element pointer = 4)
+<close structure>
+
+TEST: #SR 5
+      "If the original and resulting identifiers differ and the original
+       structure is open after execution of <change structure identifier
+       and references> then the open structure should be empty and the
+       element pointer set to zero."
+
+orgid = 111
+resid = 130
+set edit mode to INSERT
+<open structure> orgid
+set element pointer to 3
+<change structure identifier and references> orgid, resid
+pass/fail depending on (element pointer = 0)
+<close structure>
+
+TEST: #SR 6
+      "If the original and resulting identifiers differ, the original
+       structure does not exist and the resulting structure is open after
+       execution of <change structure identifier and references> then
+       the element pointer of the open structure should be set to zero."
+
+orgid = 300
+resid = 111
+<open structure> resid
+<change structure identifier and references> orgid, resid
+pass/fail depending on (element pointer = 0)
+<close structure>
+
+TEST: #SR 6
+      "If the original and resulting identifiers differ, the original
+       structure does exist and is empty, and the resulting structure
+       is open after execution of <change structure identifier and
+       references> then the element pointer of the open structure
+       should be set to zero."
+
+orgid = 142
+resid = 111
+<open structure> resid
+set element pointer to 2
+<change structure identifier and references> orgid, resid
+pass/fail depending on (element pointer = 0)
+<close structure>
+
+TEST: #SR 6
+      "If the original and resulting identifiers differ, the original
+       structure does exist and is not empty, and the resulting structure
+       is open after execution of <change structure identifier and
+       references> then the element pointer of the open structure
+       should be set to the last element."
+
+orgid = 111
+resid = 104
+<open structure> resid
+set element pointer to 3
+<change structure identifier and references> orgid, resid
+pass/fail depending on (element pointer = 11)
+<close structure>
+
+END PROGRAM 3
+

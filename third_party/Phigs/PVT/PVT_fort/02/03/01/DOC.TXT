@@ -1,0 +1,363 @@
+TITLE: Inquiring element type and size, and content
+
+MODULE#: 02.03.01
+
+DESCRIPTION: This module tests the inquiry functions dealing with
+element type and size, and element content.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Inquire current element type and size> returns the element
+type and size of the structure element pointed to by the element
+pointer.
+#F 303
+#D 7.3 4.2 4.3
+#S 4.4.4/29/5
+#T P02/1 P02/5
+
+SR2.   <Inquire current element type and size>  returns NIL as
+the element type and 0 as the element size when the element
+pointer is 0.
+#F 303
+#D 7.3 4.2 4.3
+#S 4.4.4/29/5
+#T P02/9
+
+SR3.   <Inquire current element content> returns the values of
+the structure element data record associated with the structure
+element pointed to by the element pointer.
+#F 304
+#D 7.3 4.2 4.3
+#S 4.4.4/29/5
+#T P02/2 P02/6 P02/10
+#C The Fortran binding specifies that for the NIL element
+(position 0), all array sizes are zero.
+
+SR4.   <Inquire element type and size> returns the element type
+and size for the specified element.
+#F 305
+#D 7.1 7.3
+#S 4.4.6/30/4
+#T P01/3 P02/3 P02/7
+
+SR5.   <Inquire element type and size> returns NIL as the element
+type and 0 as the element size when the specified element position
+is 0.
+#F 305
+#D 7.1 7.3
+#S 4.4.6/30/4
+#T P01/1 P02/11
+
+SR6.   <Inquire element content> returns the values of the
+structure element data record associated with the specified
+structure element.
+#F 306
+#D 7.1 7.3
+#S 4.4.6/30/4
+#T P01/2 P01/4 P02/4 P02/8 P02/12
+#C The NIL element (position 0) is treated the same as for
+<inquire current element content>.
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+  305: pqets   <inquire element type and size>
+  306: pqeco   <inquire element content>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.2  ...  name_of_open_structure
+  4.3  ...  element_pointer
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.3  ...  list_of_structure_elements
+ 
+
+PROGRAM 1: Inquire element type and size, and content when a
+           structure is closed
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Define polyline points
+   xpts = .02, .05, .08, .11, .14
+   ypts = .17, .20, .23, .26, .29
+
+<open structure> strid
+   position   contents
+     1        <set character up vector> .24, .35
+     2        <set text alignment> left, half
+     3        <polyline> 5, xpts, ypts
+     4        <set character spacing> .05
+     5        <text> .16, .2, 'PHIGS Validation Tests'
+<close structure>
+
+Throughout use:
+<inquire element type and size> to determine:
+    eltype = element type
+    intsz  = number of integer array entries
+    rlsz   = number of real array entries
+    strsz  = number of string array entries
+
+<inquire element content> to determine:
+    intsz  = number of integer array entries
+    intar  = array containing integer entries
+    rlsz   = number of real array entries
+    rlar   = array containing real entries
+    strsz  = number of string array entries
+    lnstr  = length of character string entries
+    strar  = character string entries
+
+TEST: #SR 5
+      "<Inquire element type and size> should return NIL as the
+       element type and 0 as the length of all array entry sizes
+       when the specified element position of the closed structure
+       is 0."
+
+<inquire element type and size> strid, 0
+pass/fail depending on (eltype = NIL and
+                        intsz  = 0   and
+                        rlsz   = 0   and
+                        strsz  = 0)
+
+TEST: #SR 6
+      "<Inquire element content> should return 0 as the length of
+       all arrays associated with the data record when the
+       specified element position of the closed structure is 0."
+
+<inquire element content> strid, 0
+pass/fail depending on (intsz = 0 and
+                        rlsz  = 0 and
+                        strsz = 0)
+
+TEST: #SR 4
+      "<Inquire element type and size> should return polyline as
+       the element type and an integer array entry size of 1, real
+       array entry size of 10, and a string array entry size of 0
+       for the specified element of the closed structure."
+
+<inquire element type and size> strid, 3
+pass/fail depending on (eltype = polyline and
+                        intsz  = 1        and
+                        rlsz   = 10       and
+                        strsz  = 0)
+
+TEST: #SR 6
+      "<Inquire element content> should return the appropriate
+       information contained in the data record associated with
+       polyline, the specified element of the closed structure."
+
+<inquire element content> strid, 3
+pass/fail depending on (intsz    = 1          and
+                        intar(1) = 5          and
+                        rlsz     = 10         and
+                        rlar     = xpts, ypts and
+                        strsz    = 0)
+
+END PROGRAM 1
+
+PROGRAM 2: Inquire element type and size, and content when a
+           structure is open
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<open structure> strid
+   position   contents
+     1        <set character up vector> .24, .35
+     2        <set text alignment> left, half
+     3        <set character height>  .4
+     4        <set character spacing> .05
+     5        <text> .16, .2, 'PHIGS Validation Tests'
+
+Throughout use:
+<inquire [current] element type and size> to determine:
+    eltype = element type
+    intsz  = number of integer array entries
+    rlsz   = number of real array entries
+    strsz  = number of string array entries
+
+<inquire [current] element content> to determine:
+    intsz  = number of integer array entries
+    intar  = array containing integer entries
+    rlsz   = number of real array entries
+    rlar   = array containing real entries
+    strsz  = number of string array entries
+    lnstr  = length of character string entries
+    strar  = character string entries
+
+*** *** *** ***   specified element = text   *** *** *** ***
+
+TEST: #SR 1
+      "<Inquire current element type and size> should return
+       text as the element type and an integer array entry size
+       of 0, real array entry size of 2, and a string array entry
+       size of 1 when the element pointer is positioned at the
+       last element."
+
+<inquire current element type and size>
+pass/fail depending on (eltype = text  and
+                        intsz  = 0     and
+                        rlsz   = 2     and
+                        strsz  = 1)
+
+TEST: #SR 3
+      "<Inquire current element content> should return the
+       appropriate information contained in the data record
+       associated with text when the element pointer is
+       positioned at the last element."
+
+<inquire current element content>
+pass/fail depending on (intsz    = 0   and
+                        rlsz     = 2   and
+                        rlar(1)  = .16 and
+                        rlar(2)  = .2  and
+                        strsz    = 1   and
+                        lnstr(1) = 22  and
+                        strar(1) = 'PHIGS Validation Tests')
+
+Make sure <inquire element type and size> is independent of
+element pointer:
+<set element pointer> 3
+
+TEST: #SR 4
+      "<Inquire element type and size> should return text as the
+       element type and an integer array entry size of 0, real
+       array entry size of 2, and a string array entry size of 1
+       with text as the specified element of the open structure."
+
+<inquire element type and size> strid, 5
+pass/fail depending on (eltype = text  and
+                        intsz  = 0     and
+                        rlsz   = 2     and
+                        strsz  = 1)
+
+TEST: #SR 6
+      "<Inquire element content> should return the appropriate
+       information contained in the data record associated
+       with text as the specified element of the open structure."
+
+<inquire element content> strid, 5
+pass/fail depending on (intsz    = 0   and
+                        rlsz     = 2   and
+                        rlar(1)  = .16 and
+                        rlar(2)  = .2  and
+                        strsz    = 1   and
+                        lnstr(1) = 22  and
+                        strar(1) = 'PHIGS Validation Tests')
+
+*** *** *** ***   specified element = character height   *** *** *** ***
+
+TEST: #SR 1
+      "<Inquire current element type and size> should return
+       character height as the element type and an integer array
+       entry size of 0, real array entry size of 1, and a string
+       array entry size of 0 when the element pointer indicates a
+       character height element."
+
+<inquire current element type and size>
+pass/fail depending on (eltype  = character height and
+                        intsz   = 0                and
+                        rlsz    = 1                and
+                        strsz   = 0)
+
+TEST: #SR 3
+      "<Inquire current element content> should return the
+       appropriate information contained in the data record
+       associated with character height when indicated by
+       the element pointer."
+
+<inquire current element content>
+pass/fail depending on (intsz   = 0  and
+                        rlsz    = 1  and
+                        rlar(1) = .4 and
+                        strsz   = 0)
+
+Make sure <inquire element type and size> is independent of
+element pointer:
+<set element pointer> 0
+
+TEST: #SR 4
+      "<Inquire element type and size> should return character height
+       as the element type and an integer array entry size of 0, real
+       array entry size of 1, and a string array entry size of 0 with
+       character height as the specified element of the open structure."
+
+<inquire element type and size> strid, 3
+pass/fail depending on (eltype = character height and
+                        intsz  = 0                and
+                        rlsz   = 1                and
+                        strsz  = 0)
+
+TEST: #SR 6
+      "<Inquire element content> should return the appropriate
+       information contained in the data record associated with
+       character height as the specified element of the open
+       structure."
+
+<inquire element content> strid, 3
+pass/fail depending on (intsz   = 0   and
+                        rlsz    = 1   and
+                        rlar(1) = .4  and
+                        strsz   = 0)
+
+*** *** *** ***   specified element = NIL   *** *** *** ***
+
+TEST: #SR 2
+      "<Inquire current element type and size> should return NIL
+       as the element type and 0 as the length of all array entry
+       sizes when the element pointer is 0."
+
+<inquire current element type and size>
+pass/fail depending on (eltype  = NIL and
+                        intsz   = 0   and
+                        rlsz    = 0   and
+                        strsz   = 0)
+
+TEST: #SR 3
+      "<Inquire current element content> should return 0 as the
+       length of all array entry sizes associated with the data
+       record when the element pointer is 0."
+
+<inquire current element content>
+pass/fail depending on (intsz = 0 and
+                        rlsz  = 0 and
+                        strsz = 0)
+
+Make sure <inquire element type and size> is independent of
+element pointer:
+<set element pointer> 77
+
+TEST: #SR 5
+      "<Inquire element type and size> should return NIL as the
+       element type and 0 as the length of all array entry sizes
+       when the specified element position of the open structure
+       is 0."
+
+<inquire element type and size> strid, 0
+pass/fail depending on (eltype = NIL and
+                        intsz  = 0   and
+                        rlsz   = 0   and
+                        strsz  = 0)
+
+TEST: #SR 6
+      "<Inquire element content> should return 0 as the length of
+       all arrays associated with the data record when the
+       specified element position of the open structure is 0."
+
+<inquire element content> strid, 0
+pass/fail depending on (intsz = 0 and
+                        rlsz  = 0 and
+                        strsz = 0)
+
+<close structure>
+
+END PROGRAM 2

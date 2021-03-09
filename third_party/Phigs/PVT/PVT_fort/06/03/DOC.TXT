@@ -1,0 +1,632 @@
+TITLE: Workstation transformations
+
+MODULE#: 06.03
+
+DESCRIPTION: This module tests the functions provided by PHIGS
+to support the manipulation and inquiry of the entries for the
+workstation transformation in the WSL.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  The workstation transformation is specified by the
+description of the workstation window in NPC space (px-py-pz)
+and the workstation viewport in DC space (dx-dy-dz), both of
+which are rectangular parallelpipeds, oriented with their edges
+parallel to the axes of their coordinate system.
+#F
+#D 5.6.2 5.6.3 5.6.4 5.6.5
+#S 4.7.6/90/5 4.7.6/91/2
+#T P01/1 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+
+SR2.  <Inquire display space size 3> returns the 3D maximum
+display space size in both DC and addressable units, in all
+3 dimensions.
+#F 254
+#D 6.4
+#S n
+#T P01/1 P01/2 P01/3 P02/3
+
+SR3.  <Inquire display space size> returns the 2D maximum display
+space size in both DC and addressable units, in the dx and dy
+dimensions.
+#F 255
+#D 6.4
+#S n
+#T P01/3
+
+SR4.  DC units may be either METRES or OTHER.
+#F 254 255
+#D 6.3
+#S 4.7.6/90/6 6.7/320/1
+#T P01/2
+
+SR5.  <Open workstation> initializes the workstation window
+to [0,1] in all three dimensions, the workstation viewport to the
+3D maximum display volume size, and the `workstation
+transformation update state' to NOTPENDING.
+#F 3
+#D 5.6
+#S 4.7.6/92/4 6.6/316/1
+#T P02/1 P02/2 P02/3
+
+SR6.  <Set workstation window 3> sets the requested value of the
+workstation window in all 3 dimensions.
+#F 87
+#D 5.6.2
+#S 4.7.6/91/3
+#T P01/4 P01/5 P01/11
+
+SR7.  <Set workstation window> sets the requested value of the
+workstation window in the px and py dimensions, but leaves the pz
+limits unchanged.
+#F 88
+#D 5.6.2
+#S 4.7.6/91/3
+#T P01/8
+
+SR8.  The valid values for workstation window are between 0 and
+1, inclusive, in all 3 dimensions, with a positive size in the
+px and py dimensions, and a non-negative size in the pz dimension.
+#F 87 88
+#D 5.6.2 5.6.3
+#S 4.7.6/91/2 6.6/316/1
+#T P01/4 P01/5 P01/8 P01/11
+
+SR9.  <Set workstation viewport 3> sets the requested value of
+the workstation viewport in all 3 dimensions.
+#F 89
+#D 5.6.4
+#S 4.7.6/91/3
+#T P01/6 P01/7 P01/10
+
+SR10.  <Set workstation viewport> sets the requested value of the
+workstation viewport in the dx and dy dimensions, but leaves the
+dz limits unchanged.
+#F 90
+#D 5.6.4
+#S 4.7.6/91/3
+#T P01/9
+
+SR11.  For each dimension, the valid values for workstation
+viewport are between 0 and the maximum display space size in that
+dimension, with a positive size in the px and py dimensions, and
+a non-negative size in the pz dimension.
+#F 89 90
+#D 5.6.4 5.6.5
+#S 4.7.6/91/2
+#T P01/6 P01/7 P01/9 P01/10
+
+SR12.  <Inquire workstation transformation 3> returns the current
+and requested entries for the workstation window and viewport in
+all 3 dimensions.
+#F 239
+#D 5.6.2 5.6.3 5.6.4 5.6.5
+#S n
+#T P01/4 P01/6 P01/8 P01/9 P01/10 P01/11 P02/1 P02/2 P02/3 P03/3
+
+SR13.  <Inquire workstation transformation> returns the current
+and requested entries for the workstation window and viewport in
+the x and y dimensions.
+#F 240
+#D 5.6.2 5.6.3 5.6.4 5.6.5
+#S n
+#T P01/5 P01/7
+
+SR14.  The requested values of the workstation transformation are
+those most recently set.
+#F 87 88 89 90
+#D 5.6.2 5.6.4
+#S 4.7.6/91/4
+#T P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+
+SR15.  <Inquire workstation transformation> and <Inquire
+workstation transformation 3> return the `workstation
+transformation update state' of the workstation transformation
+as PENDING or NOTPENDING.
+#F 239 240
+#D 5.6.1
+#S 4.7.6/91/4 6.6/316/1
+#T P03/1 P03/4 P03/5 P04/1
+
+SR16.  The `workstation transformation update state' is PENDING
+if and only if the current values of the workstation
+transformation have not yet been copied from the requested
+values.
+#F 239 240
+#D 5.6
+#S 4.7.6/91/5
+#T P03/3
+
+SR17.  The `workstation transformation update state' is
+NOTPENDING if and only if the current values of the workstation
+transformation have been copied from the requested values.
+#F 239 240
+#D 5.6
+#S 4.7.6/91/7
+#T P03/5
+
+SR18.  If the `workstation transformation update state' is
+PENDING, then the `state of visual representation' for that
+workstation is DEFERRED.
+#F 239 240 221
+#D 5.6.1 5.8.4
+#S 4.7.6/91/5
+#T P03/2
+#X 05.02
+
+SR19.  If the `state of visual representation' for a workstation
+is CORRECT, then the `workstation transformation update state' is
+NOTPENDING.
+#F 239 240 221
+#D 5.6.1 5.8.4
+#S 4.7.6/91/7
+#T P03/4
+#X 05.02
+
+SR20.  For workstations of category INPUT, the `workstation
+transformation update state' is always NOTPENDING.
+#F 239 240
+#D 5.6.1
+#S 4.7.6/91/6
+#T P04/1
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+   87: pswkw3  <set workstation window 3>
+   88: pswkw   <set workstation window>
+   89: pswkv3  <set workstation viewport 3>
+   90: pswkv   <set workstation viewport>
+  221: pqdus   <inquire display update state>
+  239: pqwkt3  <inquire workstation transformation 3>
+  240: pqwkt   <inquire workstation transformation>
+  254: pqdsp3  <inquire display space size 3>
+  255: pqdsp   <inquire display space size>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.6  ...  workstation_transformation_entry
+  5.6.1  ...  workstation_transformation_update_state
+  5.6.2  ...  requested_workstation_window
+  5.6.3  ...  current_workstation_window
+  5.6.4  ...  requested_workstation_viewport
+  5.6.5  ...  current_workstation_viewport
+  5.8  ...  update_status
+  5.8.4  ...  state_of_visual_representation
+  6  ...  workstation_description_table
+  6.3  ...  device_coordinate_units
+  6.4  ...  maximum_display_space_size
+ 
+
+
+PROGRAM 1: Setting and inquiring the workstation transformation
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 1 2
+      "<Inquire display space size 3> should report the maximum
+       display volume size as positive numbers in both DC and
+       addressable units."
+<inquire display space size 3> to determine
+   dcun   = device coordinate units
+   dcmax  = maximum size in DC units
+   admax  = maximum size in addressable units
+dcinfo = (no error reported  and
+          dcmax, admax > 0 )
+pass/fail depending on (dcinfo)
+
+TEST: #SR 2 4
+      "The reported DC units should be either METRES or OTHER."
+pass/fail depending on (dcun = METRES or dcun = OTHER)
+
+TEST: #SR 1 2 3
+      "<Inquire display space size> should report the same values
+       as <inquire display space size 3> for DC units and for the
+       first two dimensions of the display space."
+<inquire display space size> to determine
+   dcun2  = device coordinate units
+   dcmx2 = maximum size in DC units
+   admx2 = maximum size in addressable units
+pass/fail depending on (dcun2  = dcun           and
+                        dcmx2 = dcmax for x-y  and
+                        admx2 = admax for x-y)
+
+Use some limit values, some non-limit
+<set workstation window 3>
+  pxlo = 0.0   pxhi = 1.0
+  pylo = 0.2   pyhi = 0.8
+  pzlo = 0.1   pzhi = 1.0
+
+TEST: #SR 1 6 8 12 14
+      "Requested workstation window should be reported by
+       <inquire workstation transformation 3> as most recently
+       set by <set workstation window 3>."
+<inquire workstation transformation 3> to determine requested 3D window:
+  rpxlo, rpxhi, rpylo, rpyhi, rpzlo, rpzhi
+pass/fail depending on (rpxlo = pxlo  and
+                        rpxhi = pxhi  and
+                        rpylo = pylo  and
+                        rpyhi = pyhi  and
+                        rpzlo = pzlo  and
+                        rpzhi = pzhi)
+
+TEST: #SR 1 6 8 13 14
+      "Requested workstation window should be reported by
+       <inquire workstation transformation> as most recently
+       set by <set workstation window 3>."
+<inquire workstation transformation> to determine requested 2D window:
+  rpxlo, rpxhi, rpylo, rpyhi
+pass/fail depending on (rpxlo = pxlo  and
+                        rpxhi = pxhi  and
+                        rpylo = pylo  and
+                        rpyhi = pyhi)
+
+if (not dcinfo) then
+   message: skipping viewport_3 tests because no DC information
+   goto end_viewport_3
+endif
+
+Use result of <inquire display space size 3> in following:
+
+Use some limit values, some non-limit:
+<set workstation viewport 3>
+  dxlo = 0.0*dcmax_x   dxhi = 0.4*dcmax_x
+  dylo = 0.8*dcmax_y   dyhi = 1.0*dcmax_y
+  dzlo = 0.0*dcmax_z   dzhi = 0.1*dcmax_z
+
+TEST: #SR 1 9 11 12 14
+      "Requested workstation viewport should be reported by
+       <inquire workstation transformation 3> as most recently
+       set by <set workstation viewport 3>."
+<inquire workstation transformation 3> to determine requested
+   3D viewport: rdxlo, rdxhi, rdylo, rdyhi, rdzlo, rdzhi
+pass/fail depending on (rdxlo = dxlo  and
+                        rdxhi = dxhi  and
+                        rdylo = dylo  and
+                        rdyhi = dyhi  and
+                        rdzlo = dzlo  and
+                        rdzhi = dzhi)
+
+TEST: #SR 1 9 11 13 14
+      "Requested workstation viewport should be reported by
+       <inquire workstation transformation> as most recently
+       set by <set workstation viewport 3>."
+<inquire workstation transformation> to determine requested
+   2D viewport: rdxlo, rdxhi, rdylo, rdyhi
+pass/fail depending on (rdxlo = dxlo  and
+                        rdxhi = dxhi  and
+                        rdylo = dylo  and
+                        rdyhi = dyhi)
+
+end_viewport_3:
+
+Use some limit values, some non-limit
+<set workstation window>
+  pxlo = 0.0   pxhi = 0.4
+  pylo = 0.6   pyhi = 1.0
+
+TEST: #SR 1 7 8 12 14
+      "Requested workstation window should be reported by
+       <inquire workstation transformation 3> as most recently
+       set by <set workstation window>, with z-values unchanged."
+<inquire workstation transformation 3> to determine requested 3D window:
+  rpxlo, rpxhi, rpylo, rpyhi, rpzlo, rpzhi
+pass/fail depending on (rpxlo = pxlo  and
+                        rpxhi = pxhi  and
+                        rpylo = pylo  and
+                        rpyhi = pyhi  and
+                        rpzlo = pzlo  and
+                        rpzhi = pzhi)
+
+if (not dcinfo) then
+   message: skipping viewport tests because no DC information
+   goto end_viewport
+endif
+
+Use result of <inquire display space size 3> in following:
+
+<set workstation viewport>
+  dxlo = 0.8*dcmax_x   dxhi = 0.9*dcmax_x
+  dylo = 0.1*dcmax_y   dyhi = 0.2*dcmax_y
+
+TEST: #SR 1 10 11 12 14
+      "Requested workstation viewport should be reported by
+       <inquire workstation transformation 3> as most recently
+       set by <set workstation viewport>, with z-values
+       unchanged."
+<inquire workstation transformation 3> to determine requested
+   3D viewport: rdxlo, rdxhi, rdylo, rdyhi, rdzlo, rdzhi
+pass/fail depending on (rdxlo = dxlo  and
+                        rdxhi = dxhi  and
+                        rdylo = dylo  and
+                        rdyhi = dyhi  and
+                        rdzlo = dzlo  and
+                        rdzhi = dzhi)
+
+end_viewport:
+
+if (not dcinfo) then
+   message: skipping flat_viewport tests because no DC information
+   goto end_flat_viewport
+endif
+
+Use result of <inquire display space size 3> in following:
+
+Set up viewport with zero thickness in z-dimension
+<set workstation viewport 3>
+  dxlo = 0.0*dcmax_x   dxhi = 0.4*dcmax_x
+  dylo = 0.8*dcmax_y   dyhi = 1.0*dcmax_y
+  dzlo = 0.3*dcmax_z   dzhi = dzlo
+
+TEST: #SR 1 9 11 12 14
+      "Requested flat workstation viewport should be reported by
+       <inquire workstation transformation 3> as most recently
+       set by <set workstation viewport 3>, with unchanged
+       window."
+<inquire workstation transformation 3> to determine requested
+   3D viewport: rdxlo, rdxhi, rdylo, rdyhi, rdzlo, rdzhi
+   3D window:   rpxlo, rpxhi, rpylo, rpyhi, rpzlo, rpzhi
+pass/fail depending on (rdxlo = dxlo  and  rpxlo = pxlo  and
+                        rdxhi = dxhi  and  rpxhi = pxhi  and
+                        rdylo = dylo  and  rpylo = pylo  and
+                        rdyhi = dyhi  and  rpyhi = pyhi  and
+                        rdzlo = dzlo  and  rpzlo = pzlo  and
+                        rdzhi = dzhi  and  rpzhi = pzhi)
+
+end_flat_viewport:
+
+Set up window with zero thickness in z-dimension
+<set workstation window 3>
+  pxlo = 0.1   pxhi = 1.0
+  pylo = 0.0   pyhi = 0.9
+  pzlo = 0.0   pzhi = pzlo
+
+TEST: #SR 1 6 8 12 14
+      "Requested flat workstation window should be reported by
+       <inquire workstation transformation 3> as most recently
+       set by <set workstation window 3>, with unchanged
+       viewport."
+<inquire workstation transformation 3> to determine requested
+   3D viewport: rdxlo, rdxhi, rdylo, rdyhi, rdzlo, rdzhi
+   3D window:   rpxlo, rpxhi, rpylo, rpyhi, rpzlo, rpzhi
+pass/fail depending on (rdxlo = dxlo  and  rpxlo = pxlo  and
+                        rdxhi = dxhi  and  rpxhi = pxhi  and
+                        rdylo = dylo  and  rpylo = pylo  and
+                        rdyhi = dyhi  and  rpyhi = pyhi  and
+                        rdzlo = dzlo  and  rpzlo = pzlo  and
+                        rdzhi = dzhi  and  rpzhi = pzhi)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Initialization of the workstation transformation
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+msgsuf = message suffix = "opening workstation."
+
+check_transform:
+<open workstation>
+
+<inquire workstation transformation 3> to determine
+   update state:          wtupd
+   requested 3D window:   rqwin
+   current   3D window:   cuwin
+   requested 3D viewport: rqvwp
+   current   3D viewport: cuvwp
+
+TEST: #SR 5 12
+      "The workstation transformation update state should be
+       initialized to NOTPENDING after " + msgsuf
+pass/fail depending on (wtupd = NOTPENDING)
+
+TEST: #SR 5 12
+      "The current and requested workstation window should be
+       initialized to [0,1] in all three dimensions after "
+       + msgsuf
+pass/fail depending on (rqwin = [0,1,0,1,0,1] and
+                        cuwin = [0,1,0,1,0,1] )
+
+TEST: #SR 2 5 12
+      "The current and requested workstation viewport should be
+       initialized to the 3D maximum display volume size after "
+       + msgsuf
+<inquire display space size 3> to determine
+   dcmax  = maximum size in DC units
+pass/fail depending on (rqvwp = [0,dcmax_x,0,dcmax_y,0,dcmax_z] and
+                        cuvwp = [0,dcmax_x,0,dcmax_y,0,dcmax_z] )
+
+alter workstation transformation:
+<set workstation window 3>
+   pxlo = rqwin_xlo / 2,  pxhi = rqwin_xhi / 2
+   pylo = rqwin_ylo / 2,  pyhi = rqwin_yhi / 2
+   pzlo = rqwin_zlo / 2,  pzhi = rqwin_zhi / 2
+
+<set workstation viewport 3>
+   pxlo = rqvwp_xlo / 2,  pxhi = rqvwp_xhi / 2
+   pylo = rqvwp_ylo / 2,  pyhi = rqvwp_yhi / 2
+   pzlo = rqvwp_zlo / 2,  pzhi = rqvwp_zhi / 2
+
+<close workstation>
+if (msgsuf = "opening workstation.") then
+   msgsuf = "re-opening workstation."
+   goto check_transform
+endif
+
+END PROGRAM 2
+
+
+PROGRAM 3: Update control of the workstation transformation
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<Set display update state> to WAIT, NIVE to try to defer
+   updates
+
+<inquire workstation transformation 3> to determine original
+   current state:
+   ocwin = 3D window
+   ocvwp = 3D viewport
+
+alter workstation transformation:
+<set workstation window 3>   = nwwin = ocwin / 2
+<set workstation viewport 3> = nwvwp = ocvwp / 2
+
+<inquire workstation transformation 3> to determine new
+   current state:
+   wtupd = workstation transformation update state
+   cuwin = new 3D window
+   cuvwp = new 3D viewport
+
+TEST: #SR 15
+      "The workstation transformation update state returned by
+       <inquire workstation transformation 3> should be either
+       PENDING or NOTPENDING."
+
+if (wtupd = NOTPENDING) then
+   pass
+   message: skipping PENDING test
+   goto notpending_test
+elseif (wtupd = PENDING) then
+   pass
+else
+   fail
+   goto notpending_test
+endif
+
+pending_test:
+
+TEST: #SR 18
+      "If the workstation transformation update state is PENDING,
+       then the state of visual representation for that
+       workstation should be DEFERRED."
+<inquire display update state> to determine
+   svr = state of visual representation
+pass/fail depending on (svr = DEFERRED)
+
+TEST: #SR 12 16
+      "If the workstation transformation update state returned by
+       <inquire workstation transformation 3> is PENDING,
+       then the current values of the workstation transformation
+       should be the same as they were before the requested
+       values were last set."
+pass/fail depending on ( cuwin = ocwin and cuvwp = ocvwp )
+
+notpending_test:
+
+<update workstation> to force update of workstation transformation
+
+<inquire display update state> to determine
+   svr = state of visual representation
+if (svr = CORRECT) then
+   TEST: #SR 15 19
+         "If the state of visual representation for a workstation
+          is CORRECT, then the workstation transformation update
+          returned by <inquire workstation transformation>
+          state should be NOTPENDING."
+   <inquire workstation transformation> to determine
+      wtupd = workstation transformation update state
+   pass/fail depending on (wtupd = NOTPENDING)
+else
+   message: skipping test that CORRECT implies NOTPENDING
+endif
+
+<inquire workstation transformation 3> to determine new
+   current state:
+   wtupd = workstation transformation update state
+   cuwin = new 3D window
+   cuvwp = new 3D viewport
+
+if (wtupd not= NOTPENDING) then
+   message: skipping NOTPENDING test
+   goto end_notpending_test
+endif
+
+TEST: #SR 15 17
+      "If the workstation transformation update state returned by
+       <inquire workstation transformation 3> is NOTPENDING, then
+       the current values of the workstation transformation
+       should be the same as the most recently set requested
+       values."
+pass/fail depending on ( cuwin = nwwin and cuvwp = nwvwp )
+
+end_notpending_test:
+
+END PROGRAM 3
+
+
+PROGRAM 4: Update status of INPUT workstation transformation
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+linwk = list of accessible workstations of category INPUT
+
+if (linwk is empty) then
+   message: no INPUT workstations to be tested
+   goto done
+endif
+
+TEST: #SR 15 20
+      "For all workstations of category INPUT, the workstation
+       transformation update state should always be NOTPENDING
+       and reported as such."
+
+for each iwk in linwk
+   <open workstation> iwk
+   <Set display update state> to WAIT, NIVE to try to defer
+      updates
+
+   <inquire workstation transformation 3> to determine original
+      current state:
+      ocwin = 3D window
+      ocvwp = 3D viewport
+
+   alter workstation transformation:
+   <set workstation window 3>   = nwwin = ocwin / 2
+   <set workstation viewport 3> = nwvwp = ocvwp / 2
+
+   <inquire workstation transformation 3> to determine new
+      current state:
+      wtupd = workstation transformation update state
+      cuwin = current 3D window
+      cuvwp = current 3D viewport
+   <close workstation> iwk
+
+   if (wtupd not= NOTPENDING) then
+      fail
+      message about wtupd
+      goto done
+   endif
+
+   if ( cuwin = nwwin   and
+        cuvwp = nwvwp  )   then
+      OK so far
+   else
+      fail
+      message about current values
+      goto done
+   endif
+
+next iwk
+pass
+
+done:
+
+END PROGRAM 4

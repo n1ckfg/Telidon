@@ -1,0 +1,43 @@
+2012-02-03:
+   Add clipping for picking according to viewrep volume
+
+--------------------------------------------------------------------------------
+2012-01-14:
+   Break out creation of rendering context from phg_wsx_setup tool or,
+   create another method for workstations using widgets
+
+--------------------------------------------------------------------------------
+wsb.c: 599
+    phg_wsb_open_ws()
+        ws->out_ws.model.b.cssh = css
+ws.c: 57
+
+--------------------------------------------------------------------------------
+
+Noticed segmentation fault when using view zero for example1
+Noticed segmentation fault when using view zero for example2
+Fixed!
+
+--------------------------------------------------------------------------------
+
+phg_ws.c: all functions from popen_ws and ahead need to handler errors
+          by checking PHIGS stat list
+Added checks for all functions
+Fixed!
+
+Need to add info in phg_dt? Yes! Added to ws_type.
+
+phg_col: Add error checks
+
+--------------------------------------------------------------------------------
+
+HLHSR ID:
+Use glReadPixels and glDrawPixels with format GL_DEPTH_COMPONENT
+to safe/load depth buffer
+
+Use glClear(GL_DEPTH_BUFFER_BIT) to clear
+
+Use scratch buffer for storing z-buffer.
+
+--------------------------------------------------------------------------------
+

@@ -1,0 +1,118 @@
+TITLE: Conflict resolution flags
+
+
+MODULE#: 03.02
+
+
+DESCRIPTION: This module tests the behavior of the <set conflict
+resolution> and <inquire conflict resolution> functions.
+
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  Immediately after <open phigs>, the archival conflict
+resolution flag is UPDATE and the retrieval conflict resolution
+flag is ABANDON.
+#F 1 212
+#D 4.7 4.8
+#S 6.5/314/1
+#T P01/1 P01/3
+
+SR2.  <Set conflict resolution> individually sets the conflict
+resolution flags to MAINTAIN, ABANDON, or UPDATE.
+#F 140
+#D 4.7 4.8
+#S 4.4.7/32/7 6.5/314/1
+#T P01/2
+
+SR3.  <Inquire conflict resolution> returns the current value of
+the conflict resolution flags.
+#F 212
+#D 4.7 4.8
+#S 4.4.7/32/7
+#T P01/1 P01/2 P01/3
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    1: popph   <open phigs>
+  140: pscnrs  <set conflict resolution>
+  212: pqcnrs  <inquire conflict resolution>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.7  ...  archival_conflict_resolution_flag
+  4.8  ...  retrieval_conflict_resolution_flag
+ 
+
+
+PROGRAM 1: Setting and inquiring conflict resolution flags
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Throughout, use variable names:
+arcrst : archival conflict resolution flag, as set
+recrst : retrieval conflict resolution flag, as set
+arcriq : archival conflict resolution flag, as inquired
+recriq : retrieval conflict resolution flag, as inquired
+
+<open phigs>
+
+TEST: #SR 1 3
+      "Immediately after <open phigs>, the archival conflict
+       resolution flag should be reported as UPDATE and the
+       retrieval conflict resolution flag should be reported as
+       ABANDON."
+<inquire conflict resolution>  to determine:
+   arcriq = current archival conflict resolution flag
+   recriq = current retrieval conflict resolution flag
+pass/fail depending on (arcriq = UPDATE and recriq = ABANDON)
+
+
+TEST: #SR 2 3
+      "It should be possible to set and inquire the conflict
+       resolution flags to all combinations of valid values:
+       MAINTAIN, ABANDON, and UPDATE."
+
+do arcrst = MAINTAIN, ABANDON, UPDATE
+   do recrst = MAINTAIN, ABANDON, UPDATE
+      <set conflict resolution> with arcrst, recrst
+      <inquire conflict resolution> to determine:
+         arcriq = current archival conflict resolution flag
+         recriq = current retrieval conflict resolution flag
+      if (arcrst = arcriq and recrst = recriq) then
+         OK so far
+      else
+         informative message about failure:
+            arcrst, recrst, arcriq, recriq
+         fail
+         goto end_set_loop
+      endif
+   loop
+loop
+pass
+end_set_loop:
+
+<set conflict resolution> with MAINTAIN, MAINTAIN
+
+<close phigs>
+
+<open phigs>
+
+TEST: #SR 1 3
+      "Immediately after re-opening phigs, the archival conflict
+       resolution flag should be reported as UPDATE and the
+       retrieval conflict resolution flag should be reported as
+       ABANDON."
+<inquire conflict resolution>  to determine:
+   arcriq = current archival conflict resolution flag
+   recriq = current retrieval conflict resolution flag
+pass/fail depending on (arcriq = UPDATE and recriq = ABANDON)
+
+<close phigs>
+
+END PROGRAM 1

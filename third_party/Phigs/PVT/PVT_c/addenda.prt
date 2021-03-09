@@ -1,0 +1,57 @@
+Addenda to PVT documentation
+----------------------------
+
+These notes reflect additions and changes to version 2.1 of the PVT.
+The resulting version is 2.2.
+
+========================================================================
+10-jul-1996
+
+In LAYER/ninst.c, there may be implementor-defined initialization.
+The code is correct as far as it goes, but implementors are free
+to enhance it as needed by the implementation.  This is a
+consequence of the standard leaving Pstring_data (partially)
+implementation-dependent. The PVT documentation should reflect
+this in the future, probably in the User Guide, section 3.2.  The
+problem is that the PHIGS/C standard (see p. 35) does not define
+any fields within the record except in_buf_size and init_pos,
+which is already filled in.
+
+========================================================================
+11-jul-1996
+
+In c/LAYER nqcets.c, nqceco.c, nqets.c, and nqeco.c there may be
+implementor-defined setting of sl (dimension of string array) and str
+returned for the gdp and gdp3 primitive.  Since the answer depends on
+the data returned by pinq_cur_elem_content and since the format
+(Pgdp_data and Pgdp3_data) are implementation-defined, the equivalent
+sl is not computable in a standard way.
+
+========================================================================
+18-jul-1996
+
+Changed c/F2C/f2c.h to make integer equivalent to int, instead of long
+int, but this is user-modifiable.  Users may need to change the
+typedef declaration of the named types in f2c.h (such as "logical" and
+"integer") to be compatible with their systems.  E.g. the default
+typedef assumes that Fortran's "integer" = C's "int".
+
+========================================================================
+18-jul-1996
+
+In general, more methodical labelling of changeable source code:
+
+USERMOD: Code which may legally be changed by individual users of the
+PVT, including PHIGS implementors.  All user-modifiable code is marked
+with "USERMOD" in both Fortran and C for easier identification.
+Suggest doing: "grep USERMOD *.c" or "grep USERMOD *.f" in PVT root
+and V2LIB to get all possible places code may be modified.
+
+MANUAL: C code which has to be manually altered by NIST, folowing
+automatic generation of C from Fortran.
+
+SUNCODE: Code which has been changed to a non-standard form in order
+to run on SunPHIGS.  This should be only in the work subtree, not the
+std subtree.
+
+========================================================================

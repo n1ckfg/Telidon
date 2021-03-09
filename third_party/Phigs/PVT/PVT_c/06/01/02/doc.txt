@@ -1,0 +1,4253 @@
+TITLE: Modelling transformations in the CSS
+
+MODULE#: 06.01.02
+
+DESCRIPTION: This module tests the ability of the programmer to
+set up elements in the CSS that control modelling transformations
+and their behavior during traversal.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** *** ***   Local transformations   *** *** *** *** ***
+
+SR1.   <Set local transformation 3> creates a set local
+transformation 3 element in the CSS.
+#F 75
+#D 7.3.3.1
+#S 4.7.2/77/7
+#T P01/1 P01/2 P01/3 P01/4 P09/1
+
+SR2.   If current element is set local transformation 3 then
+<inquire current element type and size> returns the element type
+as set local transformation 3 and the appropriate element size.
+#F 303
+#D 7.3.3.1
+#S 4.4.4/29/5
+#T P01/1 P01/3
+
+SR3.   If current element is set local transformation 3 then
+<inquire current element content> returns the appropriate data
+for set local transformation 3.
+#F 304
+#D 7.3.3.1
+#S 4.4.4/29/5
+#T P01/2 P01/4
+
+SR4.   <Set local transformation> creates a set local
+transformation element in the CSS.
+#F 76
+#D 7.3.3.2
+#S 4.7.2/77/7
+#T P01/5 P01/6 P09/2 P10/1 P10/3
+
+SR5.   If current element is set local transformation then
+<inquire current element type and size> returns the element type
+as set local transformation and the appropriate element size.
+#F 303
+#D 7.3.3.2
+#S 4.4.4/29/5
+#T P01/5
+
+SR6.   If current element is set local transformation then
+<inquire current element content> returns the appropriate data
+for set local transformation.
+#F 304
+#D 7.3.3.2
+#S 4.4.4/29/5
+#T P01/6
+
+SR7.   The valid values for composition type in <set local
+transformation 3> and <set local transformation> are
+PRECONCATENATE, POSTCONCATENATE, and REPLACE.
+#F 75 76
+#D 7.3.3.1 7.3.3.2
+#S 4.7.2/77/7
+#T P01/2 P01/4 P01/6 P10/1
+
+SR8.  When a set local transformation 3 element is traversed,
+its 4x4 matrix, T, is combined with the current local modelling
+transformation, L, to produce the new value of the current local
+modelling transformation, L', according to the specified
+composition type:
+REPLACE         : L' = T
+PRECONCATENATE  : L' = L x T
+POSTCONCATENATE : L' = T x L
+#F 75
+#D 3.12.2 7.3.3.1
+#S 4.7.2/77/7ff
+#T P04/2 P04/3 P04/4 P04/6 P04/8 P08/3 P09/1 P09/2 P10/1 P10/3
+
+*** *** *** ***   Global transformations   *** *** *** ***
+
+SR9.   <Set global transformation 3> creates a set global
+transformation 3 element in the CSS.
+#F 77
+#D 7.3.3.3
+#S 4.7.2/78/2
+#T P02/1 P02/2 P09/1
+
+SR10.   If current element is set global transformation 3 then
+<inquire current element type and size> returns the element type
+as set global transformation 3 and the appropriate element size.
+#F 303
+#D 7.3.3.3
+#S 4.4.4/29/5
+#T P02/1
+
+SR11.   If current element is set global transformation 3 then
+<inquire current element content> returns the appropriate data
+for set global transformation 3.
+#F 304
+#D 7.3.3.3
+#S 4.4.4/29/5
+#T P02/2
+
+SR12.   <Set global transformation> creates a set global
+transformation element in the CSS.
+#F 78
+#D 7.3.3.4
+#S 4.7.2/78/2
+#T P02/3 P02/4 P09/2 P10/2 P10/3
+
+SR13.   If current element is set global transformation then
+<inquire current element type and size> returns the element type
+as set global transformation and the appropriate element size.
+#F 303
+#D 7.3.3.4
+#S 4.4.4/29/5
+#T P02/3
+
+SR14.   If current element is set global transformation then
+<inquire current element content> returns the appropriate data
+for set global transformation.
+#F 304
+#D 7.3.3.4
+#S 4.4.4/29/5
+#T P02/4
+
+SR15.  When a set global transformation 3 element is traversed,
+its 4x4 matrix becomes the new value of the current global
+modelling transformation.
+#F 77
+#D 3.12.1 7.3.3.3
+#S 4.7.2/78/2
+#T P04/5 P04/7 P08/1 P08/2 P09/1 P09/2 P10/2 P10/3
+
+*** *** *** ***   Composite transformation   *** *** *** ***
+
+SR16.  During traversal, the composite modelling transformation
+is the current global modelling transformation X the current
+local modelling transformation.
+#F 75 76 77 78
+#D 3.12.1 3.12.2
+#S 4.7.2/77/3ff
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P04/6 P04/7 P04/8 P05/1 P05/2 P05/3
+   P05/4 P05/5 P05/6 P05/7 P05/8 P05/9 P09/1 P09/2 P10/1 P10/2 P10/3
+
+SR17.  During traversal, the composite modelling transformation
+(C) is applied to the modelling coordinates (MC) of graphical
+output structure elements to generate graphical output primitives
+in world coordinates (WC), as follows:
+| WCx*w |   | C11 C12 C13 C14 |   | MCx |
+| WCy*w | = | C21 C22 C23 C24 | X | MCy |
+| WCz*w |   | C31 C32 C33 C34 |   | MCz |
+|     w |   | C41 C42 C43 C44 |   | MC1 |
+where WCx,y,z denote the values of the world coordinates and w is
+a non-zero scale factor.
+#F 9-24 75-78
+#D 3.12.1 3.12.2 7.3.1
+#S 4.7.2/77/3
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P04/6 P04/7 P04/8 P05/1 P05/2 P05/3
+   P05/4 P05/5 P05/6 P05/7 P05/8 P05/9 P08/1 P08/2 P08/3 P09/1 P09/2
+   P10/1 P10/2 P10/3
+#C  In homogeneous coordinates, the first three values in the
+resulting column vector must be divided by the fourth value to
+yield the x,y,z location in WC.
+
+*** *** ***   Modelling transformation: 2D vs. 3D   *** *** ***
+
+SR18.  When a set local or global transformation element is
+traversed, a 4x4 matrix is derived from its specified 3x3 matrix
+as described below, and is then processed just as the 4x4 matrix
+of, respectively, a set local or global transformation 3
+element.
+| a b 0 c |                | a b c |
+| d e 0 f |  derived from  | d e f |
+| 0 0 1 0 |                | g h j |
+| g h 0 j |
+#F 76 78
+#D 3.12.1 3.12.2 7.3.3.1 7.3.3.2 7.3.3.3 7.3.3.4
+#S n
+#T P04/7 P04/8 P08/1 P08/3 P09/2 P10/1 P10/2 P10/3
+
+*** *** ***   Modelling transformation: Network traversal   *** *** ***
+
+SR19.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current global and local modelling transformations are both set
+to the identity matrix.
+#F 311 312
+#D 2.23.1 2.23.2 3.12.1 3.12.2
+#S 4.4.3/26/2 4.4.3/28/1 4.7.2/77/4 6.3/310/1
+#T P04/1 P05/1 P10/1 P10/2 P10/3
+
+SR20.  As part of the PHIGS traversal state list, the current
+global and local modelling transformations are saved by execute
+structure and then, upon completion of the sub-traversal of the
+invoked network, restored to their former value.
+#F 113
+#D 3.12.1 3.12.2
+#S 4.4.3/28/1 4.7.2/77/6
+#T P05/1 P05/6 P05/7 P10/1 P10/2 P10/3
+
+SR21.  At the start of a sub-traversal caused by execute
+structure, after its value has been saved, the current global
+modelling transformation for the newly entered structure is set
+to the composite modelling transformation currently in effect for
+the calling structure.
+#F 113
+#D 3.12.1
+#S n
+#T P05/2 P05/3 P05/4 P05/5 P05/8 P05/9 P10/1 P10/2 P10/3
+
+SR22.  At the start of a sub-traversal caused by execute
+structure, after its value has been saved, the current local
+modelling transformation for the newly entered structure is set
+to the identity matrix.
+#F 113
+#D 3.12.2
+#S n
+#T P05/2 P05/3 P05/4 P05/5 P05/8 P05/9 P10/1 P10/2 P10/3
+
+*** *** ***   Modelling Clipping elements in CSS   *** *** ***
+
+SR23.   <Set modelling clipping volume 3> creates a set modelling
+clipping volume 3 element in the CSS.
+#F 79
+#D 7.3.3.5
+#S 4.7.2/78/4
+#T P03/1 P03/2 P11/1 P11/2 P12/1 P12/2 P13/1 P13/2 P13/3 P14/1 P15/1
+
+SR24.   If current element is set modelling clipping volume 3
+then <inquire current element type and size> returns the element
+type as set modelling clipping volume 3 and the appropriate
+element size.
+#F 303
+#D 7.3.3.5
+#S 4.4.4/29/5
+#T P03/1
+
+SR25.   If current element is set modelling clipping volume 3
+then <inquire current element content> returns the appropriate
+data for set modelling clipping volume 3.
+#F 304
+#D 7.3.3.5
+#S 4.4.4/29/5
+#T P03/2
+
+SR26.   <Set modelling clipping volume> creates a set modelling
+clipping volume element in the CSS.
+#F 80
+#D 7.3.3.6
+#S 4.7.2/78/4
+#T P03/3 P03/4 P13/1 P13/2 P13/3 P15/1
+
+SR27.   If current element is set modelling clipping volume then
+<inquire current element type and size> returns the element type
+as set modelling clipping volume and the appropriate element
+size.
+#F 303
+#D 7.3.3.6
+#S 4.4.4/29/5
+#T P03/3
+
+SR28.   If current element is set modelling clipping volume then
+<inquire current element content> returns the appropriate data
+for set modelling clipping volume.
+#F 304
+#D 7.3.3.6
+#S 4.4.4/29/5
+#T P03/4
+
+SR29.   <Set modelling clipping indicator> creates a set
+modelling clipping indicator element in the CSS.
+#F 81
+#D 7.3.3.7
+#S 4.7.2/79/3
+#T P03/11 P03/12 P03/13 P03/14 P12/1 P12/2 P15/2
+
+SR30.   If current element is set modelling clipping indicator
+then <inquire current element type and size> returns the element
+type as set modelling clipping indicator and the appropriate
+element size.
+#F 303
+#D 7.3.3.7
+#S 4.4.4/29/5
+#T P03/11 P03/13
+
+SR31.   If current element is set modelling clipping indicator
+then <inquire current element content> returns the appropriate
+data for set modelling clipping indicator.
+#F 304
+#D 7.3.3.7
+#S 4.4.4/29/5
+#T P03/12 P03/14
+
+SR32.   <Restore modelling clipping volume> creates a restore
+modelling clipping volume element in the CSS.
+#F 82
+#D 7.3.3.8
+#S 4.7.2/79/2
+#T P03/15 P03/16
+
+SR33.   If current element is restore modelling clipping volume
+then <inquire current element type and size> returns the element
+type as restore modelling clipping volume and the appropriate
+element size.
+#F 303
+#D 7.3.3.8
+#S 4.4.4/29/5
+#T P03/15
+
+SR34.   If current element is restore modelling clipping volume
+then <inquire current element content> returns the appropriate
+data for restore modelling clipping volume.
+#F 304
+#D 7.3.3.8
+#S 4.4.4/29/5
+#T P03/16
+
+*** *** ***   Modelling Clipping Facilities   *** *** ***
+
+SR35.   <Inquire modelling clipping facilities> reports the list
+of available modelling clipping operators and the maximum number
+of distinct planes for the current modelling clipping volume that
+can be used during traversal.
+#F 207
+#D 2.23.5 2.23.6 2.23.7
+#S n
+#T P03/5 P03/6 P08/3 P11/1 P11/2 P11/3 P11/4
+
+SR36.   The list of available modelling clipping operators includes
+1 and 2.
+#F 79 80 207
+#D 2.23.6 2.23.7
+#S 4.7.2/79/1 4.14/113/3 4.14/114/2 6.3/311/4
+#T P03/5
+
+SR37.   The maximum number of distinct planes supported for the
+current modelling clipping volume is at least 6.
+#F 79 80 207
+#D 2.23.5
+#S 4.14/113/3 4.14/114/2 6.3/310/1
+#T P03/6
+
+*** *** ***   Setting Modelling Clipping Volume   *** *** ***
+
+SR38.   All integers are valid values for the modelling clipping
+operator when creating a set modelling clipping volume element in
+the CSS.
+#F 79 80
+#D 7.3.3.5 7.3.3.6
+#S n
+#T P03/7 P03/8 P13/1 P13/2 P13/3
+
+SR39.   Any non-negative number of half-spaces may be specified
+when creating a set modelling clipping volume element in the CSS.
+#F 79 80
+#D 7.3.3.5 7.3.3.6
+#S n
+#T P03/9 P03/10 P12/3
+
+SR40.  A set modelling clipping volume 3 element specifies each
+half-space in MC by designating a point on the boundary plane,
+and a vector normal to the plane, pointing into the half-space.
+#F 79
+#D 7.3.3.5
+#S 4.7.2/78/4
+#T P06/2 P06/3 P06/4 P06/5 P06/6 P07/1 P07/2 P07/3 P07/4 P07/5 P07/6
+   P07/7 P07/8 P07/9 P07/10 P08/1 P08/2 P08/3 P11/1 P11/2 P11/3 P11/4
+   P12/1 P12/2 P13/1 P13/2 P13/3 P14/1 P15/1 P16/1 P16/2 P17/1 P17/2
+   P17/3 P17/4 P18/1 P18/2 P18/3 P18/4
+
+SR41.  The 3D volume in MC specified by a set modelling clipping
+volume 3 element is the set of all points, P, such that all the
+specified half-spaces contain P, i.e. their intersection.
+#F 79
+#D 7.3.3.5
+#S 4.7.2/78/4 4.7.2/78/6
+#T P06/2 P06/3 P06/4 P06/5 P06/6 P11/1 P11/2 P12/1 P12/2 P12/3 P15/1
+   P16/1 P16/2 P17/1 P17/2 P17/3 P17/4 P18/1 P18/2 P18/3 P18/4
+#C  In the vacuous case where zero half-spaces are specified, the
+volume is therefore all of MC space.
+
+SR42.  When a set modelling clipping volume 3 element is
+traversed, its 3D volume in MC is transformed by the composite
+modelling transform to yield the specified WC clipping volume.
+#F 79
+#D 3.12.1 3.12.2 7.3.3.5
+#S 4.7.2/78/5
+#T P06/1 P06/2 P06/3 P06/4 P06/5 P06/6 P08/1 P08/2 P08/3 P11/1 P11/2
+   P12/1 P12/2 P15/1 P16/1 P16/2 P17/1 P17/2 P17/3 P17/4 P18/1 P18/2
+   P18/3 P18/4
+
+SR43.  When a realizable set modelling clipping volume 3 element is
+traversed, its specified WC volume, S, is combined with the
+current modelling clipping volume, T, to produce the new value of
+the current modelling clipping volume T', according to the
+specified operator value:
+Operator
+--------
+1 (replace)   : T' = S
+2 (intersect) : T' = T AND S
+#F 79
+#D 3.12.3 7.3.3.5
+#S 4.7.2/78/4 4.7.2/78/7ff
+#T P06/2 P06/3 P06/4 P06/5 P06/6 P07/1 P07/2 P07/3 P07/4 P07/5 P07/6
+   P07/7 P07/8 P07/9 P07/10 P08/1 P08/2 P08/3 P11/1 P11/2 P12/3 P13/1
+   P13/2 P13/3 P14/1 P15/1 P16/1 P16/2 P17/1 P17/2 P17/3 P17/4 P18/1
+   P18/2 P18/3 P18/4
+
+SR44.  The effect on the current modelling clipping volume of all
+entries greater than 2 in the list of available modelling
+clipping operators is as defined in the ISO register.
+#F 79
+#D 2.23.7 3.12.3 7.3.3.5
+#S 4.7.2/79/1
+#T P11/3
+
+SR45.  The effect on the current modelling clipping volume of all
+entries less than 1 in the list of available modelling clipping
+operators is as defined in the implementor documentation.
+#F 79
+#D 2.23.7 3.12.3 7.3.3.5
+#S 4.7.2/79/1
+#T P11/4
+
+SR46.  When a set modelling clipping volume 3 element is
+traversed and its operator is not in the list of available
+modelling clipping operators, the element is ignored.
+#F 79
+#D 2.23.7 3.12.3 7.3.3.5
+#S n
+#T P13/1
+
+SR47.  When a set modelling clipping volume 3 element is traversed and
+the current modelling clipping volume that would normally result
+exceeds the maximum number of distinct planes, the element is ignored.
+#F 79
+#D 2.23.5 3.12.3 7.3.3.5
+#S n
+#T P13/2
+#C See defect report 9592-1/024
+
+SR48.  When a set modelling clipping volume 3 element is
+traversed and any of its half-spaces is degenerate, the element
+is ignored.
+#F 79
+#D 3.12.3 7.3.3.5
+#S n
+#T P13/3
+#C A half-space is degenerate iff its normal vector = [0,0,0].
+
+SR49.  When a set modelling clipping volume element is traversed,
+a 3D volume in MC is derived from the specified 2D volume in MC
+by setting the z-coordinate of each point and normal vector to 0
+and is then processed just as the 3D volume of a set modelling
+clipping volume 3 element.
+#F 80
+#D 7.3.3.5 7.3.3.6
+#S n
+#T P06/6 P08/1 P08/3 P12/2 P15/1
+
+SR50.  At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current modelling clipping volume is all of WC space.
+#F 311 312
+#D 2.23.3 3.12.3
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P06/1 P06/2 P06/4 P15/1
+
+SR51.  As part of the PHIGS traversal state list, the current
+modelling clipping volume is saved by execute structure and then,
+upon completion of the sub-traversal of the invoked network,
+restored to its former value.
+#F 113
+#D 3.12.3
+#S 4.4.3/28/1
+#T P07/2 P07/3 P07/5 P07/6 P07/8 P14/1 P15/1
+
+*** *** *** ***   Effect of Clipping Indicator   *** *** *** ***
+
+SR52.   The valid values for clipping indicator in <set modelling
+clipping indicator> are CLIP and NOCLIP.
+#F 81
+#D 7.3.3.7
+#S 4.7.2/79/3
+#T P03/12 P03/14 P12/1 P12/2 P15/2
+
+SR53.  When a set modelling clipping indicator element is
+traversed, the current modelling clipping indicator is set to its
+specified value (CLIP or NOCLIP).
+#F 81
+#D 3.12.4 7.3.3.7
+#S 4.7.2/79/3
+#T P12/1 P12/2 P15/2 P16/1 P16/2 P17/1 P17/2 P17/3 P17/4 P18/1 P18/2
+   P18/3 P18/4
+
+SR54. At the start of the top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current modelling clipping indicator is set to NOCLIP.
+#F
+#D 2.23.4 3.12.4
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P15/2
+
+SR55. As part of the PHIGS traversal state list, the current
+modelling clipping indicator is saved by execute structure and
+then, upon completion of the sub-traversal of the invoked
+network, restored to its former value.
+#F 113
+#D 3.12.4
+#S 4.4.3/28/1
+#T P15/2
+
+*** ***   Effect of Restore Modelling Clipping Volume   *** ***
+
+SR56.  When a restore modelling clipping volume element is traversed,
+the current modelling clipping volume is reset to the value inherited
+by the structure being traversed.
+#F 82
+#D 3.12.3 7.3.3.8
+#S 4.7.2/79/2
+#T P07/9 P07/10 P14/1
+
+*** *** ***   Appearance of clipped primitives   *** *** ***
+
+SR57.  Except as noted below, when a graphical output primitive
+is generated in WC from a structure element during traversal, any
+part of it lying outside the current modelling clipping volume in
+WC space is eligible for modelling clipping; all other parts are
+ineligible.
+#F 9-24 79 80 82
+#D 3.12.1 3.12.2 3.12.3 7.3.1
+#S 4.5.5/48/2 4.7.2/78/3
+#T P06/2 P06/3 P06/4 P06/5 P06/6 P07/1 P07/2 P07/3 P07/4 P07/5 P07/6
+   P07/7 P07/8 P07/9 P07/10 P08/1 P08/2 P08/3 P11/3 P11/4 P15/1 P15/2
+   P16/1 P16/2 P17/1 P17/2 P17/3 P17/4 P18/1 P18/2 P18/3 P18/4
+
+SR58.  The portions of graphical primitives which are eligible
+for modelling clipping are model-clipped (not visible) if and
+only if the value of the current modelling clipping indicator is
+CLIP.
+#F 81
+#D 3.12.4 7.3.1
+#S 4.7.2/79/3
+#T P12/1 P12/2 P15/1 P15/2 P16/1 P16/2 P17/1 P17/2 P17/3 P17/4 P18/1
+   P18/2 P18/3 P18/4
+#C Primitives are subject to viewing and workstation clipping,
+as well as modelling clipping.
+
+SR59.  If the WC position of a polymarker is outside the current
+modelling clipping volume, the entire polymarker is model-clipped.
+#F 11 12
+#D 3.12.3 3.12.4 7.3.1.3 7.3.1.4
+#S 4.5.4/44/4
+#T P11/1 P11/2 P12/1 P12/2 P15/1 P15/2 P16/2
+
+SR60.  In CHAR precision, any text character lying wholly within
+the current modelling clipping volume is not model-clipped and
+any text character lying wholly outside is model-clipped;
+in STRING precision, clipping is workstation dependent.
+#F 13 14
+#D 3.12.3 3.12.4 7.3.1.5 7.3.1.6
+#S 4.5.5/47/5
+#T P17/2
+#C In STROKE precision, modelling clipping is applied exactly, as
+described under SR57.
+
+SR61.  If the WC position of its reference point is outside the
+current modelling clipping volume, the entire annotation text
+primitive, including style components, is model-clipped.
+#F 15 16
+#D 3.12.3 3.12.4 7.3.1.7 7.3.1.8
+#S 4.5.6/55/6
+#T P17/3
+
+SR62.  If the WC position of its reference point is inside the
+current modelling clipping volume, that part of the annotation
+text primitive also inside the current modelling clipping volume
+is not model-clipped.
+#F 15 16
+#D 3.12.3 3.12.4 7.3.1.7 7.3.1.8
+#S 4.5.6/55/6
+#T P17/3 P17/4
+#C The manner in which modelling clipping is applied to that part
+of the annotation text primitive outside the current modelling
+clipping volume is workstation dependent.
+
+SR63.  When fill areas or fill area sets using interior style
+HOLLOW are model-clipped, the bounding polyline is drawn along
+the boundaries created by clipping.
+#F 17 18 19 20
+#D 3.12.3 3.12.4 7.3.1.9 7.3.1.10 7.3.1.11 7.3.1.12
+#S 4.5.8/58/4
+#T P18/1
+
+SR64.  For fill area sets, new boundaries created by modelling
+clipping are not displayed as edges.
+#F 19 20
+#D 3.12.3 3.12.4 7.3.1.11 7.3.1.12
+#S 4.5.1/35/7 4.5.9/62/6 4.5.9/62/11
+#T P18/3
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    9: ppl3    <polyline 3>
+   10: ppl     <polyline>
+   11: ppm3    <polymarker 3>
+   12: ppm     <polymarker>
+   13: ptx3    <text 3>
+   14: ptx     <text>
+   15: patr3   <annotation text relative 3>
+   16: patr    <annotation text relative>
+   17: pfa3    <fill area 3>
+   18: pfa     <fill area>
+   19: pfas3   <fill area set 3>
+   20: pfas    <fill area set>
+   21: pca3    <cell array 3>
+   22: pca     <cell array>
+   23: pgdp3   <generalized drawing primitive 3>
+   24: pgdp    <generalized drawing primitive>
+   75: pslmt3  <set local transformation 3>
+   76: pslmt   <set local transformation>
+   77: psgmt3  <set global transformation 3>
+   78: psgmt   <set global transformation>
+   79: psmcv3  <set modelling clipping volume 3>
+   80: psmcv   <set modelling clipping volume>
+   81: psmcli  <set modelling clipping indicator>
+   82: prmcv   <restore modelling clipping volume>
+  113: pexst   <execute structure>
+  207: pqmclf  <inquire modelling clipping facilities>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+  311: piss3   <incremental spatial search 3>
+  312: piss    <incremental spatial search>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.23  ...  default_modelling_attributes
+  2.23.1  ...  default_global_modelling_transformation
+  2.23.2  ...  default_local_modelling_transformation
+  2.23.3  ...  default_modelling_clipping_volume
+  2.23.4  ...  default_modelling_clipping_indicator
+  2.23.5  ...  maximum_number_of_distinct_planes_in_modelling_clipping_volume
+  2.23.6  ...  number_of_available_modelling_clipping_operators
+  2.23.7  ...  list_of_available_modelling_clipping_operators
+  3  ...  phigs_traversal_state_list
+  3.12 ...  current_modelling_attributes
+  3.12.1  ...  current_global_modelling_transformation
+  3.12.2  ...  current_local_modelling_transformation
+  3.12.3  ...  current_modelling_clipping_volume
+  3.12.4  ...  current_modelling_clipping_indicator
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.3  ...  polymarker_3
+  7.3.1.4  ...  polymarker
+  7.3.1.5  ...  text_3
+  7.3.1.6  ...  text
+  7.3.1.7  ...  annotation_text_relative_3
+  7.3.1.8  ...  annotation_text_relative
+  7.3.1.9  ...  fill_area_3
+  7.3.1.10 ...  fill_area
+  7.3.1.11 ...  fill_area_set_3
+  7.3.1.12 ...  fill_area_set
+  7.3.3  ...  modelling_transformation_elements
+  7.3.3.1  ...  local_transformation_3
+  7.3.3.2  ...  local_transformation
+  7.3.3.3  ...  global_transformation_3
+  7.3.3.4  ...  global_transformation
+  7.3.3.5  ...  modelling_clipping_volume_3
+  7.3.3.6  ...  modelling_clipping_volume
+  7.3.3.7  ...  modelling_clipping_indicator
+  7.3.3.8  ...  restore_modelling_clipping_volume
+ 
+SEMANTIC CROSS-REFERENCES:
+  02.03.03/SR10
+ 
+
+
+PROGRAM 1: Setting and inquiring local transformations
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> thoughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+            | 2.2 -33.33e33 9.9e-11 |
+matrix m3 = | 4.4   5.5     6.6     |
+            | 0.0  -5.2     9.9     |
+
+            | 2.2 -33.33e33 9.9e-11   1.34 |
+matrix m4 = | 4.4   5.5     6.6      12.4  |
+            | 0.0  -5.2     9.9     123.0  |
+            | 3.1   4.1     5.9265   66.66 |
+
+<Set local transformation 3> with m4, PRECONCATENATE
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return set
+       local transformation 3 as the type of the created element
+       and the appropriate element size, when PRECONCATENATE is
+       specified."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = set local transformation 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3 7
+      "<Inquire current element content> should return the standard
+       representation for set local transformation 3, when
+       PRECONCATENATE is specified."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+
+<Set local transformation 3> with m4, REPLACE
+
+TEST: #SR 1 2
+      "<Inquire current element type and size> should return
+       set local transformation 3 as the type of the created
+       element and the appropriate element size, when
+       REPLACE is specified."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = set local transformation 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 1 3 7
+      "<Inquire current element content> should return the standard
+       representation for set local transformation 3, when
+       REPLACE is specified."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+
+<Set local transformation> with m3, POSTCONCATENATE
+
+TEST: #SR 4 5
+      "<Inquire current element type and size> should return
+       set local transformation as the type of the created
+       element and the appropriate element size, when
+       POSTCONCATENATE is specified."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = set local transformation and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 4 6 7
+      "<Inquire current element content> should return the standard
+       representation for set local transformation, when
+       POSTCONCATENATE is specified."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Setting and inquiring global transformations
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> thoughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+            | 2.2 -33.33e33 9.9e-11 |
+matrix m3 = | 4.4   5.5     6.6     |
+            | 0.0  -5.2     9.9     |
+
+            | 2.2 -33.33e33 9.9e-11   1.34 |
+matrix m4 = | 4.4   5.5     6.6      12.4  |
+            | 0.0  -5.2     9.9     123.0  |
+            | 3.1   4.1     5.9265   66.66 |
+
+<Set global transformation 3> with m4
+
+TEST: #SR 9 10
+      "<Inquire current element type and size> should return
+       set global transformation 3 as the type of the created
+       element and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = set global transformation 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 9 11
+      "<Inquire current element content> should return the standard
+       representation for set global transformation 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+
+<Set global transformation> with m3
+
+TEST: #SR 12 13
+      "<Inquire current element type and size> should return
+       set global transformation as the type of the created
+       element and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = set global transformation and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 12 14
+      "<Inquire current element content> should return the standard
+       representation for set global transformation."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Setting and inquiring modelling clipping
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element type and size> thoughout to determine:
+    celtyp = current element type
+    celsiz = current element size
+
+Use <inquire current element content> throughout to determine:
+    celcon = current element content
+
+lhs3 = 3D half space list, in point-vector format:
+
+   point                    vector
+   -----                 |  ------
+   2.2 -33.33e33 9.9e-11 |   -1.2     3.4   5.6
+   4.4   5.5     6.6     |  -98.76  543.21  0.1e-11
+   0.0  -5.2     9.9     |    2.2     3.3   4.4
+
+
+lhs2 = 2D half space list, in point-vector format:
+
+   point                vector
+   -----             |  ------
+   -33.33e33 9.9e-11 |   -1.2     3.4
+     5.5     6.6     |  -98.76  543.21
+    -5.2     9.9     |    2.2     3.3
+
+*** *** ***   Set modelling clipping volume 3   *** *** ***
+
+operator = 1
+<Set modelling clipping volume 3> with operator, lhs3
+
+TEST: #SR 23 24
+      "<Inquire current element type and size> should return
+       set modelling clipping volume 3 as the type of the created
+       element and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = set modelling clipping volume 3 and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 23 25
+      "<Inquire current element content> should return the standard
+       representation for set modelling clipping volume 3."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+*** *** ***   Set modelling clipping volume   *** *** ***
+
+operator = 2
+<Set modelling clipping volume> with operator, lsh2
+
+TEST: #SR 26 27
+      "<Inquire current element type and size> should return
+       set modelling clipping volume as the type of the created
+       element and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = set modelling clipping volume and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 26 28
+      "<Inquire current element content> should return the standard
+       representation for set modelling clipping volume."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+*** *** ***   Modelling clipping volume facilities   *** *** ***
+
+<inquire modelling clipping facilities> returns
+   lavmco = list of available modelling clipping operators
+   ndpmcv = number of distinct planes for modelling clipping volume
+
+determine maxop, minop = maximum, minimum modelling clipping operator
+
+TEST: #SR 35 36
+      "The list of of available modelling clipping operators
+       reported by <inquire modelling clipping facilities> should
+       contain 1 and 2."
+pass/fail depending on (lavmco contains 1 and 2)
+
+TEST: #SR 35 37
+      "The number of distinct planes for a modelling clipping volume
+       reported by <inquire modelling clipping facilities> should
+       be at least 6."
+pass/fail depending on (ndpmcv >= 6)
+
+TEST: #SR 38
+      "<Set modelling clipping volume> should be able to specify
+       an operator with an integer value greater than those supported."
+
+<Set modelling clipping volume> with operator = maxop + 1
+if no error signalled then
+   <inquire current element content> to set celcon
+   pass/fail depending on
+     (celcon = representation as specified by the standard and language binding)
+else
+   fail
+   informative message on error signalled
+endif
+
+TEST: #SR 38
+      "<Set modelling clipping volume 3> should be able to specify
+       an operator with an integer value less than those supported."
+
+<Set modelling clipping volume 3> with operator = min(-1, minop - 1)
+if no error signalled then
+   <inquire current element content> to set celcon
+   pass/fail depending on
+     (celcon = representation as specified by the standard and language binding)
+else
+   fail
+   informative message on error signalled
+endif
+
+TEST: #SR 39
+      "<Set modelling clipping volume 3> should be able to specify
+       a modelling clipping volume with zero half-spaces."
+
+<Set modelling clipping volume 3> with half-spaces = null list
+if no error signalled then
+   <inquire current element content> to set celcon
+   pass/fail depending on
+     (celcon = representation as specified by the standard and language binding)
+else
+   fail
+   informative message on error signalled
+endif
+
+TEST: #SR 39
+      "<Set modelling clipping volume> should be able to specify
+       a modelling clipping volume with many half-spaces."
+
+nohs = min (100, ndpmcv+1)
+
+<Set modelling clipping volume> with half-spaces = list of nohs entries
+if no error signalled then
+   <inquire current element content> to set celcon
+   pass/fail depending on
+     (celcon = representation as specified by the standard and language binding)
+else
+   fail
+   informative message on error signalled
+endif
+
+*** *** ***   Set modelling clipping indicator   *** *** ***
+
+<Set modelling clipping indicator> with CLIP
+
+TEST: #SR 29 30
+      "<Inquire current element type and size> should return
+       set modelling clipping indicator as the type of the created
+       element and the appropriate element size, when CLIP is
+       specified."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = set modelling clipping indicator and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 29 31 52
+      "<Inquire current element content> should return the standard
+       representation for set modelling clipping indicator, when
+       CLIP is specified."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+<Set modelling clipping indicator> with NOCLIP
+
+TEST: #SR 29 30
+      "<Inquire current element type and size> should return
+       set modelling clipping indicator as the type of the created
+       element and the appropriate element size, when NOCLIP is
+       specified."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = set modelling clipping indicator and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 29 31 52
+      "<Inquire current element content> should return the standard
+       representation for set modelling clipping indicator, when
+       NOCLIP is specified."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+*** *** ***   Restore modelling clipping volume   *** *** ***
+
+<Restore modelling clipping volume>
+
+TEST: #SR 32 33
+      "<Inquire current element type and size> should return
+       restore modelling clipping volume as the type of the created
+       element and the appropriate element size."
+<inquire current element type and size> to set celtyp, celsiz
+pass/fail depending on
+  (celtyp = restore modelling clipping volume and
+   celsiz = values specified by the standard and language binding)
+
+TEST: #SR 32 34
+      "<Inquire current element content> should return the standard
+       representation for restore modelling clipping volume."
+<inquire current element content> to set celcon
+pass/fail depending on
+  (celcon = representation as specified by the standard and language binding)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Effect of local and global transformations in a
+           single structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Set up arbitrary matrices:
+
+A1 = |  0.6400  -0.3405  -0.3458  -0.2107 |
+     | -0.2158   0.9041  -0.1908   0.2571 |
+     | -0.3232  -0.1562   0.6289  -0.1183 |
+     | -0.1398   0.2284  -0.2234   1.3633 |
+
+A2 = |  0.7066  -0.0907  -0.3822  -0.1183 |
+     |  0.2092   0.7405   0.1112  -0.1777 |
+     | -0.0416  -0.1633   0.6808   0.0448 |
+     | -0.3792  -0.2249   0.0086   0.9750 |
+
+A3 = |  0.7061  -0.2344   0.2709   0.3407 |
+     | -0.2336   0.8280   0.0524   0.3902 |
+     | -0.2953  -0.2632   0.6326   0.1875 |
+     | -0.2673  -0.2501  -0.1435   1.2520 |
+
+A4 = |  0.8168   0.1839   0.1461   0.0835 |
+     | -0.2033   1.1356   0.0644  -0.1778 |
+     | -0.3886  -0.3802   0.7139  -0.3036 |
+     | -0.2358  -0.3262   0.2245   0.8549 |
+
+A5 = |  0.6428  -0.2039   0.3480  -0.2744 |
+     |  0.3743   1.3347  -0.2931  -0.2590 |
+     |  0.1195  -0.0378   1.3423   0.0819 |
+     |  0.0006   0.1513   0.2051   1.2317 |
+
+A6 = |  0.9153   0.0327   0.3814 |
+     |  0.3884   1.3789   0.0693 |
+     |  0.3859  -0.3846   0.9099 |
+
+A7 = |  0.9528   0.3002  -0.2830 |
+     |  0.1134   1.2937   0.3916 |
+     | -0.3495   0.1857   0.8847 |
+
+Set up structure #101:
+01: polymarker 3 at 3,4,5
+02: local transformation 3 with A1, replace
+03: polymarker 3 at 3,4,5
+04: local transformation 3 with A2, postconcatenate
+05: polymarker 3 at 3,4,5
+06: local transformation 3 with A3, preconcatenate
+07: polymarker 3 at 3,4,5
+08: global transformation 3 with A4
+09: polymarker 3 at 3,4,5
+10: local transformation 3 with A5, replace
+11: polymarker 3 at 3,4,5
+12: global transformation with A6 (2 dimensional)
+13: polymarker 3 at 3,4,5
+14: local transformation with A7, postconcatenate (2 dimensional)
+15: polymarker 3 at 3,4,5
+
+Throughout, use incremental spatial search (ISS) to test the
+effects of the current global and local modelling
+transformations.  The search reference point (srp) is based on an
+MC location of (3,4,5), adjusted to account for the expected
+transformation.
+
+TEST: #SR 16 17 19
+      "At the start of a traversal, the current global and local
+       modelling transformations should both be set to the
+       identity matrix."
+perform ISS, with srp based on
+  expected composite transformation = identity matrix
+pass/fail depending on (found path = 101,1)
+
+TEST: #SR 8 16 17
+      "<Set local transformation 3>, with REPLACE, should replace
+       the current local modelling transformation with the
+       specified matrix."
+perform ISS, with srp based on
+  expected composite transformation = A1
+pass/fail depending on (found path = 101,3)
+
+TEST: #SR 8 16 17
+      "<Set local transformation 3>, with POSTCONCATENATE, should
+       replace the current local modelling transformation with
+       the product of the specified matrix and its former
+       value."
+perform ISS, with srp based on
+  expected composite transformation = A2 x A1
+pass/fail depending on (found path = 101,5)
+
+TEST: #SR 8 16 17
+      "<Set local transformation 3>, with PRECONCATENATE, should
+       replace the current local modelling transformation with
+       the product of its former value and the specified
+       matrix."
+perform ISS, with srp based on
+  expected composite transformation = A2 x A1 x A3
+pass/fail depending on (found path = 101,7)
+
+TEST: #SR 15 16 17
+      "<Set global transformation 3> should replace the current
+       global modelling transformation with the specified
+       matrix."
+perform ISS, with srp based on
+  expected composite transformation = A4 x A2 x A1 x A3
+pass/fail depending on (found path = 101,9)
+
+TEST: #SR 8 16 17
+      "<Set local transformation 3>, with REPLACE, should be able
+       to replace the current local modelling transformation with
+       the specified matrix several times in one structure."
+perform ISS, with srp based on
+  expected composite transformation = A4 x A5
+pass/fail depending on (found path = 101,11)
+
+TEST: #SR 15 16 17 18
+      "<Set global transformation> should replace the current
+       global modelling transformation with the suitably expanded
+       version of the specified matrix."
+perform ISS, with srp based on
+  expected composite transformation = expanded-A6 x A5
+pass/fail depending on (found path = 101,13)
+
+TEST: #SR 8 16 17 18
+      "<Set local transformation>, with POSTCONCATENATE, should
+       replace the current local modelling transformation with
+       the product of the suitably expanded version of the
+       specified matrix and its former value."
+perform ISS, with srp based on
+  expected composite transformation = expanded-A6 x expanded-A7 x A5
+pass/fail depending on (found path = 101,15)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Effect of local and global transformations in a
+           structure network
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Set up arbitrary matrices:
+
+A1 = |  0.6400  -0.3405  -0.3458  -0.2107 |
+     | -0.2158   0.9041  -0.1908   0.2571 |
+     | -0.3232  -0.1562   0.6289  -0.1183 |
+     | -0.1398   0.2284  -0.2234   1.3633 |
+
+A2 = |  0.7066  -0.0907  -0.3822  -0.1183 |
+     |  0.2092   0.7405   0.1112  -0.1777 |
+     | -0.0416  -0.1633   0.6808   0.0448 |
+     | -0.3792  -0.2249   0.0086   0.9750 |
+
+A3 = |  0.7061  -0.2344   0.2709   0.3407 |
+     | -0.2336   0.8280   0.0524   0.3902 |
+     | -0.2953  -0.2632   0.6326   0.1875 |
+     | -0.2673  -0.2501  -0.1435   1.2520 |
+
+A4 = |  0.8168   0.1839   0.1461   0.0835 |
+     | -0.2033   1.1356   0.0644  -0.1778 |
+     | -0.3886  -0.3802   0.7139  -0.3036 |
+     | -0.2358  -0.3262   0.2245   0.8549 |
+
+A5 = |  0.6428  -0.2039   0.3480  -0.2744 |
+     |  0.3743   1.3347  -0.2931  -0.2590 |
+     |  0.1195  -0.0378   1.3423   0.0819 |
+     |  0.0006   0.1513   0.2051   1.2317 |
+
+
+Set up structure #101:
+ 1: execute structure #104
+ 2: polymarker 3 at 3,4,5
+ 3: global transformation 3 with A1
+ 4: local transformation 3 with A2, preconcatenate
+ 5: execute structure #102
+ 6: local transformation 3 with A3, postconcatenate
+ 7: polymarker 3 at 3,4,5
+ 8: global transformation 3 with A4
+ 9: execute structure #103
+
+Set up structure #102:
+ 1: polymarker 3 at 3,4,5
+ 2: global transformation 3 with A5
+ 3: polymarker 3 at 3,4,5
+ 4: global transformation 3 with A3
+ 5: execute structure #103
+ 6: local transformation 3 with A4, preconcatenate
+ 7: execute structure #104
+ 8: polymarker 3 at 3,4,5
+
+Set up structure #103:
+ 1: polymarker 3 at 3,4,5
+ 2: local transformation 3 with A1, preconcatenate
+ 3: polymarker 3 at 3,4,5
+
+Set up structure #104:
+ 1: global transformation 3 with A1
+ 2: local transformation 3 with A2, replace
+
+Throughout, use incremental spatial search (ISS) to test the
+effects of the current global and local modelling
+transformations.  The search reference point (srp) is based on an
+MC location of (3,4,5), adjusted to account for the expected
+transformation.
+
+TEST: #SR 16 17 19 20
+      "If no transformations have been set since the onset of
+       traversal, the composite modelling transformation should
+       be restored to the identity matrix after invocation of a
+       structure network."
+perform ISS, with srp based on
+  expected composite transformation = identity matrix
+pass/fail depending on (found path = 101,2)
+
+TEST: #SR 16 17 21 22
+      "At the start of a sub-traversal caused by <execute
+       structure>, the new composite modelling transformation
+       should be unchanged from that of the invoking structure."
+perform ISS, with srp based on
+  expected composite transformation = A1 x A2
+pass/fail depending on (found path = 101,5, 102,1)
+
+TEST: #SR 16 17 21 22
+      "Replacing the global modelling transformation within a
+       sub-traversal without altering the local modelling
+       transformation should replace the composite
+       transformation."
+perform ISS, with srp based on
+  expected composite transformation = A5
+pass/fail depending on (found path = 101,5, 102,3)
+
+TEST: #SR 16 17 21 22
+      "At the start of a sub-traversal several levels deep, the
+       composite modelling transformation should be unchanged
+       from that of the immediately invoking structure."
+perform ISS, with srp based on
+  expected composite transformation = A3
+pass/fail depending on (found path = 101,5, 102,5, 103,1)
+
+TEST: #SR 16 17 21 22
+      "Replacing the local modelling transformation within a
+       sub-traversal without altering the global modelling
+       transformation should postconcatenate the specified matrix
+       to the old value of the composite transformation."
+perform ISS, with srp based on
+  expected composite transformation = A3 x A1
+pass/fail depending on (found path = 101,5, 102,5, 103,3)
+
+TEST: #SR 16 17 20
+      "Upon returning from a sub-traversal, the global and local
+       modelling transformations should be restored to the value
+       they had just before the sub-traversal."
+perform ISS, with srp based on
+  expected composite transformation = A3 x A4
+pass/fail depending on (found path = 101,5, 102,8)
+
+TEST: #SR 16 17 20
+      "Upon returning several levels from a sub-traversal, the
+       global and local modelling transformations should be
+       restored to the value they had just before the
+       sub-traversal."
+perform ISS, with srp based on
+  expected composite transformation = A1 x A3 x A2
+pass/fail depending on (found path = 101,7)
+
+TEST: #SR 16 17 21 22
+      "At the start of a sub-traversal the new composite
+       modelling transformation should be unchanged from that of
+       the invoking structure, even if the invoked structure has
+       been executed previously in the traversal."
+perform ISS, with srp based on
+  expected composite transformation = A4 x A3 x A2
+pass/fail depending on (found path = 101,9, 103,1)
+
+TEST: #SR 16 17 21 22
+      "Replacing the local modelling transformation within a
+       sub-traversal without altering the global modelling
+       transformation should postconcatenate the specified matrix
+       to the old value of the composite transformation, even if
+       the invoked structure has been executed previously in the
+       traversal."
+perform ISS, with srp based on
+  expected composite transformation = A4 x A3 x A2 x A1
+pass/fail depending on (found path = 101,9, 103,3)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Effect of modelling clipping in a single structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Throughout, use incremental spatial search (ISS) to test the
+effects of modelling clipping.  In general, ISS will be performed
+with the search distance (sdist) set just below and above the
+distance needed to reach the unclipped part of a primitive from
+the search reference point (srp).
+
+A1 = rigid transformation  = rotate: .1 .2 .3, shift: .4 .5 .6
+                             fixed point: .7 .8 .9
+
+When the same rigid transformation is applied to both the
+clipping volume and primitives, the relationships are unchanged.
+
+endpt = polyline end points =
+  1: 1.2, 3.1, 0.2
+  2: 9.4, 7.0, 1.9
+
+Set up structure #101:
+  1: set global transformation 3: A1
+  2: polyline 3 from endpt(1) to (2)
+
+srp = endpt(2) + 0.1 in z-direction
+
+TEST: #SR 42 50
+      "Before any explicit clipping volume is applied, the
+       clipping volume should be all of WC space, and all parts
+       of primitives should be detected."
+perform ISS with transformed srp, clipping ON
+  with sdist just below and above 0.1
+pass/fail depending on (found path = first empty and then = 101,2)
+
+insert MCV element:
+structure #101:
+  1: set global transformation 3: A1
+  2: set MCV: point = mid-point of polyline end-points,
+              normal vector = endpt(1) - endpt(2)
+              operator = intersect
+  3: polyline 3 from endpt(1) to (2)
+
+srp = endpt(2)
+linlen = length of line segment
+
+TEST: #SR 40 41 42 43 50 57
+      "When a primitive line segment intersects the boundary
+       plane of a clipping volume, that part of it not in the
+       half-space of the volume should be clipped."
+perform ISS with transformed srp, clipping ON
+  with sdist just below and above linlen/2
+pass/fail depending on (found path = first empty and then = 101,3)
+
+<empty structure> 101
+srp = center of rays = 2.91, 0.92, 0.18
+angstp = angle step = 25 degrees
+
+for hsdx from 1 to 3
+   ang = 10 + hsdx*angstp (degrees)
+   set up half-space:
+     vec (hsdx) = x:0, y:cos(ang), z:sin(ang)
+     hspt(hsdx) = srp + vec(hsdx)
+   set up primitives:
+     endpt(1) = srp
+     endpt(2) = srp + 3*vec(hsdx)
+     insert polyline with endpts into structure
+next hsdx
+
+set element pointer to 0, insert at start of structure:
+  1: set global transformation 3: A1
+  2: set MCV: 3 points = hspt(1:3)
+              3 normal vector = vec(1:3)
+              operator = replace
+  3,4,5: polylines
+
+The first and last line line segments are clipped by the last and
+first (respectively) boundary planes farther from the center than
+is the second line segment.
+
+TEST: #SR 40 41 42 43 57
+      "When several primitive line segments intersect several
+       boundary planes of a single clipping volume, the portions
+       of the segments that are not in all the half-spaces of the
+       volume should be clipped."
+perform ISS with transformed srp, clipping ON
+  with sdist just below and above 1 / cos(angstp)
+pass/fail depending on (found path = first empty and then = 101,4)
+
+delete element #2 from structure #101 and insert in structure:
+  1: set global transformation 3: A1
+  2: set MCV: points = hspt(1)
+              normal vector = vec(1)
+              operator = intersect
+  3: set MCV: points = hspt(2)
+              normal vector = vec(2)
+              operator = intersect
+  4: set MCV: points = hspt(3)
+              normal vector = vec(3)
+              operator = intersect
+  5,6,7: polylines
+
+TEST: #SR 40 41 42 43 50 57
+      "When several primitive line segments intersect the
+       boundary planes of several intersected clipping volumes,
+       the portions of the segments that are not in the
+       half-spaces of all the volumes should be clipped."
+perform ISS with transformed srp, clipping ON
+  with sdist just below and above 1 / cos(angstp)
+pass/fail depending on (found path = first empty and then = 101,6)
+
+replace element 2-4 in structure #101:
+  1: set global transformation 3: A1
+  2: set MCV: points = hspt(1)
+              normal vector = vec(1)
+              operator = replace
+  3: set MCV: points = hspt(2)
+              normal vector = vec(2)
+              operator = replace
+  4: set MCV: points = hspt(3)
+              normal vector = vec(3)
+              operator = replace
+  5,6,7: polylines
+
+Now only half-space(3) should be operative.
+
+TEST: #SR 40 41 42 43 57
+      "When the operator of a set modelling clipping volume
+       element is REPLACE, only its volume should be used to clip
+       primitives and previous clipping volumes should be
+       ignored."
+perform ISS with transformed srp, clipping ON
+  with sdist just below and above 1.0
+pass/fail depending on (found path = first empty and then = 101,7)
+
+<empty structure> 101
+set up structure #101:
+  1: set local transformation 3: A1, replace
+  2: set 2D MCV: 4 points  = (0, 1)  (1, 0)  (0,-1) (-1,0)
+                 4 vectors = (3,-3) (-3,-3) (-3, 3) ( 3,3)
+                 operator = replace
+  3: fill area: (-2,-2,3) (-2,2,3) (2,2,3) (2,-2,3)
+
+TEST: #SR 40 41 42 43 49 57
+      "When a 2D clip volume is applied to a 3D fill area
+       primitive, it should behave as if the z-coordinate of its
+       point and normal vector were zero."
+perform ISS with transformed srp = (-2,2,3), clipping ON
+  with sdist just below and above 3*sqrt(2) / 2
+pass/fail depending on (found path = first empty and then = 101,3)
+
+END PROGRAM 6
+
+
+PROGRAM 7: Saving and restoring the modelling clipping volume
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Throughout, use incremental spatial search (ISS) to test the
+effects of modelling clipping.  In general, ISS checks which
+subset of primitives have been clipped so as to determine the
+current modelling clipping volume.  The search reference point
+and distance are constant and are set so as to reach all the
+primitives.
+
+hs(1) = half-space #1 = all points for which x > 0
+hs(2) = half-space #2 = all points for which y > 0
+hs(3) = half-space #3 = all points for which z > 0
+
+Set up structure #101:
+1: set MCV = hs(1) with replace
+2: execute structure 102
+3: execute structure 109
+4: set MCV = hs(2) with intersect
+5: execute structure 102
+6: execute structure 109
+7: set MCV = hs(2) with replace
+8: execute structure 103
+9: execute structure 109
+
+Set up structure #102:
+1: set MCV = hs(3) with intersect
+2: execute structure 103
+3: execute structure 109
+
+Set up structure #103:
+1: set MCV = hs(3) with replace
+2: execute structure 109
+
+Set up structure #109:
+1: polymarker at -1, -1, -1
+2: polymarker at -1, -1,  1
+3: polymarker at -1,  1, -1
+4: polymarker at -1,  1,  1
+5: polymarker at  1, -1, -1
+6: polymarker at  1, -1,  1
+7: polymarker at  1,  1, -1
+8: polymarker at  1,  1,  1
+
+srp   = search reference point = 0,0,0
+sdist = search distance = 2
+
+bracket notation for found paths:
+  (101,2), (102,2), (103,2), (109,[2,4,6,8])
+means finding elements 2,4,6,8 within structure 109
+
+TEST: #SR 40 43 57
+      "When an executed structure sets the MCV with REPLACE, it
+       should override the inherited current MCV."
+
+ISS with starting path = (101,0)
+pass/fail depending on
+  found paths = (101,2), (102,2), (103,2), (109,[2,4,6,8])
+  based on expected MCV = hs(3)
+
+TEST: #SR 40 43 51 57
+      "A calling structure should have its current MCV restored
+       after traversal returns from the executed structure."
+
+ISS with starting path = (101,2), (102,2), (103,2)
+pass/fail depending on
+  found paths = (101,2), (102,3), (109,[6,8])
+  based on expected MCV = hs(1),hs(3)
+
+TEST: #SR 40 43 51 57
+      "A calling structure should have its current MCV restored
+       after traversal returns from two levels of execution."
+ISS with starting path = (101,2), (102,3)
+pass/fail depending on
+  found paths = (101,3), (109,[5,6,7,8])
+  based on expected MCV = hs(1)
+
+TEST: #SR 40 43 57
+      "When an executed structure sets the MCV with REPLACE, it
+       should override the inherited current MCV, even when
+       called twice."
+
+ISS with starting path = (101,3)
+pass/fail depending on
+  found paths = (101,5), (102,2), (103,2), (109,[2,4,6,8])
+  based on expected MCV = hs(3)
+
+TEST: #SR 40 43 51 57
+      "A calling structure should have its current MCV restored
+       after executing the same structure twice."
+
+ISS with starting path = (101,5), (102,2), (103,2)
+pass/fail depending on
+  found paths = (101,5), (102,3), (109,[8])
+  based on expected MCV = hs(1),hs(2),hs(3)
+
+TEST: #SR 40 43 51 57
+      "A calling structure should have its current MCV restored
+       after traversal repeatedly returns from two levels of
+       execution."
+
+ISS with starting path = (101,5), (102,3)
+pass/fail depending on
+  found paths = (101,6), (109,[7,8])
+  based on expected MCV = hs(1),hs(2)
+
+TEST: #SR 40 43 57
+      "When an executed structure sets the MCV with REPLACE, it
+       should override the inherited current MCV, even when
+       called by a different structure."
+
+ISS with starting path = (101,6)
+pass/fail depending on
+  found paths = (101,8), (103,2), (109,[2,4,6,8])
+  based on expected MCV = hs(3)
+
+TEST: #SR 40 43 51 57
+      "A calling structure should have its current MCV restored
+       after traversal returns from different structures."
+ISS with starting path = (101,8), (103,2)
+pass/fail depending on
+  found paths = (101,9), (109,[3,4,7,8])
+  based on expected MCV = hs(2)
+
+*** *** *** ***   <restore MCV>   *** *** *** ***
+
+Add to structure #103:
+1: set MCV = hs(3) with replace
+2: execute structure 109
+3: restore MCV
+4: execute structure 109
+
+TEST: #SR 40 43 56 57
+      "<Restore MCV> should cause the current MCV to be reset to
+       the original value it had upon entry to the structure,
+       even though the value was replaced within the structure."
+
+ISS with starting path = (101,5), (102,2), (103,2)
+pass/fail depending on
+  found paths = (101,5), (102,2), (103,4), (109,[8])
+  based on expected MCV = hs(1),hs(2),hs(3)
+
+change structure #103:
+1: set MCV = hs(2) with intersect
+2: execute structure 109
+3: restore MCV
+4: execute structure 109
+
+TEST: #SR 40 43 56 57
+      "<Restore MCV> should cause the current MCV to be reset to
+       the original value it had upon entry to the structure,
+       even though the value was altered by intersection within
+       the structure."
+
+ISS with starting path = (101,2), (102,2), (103,2)
+pass/fail depending on
+  found paths = (101,2), (102,2), (103,4), (109,[6,8])
+  based on expected MCV = hs(1),hs(3)
+
+END PROGRAM 7
+
+
+PROGRAM 8: Miscellaneous tests of modelling clipping
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Throughout, use incremental spatial search (ISS) to test the
+effects of modelling clipping.
+
+P1 = matrix for transformation to shift by 1 in x-direction
+P9 = matrix for transformation to shift by 9 in x-direction
+S2 = matrix for transformation to scale by 2 in x-direction
+R1 = matrix for random transformation
+   = |  0.7061  -0.2344   0.2709   0.3407 |
+     | -0.2336   0.8280   0.0524   0.3902 |
+     |  0.2953  -0.2632   0.6326   0.1875 |
+     | -0.2673  -0.2501   0.1435   1.2520 |
+
+hsmcpt = half-space point in MC  = -1,0,1
+hsmcvc = half-space vector in MC =  2,3,4
+
+a,b,c,d = coefficients for WC boundary plane when R1 is applied
+to the MC half-space defined by hsmcpt and hsmcvc.
+
+px,py,pz = the WC point where the line
+  x = a*u
+  y = b*u
+  z = 5
+intersects the a,b,c,d plane; u = (-5*c-d) / (a*a + b*b)
+
+nsdist = nominal search distance = .1
+
+ux,uy,uz = unit vector parallel to a,b,c
+
+inpt = WC point inside volume
+inptx = px + nsdist * ux
+inpty = py + nsdist * uy
+inptz = pz + nsdist * uz
+
+outpt = WC point outside volume
+outptx = px - nsdist * ux
+outpty = py - nsdist * uy
+outptz = pz - nsdist * uz
+
+Set up structure #101
+1: set global transformation: S2
+2: set MCV: MC point  = 2,0
+            MC vector = 2,1
+            operator = replace
+3: set global transformation: P1
+4: polyline at MC: (2,1), (0,1), (2,2), (0,2), (2,3), (0,3)
+5: set global transformation: R1
+6: set MCV 3: MC point  = hsmcpt
+              MC vector = hsmcvc
+              operator = replace
+7: set global transformation: P9
+8: polymarker 3 at outptx-9, outpty, outptz
+9: polymarker 3 at  inptx-9,  inpty,  inptz
+
+In WC, polyline segment from (3,2) to (1,2) is clipped at 2,2 by
+the MCV set up in element #2.
+
+TEST: #SR 15 17 18 40 42 43 49 57
+      "When traversal causes different current modelling
+       transformations to be applied in the generation of a
+       polyline and a current MCV, the clipping should be
+       performed relative to WC space."
+
+perform ISS with
+  srp = (2-nsdist,2)
+  clipping ON
+  starting at 101,0
+  and sdist just below and above nsdist
+pass/fail depending on (found path = first empty and then = 101,4)
+
+TEST: #SR 15 17 40 42 43 57
+      "When traversal causes a perspective current modelling
+       transformation to be applied in the generation of a
+       current MCV, and a different current modelling
+       transformation to be applied in the generation of a
+       polymarker, the clipping should be performed relative to
+       WC space."
+
+perform ISS with
+  srp = outpt
+  clipping ON
+  starting at 101,0
+  and sdist just below and above 2*nsdist
+pass/fail depending on (found path = first empty and then = 101,9)
+
+To test several boundary planes, set up a sequence of polymarkers
+all on the unit circle, and arrange each clipping plane so as to
+eliminate just one of them, by slicing off the edge of the
+circle.  There will be only one polymarker left unclipped, and
+this is the one to be found.
+
+<inquire modelling clipping facilities> returns
+   ndpmcv = number of distinct planes for modelling clipping volume
+
+nopl   = number of planes to be tested = min (50, ndpmcv)
+anginc = angle increment = 360 degrees / (nopl + 1)
+radius = distance from origin of boundary planes
+       = (1 + cos(anginc)) / 2
+A1  = matrix for transformation to rotate by anginc
+idm = identity matrix
+
+open structure #102
+for ipl = 1 to nopl
+   set local transformation with A1, PRECONCATENATE
+   set MCV: point  = radius,0
+            vector = -1,0
+            operator = intersect
+next ipl
+set local transformation with idm, REPLACE
+for ipl = 1 to nopl+1
+    ang = anginc*ipl
+    polymarker at cos(ang), sin(ang)
+next ipl
+close structure #102
+
+TEST: #SR 8 17 18 35 40 42 43 49 57
+      "During traversal, it should be possible to construct the
+       current MCV from as many half-spaces as are reported
+       available by <inquire modelling clipping facilities>."
+
+expelm = expected element = 3*nopl + 2
+
+perform ISS with
+  srp = 0,0
+  clipping ON
+  starting at 102,0
+  and sdist just below and above 1.0
+pass/fail depending on (found path = first empty and then = 102,expelm)
+
+END PROGRAM 8
+
+
+PROGRAM 9: Visual effect of modelling transformation
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+3D MODELLING TRANSFORMATION: All but one of the six boxes should
+contain a single line segment with its endpoints circled.
+Identify the line whose endpoints are not accurately marked.
+
+2D MODELLING TRANSFORMATION: Same as 3D MODELLING TRANSFORMATION
+above.
+
+DESIGN:
+
+Divide screen up into 6 square labelled areas for all tests
+idxf = 3D identity matrix
+
+TEST: #SR 1 8 9 15 16 17
+      "The modelling coordinates of a 3D polyline should be
+       transformed into world coordinates by 3D local and
+       global modelling transformation."
+
+lisbox = permutation of 1-6
+ngbox  = incorrect box = random from 1 to 6
+for ix = 1 to 6
+   this = lisbox(ix)
+   xf = 4x4 matrix, values chosen randomly from 0.5 to 1.5
+
+   in order to see effect of z-coord:
+   if this = 1 or 4 then
+      rotxf = matrix to rotate 90 degrees around x-axis
+   elseif this = 2 or 5 then
+      rotxf = matrix to rotate 90 degrees around y-axis
+   else
+      rotxf = matrix to rotate 90 degrees around z-axis
+   endif
+
+   calculate effect on position of WC: 1,1,1 and 2,2,2
+      wc1x,wc1y,wc1z = rotxf X xf X (1,1,1)
+      wc2x,wc2y,wc2z = rotxf X xf X (2,2,2)
+
+   calculate boxf so as to scale and shift WCs into box #ix
+
+   composite transformation will be boxf X rotxf X xf
+   matrix fixf = boxf X rotxf
+
+   calculate expected position of WC: 1,1,1 and 2,2,2
+      wc1x,wc1y,wc1z = fixf X xf X (1,1,1)
+      wc2x,wc2y,wc2z = fixf X xf X (2,2,2)
+
+   if ix = ngbox then
+      distort result:
+      ngxf = rotate 10 degrees on z-axis, around box center
+      fixf = ngxf X fixf
+   endif
+
+   if this < 3 then
+      replace local with fixf
+      preconcatenate xf to local
+   elseif this < 5 then
+      replace local with xf
+      postconcatenate fixf to local
+   else
+      replace local with xf
+      replace global with fixf
+   endif
+   draw 3D polyline from (1,1,1) to (2,2,2)
+   replace local with idxf
+   replace global with idxf
+
+   draw expected positions as 2D circle polymarker at
+      wc1x,wc1y and wc2x,wc2y
+next ix
+
+OPQA/3D MODELLING TRANSFORMATION: Which box contains something
+  other than a single line segment with circled endpoints?
+pass/fail depending on (operator chooses box #ngbox)
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+TEST: #SR 4 8 12 15 16 17 18
+      "The modelling coordinates of a 3D polyline should be
+       transformed into world coordinates by 2D local and
+       global modelling transformation."
+
+lisbox = permutation of 1-6
+ngbox  = incorrect box = random from 1 to 6
+for ix = 1 to 6
+   this = lisbox(ix)
+   xf2 = 3x3 matrix, values chosen randomly from 0.5 to 1.5
+
+   in order to see effect of z-coord:
+   if this = 1 or 4 then
+      rotxf = matrix to rotate 90 degrees around x-axis
+   elseif this = 2 or 5 then
+      rotxf = matrix to rotate 90 degrees around y-axis
+   else
+      rotxf = matrix to rotate 90 degrees around z-axis
+   endif
+
+   calculate effect on position of WC: 1,1,1 and 2,2,2
+      wc1x,wc1y,wc1z = rotxf X xf X (1,1,1)
+      wc2x,wc2y,wc2z = rotxf X xf X (2,2,2)
+
+   calculate boxf so as to scale and shift WCs into box #ix
+
+   composite transformation will be boxf X rotxf X xf
+   matrix fixf = boxf X rotxf
+
+   calculate expected position of WC: 1,1,1 and 2,2,2
+      wc1x,wc1y,wc1z = fixf X xf X (1,1,1)
+      wc2x,wc2y,wc2z = fixf X xf X (2,2,2)
+
+   if ix = ngbox then
+      distort result:
+      ngxf = rotate 10 degrees on z-axis, around box center
+      fixf = ngxf X fixf
+   endif
+
+   if this < 3 then
+      replace local with fixf
+      preconcatenate xf2 to local
+   elseif this < 5 then
+      replace local with xf2
+      postconcatenate fixf to local
+   else
+      replace local with xf2
+      replace global with fixf
+   endif
+   draw 3D polyline from (1,1,1) to (2,2,2)
+   replace local with idxf
+   replace global with idxf
+
+   draw expected positions as 2D circle polymarker at
+      wc1x,wc1y and wc2x,wc2y
+next ix
+
+OPQA/2D MODELLING TRANSFORMATION: Which box contains something
+  other than a single line segment with circled endpoints?
+pass/fail depending on (operator chooses box #ngbox)
+
+END PROGRAM 9
+
+
+PROGRAM 10: Network inheritance and initialization of modelling
+            transformation
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR LOCAL TRANSFORMATION: There
+should be one asterisk marker on each line, and all but one
+should be overlaid by a circle marker, their centers coincident.
+Identify the single asterisk marker NOT accurately circled.
+
+STRUCTURE NETWORK INHERITANCE FOR GLOBAL TRANSFORMATION: Same as
+for STRUCTURE NETWORK INHERITANCE FOR LOCAL TRANSFORMATION,
+above.
+
+INHERITANCE OF MODELLING TRANSFORMATIONS: Same as for STRUCTURE
+NETWORK INHERITANCE FOR LOCAL TRANSFORMATION, above.
+
+DESIGN:
+
+All test cases use same basic structure network for testing
+inheritance.  Five distinct values for the transformation to be
+tested are set up and propagated throughout the network.  The
+first value is the system default from the PDT. Note that
+structure #104 is executed by both #103 and #101.
+
+default = val#1
+  |                  102
+  |                 /  prim 2
+  |               /    attr = val#3   val#3
+  V        val#1/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   attr = val#4
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  attr = val#2                                  prim 7    \ val#4
+  prim 10                                                   \
+  transform             val#2                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        attr = val#5
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+Throughout, use 2D transformations
+xloc = x-MC for polymarkers, (before transformation) = 0.2
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+set up PERM to randomize position of polymarkers
+
+set up CSS:
+
+Structure network #101 draws actual results - the position of
+asterisk polymarkers - in random order. Structure #105 draws
+expected results by drawing circle markers at the expected
+locations, except for polymarker 14 which is deliberately drawn
+at an incorrect location.
+
+structure #101
+polymarker style = asterisk
+set marker size scale factor equivalent to WC = 0.04
+polymarker #1 at (xloc, y-location corresponding to PERM(1))
+execute 102
+polymarker #9 at (xloc, y-location corresponding to PERM(9))
+postconcatenate x-shift of +0.4 to local transformation
+polymarker #10 at (xloc, y-location corresponding to PERM(10))
+set global transformation to make markers #11,12 distinguishable
+  from #5,6
+execute 104
+re-set global transformation to identity
+polymarker #13 at (xloc, y-location corresponding to PERM(13))
+polymarker #14 at (xloc, y-location corresponding to PERM(14))
+execute 105
+
+structure #102
+polymarker #2 at (xloc, y-location corresponding to PERM(2))
+replace x-shift of +0.1 for local transformation
+execute 103
+polymarker #8 at (xloc, y-location corresponding to PERM(8))
+
+structure #103
+polymarker #3 at (xloc, y-location corresponding to PERM(3))
+preconcatenate x-shift of +0.1 to local transformation
+polymarker #4 at (xloc, y-location corresponding to PERM(4))
+execute 104
+polymarker #7 at (xloc, y-location corresponding to PERM(7))
+
+structure #104
+polymarker #5 / #11 at (xloc, y-location corresponding to PERM(5 / 11))
+postconcatenate x-shift of +0.1 to local transformation
+polymarker #6 / #12 at (xloc, y-location corresponding to PERM(6 / 12))
+
+structure #105
+set marker style = circle
+set marker size scale factor equivalent to WC = 0.05
+re-set local, global transformation to identity
+All y-locations correspond to PERM as above.
+
+Expected x-locations (except #14, deliberately incorrect):
+polymarker#     x-location
+-----------     ----------
+01               0.2
+02               0.2
+03               0.3
+04               0.4
+05               0.4
+06               0.5
+07               0.4
+08               0.3
+09               0.2
+10               0.6
+11               0.6
+12               0.7
+13               0.6
+14               0.5
+
+TEST: #SR 4 7 8 16 17 18 19 20 21 22
+      "The current local transformation should be saved and
+       restored by <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR LOCAL TRANSFORMATION:
+  which asterisk-marker is NOT accurately circled?
+pass/fail depending on response = position of polymarker #14
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+set up PERM to randomize position of polymarkers
+
+set up CSS:
+
+structure #101
+polymarker style = asterisk
+set marker size scale factor equivalent to WC = 0.04
+polymarker #1 at (xloc, y-location corresponding to PERM(1))
+execute 102
+polymarker #9 at (xloc, y-location corresponding to PERM(9))
+replace global transformation with x-shift of +0.4
+polymarker #10 at (xloc, y-location corresponding to PERM(10))
+set local transformation to make markers #11,12 distinguishable
+  from #5,6
+execute 104
+re-set local transformation to identity
+polymarker #13 at (xloc, y-location corresponding to PERM(13))
+polymarker #14 at (xloc, y-location corresponding to PERM(14))
+execute 105
+
+structure #102
+polymarker #2 at (xloc, y-location corresponding to PERM(2))
+replace global transformation with x-shift of +0.1
+execute 103
+polymarker #8 at (xloc, y-location corresponding to PERM(8))
+
+structure #103
+polymarker #3 at (xloc, y-location corresponding to PERM(3))
+replace global transformation with x-shift of +0.2
+polymarker #4 at (xloc, y-location corresponding to PERM(4))
+execute 104
+polymarker #7 at (xloc, y-location corresponding to PERM(7))
+
+structure #104
+polymarker #5 / #11 at (xloc, y-location corresponding to PERM(5 / 11))
+replace global transformation with x-shift of +0.3
+polymarker #6 / #12 at (xloc, y-location corresponding to PERM(6 / 12))
+
+structure #105
+set marker style = circle
+set marker size scale factor equivalent to WC = 0.05
+re-set global transformation to identity
+All y-locations correspond to PERM as above.
+
+Expected x-locations (except #14, deliberately incorrect):
+polymarker#     x-location
+-----------     ----------
+01               0.2
+02               0.2
+03               0.3
+04               0.4
+05               0.4
+06               0.5
+07               0.4
+08               0.3
+09               0.2
+10               0.6
+11               0.6
+12               0.5
+13               0.6
+14               0.5
+
+TEST: #SR 12 15 16 17 18 19 20 21 22
+      "The current global transformation should be saved and
+       restored by <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR GLOBAL TRANSFORMATION:
+  which asterisk-marker is NOT accurately circled?
+pass/fail depending on response = position of polymarker #14
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+xloc = x-MC for polymarkers, (before transformation) = 0.1
+
+set up PERM to randomize position of polymarkers
+
+set up CSS:
+
+structure #101
+polymarker style = asterisk
+set marker size scale factor equivalent to WC = 0.04
+set global transformation = scale X by 1.5
+set local transformation  = scale X by 4
+polymarker #1 at (xloc, y-location corresponding to PERM(1))
+execute 102
+polymarker #9 at (xloc, y-location corresponding to PERM(9))
+replace local transformation with x-shift of +0.1
+polymarker #10 at (xloc, y-location corresponding to PERM(10))
+set local transformation to make markers #11,12 distinguishable
+  from #5,6: preconcatenate appropriate y-shift
+execute 104
+re-set local transformation: preconcatenate negative y-shift
+polymarker #13 at (xloc, y-location corresponding to PERM(13))
+polymarker #14 at (xloc, y-location corresponding to PERM(14))
+execute 105
+
+structure #102
+polymarker #2 at (xloc, y-location corresponding to PERM(2))
+set global transformation = scale X by 8
+execute 103
+polymarker #8 at (xloc, y-location corresponding to PERM(8))
+
+structure #103
+polymarker #3 at (xloc, y-location corresponding to PERM(3))
+set local transformation = shift X by -0.05
+polymarker #4 at (xloc, y-location corresponding to PERM(4))
+execute 104
+postconcatenate to local transformation: scale X by 1.4
+polymarker #7 at (xloc, y-location corresponding to PERM(7))
+
+structure #104
+polymarker #5 / #11 at (xloc, y-location corresponding to PERM(5 / 11))
+set local transformation = scale X by 0.8
+polymarker #6 / #12 at (xloc, y-location corresponding to PERM(6 / 12))
+
+structure #105
+set marker style = circle
+set marker size scale factor equivalent to WC = 0.05
+re-set global transformation to identity
+All y-locations correspond to PERM as above.
+
+Expected x-locations (except #14, deliberately incorrect):
+polymarker#    x-location    global trans    local trans
+-----------    ----------    ------------    -----------
+01               0.6         G = 1.5*L       L = 4*X
+02               0.6         G = 1.5*4*L     L = X
+03               0.8         G = 8*L         L = X
+04               0.4         G = 8*L         L = X-0.05
+05               0.4         G = 8*(L-0.05)  L = X
+06               0.24        G = 8*(L-0.05)  L = 0.8*X
+07               0.56        G = 8*L         L = 1.4*(X-0.05)
+08               0.8         G = 8*L         L = X
+09               0.6         G = 1.5*L       L = 4*X
+10               0.3         G = 1.5*L       L = X+0.1
+11               0.3         G = 1.5*(L+0.1) L = X
+12               0.27        G = 1.5*(L+0.1) L = 0.8*X
+13               0.3         G = 1.5*L       L = X+0.1
+14               0.27        G = 1.5*L       L = X+0.1
+
+TEST: #SR 4 8 12 15 16 17 18 19 20 21 22
+      "For an executed structure, its global transformation
+       should be initialized to the composite transformation of
+       the invoking structure and its local transformation should
+       be initialized to the identity transformation."
+
+OPQA/INHERITANCE OF MODELLING TRANSFORMATIONS: which
+   asterisk-marker is NOT accurately circled?
+pass/fail depending on response = position of polymarker #14
+
+END PROGRAM 10
+
+
+PROGRAM 11: Visual effect of modelling clipping facilities
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+MAXIMUM NUMBER OF SPECIFIED DISTINCT PLANES: A number of markers,
+arranged at irregular intervals along a circle, should be
+visible.  Report the number of visible markers.  Include markers
+which are partially visible.
+
+MAXIMUM NUMBER OF CURRENT DISTINCT PLANES: Same as for MAXIMUM
+NUMBER OF SPECIFIED DISTINCT PLANES, above.
+
+REGISTERED OPERATORS: The screen should be divided into labelled
+quadrants, indicating the extent of the previous modelling
+clipping volume, and of the most recently specified volume.  A
+text primitive, "WHERE'S THE REST OF ME?" is drawn so as to
+overlap all four regions. If the clipping of this primitive is
+consistent with the documented effect of the indicated
+combination operator, answer "yes", otherwise "no".
+
+IMPLEMENTATION OPERATORS: Same as REGISTERED OPERATORS, above.
+
+
+DESIGN:
+
+use <inquire modelling clipping facilities> to determine
+  maxpl  = maximum# of planes
+  lrmcop = list of registered modelling clipping combination
+           operators > 2
+  limcop = list of implementor modelling clipping combination
+           operators < 1
+
+tstmax = maximum number of planes that test can handle
+numpl = actual number of planes to be tested
+      = min(maxpl,tstmax)
+minmrk = minimum number of visible markers = 2
+maxmrk = maximum number of visible markers = min(12, 0.75*numpl)
+rad = WC radius of prism = 0.4
+
+TEST: #SR 23 35 40 41 42 43 59
+      "The program should be able to replace the current
+       modelling clipping volume by a specified modelling
+       clipping volume that uses up to the reported maximum
+       number of distinct planes."
+
+Set up array of planes: each half-space specified
+  by a point and vector.  Combination of half-spaces
+  is a prism whose central axis is the y-axis, and whose
+  cross-section in the y=0 plane is a regular polygon
+  with numpl sides.
+
+do ix = 1,numpl
+   ang = ix*2*pi / numpl
+   cosang = cos(ang)
+   sinang = sin(ang)
+   calculate half-spaces:
+   x-point (ix) = hs(1,ix) = cosang
+   y-point (ix) = hs(2,ix) = random real from -5 to 5
+   z-point (ix) = hs(3,ix) = sinang
+   x-vector(ix) = hs(4,ix) = -cosang
+   y-vector(ix) = hs(5,ix) = 0
+   z-vector(ix) = hs(6,ix) = -sinang
+next ix
+
+set up structure:
+
+set local transformation:
+   fixed point = 0,0,0
+   scale by rad,rad,rad
+   rotate 90 degrees around x-axis
+     (make axis of prism parallel to z-axis)
+   shift by 0.5,0.5,0.5 to center in NPC
+set up current MCV to be replaced by next <Set MCV>:
+set 2D MCV, using
+   combination operator = replace
+   MCV = one half-space: (point = -0.5,0.0; vector = 1,0)
+set 3D MCV, using
+   combination operator = replace
+   MCV = full array of planes
+set local transformation back to identity
+set modelling clipping indicator = CLIP
+
+visct = random number from minmrk to maxmrk
+vislis = random list of visct entries, chosen from 1-numpl
+
+calculate coordinates of polymarker:
+do ix = 1,numpl
+   if (vislis contains ix) then
+      make visible:
+      thsrad = 0.99 * rad
+   else
+      thsrad = 1.01 * rad
+   endif
+
+   ang = ix*2*pi / numpl
+   xloc (ix) = 0.5 + thsrad * cos(ang)
+   yloc (ix) = 0.5 + thsrad * sin(ang)
+   zloc (ix) = random from 0 to 1
+next ix
+draw polymarker using xloc,yloc,zloc arrays
+
+OPQA/MAXIMUM NUMBER OF SPECIFIED DISTINCT PLANES: How many
+  markers are visible?
+pass/fail depending on (operator response = visct)
+
+TEST: #SR 23 35 40 41 42 43 59
+      "The intersection operator should be able to construct a
+       current modelling clipping volume that uses up to the
+       reported maximum number of distinct planes."
+
+set up structure:
+set local transformation:
+   fixed point = 0,0,0
+   scale by rad,rad,rad
+   rotate 90 degrees around x-axis
+     (make axis of prism parallel to z-axis)
+   shift by 0.5,0.5,0.5 to center in NPC
+do ix = 1,numpl
+   set 3D MCV, using
+      combination operator = intersect
+      MCV = half-space #ix
+next ix
+set local transformation back to identity
+set modelling clipping indicator = CLIP
+
+
+visct = random number from minmrk to maxmrk
+vislis = random list of visct entries, chosen from 1-numpl
+
+calculate coordinates of polymarker:
+do ix = 1,numpl
+   if (vislis contains ix) then
+      make visible:
+      thsrad = 0.99 * rad
+   else
+      thsrad = 1.01 * rad
+   endif
+
+   ang = ix*2*pi / numpl
+   xloc (ix) = 0.5 + thsrad * cos(ang)
+   yloc (ix) = 0.5 + thsrad * sin(ang)
+   zloc (ix) = random from 0 to 1
+next ix
+draw polymarker using xloc,yloc,zloc arrays
+
+OPQA/MAXIMUM NUMBER OF CURRENT DISTINCT PLANES: How many
+  markers are visible?
+pass/fail depending on (operator response = visct)
+
+if (lrmcop is empty and limcop is empty) then
+   no additional operator tests - skip initialization
+   goto list_check
+endif
+
+txstr = text string to be potentially clipped
+      = "WHERE'S THE REST OF ME?"
+
+initialize structure for tests:
+outline and label four quadrants of screen
+set previous MCV using
+   combination operator = replace
+   volume = point: 0.5,0.5, vector: -1,0
+label 101
+set dummy MCV using
+   combination operator = replace
+   volume = point: 0.5,0.5, vector: -1,0
+set clipping on
+text primitive, using txstr, STROKE precision,
+   centered at 0.5,0.5
+edit mode = replace
+position element pointer at label 101
+increment element pointer by 1 to allow replacement
+   of second <set MCV>
+
+screen looks like:
+
+ -------------------------------------------------------
+ | inside previous MCV      | outside previous MCV     |
+ | outside new MCV          | outside new MCV          |
+ |                          |                          |
+ |                          |                          |
+ |                          |                          |
+ |--------------"WHERE'S THE REST OF ME?"--------------|
+ |                          |                          |
+ |                          |                          |
+ |                          |                          |
+ | inside previous MCV      | outside previous MCV     |
+ | inside new MCV           | inside new MCV           |
+ -------------------------------------------------------
+
+list_check:
+
+if (lrmcop is empty) then
+   informational message: No registered combination operators
+      supported for setting modelling clipping volume.
+   goto end_reg
+endif
+
+TEST: #SR 35 40 44 57
+      "The effect of combination operators > 2 in <set modelling
+       clipping volume> should be as described in the ISO
+       register."
+
+numop = min(size of lrmcop, 8)
+lisop = list of operators = numop elements taken from lrmcop
+for each element = thisop in lisop
+   set new MCV using
+      combination operator = thisop
+      volume = point: 0.5,0.5, vector: 0,-1
+   OPQA/REGISTERED OPERATORS: Is the clipping of the centered
+     text primitive <txstr> consistent with the description
+     of combination operator #<thisop>, as documented in the ISO
+     register?
+   if (operator response = NO) then
+      fail
+      goto end_reg
+   endif
+next element
+pass
+
+end_reg:
+
+if (limcop is empty) then
+   informational message: No implementor-defined combination
+      operators supported for setting modelling clipping volume.
+   goto end_imp
+endif
+
+TEST: #SR 35 40 45 57
+      "The effect of combination operators < 1 in <set modelling
+       clipping volume> should be as described in the
+       implementor's documentation."
+
+numop = min(size of limcop, 8)
+lisop = list of operators = numop elements taken from limcop
+for each element = thisop in lisop
+   set new MCV using
+      combination operator = thisop
+      volume = point: 0.5,0.5, vector: 0,-1
+   OPQA/IMPLEMENTATION OPERATORS: Is the clipping of the centered
+     text primitive <txstr> consistent with the description
+     of combination operator #<thisop>, as documented by the
+     implementor?
+   if (operator response = NO) then
+      fail
+      goto end_imp
+   endif
+next element
+pass
+
+end_imp:
+
+END PROGRAM 11
+
+
+PROGRAM 12: Geometry of modelling clipping
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+3D GEOMETRY OF CLIPPING VOLUME: Several markers should be visible.
+Verify that they are all plus-type markers, and if so, report how many
+are visible.
+
+2D GEOMETRY OF CLIPPING VOLUME: Same as 3D GEOMETRY OF CLIPPING
+VOLUME, above.
+
+EMPTY LIST OF HALF-SPACES: There should be a dotted line down the
+center of the screen, with a number of visible markers to its
+left and right.  Report the number of each as prompted.
+
+DESIGN:
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+TEST: #SR 23 29 40 41 42 52 53 58 59
+      "A polymarker should be clipped if and only if (1) its WC position
+       is outside the current WC modelling clipping volume as set by
+       <set modelling clipping volume 3> and (2) the current clipping
+       indicator = CLIP."
+
+set up transformation to change xy plane into a plane slightly
+rotated about .5,.5,0 and then shifted so as to contain
+(.5, .5, .5):
+
+xf = transform to x-rotate by up to +/- 20 degrees,
+                  y-rotate by up to +/- 20 degrees,
+  and then shift by 0,0,.5
+
+set local transformation to xf
+
+set modelling clipping volume to the X-Y plane in MC:
+    point  = 0,0,0
+    vector = 0,0,1
+
+Generate matrices to shift along Z axis (in or out)
+inxf = transform to shift in Z-dimension by +0.01
+outxf = transform to shift in Z-dimension by -0.01
+
+a,b,c,d = coefficients of transformed boundary plane (in WC)
+
+visct = number of polymarkers which should be visible = 0
+
+for x = 0.1 to 1 by 0.2
+for y = 0.1 to 1 by 0.2
+   inmcv  = true 1/3 of the time, else false
+   nclipd = true 1/2 of the time, else false
+
+   z = on clipping plane for x,y values
+     = (-a*x - b*y - d) / c
+
+   if (inmcv) then
+      set local transformation to inxf (x,y,z slightly inside MCV)
+      else
+      set local transformation to outxf (x,y,z, slightly outside MCV)
+      endif
+
+   if (nclipd) then
+      set modelling CLIP OFF
+   else
+      set modelling CLIP ON
+   endif
+
+   if (inmcv or nclipd) then
+      should be visible
+      marker style = plus
+      visct = visct+1
+   else
+      should be invisible
+      marker style = cross
+   endif
+
+   polymarker at x,y,z
+next x
+next y
+
+OPQA/3D GEOMETRY OF CLIPPING VOLUME: Is plus (+) the type of all
+   visible markers?
+if (operator responds "no") then
+   fail
+   goto end_3d
+endif
+
+OPQA/3D GEOMETRY OF CLIPPING VOLUME: How many markers are
+  visible?
+pass/fail depending on (operator response = visct)
+
+end_3d:
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+TEST: #SR 23 29 40 41 42 49 52 53 58 59
+      "A polymarker should be clipped if and only if (1) its WC position
+       is outside the current WC modelling clipping volume as set by
+       <set modelling clipping volume> and (2) the current clipping
+       indicator = CLIP."
+
+gen_2D_plane:
+
+set up transformation to change y=.5 plane into a plane slightly
+rotated about .5,.5,0 and then shifted so as to contain
+(.5, .5, .5):
+
+xf = transform to x-rotate from 70 to 110 degrees,
+                  y-rotate by up to +/- 20 degrees,
+  and then shift by 0,0,.5
+
+set local transformation to xf
+
+set modelling clipping volume to the X-Y plane in MC:
+    point  = 0, 0.5
+    vector = 0, 1
+
+Generate matrices to shift along Z axis (in or out)
+inxf = transform to shift in Z-dimension by +0.01
+outxf = transform to shift in Z-dimension by -0.01
+
+a,b,c,d = coefficients of transformed boundary plane (in WC)
+
+visct = number of polymarkers which should be visible = 0
+
+for x = 0.1 to 1 by 0.2
+for y = 0.1 to 1 by 0.2
+   inmcv  = true 1/3 of the time, else false
+   nclipd = true 1/2 of the time, else false
+
+   z = on clipping plane for x,y values
+     = (-a*x - b*y - d) / c
+
+   if (inmcv) then
+      set local transformation to inxf (x,y,z slightly inside MCV)
+      else
+      set local transformation to outxf (x,y,z, slightly outside MCV)
+   endif
+
+   if (nclipd) then
+      set modelling CLIP OFF
+   else
+      set modelling CLIP ON
+      endif
+
+   if (inmcv or nclipd) then
+      should be visible
+      marker style = plus
+      visct = visct+1
+   else
+      should be invisible
+      marker style = cross
+   endif
+
+   polymarker at x,y,z
+next x
+next y
+
+OPQA/2D GEOMETRY OF CLIPPING VOLUME: Is plus (+) the type of all
+   visible markers?
+if (operator responds "no") then
+   fail
+   goto end_2d
+endif
+
+OPQA/2D GEOMETRY OF CLIPPING VOLUME: How many markers are
+  visible?
+pass/fail depending on (operator response = visct)
+
+end_2d:
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+TEST: #SR 39 41 43
+      "In <set modelling clipping volume>, an empty list of
+       half-spaces should denote all of WC space."
+
+draw dotted line down the center of the screen
+set clipping indicator = CLIP
+
+set modelling clipping volume, using:
+  operator = replace
+  point = 0.5,0.5
+  vector = -1,0
+
+MCV should be unchanged:
+set modelling clipping volume 3, using:
+  operator = intersection
+  zero half-spaces
+
+rnloc = list of 1-9, in random order
+lvis = number visible on left side
+     = random from 2 to 4
+rvis = number visible on right side
+     = random from 1 to 9-lvis
+
+draw pairs of markers, left visible, right clipped
+for ix = 1 to lvis
+   jx = ix+lvis
+   xa(ix) = 0.4
+   xa(jx) = 0.6
+   ya(ix) = rnloc(ix) / 10.0
+   ya(jx) = ya(ix)
+next ix
+polymarker: 2*lvis entries from xa,ya
+
+re-set MCV to all WC space
+set modelling clipping volume (2D), using:
+  operator = replace
+  zero half-spaces
+
+for ix = 1 to rvis
+   jx = ix+rvis
+   xa(ix) = 0.4
+   xa(jx) = 0.6
+   ya(ix) = rnloc(ix+lvis) / 10.0
+   ya(jx) = ya(ix)
+next ix
+polymarker: 2*rvis entries from xa,ya
+
+lvis = lvis+rvis
+
+OPQA/EMPTY LIST OF HALF-SPACES: How many markers are visible
+  to the left of the dotted line?
+if (operator response not= lvis) then
+   fail
+   goto end_zero
+endif
+
+OPQA/EMPTY LIST OF HALF-SPACES: How many markers are visible
+  to the right of the dotted line?
+pass/fail depending on (operator response = rvis)
+
+end_zero:
+
+END PROGRAM 12
+
+
+PROGRAM 13: Invalid clipping specifications
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+UNSUPPORTED COMBINATION OPERATOR: There should be six boxes visible,
+each containing a clipped polyline.  All but one should be clipped
+along the same plane.  Identify the box in which the polyline is
+clipped differently.
+
+MAXIMUM CLIPPING PLANES EXCEEDED: Same as UNSUPPORTED COMBINATION
+OPERATOR, above.
+
+DEGENERATE HALF-SPACE: Same as UNSUPPORTED COMBINATION OPERATOR,
+above.
+
+DESIGN:
+
+Set up 6 windows on the screen
+
+use <inquire modelling clipping facilities> to determine
+  maxpl  = maximum# of planes
+  minop = minimum operator (lowest value)
+  maxop = maximum operator (highest value)
+
+coordinates for zigzag polyline:
+for ix = 1 to 8
+   xa(ix) = 0.2 + 0.6 * mod(ix,2)
+   ya(ix) = ix/9.0
+next ix
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+TEST: #SR 23 26 38 40 43 46
+      "If a <set modelling clipping volume> element specifies an
+       unsupported combination operator, then it should be ignored
+       upon traversal."
+
+winlis = randomized list of 1-6
+
+for winid = 1 to 6
+   thismc = winlis(winid)
+   <set local transformation to map 0:1,0:1 into window #winid
+   <set modelling clipping volume> using:
+      operator = replace
+      point = 0.5,0.5; vector = -1,0
+
+   if     (thismc = 1) then
+      different clip:
+      <set modelling clipping volume> using:
+         operator = replace,
+         point = 0.6,0.5; vector = -1,0
+      ngwin = winid
+   elseif (thismc = 2) then
+      normal clip: do nothing
+   elseif (thismc = 3) then
+      operator way too low:
+      <set modelling clipping volume 3> using:
+         operator = minop-303,
+         half-spaces: point = 0.5,0.5,0.5; vector = 0,1,0
+   elseif (thismc = 4) then
+      operator way too high:
+      <set modelling clipping volume> using:
+         operator = maxop+1000,
+         half-spaces: point = 0.5,0.5; vector = 0,-1
+   elseif (thismc = 5) then
+      operator slightly too low:
+      <set modelling clipping volume 3> using:
+         operator = minop-1,
+         half-spaces: point = 0.5,0.5,0.5; vector = 1,1,0
+   elseif (thismc = 6) then
+      operator slightly too high:
+      <set modelling clipping volume> using:
+         operator = maxop+1,
+         half-spaces: point = 0.5,0.5; vector = 1,-1
+   endif
+   draw polyline: 8 points using xa,ya
+next winid
+
+OPQA/UNSUPPORTED COMBINATION OPERATOR: In which square is the polyline
+  clipped differently?
+pass/fail depending on (operator response = ngwin)
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+TEST: #SR 23 26 38 40 43 47
+      "If a <set modelling clipping volume> element attempts to
+       generate a current MCV with more distinct planes than the
+       maximum supported, then it should be ignored upon traversal."
+
+winlis = randomized list of 1-6
+
+for winid = 1 to 6
+   thismc = winlis(winid)
+   <set local transformation to map 0:1,0:1 into window #winid
+   <set modelling clipping volume> using:
+      operator = replace
+      point = 0.5,0.5; vector = -1,0
+
+   if     (thismc = 1) then
+      different clip:
+      <set modelling clipping volume> using:
+         operator = replace,
+         point = 0.5,0.5; vector = 0,-1
+      ngwin = winid
+   elseif (thismc = 2) then
+      normal clip: do nothing
+   elseif (thismc = 3) then
+      exceed maximum with 2D replace:
+      <set modelling clipping volume> using:
+         operator = replace,
+         half-spaces: polygon centered at 0.5,0.5, radius = 0.1,
+                      with maxpl+1 sides
+   elseif (thismc = 4) then
+      exceed maximum with 2D intersect:
+      <set modelling clipping volume> using:
+         operator = intersect,
+         half-spaces: polygon centered at 0.5,0.5, radius = 0.1,
+                      with maxpl sides
+   elseif (thismc = 5) then
+      exceed maximum with 3D replace:
+      <set modelling clipping volume 3> using:
+         operator = replace,
+         half-spaces: polygon centered at 0.5,0.5, radius = 0.1,
+                      with maxpl+1 sides
+   elseif (thismc = 6) then
+      exceed maximum with 3D intersect:
+      <set modelling clipping volume 3> using:
+         operator = intersect,
+         half-spaces: polygon centered at 0.5,0.5, radius = 0.1,
+                      with maxpl sides
+   endif
+
+   draw polyline: 8 points using xa,ya
+next winid
+
+OPQA/MAXIMUM CLIPPING PLANES EXCEEDED: In which square is the polyline
+  clipped differently?
+pass/fail depending on (operator response = ngwin)
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+TEST: #SR 23 26 38 40 43 48
+      "If a <set modelling clipping volume> element specifies a
+       degenerate half-space (zero-length vector), then it should
+       be ignored upon traversal."
+
+winlis = randomized list of 1-6
+
+for winid = 1 to 6
+   thismc = winlis(winid)
+   <set local transformation to map 0:1,0:1 into window #winid
+   <set modelling clipping volume> using:
+      operator = replace
+      point = 0.5,0.5; vector = -1,0
+
+   if     (thismc = 1) then
+      different clip:
+      <set modelling clipping volume> using:
+         operator = replace,
+         point = 0.6,0.5; vector = -1,-1
+      ngwin = winid
+   elseif (thismc = 2) then
+      normal clip: do nothing
+   elseif (thismc = 3) then
+      zero vector, 2D, operator=replace:
+      <set modelling clipping volume> using:
+         operator = replace
+         point  = 0.4,0.6; vector =  1, 1
+         point  = 0.4,0.6; vector =  0, 0
+         point  = 0.4,0.6; vector = -1,-1
+   elseif (thismc = 4) then
+      zero vector, 3D, operator=intersect:
+      <set modelling clipping volume 3>, using:
+         operator = intersect
+         point  = 1,1,1; vector =  1,0,0
+         point  = 1,1,1; vector =  0,0,0
+         point  = 1,1,1; vector = -1,0,0
+   elseif (thismc = 5) then
+      zero vector, 2D, operator=intersect:
+      <set modelling clipping volume> using:
+         operator = intersect
+         point  = 0.4,0.6; vector =  1, 1
+         point  = 0.4,0.6; vector =  0, 0
+         point  = 0.4,0.6; vector = -1,-1
+   elseif (thismc = 6) then
+      zero vector, 3D, operator=replace:
+      <set modelling clipping volume 3>, using:
+         operator = replace
+         point  = 1,1,1; vector =  1,0,0
+         point  = 1,1,1; vector =  0,0,0
+         point  = 1,1,1; vector = -1,0,0
+   endif
+   draw polyline: 8 points using xa,ya
+next winid
+
+OPQA/DEGENERATE HALF-SPACE: In which square is the polyline
+  clipped differently?
+pass/fail depending on (operator response = ngwin)
+
+END PROGRAM 13
+
+
+PROGRAM 14: Restore MCV
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DESIGN:
+
+set up 6 windows on screen
+
+set up distinct z-location for various clipping planes:
+delta = 0.05
+for ix = 1 to 5
+   hloc(ix) = ix * 3 * delta + 0.1
+next ix
+
+randomize window order:
+ranwin = list of 1-6, in random order
+
+Throughout, check which clipping plane is in effect by drawing
+polymarker with two markers, one just in front (unclipped), and
+one just behind (clipped) the expected plane.
+
+--- structure 101:
+
+set clipping indicator = ON
+
+draw polymarker:
+  marker #1: (should be visible)
+    x = x-center of window #ranwin(6) - delta
+    y = y-center of window #ranwin(6)
+    z = 0.5
+  marker #2: (should be visible)
+    x = x-center of window #ranwin(6) + delta
+    y = y-center of window #ranwin(6)
+    z = 0.5
+
+set MCV#1, using replace
+  point  = (0,0,hloc(1))
+  vector = (0,0,1)
+execute structure 102
+
+--- structure 102:
+inherit MCV #1
+
+set MCV#2, using replace
+  point  = (0,0,hloc(2))
+  vector = (0,0,1)
+restore MCV#1
+draw polymarker:
+  marker #1: (should be clipped)
+    x = x-center of window #ranwin(1) - delta
+    y = y-center of window #ranwin(1)
+    z = hloc(1) - delta
+  marker #2: (should be visible)
+    x = x-center of window #ranwin(1) + delta
+    y = y-center of window #ranwin(1)
+    z = hloc(1) + delta
+
+set MCV#3, using replace
+  point  = (0,0,hloc(3))
+  vector = (0,0,1)
+execute structure 103
+
+draw polymarker:
+  marker #1: (should be clipped)
+    x = x-center of window #ranwin(2) - delta
+    y = y-center of window #ranwin(2)
+    z = hloc(3) - delta
+  marker #2: (should be visible)
+    x = x-center of window #ranwin(2) + delta
+    y = y-center of window #ranwin(2)
+    z = hloc(3) + delta
+
+restore MCV#1
+
+draw polymarker:
+  marker #1: (should be clipped)
+    x = x-center of window #ranwin(3) - delta
+    y = y-center of window #ranwin(3)
+    z = hloc(1) - delta
+  marker #2: (should be visible)
+    x = x-center of window #ranwin(3) + delta
+    y = y-center of window #ranwin(3)
+    z = hloc(1) + delta
+
+--- structure 103:
+inherit MCV#3
+
+set MCV#4, using replace
+  point  = (0,0,hloc(4))
+  vector = (0,0,1)
+
+draw polymarker:
+  marker #1: (should be clipped)
+    x = x-center of window #ranwin(4) - delta
+    y = y-center of window #ranwin(4)
+    z = hloc(4) - delta
+  marker #2: (should be visible)
+    x = x-center of window #ranwin(4) + delta
+    y = y-center of window #ranwin(4)
+    z = hloc(4) + delta
+
+restore MCV#3
+
+draw polymarker:
+  marker #1: (should be clipped)
+    x = x-center of window #ranwin(5) - delta
+    y = y-center of window #ranwin(5)
+    z = hloc(3) - delta
+  marker #2: (should be visible)
+    x = x-center of window #ranwin(5) + delta
+    y = y-center of window #ranwin(5)
+    z = hloc(3) + delta
+set MCV#5, using replace
+  point  = (0,0,hloc(5))
+  vector = (0,0,1)
+
+TEST: #SR 23 40 43 51 56
+      "<Restore modelling clipping volume> should cause the
+       current modelling clipping volume to be reset to the value
+       inherited by the structure being traversed."
+
+OPQA/RESTORE MCV: Which box does NOT contain exactly one marker?
+pass/fail depending on (operator identifies #ranwin(6))
+
+END PROGRAM 14
+
+
+PROGRAM 15: Network inheritance and initialization of modelling
+            clipping volume
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR MCV: There should be a pair of
+polymarkers on each line, one of type plus (+) and the other of type
+cross (X).  On all lines but one, the number of markers in each
+polymarker should be the same.  Identify the line in which the number
+of markers does NOT match.
+
+STRUCTURE NETWORK INHERITANCE FOR CLIPPING INDICATOR: Every line
+but one should contain a single marker.  Identify the line in
+which the number of markers is not one (may be zero).
+
+DESIGN:
+
+All test cases use same basic structure network for testing
+inheritance.  Five distinct values for the transformation to be
+tested are set up and propagated throughout the network.  The
+first value is the system default from the PDT. Note that
+structure #104 is executed by both #103 and #101.
+
+default = val#1
+  |                  102
+  |                 /  prim 2
+  |               /    attr = val#3   val#3
+  V        val#1/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   attr = val#4
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  attr = val#2                                  prim 7    \ val#4
+  prim 10                                                   \
+  transform             val#2                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        attr = val#5
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+
+*** *** *** ***   modelling clipping volume   *** *** *** ***
+
+set up PERM to randomize position of polymarkers
+
+set up CSS:
+
+Structure network #101 draws actual results - partially clipped
+plus-type polymarkers - in random order.  Structure #105 draws
+expected results except for polymarker 14 which is deliberately
+drawn with an incorrect number of markers.
+
+xloc(1 to 5) = 0.2, 0.25, 0.3, 0.35, 0.4
+
+structure #101
+set clipping on
+set marker style = plus
+set marker size scale factor equivalent to WC = 0.03
+polymarker #1 at (xloc, y-location corresponding to PERM(1))
+execute 102
+polymarker #9 at (xloc, y-location corresponding to PERM(9))
+set MCV:
+  point = 0.22,0; vector = -1,0
+polymarker #10 at (xloc, y-location corresponding to PERM(10))
+set local transformation to make markers #11,12 distinguishable
+  from #5,6
+execute 104
+re-set local transformation to identity
+polymarker #13 at (xloc, y-location corresponding to PERM(13))
+polymarker #14 at (xloc, y-location corresponding to PERM(14))
+execute 105
+
+structure #102
+polymarker #2 at (xloc, y-location corresponding to PERM(2))
+set MCV:
+  point = 0.27,0; vector = -1,0
+execute 103
+polymarker #8 at (xloc, y-location corresponding to PERM(8))
+
+structure #103
+polymarker #3 at (xloc, y-location corresponding to PERM(3))
+set MCV3:
+  point = 0.32,0,0; vector = -1,0,1
+polymarker #4 at (xloc, y-location corresponding to PERM(4))
+execute 104
+polymarker #7 at (xloc, y-location corresponding to PERM(7))
+
+structure #104
+polymarker #5 / #11 at (xloc, y-location corresponding to PERM(5 / 11))
+set MCV:
+  point = 0.37,0; vector = -1,0
+polymarker #6 / #12 at (xloc, y-location corresponding to PERM(6 / 12))
+
+structure #105
+set clipping off
+set marker style = cross
+
+All y-locations correspond to PERM as above.
+
+Expected number of markers (except #14, deliberately incorrect):
+polymarker#     number visible
+-----------     --------------
+   01                 5
+   02                 5
+   03                 2
+   04                 3
+   05                 3
+   06                 4
+   07                 3
+   08                 2
+   09                 5
+   10                 1
+   11                 1
+   12                 4
+   13                 1
+   14                 2
+
+TEST: #SR 23 26 40 41 42 43 49 50 51 57 58 59
+      "The current modelling clipping volume should be saved and
+       restored by <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR MCV: On which line is the
+  number of plus-markers NOT equal to that of the cross-markers?
+pass/fail depending on response = position of polymarker #14
+
+*** *** *** ***   modelling clipping indicator   *** *** *** ***
+
+val#  clipping indicator
+----  ------------------
+1     off (default)
+2     on
+3     on
+4     off
+5     on
+
+set up PERM to randomize position of polymarkers
+
+set up CSS:
+
+Structure network #101 draws actual results - each marker either
+clipped or not - in random order.  Structure #105 draws a marker
+on those lines where the actual marker should have been clipped
+(so that each line should contain exactly one visible marker),
+except for polymarker 14 which is deliberately drawn incorrectly.
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+xloc(1) = 0.4
+
+structure #101
+set MCV, clip out all of MC-space:
+  point = xloc(1)-0.01,0; vector = -1,0
+  point = xloc(1)+0.01,0; vector =  1,0
+set marker style = plus
+set marker size scale factor equivalent to WC = 0.03
+polymarker #1 at (xloc, y-location corresponding to PERM(1))
+execute 102
+polymarker #9 at (xloc, y-location corresponding to PERM(9))
+set clipping indicator = ON
+polymarker #10 at (xloc, y-location corresponding to PERM(10))
+set local transformation to make markers #11,12 distinguishable
+  from #5,6
+execute 104
+re-set local transformation to identity
+polymarker #13 at (xloc, y-location corresponding to PERM(13))
+polymarker #14 at (xloc, y-location corresponding to PERM(14))
+execute 105
+
+structure #102
+polymarker #2 at (xloc, y-location corresponding to PERM(2))
+set clipping indicator = ON
+execute 103
+polymarker #8 at (xloc, y-location corresponding to PERM(8))
+
+structure #103
+polymarker #3 at (xloc, y-location corresponding to PERM(3))
+set clipping indicator = OFF
+polymarker #4 at (xloc, y-location corresponding to PERM(4))
+execute 104
+polymarker #7 at (xloc, y-location corresponding to PERM(7))
+
+structure #104
+polymarker #5 / #11 at (xloc, y-location corresponding to PERM(5 / 11))
+set clipping indicator = ON
+polymarker #6 / #12 at (xloc, y-location corresponding to PERM(6 / 12))
+
+structure #105
+set clipping off
+
+xloc(1) = xloc(1) + 0.1
+All y-locations correspond to PERM as above.
+
+polymarker#     to be drawn?   expected clipping indicator
+-----------     ------------   ---------------------------
+   01              no             OFF
+   02              no             OFF
+   03              yes            ON
+   04              no             OFF
+   05              no             OFF
+   06              yes            ON
+   07              no             OFF
+   08              yes            ON
+   09              no             OFF
+   10              yes            ON
+   11              yes            ON
+   12              yes            ON
+   13              yes            ON
+   14              no             ON
+
+TEST: #SR 29 52 53 54 55 57 58 59
+      "The current modelling clipping indicator should be saved
+       and restored by <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR CLIPPING INDICATOR: Which
+  line does NOT contain exactly one marker?
+pass/fail depending on response = position of polymarker #14
+
+END PROGRAM 15
+
+
+PROGRAM 16: Modelling clipping for polyline and polymarker
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+MODELLING CLIPPING OF POLYLINE: There should be six windows, some
+containing individual line segments, others containing connected
+polylines.  In all windows but one, every line vertex (location
+of endpoints, or of points where line segments are joined) should
+be accurately circled by a marker and every circle should
+surround a vertex.  Identify the window in which this is NOT the
+case.
+
+MODELLING CLIPPING OF POLYMARKER: There should be eight lines,
+all but one containing a number of markers, each surrounded by a
+square.  Furthermore, every square should surround a marker.
+Identify the line in which there are either empty squares or
+unsurrounded markers.
+
+DESIGN:
+
+throughout, represent a line segment as a point P and vector V,
+  where endpoints = P and P+V
+
+*** *** *** ***   polyline   *** *** *** ***
+
+TEST: #SR 40 41 42 43 53 57 58
+      "Exactly those parts of a polyline that lie outside the
+       current modelling clipping volume should be clipped."
+
+set up 6 numbered windows on screen
+set marker type = circle
+set marker size = 0.02 in WC
+set line width = minimum available
+
+ngwin = incorrectly drawn window = random from 1 to 6
+for thiswn = 1 to 6
+   xf = modelling transformation to map unit square (0-1) into
+     window #thiswn (with z-dimension unaltered)
+   set local transformation = xf
+   set clipping ON
+
+   if (thiswn = 1 or 4) then
+      *** *** ***  multi line segment, several ends clipped:
+
+      points on clipping planes =
+        plpt(1) = (0.5, 0.5, 0)
+        plpt(2) = (0.5, 0.5, 0)
+      vec(1) = attitude of plane #1 =  5,0,2
+      vec(2) = attitude of plane #2 = -5,0,2
+
+      set MCV (with REPLACE operator) =
+         point: plpt(1), vector: vec(1)
+         point: plpt(2), vector: vec(2)
+
+      dco(1) = 4th coefficient for plane #1
+             = -(vecx(1)*plptx(1) + vecy(1)*plpty(1) + vecz(1)*plptz(1))
+      dco(2) = 4th coefficient for plane #2
+             = -(vecx(2)*plptx(2) + vecy(2)*plpty(2) + vecz(2)*plptz(2))
+
+      expnum = 0
+      for ix = 1 to 6
+         primx(ix) = 0.9 * mod(ix,2) + 0.05
+         primy(ix) = ix/7.0
+         primz(ix) = random real from 0.1 to 0.9
+         if (ix > 1) then
+            pdif = prim(ix) - prim(ix-1)
+
+            expnum = expnum+1
+            expv(expnum) = intersection of
+               plane defined by vecx(1),vecy(1),vecz(1),dco(1) and
+               line defined by prim(ix) and pdif
+            expnum = expnum+1
+            expv(expnum) = intersection of
+               plane defined by vecx(2),vecy(2),vecz(2),dco(2) and
+               line defined by prim(ix) and pdif
+         endif
+      next ix
+
+      draw polyline using prim(1 to 6)
+
+   elseif (thiswn = 2 or 5) then
+      *** *** ***  use six clipping planes:
+
+      xf = modelling transformation to map double-unit cube (-1 to 1)
+           into window #thiswn (in z-dimension map -1 to 1 into 0 to 1)
+      set local transformation = xf
+      set up planes surrounding the origin,
+         clipping away from the origin:
+      for ix = 1 to 6
+         ang = (2*pi*ix) / 6
+         plptx(ix) = 0.5 * sin(ang)
+         plpty(ix) = 0.5 * cos(ang)
+         plptz(ix) = 0
+         vecx(ix) = -plptx(ix)
+         vecy(ix) = -plpty(ix)
+         vecz(ix) = random from -0.1 to 0.1
+         dco(ix) = 4th coefficient for plane #ix
+                 = -(vecx(ix)*plptx(ix) +
+                     vecy(ix)*plpty(ix) +
+                     vecz(ix)*plptz(ix))
+      next ix
+
+      set MCV (with REPLACE operator) =
+         6 points: plpt(1 to 6), 6 vectors: vec(1 to 6)
+
+      draw 4 line segments through the origin:
+      expnum = 0
+      for ix = 1 to 4
+         ang = ix * pi / 4
+         primx(1) = 5 * sin(ang)
+         primy(1) = 5 * cos(ang)
+         primz(1) = random real from -1.0 to 1.0
+         primx(2) = -primx(1)
+         primy(2) = -primy(1)
+         primz(2) = -primz(1)
+         draw polyline from prim(1) to prim(2)
+
+         calculate clipped points as those closest to the origin:
+         upos =  1000
+         uneg = -1000
+         for iy = 1 to 6
+            u = -dco(iy) / (vecx(iy)*primx(1) +
+                            vecy(iy)*primy(1) +
+                            vecz(iy)*primz(1) )
+            if (u > 0) then
+               upos = min(upos,u)
+            else
+               uneg = max(uneg,u)
+            endif
+         next iy
+         expnum = expnum+1
+         expv(expnum) = upos*primx(1), upos*primy(1), upos*primz(1)
+         expnum = expnum+1
+         expv(expnum) = uneg*primx(1), uneg*primy(1), uneg*primz(1)
+      next ix
+
+   elseif (thiswn = 3 or 6) then
+      *** *** ***  clip away entire 2D line segments:
+      point, vector for clipping plane:
+      plpt(1) = ( 0.6, 0.5, 0)
+      vec(1)  = (-3.0,-1.0, 5.0)
+
+      set MCV (with REPLACE operator) =
+         point: plpt(1), vector: vec(1)
+
+      build spiral 2D polyline:
+      ptid = 1
+      prim(ptid) = (0.5, 0.5)
+      delta = 1
+
+      expnum = 0
+
+      for ix = 1 to 5
+         ptid = ptid+1
+         primx(ptid) = primx(ptid-1) + delta*0.15
+         primy(ptid) = primy(ptid-1)
+
+         horizontal segment crosses clipping plane:
+         expnum = expnum+1
+         expvx(expnum) = min(primx(ptid), primx(ptid-1))
+         expvy(expnum) = primy(ptid)
+         expvz(expnum) = 0
+
+         expnum = expnum+1
+         expvx(expnum) = (2-primy(ptid)) / 3
+         expvy(expnum) = primy(ptid)
+         expvz(expnum) = 0
+
+         ptid = ptid+1
+         primx(ptid) = primx(ptid-1)
+         primy(ptid) = primy(ptid-1) + delta*0.15
+
+         if (delta > 0) then
+            delta = delta+1
+         else
+            delta = delta-1
+         endif
+         delta = -delta
+      next ix
+      draw polyline using prim(1 to ptid)
+   endif
+
+   if (thiswn = ngwin) then
+      omit at random one expected vertex:
+      idel = random integer from 1 to expnum
+      expv(idel) = expv(expnum)
+      expnum = expnum-1
+   endif
+
+   for ix = 1, expnum
+      pmloc(ix) = expv(ix) as transformed by xf
+   next ix
+   set clipping OFF
+   set modelling transformation to identity
+   draw 2D circle polymarker for pmloc
+
+next thiswn
+
+OPQA/MODELLING CLIPPING OF POLYLINE: In which window is there NOT
+  exactly one enclosing circle marker for each polyline vertex?
+pass/fail depending on (operator identifies ngwin)
+
+
+*** *** *** ***   polymarker   *** *** *** ***
+
+TEST: #SR 40 41 42 43 53 57 58 59
+      "If the location of a marker lies outside the current
+       modelling clipping volume, the entire marker should be
+       clipped; if inside it should be unclipped or partially
+       clipped."
+
+set marker size = 0.03 in WC
+set line width = minimum available
+
+numlin = number of lines to display = 8
+ngline = incorrectly drawn line = random integer from 1 to numlin
+yincr = space between lines = 1.0 / (numlin+1)
+ytop = 1 - yincr
+yloc = ytop
+primx(1 to 8) = 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9
+label the lines
+for thisln = 1 to numlin
+   set clipping ON
+   set marker type = mod(thisln, 5) + 1
+   numvis = number visible markers = random integer from 1 to 8
+
+   put clipping plane just to the right of marker #numvis or
+     just to the left of marker #numvis+1:
+   xincr = mod(thisln,2) * 0.098
+   set MCV (with REPLACE operator) =
+      point: (numvis/10.0 + 0.101 + xincr, 0, 0); vector: (-1,0,0)
+   primy(1 to 8) = yloc
+   draw polymarker with prim(1 to 8)
+
+   set clipping OFF
+   if (thisln = ngline) then
+      numvis = numvis-1
+   endif
+   xloc = 0.2
+   for ix = 1 to numvis
+      draw square, using polyline, size = 0.035 in WC,
+        centered at xloc, yloc
+      xloc = xloc + 0.1
+   next ix
+
+   yloc = yloc-yincr
+next thisln
+
+OPQA/MODELLING CLIPPING OF POLYMARKER: On which line is there NOT
+  exactly one enclosing box for each marker?
+pass/fail depending on (operator identifies ngline)
+
+END PROGRAM 16
+
+
+PROGRAM 17: Modelling clipping for text and annotation text
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+MODELLING CLIPPING OF STROKE TEXT: There should be six windows,
+each containing some clipped text.  The visible text should be
+accurately outlined by a dotted polyline. Identify the window in
+which this is NOT the case.
+
+MODELLING CLIPPING OF CHAR TEXT: The screen should display a
+single text string.  Count and report the number of visible
+characters in the string.  Even if a character is partially
+clipped, it should be included in the count.
+
+MODELLING CLIPPING OF ENTIRE ANNOTATION TEXT: There should be six
+windows, some containing at least partially visible annotation
+text, others empty.  List all empty the windows (in any order).
+
+PARTIAL MODELLING CLIPPING OF ANNOTATION TEXT: There should be eight
+numbered lines of text, each containing some visible annotation text.
+In all but one, a dotted polyline is used to outline that part of the
+annotation text which must be visible (because it is within the
+transformed modelling clipping volume).  Identify the window in which
+the outline is at least partially empty.  In all the windows, ignore
+any additional annotation text that may appear outside the outline.
+
+DESIGN:
+
+throughout, represent a line segment as a point P and vector V,
+  where endpoints = P and P+V
+
+*** *** *** ***   text   *** *** *** ***
+
+TEST: #SR 40 41 42 43 53 57 58
+      "Exactly those parts of a text primitive in STROKE
+       precision that lie outside the current modelling clipping
+       volume should be clipped."
+
+txstr = text string with ASCII characters that fill character box
+      = ZHMENKX
+
+*** *** ***  set up expected horizontal text extent:
+
+using text alignment = center,half:
+nomhl = nominal x-location of left border of horizontal string
+nomhr = nominal x-location of right border of horizontal string
+nomhb = nominal y-location of baseline of horizontal string
+nomhc = nominal y-location of capline of horizontal string
+chxph = horizontal-path expansion factor = 0.3
+nomhl = nomhl*chxph
+nomhr = nomhr*chxph
+chhth = horizontal-path character height = 1.8 / (nomhr-nomhl)
+
+*** *** ***  set up expected vertical text extent:
+
+assuming text alignment = center,half:
+nomvl = nominal x-location of left border of vertical string
+nomvr = nominal x-location of right border of vertical string
+nomvb = nominal y-location of baseline of vertical string
+nomvc = nominal y-location of capline of vertical string
+chxpv = vertical-path expansion factor = 3.0
+nomvl = nomvl*chxpv
+nomvr = nomvr*chxpv
+chhtv = vertical-path character height = 1.8 / (nomvc-nomvb)
+
+set up 6 numbered windows on screen
+set text alignment      = center,half
+set text precision      = stroke
+
+ngwin = incorrectly drawn window = random from 1 to 6
+for thiswn = 1 to 6
+   xf = modelling transformation to map double-unit MC cube (-1 to 1)
+        into window #thiswn in xy-dimensions, and into (0 to 1)
+        in z-dimension
+   set local transformation = xf
+   set clipping ON
+
+   compute expected text position:
+get_vecs:
+   td(1) = random 3D vector chosen from -1 to 1 in each dimension
+   td(2) = random 3D vector chosen from -1 to 1 in each dimension
+   nvec = normal vector to text plane = cross-product of vec1 x vec2
+
+   ensure text-plane not edge-on to operator:
+   if (nvec too oblique) then
+      goto get_vecs
+   endif
+
+   tdrot = 3D rotation transformation resulting from application
+           of text direction vectors
+
+   compute text rectangle corners:
+   if (thiswn < 4) then
+      set up for horizontal path:
+      set character height    = chhth
+      set character expansion = chxph
+      set text path           = RIGHT
+      scxf = transformation to scale by chhth
+      corxf = transformation for corners of text rectangle induced
+              by text direction vectors and char-height: TLC to MC
+            = scxf x tdrot
+      compute expected corners of text rectangle in MC:
+      corlb = (nomhl,nomhb,0) transformed by corxf
+      corlc = (nomhl,nomhc,0) transformed by corxf
+      corrb = (nomhr,nomhb,0) transformed by corxf
+      corrc = (nomhr,nomhc,0) transformed by corxf
+   else
+      set up for vertical path:
+      set character height    = chhtv
+      set character expansion = chxpv
+      set text path           = DOWN
+      scxf = transformation to scale by chhtv
+      corxf = transformation for corners of text rectangle induced
+              by text direction vectors and char-height: TLC to MC
+            = scxf x tdrot
+      compute expected corners of text rectangle in MC:
+      corlb = (nomvl,nomvb,0) transformed by corxf
+      corlc = (nomvl,nomvc,0) transformed by corxf
+      corrb = (nomvr,nomvb,0) transformed by corxf
+      corrc = (nomvr,nomvc,0) transformed by corxf
+   endif
+
+   4 corners form a scaled, rotated rectangle in 3D MC,
+      and a parallelogram when projected to xy-plane.
+   cent = center point = (corlb + corlc + corrb + corrc) / 4
+   hvec  = horizontal vector   = corrb-corlb
+   vvec  = vertical vector     = corlc-corlb
+   d1vec = 1st diagonal vector = corrc-corlb
+   d2vec = 2nd diagonal vector = corlc-corrb
+
+   compute values for clipping planes and for expected vertices:
+
+   if (thiswn = 1 or 4) then
+      clip off all but one corner:
+      plpt(1) = (corlb + 2*cent) / 3
+      vec(1)  = cross-product of nvec x d2vec
+      numhp = number of half-planes = 1
+      expnum = expected number of vertices = 3
+      expv(1) = corlb
+      expv(2) = (2*corlc + corlb) / 3
+      expv(3) = (2*corrb + corlb) / 3
+
+   elseif (thiswn = 2 or 5) then
+      clip off 4 corners:
+      plpt(1) = (2*corlb + cent) / 3
+      plpt(2) = (2*corlc + cent) / 3
+      plpt(3) = (2*corrb + cent) / 3
+      plpt(4) = (2*corrc + cent) / 3
+      vec(1)  = cross-product of d2vec x nvec
+      vec(2)  = cross-product of d1vec x nvec
+      vec(3)  = -vec(2)
+      vec(4)  = -vec(1)
+      numhp = number of half-planes = 4
+
+      expnum = expected number of vertices = 8
+      expv(1) = (2*corlc + corlb) / 3
+      expv(2) = (2*corlc + corrc) / 3
+      expv(3) = (2*corrc + corlc) / 3
+      expv(4) = (2*corrc + corrb) / 3
+      expv(5) = (2*corrb + corrc) / 3
+      expv(6) = (2*corrb + corlb) / 3
+      expv(7) = (2*corlb + corrb) / 3
+      expv(8) = (2*corlb + corlc) / 3
+
+   elseif (thiswn = 3 or 6) then
+      clip down the middle:
+      numhp = number of half-planes = 1
+      plpt(1) = cent
+      expnum = expected number of vertices = 4
+
+      if (thiswn = 3) then
+         clip horizontally - clip away top half
+         vec(1) = cross-product of hvec x nvec
+         expv(1) = corlb
+         expv(2) = corrb
+         expv(3) = (corrb + corrc) / 2
+         expv(4) = (corlb + corlc) / 2
+      else
+         clip vertically - clip away left side
+         vec(1) = cross-product of vvec x nvec
+         expv(1) = corrc
+         expv(2) = corrb
+         expv(3) = (corrb + corlb) / 2
+         expv(4) = (corrc + corlc) / 2
+      endif
+
+   endif
+
+   set MCV (with REPLACE operator) with numhp half-planes =
+      points: plpt; vectors: vec
+
+   draw 3D text using:
+      text position     = (0,0,0)
+      direction vectors = td(1), td(2)
+      character string  = txstr
+
+   if (thiswn = ngwin) then
+      3rd expected vertex = cent
+   endif
+
+   compute expected vertices in WC
+   for ix = 1, expnum+1
+      iy = mod(ix, expnum) + 1
+      plloc(ix) = expv(iy) as transformed by xf
+   next ix
+
+   set clipping OFF
+   set modelling transformation to identity
+   draw 2D polyline for plloc(1 to expnum+1)
+next thiswn
+
+OPQA/MODELLING CLIPPING OF STROKE TEXT: In which window is the
+  clipped text NOT accurately outlined?
+pass/fail depending on (operator identifies ngwin)
+
+clear screen
+
+TEST: #SR 40 41 42 43 53 57 58 60
+      "Characters in a text primitive drawn in CHAR precision
+       that lie completely outside the current modelling clipping
+       volume should be clipped, and those completely inside
+       should not be clipped."
+
+set text font           = 1
+set text precision      = char
+set text alignment      = center,half
+set text path           = RIGHT
+
+chstr  = "EEEEEEEEEEEEE"
+numvis = random integer from 2 to 6
+txlen  = number of characters drawn = 2*numvis + 1
+
+set 2D MCV (with REPLACE operator) with 1 half-plane =
+   point: (.5,.5); vector: (1,0)
+set clipping on
+
+draw 2D text using:
+   text position     = (.5,.5)
+   character string  = 1st txlen characters of chstr
+
+OPQA/MODELLING CLIPPING OF CHAR TEXT: How many characters are at
+  least partially visible?
+pass/fail depending on (operator response = numvis or numvis+1)
+
+*** *** *** ***   annotation text   *** *** *** ***
+
+TEST: #SR 40 41 42 43 53 57 58 61 62
+      "If its reference point is inside the current MCV, then
+       those parts of an annotation text primitive that also lie
+       inside should be visible, but if its reference point is
+       outside the current MCV, then the entire annotation text
+       primitive should be model-clipped."
+
+set up 6 windows
+
+npcpwc = NPC units per WC units
+
+winsiz = window-size in NPC = window-size in WC * npcpwc
+
+set text font                 = 1
+set text precision            = stroke
+set character spacing         = 0
+set character expansion       = 1
+set annotation char-height    = 0.2 * winsiz
+set annotation text alignment = center,half
+set annotation text path      = RIGHT
+set annotation style          = 2
+
+ranwin = list of 6 integers chosen from 1-8
+vislis = list of windows with invisible annotation text = empty
+set clipping ON
+
+vecx = 0
+for thiswn = 1 to 6
+   wntype = ranwin(thiswn)
+   plpt = center of window #thiswn (with z=0.5)
+
+   point MCV vector to 4 quadrants around the y-axis:
+   if (mod(wntype,4) < 2) then
+      vecy = -1
+   else
+      vecy =  1
+   endif
+   vecz = 2 * mod(wntype,2) - 1
+
+   set MCV (with REPLACE operator) with 1 half-plane =
+   point: plpt; vector: vec
+
+   if (wntype < 5) then
+      should be partially visible:
+      delta = 0.01
+   else
+      should be invisible:
+      add thiswn to vislis
+      delta = -0.01
+   endif
+
+   d1vec = vector pointing into or out of MCV = delta * vec
+
+   set up reference point and annotation point on opposite sides of
+   clipping plane:
+      refpt = reference point (MC) = plpt + d1vec
+      offst = annotation offset (NPC) = -2 * d1vec * npcpwc
+   draw annotation text "ABC" at refpt with offst
+next thiswn
+
+OPQA/MODELLING CLIPPING OF ENTIRE ANNOTATION TEXT: List all the
+  empty windows.
+pass/fail depending on (operator response = vislis)
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+TEST: #SR 40 41 42 43 53 57 58 62
+      "If its reference point is inside the current MCV, then
+       at least those parts of an annotation text primitive that
+       also lie inside should be visible."
+
+txstr = text string with ASCII characters that fill character box
+      = "EXAM"
+
+using text alignment = center,half:
+nomhl = nominal x-location of left border of horizontal string
+nomhr = nominal x-location of right border of horizontal string
+nomhb = nominal y-location of baseline of horizontal string
+nomhc = nominal y-location of capline of horizontal string
+
+numlin = number of lines to display = 8
+yincr = 1 / (numlin + 1.0)
+ytop = 1-yincr
+yloc = ytop
+set achht to scale ann-text so as to fit on line:
+achht = WC character height = 0.5 * yincr
+
+nomhl = nomhl * achht
+nomhr = nomhr * achht
+nomhb = nomhb * achht
+nomhc = nomhc * achht
+
+set text font                 = 1
+set text precision            = stroke
+set character spacing         = 0
+set character expansion       = 1
+set annotation char-height    = achht * npcpwc
+set annotation text alignment = center,half
+set annotation text path      = RIGHT
+set text color                = 1
+set polyline color            = 2
+set line style                = dotted
+set line width                = minimum available
+
+draw labels for numlin lines
+ngline = incorrect line = random from 1 to numlin
+xcent = reference point for annotation text = 0.6
+expnum = expected number of vertices = 5
+
+for thisln = 1 to numlin
+   set clipping ON
+
+   compute values for clipping planes and for expected vertices:
+   clip down the middle:
+   plpt(1) = xcent,yloc,0.5
+   vecx = nomhc
+   if (random integer from 0 to 1 = 1) then
+      vecx = -vecx
+   endif
+   vecy = nomhl * random real between -.7 and .7
+   vecz = 0.1
+
+   set MCV (with REPLACE operator) with 1 half-plane =
+      points: plpt; vectors: vec
+
+   compute expected annotation text position:
+   chxp = character expansion factor = random from 0.6 to 1.0
+
+   xleft = xcent + nomhl*chxp
+   xrite = xcent + nomhr*chxp
+   ybas  = yloc  + nomhb*chxp
+   ycap  = yloc  + nomhc*chxp
+
+   draw 3D annotation text:
+      make sure reference point inside MCV:
+      reference point   = plpt(1) + 0.1*vec
+      annotation offset = -0.1 * vec * npcpwc
+      character string  = txstr
+
+   compute expected vertices in WC:
+   expvy(1) = ycap
+   expvy(2) = ybas
+   expvy(3) = ybas
+   expvy(4) = ycap
+   expvy(5) = ycap
+
+   if (thisln = ngline) then
+      distort vertices:
+      rtval = xrite + 0.1
+      lfval = xleft - 0.1
+   else
+      rtval = xrite
+      lfval = xleft
+   endif
+
+   if (vecx > 0) then
+      expvx(1) = rtval
+      expvx(2) = rtval
+      expvx(5) = rtval
+   else
+      expvx(1) = lfval
+      expvx(2) = lfval
+      expvx(5) = lfval
+   endif
+
+   expvx(3) = xcent + (ybas-yloc) * vecy/vecx
+   expvx(4) = xcent + (yloc-ytop) * vecy/vecx
+
+   set clipping OFF
+   draw 2D polyline for expv(1 to expnum)
+
+   yloc = yloc-yincr
+next thisln
+
+OPQA/PARTIAL MODELLING CLIPPING OF ANNOTATION TEXT: On which
+  line is the dotted boundary NOT filled with annotation text
+  (additional annotation text outside boundary is permitted)?
+pass/fail depending on (operator identifies ngline)
+
+END PROGRAM 17
+
+
+PROGRAM 18: Modelling clipping for fill area, fill area set,
+            and cell array
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+MODELLING CLIPPING OF FILL AREA: Six windows, each containing a
+clipped fill area, should be displayed.  All but one should have the
+same size, shape, style and color.  Identify the different fill area.
+
+MODELLING CLIPPING OF FILL AREA SET: Same as MODELLING CLIPPING OF
+FILL AREA, above.
+
+MODELLING CLIPPING OF EDGED FILL AREA SET: Six windows, each
+containing a clipped fill area set of interior style empty, but with
+visible edges, should be displayed.  All but one should have the same
+size, shape, style and color.  Identify the different fill area set.
+
+MODELLING CLIPPING OF CELL ARRAY: Six windows, each containing a
+clipped cell array, should be displayed.  All but one should have the
+same size and shape.  Identify the different cell array.
+
+DESIGN:
+
+<inquire interior facilities> to determine
+  numhat = number of available hatch styles
+  numsty = number of available interior styles
+
+if (numhat > 0) then
+   display several hatch styles, ask operator to pick a "dense" one
+   hatsty = dense hatch style
+endif
+
+<inquire interior facilities> to determine
+  ransty = list of available non-empty interior styles
+           (hollow, solid, pattern, or hatch)
+
+set up 6 windows on screen
+
+colia = color pattern = 1,2,3
+                        2,3,1
+
+set up two 2D clipping planes:
+    -0.45x + y - 0.07 = 0
+    -0.8x  - y + 1.1  = 0
+
+clipping plane co-efficients (in MC):
+  acl(1),bcl(1),ccl(1),dcl(1) = -0.45, 1.0, 0, -0.07
+  acl(2),bcl(2),ccl(2),dcl(2) = -0.8, -1.0, 0,  1.1
+
+Store two 2D clipping planes in PHIGS format
+  mcv2 = clipping planes
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+xexp, yexp = expected vertices for clipped fill area and
+             fill area set
+xp,   yp   = actual vertices for fill area (before clipping)
+xfas, yfas = actual vertices for fill area set (before clipping)
+
+for primsw = fill area, fill area set
+   if (primsw = fill area) then
+      setlab = " "
+   else
+      setlab = " set "
+   endif
+for intsty = interior style in ransty
+   set interior style = intsty
+   intlab = name of interior style
+   set edge flag = OFF
+   if (intsty = HOLLOW) then
+      TEST: #SR 40 41 42 43 53 57 58 63
+            "When the interior style is hollow, exactly those parts of
+             a fill area" + setlab + "that lie outside the current
+             modelling clipping volume should be clipped, and the new
+             boundaries formed by clipping should be drawn."
+   else
+      TEST: #SR 40 41 42 43 53 57 58
+            "Exactly those parts of a fill area" + setlab + "that
+             lie outside the current modelling clipping volume should
+             be clipped when the interior style is " + intlab
+
+      if (intsty = PATTERN) then
+         set pattern representation #1 = colia
+         set pattern size = .03,.03
+         set interior style index = 1
+      elseif (intsty = HATCH) then
+         set interior style index = hatsty
+      endif
+   endif
+
+   ranwin = list of six windows in random order
+   set clipping = ON
+   for wndex = 1 to 6
+      xf = modelling transformation to map unit square (0-1) into
+           window #WNDEX (with z-dimension unaltered)
+
+      xco,yco,zco = random co-efficients of plane of primitive to be clipped
+      mcv3 = two 3D clipping planes, perpendicular to plane of primitive,
+             which intersect plane of primitive exactly where 2D clipping
+             planes intersect it
+
+      set local modelling transform = xf (to be applied to clipping planes)
+      thiswn = ranwin(wndex)
+      set modelling clipping planes = 0 planes (no clipping planes in effect)
+
+      if (thiswn = 1) then
+         set up 2d clipping planes (mcv2) using replace
+      elseif (thiswn = 2) then
+         set up 2d clipping planes (mcv2) using intersect
+      elseif (thiswn = 3) then
+         set up 3d clipping planes (mcv3) using replace
+      elseif (thiswn = 4) then
+         set up 3d clipping planes (mcv3) using intersect
+      elseif (thiswn = 5) then
+         simulate complex self-intersecting fill area, properly clipped,
+            using xexp,yexp
+         goto next_wndex
+      else
+         simulate complex self-intersecting fill area, improperly clipped,
+            using xexp,yexp
+         ngwin = wndex
+         goto next_wndex
+      endif
+
+      render primitive using different transformation
+      set local modelling transform = identity
+          (to be applied to primitive)
+
+      if (primsw = fill area) then
+         compute z-values for fill area
+         transform fill area "by hand" from MC to WC
+         xt,yt,xt = transformed vertices
+         draw complex self-intersecting 3d fill area
+      else
+         compute z-values for fill area set
+         transform fill area set "by hand" from MC to WC
+         xt,yt,xt = transformed vertices
+         draw complex self-intersecting 3d fill area set
+      endif
+
+next_wndex:
+   next wndex
+
+   if (primsw = fill area) then
+      OPQA/MODELLING CLIPPING OF FILL AREA: Which fill area is different?
+   else
+      OPQA/MODELLING CLIPPING OF FILL AREA SET: Which fill area set is
+         different?
+   endif
+   pass/fail depending on (operator identifies ngwin)
+
+next intsty
+next primsw
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+TEST: #SR 40 41 42 43 53 57 58 64
+      "When a fill area set with a visible edge is clipped, the new
+       boundary formed by the clipping should not be indicated by
+       the edge."
+
+set interior style = empty
+set edge flag = ON
+set edge and line attributes the same
+
+ranwin = list of six windows in random order
+set clipping = ON
+for wndex = 1 to 6
+   xf = modelling transformation to map unit square (0-1) into
+        window #WNDEX (with z-dimension unaltered)
+
+   xco,yco,zco = random co-efficients of plane of primitive to be clipped
+   mcv3 = two 3D clipping planes, perpendicular to plane of primitive,
+          which intersect plane of primitive exactly where 2D clipping
+          planes intersect it
+
+   set local modelling transform = xf (to be applied to clipping planes)
+   thiswn = ranwin(wndex)
+   set modelling clipping planes = 0 planes (no clipping planes in effect)
+
+   if (thiswn = 1) then
+      set up 2d clipping planes using replace
+   elseif (thiswn = 2) then
+      set up 2d clipping planes using intersect
+   elseif (thiswn = 3) then
+      set up 3d clipping planes using replace
+   elseif (thiswn = 4) then
+      set up 3d clipping planes using intersect
+   elseif (thiswn = 5) then
+      simulate expected edge vertices, using xexp,yexp
+      goto next_edge
+   else
+      simulate incorrect edge vertices, using xexp,yexp
+      ngwin = wndex
+      goto next_edge
+   endif
+
+   render edged fill area set using different transformation
+   set local modelling transform = identity
+       (to be applied to primitive)
+   compute z-values for fill area set
+   transform fill area set "by hand" from MC to WC
+   xt,yt,xt = transformed vertices
+   draw complex self-intersecting 3d fill area set
+
+next_edge:
+next wndex
+
+OPQA/MODELLING CLIPPING OF EDGED FILL AREA SET: Which clipped fill
+   area set has different edges?
+pass/fail depending on (operator identifies ngwin)
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+TEST: #SR 40 41 42 43 53 57 58
+      "Exactly those parts of a cell array that lie outside the current
+       modelling clipping volume should be clipped."
+
+set interior style = solid
+set edge flag = OFF
+
+xca,yca = cell array x-y coordinates
+compute cell vectors:
+  pqx, pqy = vector from P to Q for one cell
+  prx, pry = vector from P to R for one cell
+
+xexp,yexp = expected clipped cell vertices
+
+ranwin = list of six windows in random order
+set clipping = ON
+for wndex = 1 to 6
+   xf = modelling transformation to map unit square (0-1) into
+        window #WNDEX (with z-dimension unaltered)
+
+   xco,yco,zco = random co-efficients of plane of primitive to be clipped
+   mcv3 = two 3D clipping planes, perpendicular to plane of primitive,
+          which intersect plane of primitive exactly where 2D clipping
+          planes intersect it
+
+   set local modelling transform = xf (to be applied to clipping planes)
+   thiswn = ranwin(wndex)
+   set modelling clipping planes = 0 planes (no clipping planes in effect)
+
+   if (thiswn = 1) then
+      set up 2d clipping planes using replace
+   elseif (thiswn = 2) then
+      set up 2d clipping planes using intersect
+   elseif (thiswn = 3) then
+      set up 3d clipping planes using replace
+   elseif (thiswn = 4) then
+      set up 3d clipping planes using intersect
+   elseif (thiswn = 5) then
+      simulate expected clipped cells, using xexp,yexp
+      goto next_ca
+   else
+      simulate incorrect clipped cells, using xexp,yexp
+      ngwin = wndex
+      goto next_ca
+   endif
+
+   render cell array using different transformation
+   set local modelling transform = identity
+       (to be applied to primitive)
+   compute z-values for cell array
+   transform cell array "by hand" from MC to WC
+   xt,yt,xt = transformed vertices
+   draw cell array
+
+next_ca:
+next wndex
+
+OPQA/MODELLING CLIPPING OF CELL ARRAY: Which cell array has a different
+   size or shape?
+pass/fail depending on (operator identifies ngwin)
+
+END PROGRAM 18
+

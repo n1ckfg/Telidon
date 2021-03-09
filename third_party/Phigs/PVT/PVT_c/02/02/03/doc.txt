@@ -1,0 +1,354 @@
+TITLE: Set edit mode and control of element pointer
+
+MODULE#: 02.02.03
+
+DESCRIPTION: This module tests the ability of the programmer to
+set the `edit mode' of structures and control the element pointer
+position.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Set edit mode> sets the `edit mode.'
+#F 117
+#D 4.4
+#S 4.4.4/29/1
+#T P01/5 P02/1
+
+SR2.   When `edit mode' is INSERT, new elements are inserted
+after the element pointed to by the `element pointer.'
+#F 117
+#D 4.3 4.4 7.3
+#S 4.4.4/29/1
+#T P01/6
+
+SR3.   When `edit mode' is REPLACE, new elements replace the
+element pointed to by the `element pointer.'
+#F 117
+#D 4.3 4.4 7.3
+#S 4.4.4/29/1
+#T P02/2
+
+SR4.   Whether the `edit mode' is REPLACE or INSERT, the `element
+pointer' is always updated to point to the new element.
+#F 117
+#D 4.3 4.4
+#S 4.4.4/29/1
+#T P01/7 P02/3
+
+SR5.   After <open PHIGS>, the default for `edit mode' is INSERT.
+#F 1 117
+#D 4.4
+#S 6.5/314/1
+#T P01/1 P02/11
+
+SR6.   If the `element pointer' is 0, then, regardless of the `edit
+mode', the new element is inserted immediately before element 1;
+the `element pointer' becomes 1 and points at the new element.
+#F 117
+#D 4.3 4.4 7.3
+#S n
+#T P01/12 P01/13 P02/8 P02/9
+
+SR7.   <Set element pointer> sets the `element pointer' to an
+absolute position.
+#F 119
+#D 4.3
+#S 4.4.4/28/7
+#T P01/2 P01/8 P01/10 P02/4 P02/6
+
+SR8.   <Offset element pointer> offsets the `element pointer' to
+a position whose value is the sum of the `element pointer' and
+the offset.
+#F 120
+#D 4.3
+#S 4.4.4/28/7
+#T P01/4 P01/9 P01/11 P02/5 P02/7
+
+SR9.   <Set element pointer at label> positions the `element
+pointer' at the next occurrence beyond the current position of a
+specified label element.
+#F 121
+#D 4.3 7.3.5
+#S 4.4.4/28/7
+#T P01/3 P01/14 P02/10
+
+SR10.  If <set element pointer> or <offset element pointer> is
+used to position the `element pointer' beyond the structure's
+bounds (either zero, or the last element position), the `element
+pointer' then points at the bound it would have exceeded.
+#F 119 120
+#D 4.3
+#S 4.4.4/28/7
+#T P01/8 P01/9 P01/10 P01/11 P02/4 P02/5 P02/6 P02/7
+
+SR11.   <Inquire edit mode> returns the current `edit mode.'
+#F 208
+#D 4.4
+#S n
+#T P01/1 P01/5 P02/1 P02/11
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    1: popph   <open phigs>
+  117: psedm   <set edit mode>
+  119: psep    <set element pointer>
+  120: posep   <offset element pointer>
+  121: pseplb  <set element pointer at label>
+  208: pqedm   <inquire edit mode>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.3  ...  element_pointer
+  4.4  ...  edit_mode
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.5  ...  label
+ 
+SEMANTIC CROSS-REFERENCES:
+  02.01.02.01/SR06 02.01.02.01/SR07 02.01.02.02/SR11
+  02.01.02.02/SR12
+ 
+
+PROGRAM 1: Set edit mode to INSERT and manipulate element pointer
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire edit mode> throughout to determine:
+    edmod = edit mode
+
+Use <inquire element pointer> throughout to determine:
+    ielpos = element position
+
+strid  = 35
+label1 = 11
+label2 = 12
+label3 = 13
+label4 = 14
+label5 = 15
+
+<open structure> with strid
+
+fill structure with elements:
+<label> with label1
+<label> with label2
+<label> with label3
+<label> with label4
+<label> with label5
+
+TEST: #SR 5 11
+      "<Inquire edit mode> should return the current edit mode as the
+       default edit mode INSERT."
+<inquire edit mode> to set edmod
+pass/fail depending on (edmod = INSERT)
+
+elepos = 2
+<set element pointer> to elepos
+TEST: #SR 7
+      "<Set element pointer> should set the element pointer to an absolute
+       position."
+pass/fail depending on (current element position = elepos)
+
+<set element pointer at label> with label5
+TEST: #SR 9
+      "<Set element pointer at label> should position the element
+       pointer at the next occurrence of a specified label, when
+       the current element is not that label."
+pass/fail depending on (current element position = 5)
+
+elpsof = -3
+<offset element pointer> with elpsof
+TEST: #SR 8
+      "<Offset element pointer> should offset the element pointer by a
+       relative position."
+pass/fail depending on (current element position = 2)
+
+<set edit mode> to REPLACE to nullify default
+<set edit mode> to INSERT
+TEST: #SR 1 11
+      "<Inquire edit mode> should return the current edit mode as INSERT
+       after an explicit setting."
+<inquire edit mode> to set edmod
+pass/fail depending on  (edmod = INSERT)
+
+<label> with label4
+TEST: #SR 2
+      "When <set edit mode> is INSERT, new elements should be inserted
+       after the element pointed to by the element pointer."
+pass/fail depending on
+  (current structure contents = labels 11, 12, 14, 13, 14, 15)
+
+TEST: #SR 4
+      "When the edit mode is INSERT, the element pointer should be
+       updated to point to the new element after insertion."
+pass/fail depending on (current element position = 3)
+
+elepos = 10
+<set element pointer> to elepos
+TEST: #SR 7 10
+      "If <set element pointer> is used to position the element pointer
+       to a position greater than the last element in the open structure,
+       the element pointer should point to the last element."
+pass/fail depending on (current element position = 6)
+
+elpsof = 1
+<offset element pointer> with elpsof
+TEST: #SR 8 10
+      "If <offset element pointer> is used to position the element pointer
+       to a position greater than the last element in the open structure,
+       the element pointer should point to the last element."
+pass/fail depending on (current element position = 6)
+
+elepos = -3
+<set element pointer> to elepos
+TEST: #SR 7 10
+      "If <set element pointer> is used to position the element pointer
+       to a position less than zero, the element pointer should point
+       to zero."
+pass/fail depending on (current element position = 0)
+
+elpsof = -1
+<offset element pointer> with elpsof
+TEST: #SR 8 10
+      "If <offset element pointer> is used to position the element pointer
+       to a position less than zero, the element pointer should point
+       to zero."
+pass/fail depending on (current element position = 0)
+
+<label> with label5
+TEST: #SR 6
+      "If the element pointer is 0, then the new element should be inserted
+       immediately before element 1."
+pass/fail depending on
+  (current structure contents = labels 15, 11, 12, 14, 13, 14, 15)
+
+TEST: #SR 6
+      "After an insertion of an element at the beginning of a structure,
+       the element pointer should become 1 and point at the new element."
+pass/fail depending on (current element position = 1)
+
+<set element pointer at label> with label5
+TEST: #SR 9
+      "If the element pointer is already positioned at a label element,
+       <set element pointer at label> should position the element pointer
+       at the next occurence of a specified label element within the open
+       structure."
+pass/fail depending on (current element position = 7)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Set edit mode to REPLACE and manipulate element pointer
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire edit mode> throughout to determine:
+    edmod = edit mode
+
+Use <inquire element pointer> throughout to determine:
+    ielpos = element position
+
+strid  = 35
+label1 = 11
+label2 = 12
+label3 = 13
+label4 = 14
+label5 = 15
+
+<open structure> with strid
+
+fill structure with elements:
+<label> with label1
+<label> with label2
+<label> with label3
+<label> with label4
+<label> with label5
+
+<set edit mode> to REPLACE
+TEST: #SR 1 11
+      "<Inquire edit mode> should return the current edit mode as REPLACE."
+<inquire edit mode> to set edmod
+pass/fail depending on (edmod = REPLACE)
+
+elepos = 2
+<set element pointer> to elepos
+<label> with label4
+TEST: #SR 3
+      "When <set edit mode> is REPLACE, new elements should replace the
+       element pointed to by the element pointer."
+pass/fail depending on
+  (current structure contents = labels 11, 14, 13, 14, 15)
+
+TEST: #SR 4
+      "When the edit mode is REPLACE, the element pointer should be
+       updated to point to the new element after replacement."
+pass/fail depending on (current element position = 2)
+
+elepos = 10
+<set element pointer> to elepos
+TEST: #SR 7 10
+      "If <set element pointer> is used to position the element pointer
+       to a position greater than the last element in the open structure,
+       the element pointer should point to the last element."
+pass/fail depending on (current element position = 5)
+
+elpsof = 7
+<offset element pointer> with elpsof
+TEST: #SR 8 10
+      "If <offset element pointer> is used to position the element pointer
+       to a position greater than the last element in the open structure,
+       the element pointer should point to the last element."
+pass/fail depending on (current element position = 5)
+
+elepos = -3
+<set element pointer> to elepos
+TEST: #SR 7 10
+      "If <set element pointer> is used to position the element pointer
+       to a position less than zero, the element pointer should point
+       to zero."
+pass/fail depending on (current element position = 0)
+
+elpsof = -6
+<offset element pointer> with elpsof
+TEST: #SR 8 10
+      "If <offset element pointer> is used to position the element pointer
+       to a position less than zero, the element pointer should point
+       to zero."
+pass/fail depending on (current element position = 0)
+
+<label> with label5
+TEST: #SR 6
+      "If the element pointer is 0, then the new element should be inserted
+       immediately before element 1 even when edit mode is REPLACE."
+pass/fail depending on
+  (current structure contents = labels 15, 11, 14, 13, 14, 15)
+
+TEST: #SR 6
+      "After an insertion of an element at the beginning of a structure,
+       the element pointer should become 1 and point at the new element."
+pass/fail depending on (current element position = 1)
+
+<set element pointer at label> with label5
+TEST: #SR 9
+      "If the element pointer is already positioned at a label element,
+       <set element pointer at label> should position the element pointer
+       at the next occurence of a specified label element within the open
+       structure."
+pass/fail depending on (current element position = 6)
+
+<close phigs>
+<open phigs>
+TEST: #SR 5 11
+      "Closing and re-opening PHIGS should re-set the edit mode to INSERT."
+<inquire edit mode> to set edmod
+pass/fail depending on (edmod = INSERT)
+
+END PROGRAM 2

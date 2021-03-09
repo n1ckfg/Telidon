@@ -1,0 +1,590 @@
+TITLE: Structure errors handled by system
+
+MODULE#: 09.01.05.02
+
+DESCRIPTION: This module tests that the functions which are related
+to structures generate the specified error codes if they are executed
+in an incorrect conditions.  The error is handled by the default system
+handling subroutine. Also, this module tests the requirement that no
+side effects.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   If functions <archive structures>, <archive structure networks>
+are called, and a specified structure does not exist in the CSS,
+then a warning error 200 is generated and no action is taken for that
+structure.
+#F 137 138
+#D 4.5 4.5.1 9.1 8.1
+#S 4.12/109/6
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8
+
+SR2.   If functions <retrieve paths to ancestors> , <retrieve paths to
+descendants > are called, and the specified structure does not
+exist, then error 201 is generated and the function is ignored.
+#F 145 146
+#D 9.1 9.1.1 9.1.2 8.1
+#S 4.12/109/6
+#T P02/1 P02/2 P02/3 P02/4
+
+SR3.   If function <set element pointer at label> is called, and the
+lable does not exist in the open structure between the element pointer
+and the end of the structure, then error 205 is generated and the function
+is ignored.
+#F 121
+#D 4.3 7.1 7.3 7.3.5 8.1
+#S 4.12/109/6
+#T P03/1 P03/2 P03/3
+
+SR4.   If function <delete elements between labels> is called, and one
+or both of the labels does not exist in the open structure between the element
+pointer and the end of the structure, then error 206 is generated and the
+function is ignored.
+#F 124
+#D 4.3 7.1 7.3 7.3.5 8.1
+#S 4.12/109/6
+#T P04/1 P04/2 P04/3 P04/4 P04/5
+
+SR5.   If functions <retrieve paths to ancestors>, <retrieve paths to
+descendants> are called, and the specified path depth is less than zero,
+then error 207 is generated and the function is ignored.
+#F 145 146
+#D 9.1 9.1.1 9.1.2 8.1
+#S 4.12/109/6
+#T P05/1 P05/2 P05/3 P05/4
+
+SR6.   If function <post structure> is called, and the display priority
+is out of range, then error 208 is generated and the function is ignored.
+#F 132
+#D 7.1 7.2 8.1
+#S 4.12/109/6
+#T P06/1 P06/2 P06/3
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  121: pseplb  <set element pointer at label>
+  124: pdellb  <delete elements between labels>
+  132: ppost   <post structure>
+  137: parst   <archive structures>
+  138: parsn   <archive structure networks>
+  145: prepan  <retrieve paths to ancestors>
+  146: prepde  <retrieve paths to descendants>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.3  ...  element_pointer
+  4.5  ...  list_of_structure_identifiers
+  4.5.1  ...  structure_identifier
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.2  ...  list_of_workstations_to_which_posted
+  7.3  ...  list_of_structure_elements
+  7.3.5  ...  label
+  8  ...  phigs_error_state_list
+  8.1  ...  error_state
+  9  ...  archive
+  9.1  ...  archive_file
+  9.1.1  ...  structure_identifier
+  9.1.2  ...  list_of_structure_elements
+ 
+
+
+PROGRAM 1: Error 200 handled by system
+
+CHARACTERISTICS: nnny
+
+OPERATOR SCRIPT:
+This program uses the system default error handler.  The usual
+means of invoking PVT programs links in a user-defined error handler.
+Be sure to use the special mechanism provided (normally the "phfe" or
+"phce" command) for invoking programs without the user-defined error
+handler, since it overrides the system handler.
+
+The general idea of this test is that errors are generated and the
+resulting error messages from the system default error handler are
+displayed so that you can verify their contents.
+
+The program needs to display the contents of the error file one message at
+a time .  If the system has a consistent message header (as specified to
+INITPH), this is done automatically.  If not, you are prompted to say
+whether the entire message has been displayed, since one message may occupy
+several records.  The program will keep displaying successive records
+until the entire message is visible.
+
+Once the entire error message is displayed, you must enter the function
+that  generated the corresponding error as reported in the message.  You
+may identify the function either by its full generic name ("polyline 3"),
+or by its unique number as specified in Fortran and C bindings (these are
+the same). E.g. instead of typing "polyline 3", you can enter "8".  If the
+message does not identify the function, enter a negative number to signify
+this.
+
+The error message may  or may not specify the numeric code of the error.
+If so, simply enter the code as prompted.  If not, enter "n".  The program
+will then display the standard wording for the error (there may be several
+possible wordings, since a given condition may sometimes generate one of
+several errors).  If the actual message is accurate with respect to the
+standard wording (has the same meaning), enter "y", otherwise "n".
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the system-defined error handler should
+call <error logging> to write in error message on the error file.
+
+<archive structures> or <archive structure networks> using one
+structure which does not exist in CSS to test if warning error
+200 is generated: ignoring structures that do not exist.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open archive file> with arf, arfnam
+
+<archive structures> 100,101: signals error
+numcss = reported number of structures in CSS
+numarc = reported number of structures in archive
+TEST: #SR 1
+      "If <archive structures> issues a warning because some of
+       specified structures do not exist in CSS, it should ignore
+       the non-existent structures."
+pass/fail depending on (PHIGS open and structure closed and
+                        archive open and numcss=0 and numarc=0)
+
+<open structure> 100
+<text>
+<close structure>
+<archive structures> with arf, 100,101: signals error
+Use <inquire structure identifier> to get list of structures:
+     numarc = number of structures
+     outst = list of structure identifiers
+
+TEST: #SR 1
+      "If <archive structures> issues a warning because some of
+       specified structures do not exist in CSS, it should ignore
+       the non-existent structures."
+pass/fail depending on (PHIGS open and structure closed and
+                        archive open and numarc=1 and outst(1) = 100)
+
+<delete all structures>
+<delete all structures in archive> arf
+
+<archive structure networks> 100,101: signals error
+numcss = reported number of structures in CSS
+numarc = reported number of structures in archive
+TEST: #SR 1
+      "If <archive structure networks> issues a warning because some of
+       specified structures do not exist in CSS, it should ignore
+       the non-existent structures."
+pass/fail depending on (PHIGS open and structure closed and
+                        archive open and numcss=0 and numarc=0)
+
+create structure network #100 - 101
+
+<archive structure networks> 100,102: signals error
+
+Use <inquire structure identifier> to get list of structures:
+     numarc = number of structures
+     outst = list of structure identifiers
+
+TEST: #SR 1
+      "If <archive structure networks> issues a warning because some of
+       specified structures do not exist in CSS, it should ignore
+       the non-existent structures."
+pass/fail depending on (PHIGS open and structure closed and
+                        archive open and numarc=2 and outst = (100,101))
+
+<close archive file> arf
+
+*** *** ***  Results of system-defined error handling  *** *** ***
+
+TEST: #SR 1
+      "If <archive structures> is called and some of specified
+       structures do not exist in CSS, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <archive structures> is called and some of specified
+       structures do not exist in CSS, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <archive structure networks> is called and some of specified
+       structures do not exist in CSS, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 1
+      "If <archive structure networks> is called and some of specified
+       structures do not exist in CSS, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error 201 handled by system
+
+CHARACTERISTICS: nnny
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the system-defined error handler should
+call <error logging> to write in error message on the error file.
+
+Make a CSS with structure references, archive them to an archive file.
+Then retrieve paths with unexisted structure identifier to test if
+fuctions 124 and 125 to generate error 201: ignoring function, the
+specified structure does not exist.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open archive file> with arf, arfnam
+create structure network #100 - 101
+
+<archive all structures>
+path order = topfirst
+path depth = 0
+paths = store paths
+
+<retrieve paths to ancestors> with arf, 102, path order, path depth, paths:
+        signal error
+check that state of CSS is unchanged
+Use <inquire structure identifiers> to get:
+    nst = number of structures
+    lstst = list of structure identifiers
+TEST: #SR 2
+      "If <retrieve paths to ancestors> signals an error because the
+       specified structure does not exist, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = close    and
+                        archive file state = open  and
+                        nst = 2    and    lstst=(100,101))
+
+clear archive and CSS
+
+create structure network #100 - 101
+
+<archive all structures>
+path order = bottomfirst
+path depth = 0
+paths = store paths
+
+<retrieve paths to descendants> with arf, 102, path order, path depth,
+   paths: signal error
+check that state of CSS is unchanged
+Use <inquire structure identifiers> to get:
+    nst = number of structures
+    lstst = list of structure identifiers
+TEST: #SR 2
+      "If <retrieve paths to descendants> signals an error because the
+       specified structure does not exist, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = close    and
+                        archive file state = open  and
+                        nst = 2    and    lstst=(100,101))
+
+clear archive and CSS
+
+*** *** ***  Results of system-defined error handling  *** *** ***
+
+TEST: #SR 2
+      "If <retrieve paths to ancestors> is called and the specified
+       structure does not exist, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 2
+      "If <retrieve paths to descendants> is called and the specified
+       structure does not exist, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Error 205 handled by system
+
+CHARACTERISTICS: nnny
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the system-defined error handler should
+call <error logging> to write in error message on the error file.
+
+Open an structure, set element pointer to a position, and set element pointer
+to a label which does not exist between the element pointer and the end of
+the structure to test if function 100 generates error 205: ignoring function,
+the lable does not exist in the open structure between the element pointer and
+the end of the structure.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open structure> 100
+<ppl>
+Use <inquire element pointer> to get :
+     elpnt1 = element pointer value
+<set element pointer to label> with label=1: signals  error
+Use <inquire element pointer> to get:
+     elpnt2 = element pointer value
+TEST: #SR 3
+      "If <set element pointer at label> signals an error because the
+       specified label does not exist in the open structure between the
+       element pointer and the end of the structure, it should not cause
+       any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = open    and
+                        elpnt1=elpnt2)
+
+<label> 1
+<ppl>
+<label> 2
+<offset elememt pointer> -1
+<set element pointer to label> with label = 1: signals error
+<close structure> 100
+
+*** *** ***  Results of system-defined error handling  *** *** ***
+
+TEST: #SR 3
+      "If <set element pointer at label> is called and the specified
+       label does not exist in the open structure between the element
+       pointer and the end of the structure, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 3
+      "If <set element pointer at label> is called and the specified
+       label does not exist in the open structure between the element
+       pointer and the end of the structure, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Error 206 handled by system
+
+CHARACTERISTICS: nnny
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the system-defined error handler should
+call <error logging> to write in error message on the error file.
+
+Open a structure, set no label and one label to test if the function
+103 generates the error 206: ignoring function, one or both of the labels
+does not exist in the open structure between the element pointer and the
+end of the structure.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open structure> 100
+Use <inquire element pointer> to get :
+    elpnt1 = element pointer value
+<delete elements between labels> with label1=1 and label2=2:
+      signals error
+Use <inquire element pointer> to get:
+    elpnt2 = element pointer value
+TEST: #SR 4
+      "If <delete elements between labels> signals an error because one or
+       both of the labels does not exist in the open structure between
+       the element pointer and the end of the structure, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = open    and
+                        elpnt1 = elpnt2)
+
+<ppl>
+<label> 1
+<ppm>
+<label> 2
+<offset element pointer> -1
+Use <inquire element pointer> to get :
+    elpnt1 = element pointer value
+<delete elements between labels> with label1=1 and label2=2:
+      signals error
+Use <inquire element pointer> to get:
+    elpnt2 = element pointer value
+TEST: #SR 4
+      "If <delete elements between labels> signals an error because one or
+       both of the labels does not exist in the open structure between
+       the element pointer and the end of the structure, it should not
+       cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        structure state = open    and
+                        elpnt1 = elpnt2)
+
+<set element pointer> 0
+<delete elements between labels> with label1=2 and label2=4:
+      signals error
+
+<close structure>
+
+*** *** ***  Results of system-defined error handling  *** *** ***
+
+TEST: #SR 4
+      "If <delete elements between labels> is called and one or both of the
+       labels does not exist in the open structure between the element
+       pointer and the end of the structure, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 4
+      "If <delete elements between labels> is called and one or both of the
+       labels does not exist in the open structure between the element
+       pointer and the end of the structure, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 4
+      "If <delete elements between labels> is called and one or both of the
+       labels does not exist in the open structure between the element
+       pointer and the end of the structure, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Error 207 handled by system
+
+CHARACTERISTICS: nnny
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the system-defined error handler should
+call <error logging> to write in error message on the error file.
+
+Make a CSS with structure references, archive them to an archive file.
+Then retrieve paths with path depth less than zero to test if
+fuctions 124 and 125  generate error 207: ignoring function, the
+specified path depth is less than zero.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open archive file> with arf, arfnam
+
+<open structure> 100
+<ppl>
+<execute structure> 101
+<close structure>
+<open structure> 101
+<ppm>
+<close structure>
+
+<archive all structures>
+<delete all structures> (in CSS)
+<open structure> 103
+
+path order = topfirst
+path depth = -1
+path:  store paths
+<retrieve paths to ancestors> with arf, 100, path order, path depth, paths:
+        signal error
+check that state of CSS is unchanged:
+TEST: #SR 5
+      "If <retrieve paths to ancestors> signals an error because the
+       specified path depth is less than zero, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        archive state = open      and
+                        list of CSS structures = (103))
+
+
+path order = bottomfirst
+path depth = -100
+<retrieve paths to descendants> with arf, 101, path order, path depth, paths:
+        signal error
+check that state of CSS is unchanged:
+TEST: #SR 5
+      "If <retrieve paths to descendants> signals an error because the
+       specified path depth is less than zero, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        archive state = open      and
+                        list of CSS structures = (103))
+
+*** *** ***  Results of system-defined error handling  *** *** ***
+
+TEST: #SR 5
+      "If <retrieve paths to ancestors> is called and the specified
+       path depth is less than zero, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 5
+      "If <retrieve paths to descendants> is called and the specified
+       path depth is less than zero, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Error 208 handled by system
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the system-defined error handler should
+call <error logging> to write in error message on the error file.
+
+Post structure with a display priority less than 0 or larger than 1
+to test if the function 111  generates error 208: ignoring function,
+the display priority is out of range.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+create structure network 100 - 101
+<post structure> with wkid, structure id=100, display priority=0.5
+
+<post structure> with wkid, 101, display priority=-0.1 : signals error
+<post structure> with wkid, 101, display priority= 1.1 : signals error
+use <inquire posted structure> to get:
+     number = number of posted structures
+     postst = list of posted structures
+     orgpri = priority
+TEST: #SR 6
+      "If <post structure> signals an error because the specified
+       display priority is out of range, it should not cause any other
+       effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open and
+                        number = 1 and postst = (100) and
+                        orgpri = 0.5)
+
+*** *** ***  Results of system-defined error handling  *** *** ***
+
+TEST: #SR 6
+      "If <post structure> is called and the specified display
+       priority is out of range, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+TEST: #SR 6
+      "If <post structure> is called and the specified display
+       priority is out of range, it should write an accurate,
+       self-identifying error message on the error file."
+pass/fail depending on (operator verifies error message)
+
+END PROGRAM 6

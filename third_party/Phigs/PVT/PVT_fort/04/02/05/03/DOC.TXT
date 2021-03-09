@@ -1,0 +1,2123 @@
+TITLE: Edge bundles
+
+MODULE#: 04.02.05.03
+
+DESCRIPTION:  This module tests the bundled entries and
+workstation facilities for the edges of the fill area set
+primitive.  These entries control the appearance of edges when
+they are under bundled (as opposed to individual) control.
+
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** ***   Edge index inquiry   *** *** *** ***
+
+SR1.  If current element is edge index then <inquire current
+element type and size> returns the element type as edge index and
+the appropriate element size.
+#F 303
+#D 7.3.2.1.5
+#S 4.4.4/29/5
+#T P01/1
+
+SR2.  If current element is edge index then <inquire current
+element content> returns the appropriate data for edge index.
+#F 304
+#D 7.3.2.1.5
+#S 4.4.4/29/5
+#T P01/2
+
+*** *** ***   Edge index traversal binding   *** *** ***
+
+SR3.  Upon traversal of a "fill area set" or "fill area set 3"
+element, the current edge index in the PTSL is bound to the
+resulting primitive.
+#F 29
+#D 3.6.1 7.3.1.11 7.3.1.12
+#S 4.5.2/38/3 4.5.2/40/3
+#T P10/1 P10/2 P10/3 P11/1 P11/2 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6
+   P12/7 P12/8 P12/9 P12/10 P13/1
+
+*** *** ***   Edge index: element creation   *** *** ***
+
+SR4.  <Set edge index> creates a "set edge index" element, (in
+the open structure), whose associated value is taken from the
+function's parameter.
+#F 29
+#D 7.3.2.1.5
+#S 4.4.1/23/1 4.5.2/38/3
+#T P01/1 P01/2 P11/1 P11/2 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P12/7
+   P12/8 P12/9 P12/10
+
+*** ***   Edge index: effect during traversal   *** ***
+
+SR5.  Upon traversal of a "set edge index" element, the current
+edge index entry in the PHIGS traversal state list (PTSL) is set
+to the element's associated value.
+#F 29
+#D 3.6.1 7.3.2.1.5
+#S 4.4.1/23/1 4.5.2/38/3
+#T P11/1 P11/2 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P12/7 P12/8 P12/9
+   P12/10 P13/1
+
+SR6.  When a fill area set is displayed, if its bound edge index
+is defined on the workstation, then the indicated bundle is the
+source for the bundled aspects of that edge.
+#F 29
+#D 3.6.1 5.13.1 5.13.2
+#S 4.5.2/38/7 4.5.2/39/7 4.5.9/62/5
+#T P10/1 P10/2 P10/3 P11/1 P12/1 P12/2 P12/3 P12/4 P12/5 P12/6 P12/7
+   P12/8 P12/9 P12/10 P13/1
+
+SR7.  When a fill area set is displayed, if its bound edge index
+is undefined on the workstation, then bundle number 1 in the edge
+bundle table is the source for the bundled aspects of that edge.
+#F 29
+#D 3.6.1 5.13.1 5.13.2
+#S 4.5.2/38/7 4.5.2/39/7 4.5.2/43/3 4.5.9/62/5
+#T P11/2
+
+*** *** ***   Edge index: network traversal   *** *** ***
+
+SR8.  At the start of a top-level traversal of a structure
+network (not a sub-traversal caused by execute structure), the
+current edge index of the PTSL is set to 1.
+#F
+#D 2.15.1 3.6.1
+#S 4.4.3/26/2 4.4.3/28/1 6.3/310/1
+#T P13/1
+
+SR9.  As part of the PTSL, the current edge index is saved (but
+not changed) by execute structure and then, upon completion of
+the sub-traversal of the invoked network, restored to the saved
+value.
+#F 113
+#D 3.6.1
+#S 4.4.3/28/1
+#T P13/1
+
+*** *** ***   Edge Representation   *** *** ***
+
+SR10.  <Set edge representation> causes an entry to be defined.
+#F 67
+#D 5.13.1 5.13.2.1
+#S 4.5.2/42/3 4.5.2/43/2
+#T P02/2 P02/3 P02/6 P02/7 P02/9 P02/10
+
+SR11.  <Set edge representation> sets bundle's edge flag,
+edgetype, edgewidth scale factor, and colour index.
+#F 67
+#D 5.13.2
+#S 4.5.9/62/4
+#T P01/3 P02/4 P02/8 P02/11 P08/5 P08/6 P08/7 P08/8 P08/9 P08/10
+
+SR12.  <Inquire list of edge indices> returns list of all defined
+edge indices.
+#F 230
+#D 5.13.1 5.13.2.1
+#S n
+#T P02/1 P02/2 P02/3 P02/5 P02/6 P02/7 P02/9 P02/10 P02/12
+
+SR13.  <Inquire edge representation> works for all defined
+entries.
+#F 230 231
+#D 5.13.1 5.13.2.1
+#S n
+#T P02/12
+
+SR14.  <Inquire edge representation> returns the edge bundle's
+edge flag, edgetype, edgewidth scale factor, and colour index as
+set, when type of returned values specified as SET.
+#F 231
+#D 5.13.2
+#S 4.11/108/1
+#T P01/3 P02/4 P02/8 P02/11
+
+SR15.  <Inquire edge representation> returns the edge bundle's
+edge flag, edgetype, edgewidth scale factor, and colour index as
+realized, when type of returned values specified as REALIZED.
+#F 231
+#D 5.13.2
+#S 4.11/108/1
+#T P02/5 P04/6 P06/1 P07/5 P08/5 P08/6 P08/7 P08/8 P08/9 P08/10 P09/1
+   P09/3
+
+SR16.  <Inquire edge representation> returns representation for
+bundle number 1, if type of returned values is REALIZED, and
+bundle index is undefined.
+#F 230 231
+#D 5.13.2
+#S n
+#T P02/5
+
+*** *** ***   Maximum size of bundle table   *** *** ***
+
+SR17.  <Inquire workstation state table lengths> returns the
+maximum size of edge bundle table.
+#F 285
+#D 6.21.5
+#S n
+#T P03/1 P03/2
+
+SR18.  There must be at least 20 settable entries available in
+the edge bundle table.
+#F 67 285
+#D 5.13 6.21.5
+#S 4.14/114/2 6.7/324/1
+#T P03/1
+
+*** *** *** ***   Predefined bundle facilities   *** *** *** ***
+
+SR19.  <Inquire edge facilities> returns the number of predefined
+edge bundle entries.
+#F 272
+#D 6.15.1.7
+#S n
+#T P04/1 P04/7
+
+SR20.  <Inquire predefined edge representation> returns the edge
+flag, edgetype, edgewidth scale factor, and edge colour index for
+a predefined edge bundle.
+#F 273
+#D 6.15.2
+#S n
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P04/8 P05/2 P10/1 P10/2 P10/3
+
+SR21.  Every workstation must have at least 5 predefined edge
+bundles.
+#F 272 273
+#D 6.15.1.7 6.15.2
+#S 4.14/113/3 4.14/114/2 6.7/322/1
+#T P04/7
+
+SR22.  No two of the first 5 predefined edge bundles have
+identical sets of attributes.
+#F 273
+#D 6.15.2
+#S 4.5.2/42/3 4.14/113/3 4.14/114/2 6.7/323/1
+#T P04/8
+
+SR23.  The n predefined edge bundles in the Workstation
+Description Table (WDT) are indexed as 1-n.
+#F 273
+#D 6.15.2
+#S 6.7/323/1
+#T P04/1 P05/2
+#C The standard presumes this because in section 6.7 the predefined
+bundles in the WDT do not mention index as a data item, nor is there a
+way to get a list of these indices (<inquire edge facilities> gives
+the number of predefined bundles, but not a list thereof).
+
+SR24.  Immediately after <open workstation>, for each WDT
+predefined edge entry there exists a Workstation State List (WSL)
+edge entry with the same attributes, including the same edge
+index.
+#F 230 231 273 3
+#D 5.13.2 6.15.2
+#S 4.5.2/42/3 6.6/317/1 6.7/323/1
+#T P05/1 P05/2 P10/1 P10/2
+#X 05.01.02
+
+SR25.  Immediately after <open workstation>, the edge bundle
+table contains nothing but the entries initialized from the WDT
+predefined edge bundle table.
+#F 230 231 273 3
+#D 5.13.2 6.15.2
+#S 4.5.2/42/3 6.6/317/1 6.7/323/1
+#T P05/1
+#X 05.01.02
+
+
+*** *** ***   Validity of predefined bundles   *** *** ***
+
+SR26.  Each predefined edge bundle has an edgetype within the
+list of available edgetypes.
+#F 272 273
+#D 6.15.1.2 6.15.2.2
+#S 5.12.1/232/2
+#T P04/3 P04/6
+
+SR27.  Each predefined edge bundle has a edgewidth scale factor
+which generates an edgewidth within the minimum and maximum
+edgewidths.
+#F 272 273
+#D 6.15.1.4 6.15.1.5 6.15.1.6 6.15.2.3
+#S 5.12.1/232/2
+#T P04/4 P04/6
+
+SR28.  Each predefined edge bundle has a color index within range
+of the predefined color indices.
+#F 273 277
+#D 6.15.2.4 6.17.2.4
+#S 6.7/323/1
+#T P04/5 P04/6
+
+*** *** ***   Available attributes: edge flag  *** *** ***
+
+SR29.  The only valid values for edge flag are: OFF or ON.
+#F 67 231 273
+#D 5.13.2.2 6.15.2.1
+#S 4.5.9/62/5 6.6/317/1 6.7/323/1
+#T P04/2 P04/6 P06/1
+
+SR30.  When a fill area set is displayed, if its edge flag ASF is
+bundled, then its edge flag aspect is taken from the edge bundle
+determined by the edge index.
+#F 29 62 67
+#D 3.6.1 3.6.6 5.13.2.1 5.13.2.2
+#S 4.5.2/39/7 4.5.9/62/5
+#T P12/1
+
+SR31.  If the edge flag aspect is ON, then the edges of fill area
+sets are drawn; otherwise, they are not.
+#F
+#D 5.13.2.1 5.13.2.2
+#S 4.5.9/62/5
+#T P12/1
+
+*** *** ***   Available attributes: edgetype   *** *** ***
+
+SR32.  The absolute value of the number of available edgetypes
+returned from <inquire edge facilities> indicates the length of
+the list of available edgetypes.
+#F 272
+#D 6.15.1.1 6.15.1.2
+#S 6.7/322/1
+#T P07/1
+
+SR33.  The list of available edgetypes contains all registered
+types, and includes edgetype 1.
+#F 272
+#D 6.15.1.2
+#S 4.5.9/62/7 4.14/113/3 4.14/114/2 6.7/322/1
+#T P07/2
+
+SR34.  If the number of available edgetypes is positive, the list
+of available edgetypes contains any implementation-dependent
+types.
+#F 272
+#D 6.15.1.1 6.15.1.2
+#S n
+#T P07/3
+
+SR35.  If the number of available edgetypes is negative, the list
+of available edgetypes does not contain any implementation
+dependent types.
+#F 272
+#D 6.15.1.1 6.15.1.2
+#S n
+#T P07/4
+
+SR36.  All the edgetypes in the list of available edgetypes are
+valid and realizable for the workstation.
+#F 67 272
+#D 5.13.2.3 6.15.1.1 6.15.1.2
+#S n
+#T P07/5
+
+SR37.  Positive edgetypes are standard or registered;
+non-positive edgetypes are implementation-dependent.
+#F 67 272
+#D 5.13.2.3 6.15.1.2
+#S 4.5.9/62/7
+#T P07/3 P07/4
+
+SR38.  When a fill area set is displayed, if its edgetype ASF is
+bundled, then its edgetype aspect is taken from the edge bundle
+determined by the edge index.
+#F 29 62 67
+#D 3.6.1 3.6.7 5.13.2.1 5.13.2.3
+#S 4.5.2/39/7 4.5.9/62/5
+#T P12/2 P12/3 P12/4
+
+SR39.  When available on the workstation to which posted,
+edgetypes 1 through 4 appear as solid, dashed, dotted, and
+dashed-dotted edges, respectively.
+#F
+#D 5.13.2.1 5.13.2.3 6.15.1.1 6.15.1.2
+#S 4.5.9/62/7
+#T P12/2
+
+SR40.  When available on the workstation to which posted,
+edgetypes greater than 4 appear as specified in the ISO register.
+#F
+#D 5.13.2.1 5.13.2.3 6.15.1.1 6.15.1.2
+#S 4.1.2/15/2 4.5.9/62/7
+#T P12/3
+
+SR41.  When available on the workstation to which posted,
+edgetypes less than 1 appear as specified in the implementor
+documentation.
+#F
+#D 5.13.2.1 5.13.2.3 6.15.1.1 6.15.1.2
+#S 4.1.1/15/1 4.5.9/62/7
+#T P12/4
+
+*** ***   Available attributes: edgewidth scale factor   *** ***
+
+SR42.  <Inquire edge facilities> describes the realizable
+edgewidths for this workstation, via the number of available
+edgewidths, nominal edgewidth, minimum edgewidth, and maximum
+edgewidth.
+#F 272
+#D 6.15.1.3 6.15.1.4 6.15.1.5 6.15.1.6
+#S n
+#T P08/1 P08/5 P08/6 P08/7 P08/8 P08/9 P08/10
+
+SR43.  The nominal edgewidth, minimum edgewidth, and maximum
+edgewidth are all positive.
+#F 272
+#D 6.15.1.4 6.15.1.5 6.15.1.6
+#S 6.7/323/1
+#T P08/2
+
+SR44.  Workstations must support at least one edgewidth.
+#F 67 272
+#D 5.13.2.4 6.15.1.3 6.15.1.4 6.15.1.5 6.15.1.6
+#S 4.14/114/2 6.7/322/1
+#T P08/3
+
+SR45.  Any edgewidth scale factor, whether or not resulting in a
+valid edgewidth for that workstation, may be specified for a edge
+bundle when invoking <set edge representation>.
+#F 67
+#D 5.13.2.4
+#S n
+#T P08/4 P12/5 P12/6 P12/7 P12/8
+
+SR46.  When a fill area set is displayed, if its edgewidth scale
+factor ASF is bundled, then its logical edgewidth is equal to the
+edgewidth scale factor determined by the edge index times the
+workstation's nominal edgewidth.
+#F 29 62 67
+#D 3.6.1 3.6.8 5.13.2.1 5.13.2.4
+#S 4.5.2/39/7 4.5.9/62/5
+#T P12/5 P12/6 P12/7 P12/8
+
+SR47.  When a fill area set is displayed, if its logical
+edgewidth is available on the workstation, then the actual
+edgewidth agrees with the logical edgewidth.
+#F 29 62 67
+#D 5.13.2.1 5.13.2.4 6.15.1.3 6.15.1.4 6.15.1.5 6.15.1.6
+#S 4.5.2/39/7 4.5.9/62/5 4.5.9/62/8
+#T P12/5
+
+SR48.  When a fill area set is displayed, if its logical
+edgewidth is not available on the workstation, then the actual
+edgewidth is the nearest available to the logical edgewidth.
+#F 29 62 67
+#D 5.13.2.1 5.13.2.4 6.15.1.3 6.15.1.4 6.15.1.5 6.15.1.6
+#S 4.5.2/39/7 4.5.9/62/5 4.5.9/62/8
+#T P12/6 P12/7 P12/8
+
+*** *** ***   Available attributes: edge color index   *** *** ***
+
+SR49.  Any non-negative edge color index, whether or not defined
+for that workstation, may be specified for an edge bundle when
+invoking <set edge representation>.
+#F 67
+#D 5.13.2.5
+#S n
+#T P09/2 P12/9 P12/10
+
+SR50.  When a fill area set is displayed, if its edge colour
+index ASF is bundled, then its edge colour index is taken from
+the edge bundle determined by the edge index.
+#F 29 62 67
+#D 3.6.1 3.6.9 5.13.2.1 5.13.2.5
+#S 4.5.2/39/7 4.5.9/62/5
+#T P09/1 P09/3 P12/9 P12/10
+
+SR51.  When a fill area set is displayed, if its edge colour
+index is available on the workstation, then the edge colour index
+is realized as itself.
+#F 231 235
+#D 5.13.2.1 5.13.2.5 5.15.3
+#S 4.5.2/39/7 4.5.2/43/3 4.5.9/62/5 4.5.12/63/4
+#T P09/1 P12/9
+
+SR52.  When a fill area set is displayed, if its edge colour
+index is undefined, then the edge colour index is realized as
+colour index 1.
+#F 231 235
+#D 5.13.2.1 5.13.2.5 5.15.3
+#S 4.5.2/39/7 4.5.2/43/3 4.5.9/62/5 4.5.12/63/4
+#T P09/3 P12/10
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+   29: psedi   <set edge index>
+   62: psiasf  <set individual asf>
+   67: psedr   <set edge representation>
+  113: pexst   <execute structure>
+  230: pqeedi  <inquire list of edge indices>
+  231: pqedr   <inquire edge representation>
+  235: pqeci   <inquire list of colour indices>
+  272: pqedf   <inquire edge facilities>
+  273: pqpedr  <inquire predefined edge representation>
+  277: pqcf    <inquire colour facilities>
+  285: pqwksl  <inquire workstation state table lengths>
+  303: pqcets  <inquire current element type and size>
+  304: pqceco  <inquire current element content>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.15  ...  default_edge_attributes
+  2.15.1  ...  default_edge_index
+  3  ...  phigs_traversal_state_list
+  3.6  ...  current_edge_attributes
+  3.6.1  ...  current_edge_index
+  3.6.6  ...  current_edge_flag_asf
+  3.6.7  ...  current_edgetype_asf
+  3.6.8  ...  current_edgewidth_scale_factor_asf
+  3.6.9  ...  current_edge_colour_index_asf
+  5  ...  workstation_state_list
+  5.13  ...  edge_entry
+  5.13.1  ...  number_of_edge_bundle_table_entries
+  5.13.2  ...  edge_bundle_table
+  5.13.2.1  ...  edge_index
+  5.13.2.2  ...  edge_flag
+  5.13.2.3  ...  edgetype
+  5.13.2.4  ...  edgewidth_scale_factor
+  5.13.2.5  ...  edge_colour_index
+  5.15  ...  colour_entry
+  5.15.3  ...  colour_table
+  6  ...  workstation_description_table
+  6.15  ...  edge_entry
+  6.15.1  ...  edge_facilities
+  6.15.1.1  ...  number_of_available_edgetypes
+  6.15.1.2  ...  list_of_available_edgetypes
+  6.15.1.3  ...  number_of_available_edgewidths
+  6.15.1.4  ...  nominal_edgewidth
+  6.15.1.5  ...  minimum_edgewidth
+  6.15.1.6  ...  maximum_edgewidth
+  6.15.1.7  ...  number_of_predefined_edge_indices
+  6.15.2  ...  predefined_edge_bundle_table
+  6.15.2.1  ...  edge_flag
+  6.15.2.2  ...  edgetype
+  6.15.2.3  ...  edgewidth_scale_factor
+  6.15.2.4  ...  edge_colour_index
+  6.17  ...  colour_entry
+  6.17.2  ...  colour_facilities
+  6.17.2.4  ...  number_of_predefined_colour_indices
+  6.21  ...  maximum_table_lengths
+  6.21.5  ...  maximum_number_of_edge_bundle_table_entries
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.11 ...  fill_area_set_3
+  7.3.1.12 ...  fill_area_set
+  7.3.2  ...  primitive_attributes
+  7.3.2.1  ...  bundle_index_attributes
+  7.3.2.1.5  ...  edge_index
+ 
+LOCAL SUBROUTINES:
+
+DISEDB selects SAMP predefined bundles at random from the edge
+bundle table which are distinct in all their attributes. If there
+are not SAMP completely distinct bundles, DISEDB tries to
+maximize the number of different attributes.
+
+DRWEDB draws a set of actual edges using the specified bundle
+values, and a set of expected edges, using the attribute values
+returned by <inquire predefined edge representation>. It draws
+the expected edge incorrectly at the specified position.
+
+DRBUED draws a set of edges using the specified bundle values.
+
+SHEDBW tests the rendering of a given edgewidth, and returns the
+pass/fail result, or an abort signal if the requested edge is too
+wide to be tested.
+
+
+PROGRAM 1: Simple setting and inquiring
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire current element content> throughout to determine:
+    celval = current element value as set by program
+    recval = auxiliary element values implied by the standard's
+             representation conventions.
+
+Use <inquire current element type and size> throughout to determine:
+    celsiz = current element size
+
+*** *** *** *** ***   Edge index   *** *** *** *** ***
+<set edge index>:
+    edge_index = 8
+
+TEST: #SR 1 4
+      "<Inquire current element type and size> should return
+       edge index as the type of the created element and the
+       appropriate element size."
+<inquire current element type and size> for current element type
+pass/fail depending on
+  (current_element_type = edge_index
+   celsiz               = value specified by the standard)
+
+TEST: #SR 2 4
+      "<Inquire current element content> should return the
+       standard representation for the edge index value."
+<inquire current element content> for current element representation
+pass/fail depending on
+  (celval = 8 and
+   recval = auxiliary values specified by the standard)
+
+*** ***  edge representation set and inquire   *** ***
+
+Use <inquire edge facilities> to determine
+   etype = an available edgetype
+
+<set edge representation>:
+  index     = 2
+  edge flag = ON
+  edgetype  = etype
+  edgewidth scale factor
+            = 4.0
+  colour    = 5
+<inquire edge representation> for index #2, as set
+
+TEST: #SR 11 14
+      "Edge attributes should be returned as set."
+pass/fail depending on
+   (edge flag              = ON    and
+    edgetype               = etype and
+    edgewidth scale factor = 4.0   and
+    colour                 = 5)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Setting entries of various kinds
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire workstation state table lengths> to determine maximum
+   number of entries:
+   mne = maximum number of entries
+
+*** *** *** *** ***    initialized entries   *** *** *** *** ***
+
+<inquire list of edge indices> to determine initialized entries
+   nie = number of initialized entries
+   aii = an initialized index
+TEST: #SR 12
+      "<Inquire list of edge indices> should return initialized
+       indices."
+if (<inquire list of edge indices> indicates error) then
+   fail
+   goto undefined_test
+else
+   pass
+endif
+
+initialized_test:
+
+<inquire edge representation> for index# aii, as set
+   establishes:
+      old_edge_flag
+      old_edgetype
+      old_edgewidth_scale_factor
+      old_colour
+
+if old_edge_flag = ON then
+   new_edge_flag  = OFF
+else
+   new_edge_flag  = ON
+endif
+
+Use <inquire edge facilities> to determine
+   avet= an available edgetype
+
+if old_edgetype not= 1 then
+   new_edgetype  = 1
+else
+   new_edgetype  = avet
+endif
+new_edgewidth_scale_factor
+            = old_edgewidth_scale_factor * 1.5
+new_colour  = old_colour    + 1
+
+<set edge representation> sets:
+  index      = aii
+  edge_flag  = new_edge_flag
+  edgetype   = new_edgetype
+  edgewidth_scale_factor
+             = new_edgewidth_scale_factor
+  colour     = new_colour
+
+<inquire list of edge indices> returns defined list
+
+TEST: #SR 10 12
+      "Re-defining a system-initialized entry should not change
+       the number of defined entries."
+pass/fail depending on (current number of entries = nie)
+
+TEST: #SR 10 12
+      "Initialized bundle entry should be reported as defined
+       after being set."
+if (defined list includes #aii) then
+   pass
+else
+   fail
+   goto undefined_test
+endif
+
+<inquire edge representation> for index# aii, as set
+TEST: #SR 11 14
+      "New values should be set for initialized bundle entry."
+pass/fail depending on
+   (edge_flag              = new_edge_flag              and
+    edgetype               = new_edgetype               and
+    edgewidth_scale_factor = new_edgewidth_scale_factor and
+    colour                 = new_colour)
+
+*** *** *** *** ***    undefined entries   *** *** *** *** ***
+
+undefined_test:
+
+<inquire list of edge indices> returns defined list
+determine lowest undefined index (not in defined list) = lui
+determine current number defined entries = cnde
+
+TEST: #SR 12 15 16
+      "<Inquire edge representation> should return attributes
+       for bundle #1 when inquiring an undefined entry as
+       REALIZED."
+<inquire edge representation> as REALIZED for index #lui
+   to get undefined_bundle.
+<inquire edge representation> as REALIZED for index #1
+   to get bundle #1.
+pass/fail depending on (undefined_bundle = bundle #1).
+
+If (number of initialized entries
+   >= max size of bundle table) then
+   skip rest of undefined_test; goto redefined_test
+endif
+
+If (number of initialized entries
+   >= max table size in test program) then
+   skip rest of undefined_test; goto redefined_test
+endif
+
+<set edge representation>:
+   index     = lui
+   edge_flag = OFF
+   edgetype  = 3
+   edgewidth_scale_factor
+             = 4.0
+   colour    = 5
+
+<inquire list of edge indices> to determine
+   listot = total number of entries in list
+
+TEST: #SR 10 12
+      "Defining an undefined entry should increment the number of
+       defined entries."
+pass/fail depending on (listot = cnde + 1)
+
+TEST: #SR 10 12
+      "Undefined bundle entry should be reported as defined after
+       set."
+if (resulting list of indices contains lui) then
+   pass
+else
+   fail
+   goto redefined_test
+endif
+
+<inquire edge representation> for index #lui, as set
+TEST: #SR 11 14
+      "New values should be set for undefined bundle entry."
+pass/fail depending on
+   (edge_flag              = OFF  and
+    edgetype               = 3    and
+    edgewidth_scale_factor = 4.0  and
+    colour                 = 5)
+
+*** *** *** *** ***    redefined entries   *** *** *** *** ***
+
+redefined_test:
+
+dei  = defined edge index
+cnde = current number of defined entries
+
+<set edge representation>:
+   index     = dei
+   edge_flag = ON
+   edgetype  = 2
+   edgewidth_scale_factor
+             = 3.0
+   colour    = 4
+
+new_edge_flag = OFF
+new_edgetype  = 3
+new_edgewidth_scale_factor
+              = 4.0
+new_colour    = 5
+
+<set edge representation>:
+   index = dei
+   edge_flag = new_edge_flag
+   edgetype  = new_edgetype
+   edgewidth_scale_factor
+             = new_edgewidth_scale_factor
+   colour    = new_colour
+
+<inquire list of edge indices> to determine
+   nnde = new number of defined entries
+
+TEST: #SR 10 12
+      "Re-defining a user-defined entry should not change number
+       of defined entries."
+pass/fail depending on (nnde = cnde)
+
+TEST: #SR 10 12
+      "Redefined bundle entry should be reported as defined after
+       set."
+if (resulting list of indices contains dei) then
+   pass
+else
+   fail
+   goto end_redefined_test
+endif
+
+<inquire edge representation> for index #dei, as set
+TEST: #SR 11 14
+      "New values should be set for redefined bundle entry."
+pass/fail depending on
+   (edge_flag              = new_edge_flag  and
+    edgetype               = new_edgetype  and
+    edgewidth_scale_factor = new_edgewidth_scale_factor and
+    colour                 = new_colour)
+
+end_redefined_test:
+
+*** *** *** ***    access all defined entries   *** *** *** ***
+
+TEST: #SR 12 13
+      "<Inquire list of edge indices> and <inquire edge
+       representation> should detect all defined entries."
+Use <inquire list of edge indices> to get
+    list of defined indices
+if (non-zero error code) then
+   fail
+   goto end_access_all
+endif
+For each defined index, apply <inquire edge representation>
+   if (non-zero error code) then
+      fail
+      goto end_access_all
+   endif
+loop to next index
+pass
+
+end_access_all:
+
+END PROGRAM 2
+
+
+PROGRAM 3: Edge bundle table length
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire workstation state table lengths> to determine
+   mebe = maximum edge bundle entries
+
+TEST: #SR 17 18
+      "<Inquire workstation state table lengths> should report at
+       least 20 entries as maximum size of edge bundle table."
+pass/fail depending on (mebe >= 20)
+
+Use <inquire list of edge indices> to determine
+   nde = number of defined entries and
+   mdei = maximum defined edge index
+nemp = number of empty entries = mebe - nde
+TEST: #SR 17
+      "The program should be able to define additional edge
+       bundle entries, up to the maximum."
+do edi = mdei+1, mdei+nemp
+   set edge bundle entry, with index = edi
+   if error signalled then
+      fail
+      goto done
+   endif
+loop
+
+pass
+
+done:
+
+END PROGRAM 3
+
+
+PROGRAM 4: Validity of predefined edge bundles
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+mpci = maximum predefined color index
+
+Use <inquire edge facilities> to determine
+   npe = number of predefined entries
+   naet = number of available edgetypes
+   nomew = nominal edgewidth
+   minew = minimum edgewidth
+   maxew = maximum edgewidth
+
+flgerr = false = edge flag error found yet
+edgerr = false = edgetype error found yet
+ewerr  = false = edgewidth error found yet
+colerr = false = color error found yet
+rlzerr = false = realized error found yet
+
+TEST: #SR 19 20 23
+      "<Inquire predefined edge representation> should be
+       able to access as many entries as reported by <inquire
+       edge facilities>."
+do edi = 1 to npe
+   <inquire predefined edge representation> for edi to determine
+      edfl  = edge flag
+      edty  = edgetype
+      ewsf  = predefined edgewidth scale factor
+      edci  = edge color index
+   if error then
+      fail
+      goto nxt_test
+   endif
+
+   if edfl not= OFF or ON then
+      flgerr = true
+      erflg  = erroneous edfl
+   endif
+
+   if edty is not in the list of available edgetypes then
+      edgerr = true
+      eredty = erroneous edty
+   endif
+
+   genew = ewsf * nomew = generated edgewidth
+   if genew < minew or > maxew then
+      ewerr = true
+      erew  = erroneous ewsf
+   endif
+
+   if edci < 0 or > mpci then
+      colerr = true
+      eredci = erroneous edci
+   endif
+
+   set edge representation #3 to edfl,edty,edsf,edci
+   inquire edge representation #3, as realized
+   if (reported aspects not= edfl,edty,edsf,edci) then
+      rlzerr = true
+      erbun  = edi
+   endif
+
+next edi
+pass
+
+TEST: #SR 20 29
+      "The edge flag in predefined edge bundles should be either
+       OFF or ON."
+if flgerr then
+   fail
+   message about erflg
+else
+   pass
+endif
+
+TEST: #SR 20 26
+      "All edgetypes in predefined edge bundles should
+       themselves be in the list of available edgetypes."
+if edgerr then
+   fail
+   message about eredty
+else
+   pass
+endif
+
+TEST: #SR 20 27
+      "All edgewidth scale factors in predefined edge bundles
+       should generate edgewidths within the minimum and maximum
+       edgewidths."
+if ewerr then
+   fail
+   message about erew
+else
+   pass
+endif
+
+TEST: #SR 20 28
+      "All color indices in predefined edge bundles should
+       themselves be in the predefined color table."
+if colerr then
+   fail
+   message about eredci
+else
+   pass
+endif
+
+TEST: #SR 15 26 27 28 29
+      "All aspects of all predefined edge bundles should be
+       reported as realizable by <inquire edge representation>."
+if rlzerr then
+   fail
+   message about erbun
+else
+   pass
+endif
+
+nxt_text:
+
+TEST: #SR 19 21
+      "<Inquire edge facilities> should report at least 5
+       predefined entries."
+if npe < 5 then
+   fail
+   goto done
+else
+   pass
+endif
+
+TEST: #SR 20 22
+      "The first five predefined edge bundle entries should
+       all be mutually distinguishable."
+do edi = 1 to 5
+  <inquire predefined edge representation> for index edi, determine
+    pdef = predefined edge flag
+    pdet = predefined edgetype
+    pdew = predefined edgewidth scale factor
+    pdci = predefined edge color index
+  do edi2 = 1 to edi-1
+     if svpdef (edi2) = pdef  and
+        svpdet (edi2) = pdet  and
+        svpdew (edi2) = pdew  and
+        svpdci (edi2) = pdci    then
+          fail
+          message about edi, edi2
+          goto done
+     endif
+  loop
+  svpdef (edi) = pdef
+  svpdet (edi) = pdet
+  svpdew (edi) = pdew
+  svpdci (edi) = pdci
+loop
+pass
+
+done:
+
+END PROGRAM 4
+
+PROGRAM 5: WSL edge bundles initialized properly
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+msgsuf = message suffix = "opening workstation."
+
+check_table:
+
+<open workstation>
+
+<inquire edge facilities> to determine
+   npe = number of predefined edge entries in WDT
+
+<inquire list of edge indices> to determine
+   sebt = size of WSL edge bundle table
+TEST: #SR 24 25
+      "WSL edge bundle table should be the same size as the
+       predefined edge bundle table after " + msgsuf
+if sebt not= npe then
+   fail
+   message about sebt and npe
+else
+   pass
+endif
+
+TEST: #SR 20 23 24
+      "Each WSL edge entry should have the same attributes as
+       the corresponding predefined edge entry after " + msgsuf
+do edi = 1 to min(npe,sebt)
+  <inquire predefined edge representation> for index edi, determine
+    pdef = predefined edge flag
+    pdet = predefined edgetype
+    pdew = predefined edgewidth scale factor
+    pdci = predefined edge color index
+  <inquire edge representation> for index edi, determine
+    def = defined edge flag
+    det = defined edgetype
+    dew = defined edgewidth scale factor
+    dci = defined edge color index
+  if def = pdef and
+     det = pdet and
+     dew = pdew and
+     dci = pdci    then
+       OK so far
+  else
+     fail
+     message about edi
+     goto end_check
+  endif
+loop
+pass
+
+end_check:
+alter bundle table - insert new or different entry
+<close workstation>
+if (msgsuf = "opening workstation.") then
+   msgsuf = "re-opening workstation."
+   goto check_table
+endif
+
+END PROGRAM 5
+
+
+PROGRAM 6: Edge flag facilities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 15 29
+      "A valid edge flag should be realized as itself."
+do efi = OFF to ON
+   <set edge representation> index #1, edge flag = efi
+   if error signalled then
+      fail
+      message about efi
+      goto done
+   endif
+   <inquire edge representation> index #1 to determine
+      ref = realized edge flag
+   if ref not = efi then
+      fail
+      message about ref, efi
+      goto done
+   endif
+loop
+pass
+
+done:
+
+END PROGRAM 6
+
+
+PROGRAM 7: Edgetype facilities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire edge facilities> to determine
+   naet = number of available edgetypes
+errcod = false
+stdet  = false
+impdep = false
+do etid = 1 to abs(naet)
+   <inquire edge facilities> to determine
+      thiset = nth edgetype
+   keep track of non-zero error indicators:
+   if errind not= 0 then
+      errcod = true
+      message about errind and etid
+      goto loop
+   endif
+   et(etid) = thiset
+   keep track of edgetype 1:
+   if thiset = 1 then
+      stdet  = true
+   endif
+   keep track of implementation-dependent types (non-positives):
+   if thiset < 1 then
+      impdep = true
+   endif
+loop
+
+TEST: #SR 32
+      "All entries within the reported size of the list of available
+       edgetypes should be accessible."
+pass/fail depending on (NOT errcod)
+
+TEST: #SR 33
+      "The list of available edgetypes should contain edgetype 1."
+pass/fail depending on (stdet)
+
+if naet > 0 then (positive number of available edgetypes)
+   if impdep then
+      no test
+   else
+      TEST: #SR 34 37
+            "When system reports that no implementation-dependent
+             edgetypes are available, none should be."
+      do impet = 0 to -3
+         <set edge representation>, index #1, edgetype = impet
+         if not rejected as invalid then
+            fail
+            message about impet
+            goto endimp
+         endif
+      loop
+      pass
+      endimp:
+   endif
+else (naet <= 0)
+   TEST: #SR 35 37
+         "Negative number of available edgetypes should indicate that
+          list contains no implementation-dependent edgetypes."
+   pass/fail depending on (NOT impdep)
+endif
+
+TEST: #SR 15 36
+      "All entries within the reported list of available edgetypes
+       should be realizable and valid."
+do etid = 1 to abs(naet)
+  thiset = et(etid)
+  <set edge representation>, index #3, edgetype = thiset
+  if rejected as invalid then
+     fail
+     message about thiset
+     goto done
+  endif
+  <inquire edge representation>, index #3, as realized to determine
+     ret = realized edgetype
+  if ret not= thiset then
+     fail
+     message about thiset and ret
+     goto done
+  endif
+loop
+pass
+
+done:
+
+END PROGRAM 7
+
+
+PROGRAM 8: Edgewidth facilities
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<inquire edge facilities> to determine:
+   naew  = number of available edgewidths
+   nomew = nominal edgewidth
+   minew = minimum edgewidth
+   maxew = maximum edgewidth
+
+Informative message about: naew, nomew, minew, maxew
+
+TEST: #SR 42
+      "Maximum edgewidth should not be less than minimum."
+pass/fail depending on (maxew >= minew)
+
+TEST: #SR 43
+      "The nominal edgewidth, minimum edgewidth, and maximum
+       edgewidth should all be positive."
+pass/fail depending on (minew and maxew and nomew > 0)
+
+TEST: #SR 44
+      "The reported number of available edgewidths should be at
+       least 0."
+pass/fail depending on (naew >= 0)
+
+minsc = minew/nomew = minimum scale factor
+maxsc = maxew/nomew = maximum scale factor
+
+TEST: #SR 45
+      "All edgewidth scale factors should be accepted as valid."
+<set edge representation>, index #4, scale_factor = minsc/10
+if error signalled then
+   goto errval
+endif
+<set edge representation>, index #4, scale_factor = maxsc*10
+if error signalled then
+   goto errval
+endif
+<set edge representation>, index #4, scale_factor = -10.0
+if error signalled then
+   goto errval
+endif
+pass
+valok = true
+goto done_valid
+
+errval:
+fail
+valok = false
+message about scale_factor and error code
+
+done_valid:
+
+TEST: #SR 11 15 42
+      "The reported minimum edgewidth should be realizable."
+<set edge representation>, index #4, scale_factor = minsc
+<inquire edge representation>, index #4 as realized,
+  to determine rew = realized edgewidth scale factor
+pass/fail depending on (rew app= minsc)
+
+TEST: #SR 11 15 42
+      "The reported maximum edgewidth should be realizable."
+<set edge representation>, index #4, scale_factor = maxsc
+<inquire edge representation>, index #4 as realized,
+  to determine rew = realized edgewidth scale factor
+pass/fail depending on (rew app= maxsc)
+
+if (not valok) then
+   informative message: skipping coercion tests
+   goto skip_coerce
+endif
+
+TEST: #SR 11 15 42
+      "A edgewidth scale factor set as less than the minimum
+       should be realized as the reported minimum."
+<set edge representation>, index #4, scale_factor = minsc/3
+<inquire edge representation>, index #4 as realized,
+  to determine rew = realized edgewidth scale factor
+pass/fail depending on (rew app= minsc)
+
+TEST: #SR 11 15 42
+      "A edgewidth scale factor set as greater than the maximum
+       should be realized as the reported maximum."
+<set edge representation>, index #4, scale_factor = maxsc*3
+<inquire edge representation>, index #4 as realized,
+  to determine rew = realized edgewidth scale factor
+pass/fail depending on (rew app= maxsc)
+
+TEST: #SR 11 15 42
+      "A edgewidth scale factor set as less than zero
+       should be realized as the reported minimum."
+<set edge representation>, index #4, scale_factor = -abs(maxsc)
+<inquire edge representation>, index #4 as realized,
+  to determine rew = realized edgewidth scale factor
+pass/fail depending on (rew app= minsc)
+
+skip_coerce:
+
+if (naew not= 0) goto done
+
+TEST: #SR 11 15 42
+      "If the reported number of available edgewidths is zero,
+       then all edgewidths between the reported minimum and
+       maximum should be realizable."
+
+incr = (maxsc/minsc) ^ 0.25
+thisc = minsc
+for ix = 1 to 3
+   thisc = thisc * incr
+   <set edge representation>, index #4, scale_factor = thisc
+   <inquire edge representation>, index #4 as realized,
+      to determine rew = realized edgewidth scale factor
+   if (rew app= thisc) then
+      OK so far
+   else
+      fail
+      goto done
+   endif
+next ix
+pass
+
+done:
+
+END PROGRAM 8
+
+
+PROGRAM 9: Edge color index
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+loop thru color table to determine:
+  mci = maximum defined color index
+undci = mci + 1 = undefined color index
+
+<set edge representation>, index #5, edge color index = mci
+
+TEST: #SR 15 50 51
+      "<Inquire edge representation> should report a defined
+       edge colour index realized as itself."
+<inquire edge representation>, index #5 to determine
+   redci = realized edge color index
+if redci = mci then
+   pass
+else
+   fail
+   message about redci
+endif
+
+TEST: #SR 49
+      "Any non-negative color index should be accepted as valid."
+<set edge representation>, index #5, edge color index = undci
+if error signalled then
+   fail
+   message about undci
+else
+   pass
+endif
+
+TEST: #SR 15 50 52
+      "<Inquire edge representation> should report an
+       undefined edge colour index realized as 1."
+<inquire edge representation>, index #5 to determine
+   redci = realized edge color index
+if redci = 1 then
+   pass
+else
+   fail
+   message about redci
+endif
+
+END PROGRAM 9
+
+
+PROGRAM 10: Appearance of predefined edge bundles
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES 1-5: This
+screen displays 6 pairs (consisting of the first 5, with one
+repeated) of predefined edge bundles and individual edges.
+Identify the pair of edges (of the triangles) that is different.
+
+WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES > 5: This
+screen displays several pairs (at most 8) of predefined edge
+bundles and individual edges.  Identify the pair of edges (of the
+triangles) that is different.
+
+PREDEFINED EDGE BUNDLES: This screen displays a sample (at most
+8) of predefined edge bundles and their bundle values for edge
+flag, edgetype, edgewidth scale factor, and color index, as
+reported by <inquire predefined edge representation>. For each
+displayed bundle, verify that 1) the actual appearance of the
+edge agrees with the aspect values reported on the screen and 2)
+these both agree with any external documentation provided by the
+implementor.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+set interior style attribute ASFs to INDIVIDUAL
+   set interior style = EMPTY, interior color index = 1
+
+use <inquire edge facilities> to determine:
+  nprei  = number of predefined bundles
+  numet  = number of edge types
+
+*** *** ***   predefined edge bundles 1-5   *** *** ***
+
+numbun = 6
+bundis = bundles to be displayed (1 to 5, with one repeated)
+bundif = location of repeated bundle identifier (so that all 5
+         may be verified)
+
+TEST: #SR 3 6 20 24
+      "Immediately after <open workstation>, the first five
+       defined edge bundles of the WSL should appear as
+       specified in the corresponding predefined edge
+       bundles of the WDT."
+
+The actual results (edges drawn from initial state of WSL)
+are drawn on the left side of the picture. The corresponding
+expected results (edge with individual attributes taken
+from WDT) are drawn on the right side, except for one
+edge which will be different.
+
+display and label actual results from bundis.
+
+set edge flag, edgetype, edgewidth and color index ASF to individual
+
+for ix = 1, numbun
+   <inquire predefined edge representation> on index
+        bundis(ix), determine:
+      pdef = predefined edge flag
+      pdet = predefined edgetype
+      pdew = predefined edgewidth scale factor
+      pdci = predefined edge color index
+    if (ix = bundif) then
+       if (numet = 1) then
+          if (pdef = ON) then
+             pdef = OFF
+          else
+             pdef = ON
+          endif
+       endif
+       pdet = (pdet mod numet) + 1
+       pdew = pdew * 1.25
+       pdci = (pdci mod 5) + 1
+    endif
+    draw edge with pdef, pdet, pdew, pdci
+next ix
+
+OPQA/WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES 1-5:
+   Which pair of edges does NOT match?
+pass/fail depending on (operator selects bundif)
+
+*** *** ***   predefined edge bundles > 5   *** *** ***
+
+if nprei <= 5 then
+   skip to end_comp_tables
+endif
+
+numbun = min (8, nprei-5)
+bundis = distinct bundles to be displayed - randomly chosen
+         from [6,nprei] predefined bundles
+
+TEST: #SR 3 6 20 24
+      "Immediately after <open workstation>, the defined
+       edge bundles > 5 of the WSL should appear as
+       specified in the corresponding predefined edge
+       bundles of the WDT."
+
+The actual results (edges drawn from initial state of WSL)
+are drawn on the left side of the picture. The corresponding
+expected results (edge with individual attributes copied
+from WDT) are drawn on the right side, except for one
+edge which will be different.
+
+display and label bundis
+
+bundif = randomly selected bundle from bundis
+set edge flag, edgetype, edgewidth and color index ASF to individual
+
+for ix = 1, numbun
+   <inquire predefined edge representation> on index
+        bundis(ix), determine
+      pdef = predefined edge flag
+      pdet = predefined edgetype
+      pdew = predefined edgewidth scale factor
+      pdci = predefined edge color index
+    if (ix = bundif) then
+       if (numet = 1) then
+          if (pdef = ON) then
+             pdef = OFF
+          else
+             pdef = ON
+          endif
+       endif
+       pdet = (pdet mod numet) + 1
+       pdew = pdew * 1.25
+       pdci = (pdci mod 5) + 1
+    endif
+    draw edge with pdef, pdet, pdew, pdci
+next ix
+
+OPQA/WORKSTATION DESCRIPTION AND STATE LIST TABLES, INDICES > 5:
+   Which pair of edges does NOT match?
+pass/fail depending on (operator selects bundif)
+
+end_comp_tables:
+
+*** ***  predefined bundle descriptions   *** ***
+
+TEST: #SR 3 6 20
+      "The appearance of predefined edge bundles should agree
+       with the descriptions supplied by the implementor."
+
+numbun = min(8, nprei)
+bundis = distinct bundles to be displayed, sorted
+
+for ix = 1 to numbun
+   <inquire predefined edge representation> for index ix, determine
+      pdef = edge flag
+      pdet = edgetype
+      pdew = edgewidth scale factor
+      pdci = edge color index
+   display and label ixth entry in bundis and its pdef,pdet,pdew,pdci
+next ix
+
+OPQA/PREDEFINED EDGE BUNDLES: Does the appearance of each
+  edge agree with the displayed aspect values for that bundle?
+if (operator responds "yes") then
+   OPQA/PREDEFINED EDGE BUNDLES: If the implementor provides
+      external documentation, is it consistent with the edge
+      appearance and displayed aspect values for every bundle
+      identifier?
+   pass/fail depending on (operator responds "yes")
+else
+   fail
+endif
+
+END PROGRAM 10
+
+
+PROGRAM 11: Edge bundle index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+DEFINED EDGE INDICES: All edges but one are identical (drawn with
+the same attributes).  Identify the edge that is different.
+
+UNDEFINED EDGE INDICES: A star is drawn with several triangles
+beneath it.  Normally, all of these will have the same edge
+attributes as the star.  Count up and report the number of
+triangles which match the star in edgetype, edgewidth, and color.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+set interior style attribute ASFs to INDIVIDUAL
+   set interior style = EMPTY, interior color index = 1
+
+<inquire workstation state table lengths> to determine maximum
+   number of entries in edge table
+szbt   = maximum size of bundle table
+
+<inquire edge facilities> to determine:
+numet = number of available edgetypes
+laet  = list of available edgetypes
+
+sort laet
+
+*** *** ***   edge index   *** *** ***
+
+use interior style EMPTY
+
+TEST: #SR 3 4 5 6
+      "A defined edge index should cause the addressed
+       entry in the bundle table to be used when rendering a
+       edge."
+
+bundis = number of bundles to be displayed = min(8, szbt)
+initialize all of bundis to: edgeflag ON
+                             edgetype 1,
+                             edgewidth scale factor 1.0,
+                             color index 1
+
+altet  = alternative edgetype
+switch = switch edge flag
+if (numet > 1) then
+   altet  = laet(2)
+   switch = ON
+else
+   altet  = laet(1)
+   switch = OFF
+endif
+
+bundif = randomly selected bundle from bundis
+set bundif = edge flag = switch
+             edgetype  = altet
+             edgewidth scale factor  = 2.0
+             color     = 2
+
+Display and label triangles with edges for each bundle in bundis
+
+OPQA/DEFINED EDGE INDICES: which triangle is different?
+pass/fail depending on (edge with attributes from bundle #bundif
+                        selected)
+
+TEST: #SR 3 4 5 7
+      "An undefined edge index should cause bundle number 1
+       in the edge bundle table to be used when rendering an
+       edge."
+
+set index #1 in bundle table to edge flag = ON
+                                edgetype   = altet
+                                edgewidth  = 2.0
+                                edge color = 2
+
+u1,u2,u3 = 3 undefined, positive indices - all greater than
+  maximum defined index in bundle table (szbt)
+explct = number of explicit edges using bundle #1 = random integer
+   from 0 to 4
+
+draw star with bundle index 1
+
+display interleaved:
+  three triangles with edges using bundle index u1,u2,u3,
+  explct triangles with edges using bundle index 1
+
+OPQA/UNDEFINED EDGE INDICES: How many of the triangles
+  have the same edge attributes as the star?
+pass/fail depending on response = 3+explct
+
+END PROGRAM 11
+
+
+PROGRAM 12: Appearance of bundled attributes
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+EDGE FLAG INDICATOR: This screen should display several
+rectangles with edges and several without edges.  Identify the
+rectangles with visible edges.
+
+STANDARD EDGETYPES: This screen should display examples of each
+of the edgetypes actually supported by the implementation. You
+should not consider whether the mandatory edgetype (1) is
+present, but simply whether each edgetype is recognizable from
+the verbal description.  Enter a list of integers which identify
+the edgetypes in the same order as they appear in the prompt.
+
+REGISTERED EDGETYPES: This screen displays a sample of supported
+registered edgetypes (at most 8).  For each displayed edge, look
+up its edgetype identifier in the ISO register and verify that
+the actual appearance of the edge agrees with the ISO
+specification.
+
+IMPLEMENTOR DEFINED EDGETYPES: This screen displays a sample of
+implementor defined edgetypes (at most 8).  For each displayed
+edge, look up its edgetype identifier in the implementor's
+documentation and verify that the actual appearance of the edge
+agrees with the specification.
+
+VARIOUS EDGEWIDTH SCALE FACTORS: Several numbered pairs of
+rectangles are drawn.  Compare the edgewidth for each pair. One
+pair should have the same width for both members.  Although the
+program tries to line up the bottom of the rectangles, there is
+no requirement that they be aligned, so judge only according to
+width.
+
+POSITIVE EDGEWIDTH BELOW MINIMUM: as above, for VARIOUS EDGEWIDTH
+SCALE FACTORS.
+
+NEGATIVE EDGEWIDTH: as above, for VARIOUS EDGEWIDTH SCALE
+FACTORS.
+
+POSITIVE EDGEWIDTH ABOVE MAXIMUM: as above, for VARIOUS EDGEWIDTH
+SCALE FACTORS.
+
+DEFINED EDGE COLOR INDICES: All the edges of the triangles but
+one are drawn in the background color.  Identify the single
+triangle with its edges drawn in the default foreground color.
+
+UNDEFINED EDGE COLOR INDICES: A star is drawn with several
+rectangles beneath it.  Normally, all of these will have edges
+the same color as the star.  Count up and report the number of
+rectangles with edges that match the star in color.
+
+DESIGN:
+
+set all ASFs to BUNDLED
+set interior style attribute ASFs to INDIVIDUAL
+   set interior style = EMPTY, interior color index = 1
+
+use <inquire edge facilities> to determine:
+  numet  = number of available edgetypes
+  lavset = list of available standard edgetypes
+  lavret = list of available registered edgetypes
+  laviet = list of available implementor-defined edgetypes
+           (may be derived directly from edgetype value, if reported
+            number of edgetypes < 0)
+  numew  = number of available edge-widths
+  nomew  = nominal edge-width (DC)
+  minew,maxew = minimum,maximum edge-width (DC)
+
+use <inquire workstation state table lengths> to determine:
+   szbt = size of edge bundle table
+
+*** *** ***   edge flag indicator   *** *** ***
+
+filon  = number of areas to be drawn with edge flag ON =
+         random number 1 to 8
+for ix = 1, 8
+   if (ix <= filon) then
+      <set edge representation> #ix:
+         edgeflag  = ON
+         edgetype  = SOLID
+         edgewidth = 1.0
+         color     = 1
+   else
+      <set edge representation> #ix:
+         edgeflag  = OFF
+         edgetype  = SOLID
+         edgewidth = 1.0
+         color     = 1
+   endif
+next ix
+
+display in random order bundles 1-8
+
+TEST: #SR 3 4 5 6 30 31
+      "The edge of a polygonal area should be visible when the
+       edge flag is ON and not visible when the edge flag is
+       OFF."
+
+OPQA/EDGE FLAG INDICATOR: which triangles have visible edges?
+pass/fail depending on (all displayed areas with visible edges
+   correctly identified)
+
+*** *** ***   edgetype   *** *** ***
+
+Use default background color=0, foreground=1
+
+stddx = size of lavset
+
+for ix = 1, stddx
+   <set edge representation>:
+      index     = ix
+      edgeflag  = ON
+      edgetype  = ixth entry in lavset
+      edgewidth = 1.0
+      color     = 1
+next ix
+
+Display in random order bundles 1 thru stddx
+
+TEST: #SR 3 4 5 6 38 39
+      "The standard edgetypes should be recognizable from
+       their standard description."
+
+OPQA/STANDARD EDGETYPES: List, in order, the numeric labels for
+  edgetypes: solid, dotted, dashed, dotted-dashed.
+
+pass/fail depending on (all displayed edgetypes correctly identified)
+
+regdx = size of lavret
+if regdx < 1 skip to neg_type
+
+numdis = min(regdx, 8, szbt)
+lindis = numdis entries, randomly chosen from lavret
+
+for ix = 1, numdis
+   <set edge representation>:
+      index     = ix
+      edgeflag  = ON
+      edgetype  = ixth entry in lindis
+      edgewidth = 1.0
+      color     = 1
+next ix
+
+display in order and label bundles 1 thru numdis
+
+TEST: #SR 3 4 5 6 38 40
+      "The registered edgetypes (> 4) should agree
+       with their registered description."
+
+OPQA/REGISTERED EDGETYPES: Is each edgetype
+  depicted according to its numeric identifier's specification in
+  the ISO register?
+pass/fail depending on (operator responds "yes")
+
+neg_type:
+
+impdx = size of laviet
+if impdx < 1 goto end_edgetype
+
+numdis = min(impdx, 8, szbt)
+lindis = numdis entries, randomly chosen from laviet
+
+for ix = 1, numdis
+   <set edge representation>:
+      index     = ix
+      edgeflag  = ON
+      edgetype  = ixth entry in lindis
+      edgewidth = 1.0
+      color     = 1
+next ix
+
+display in order and label bundles 1 thru numdis
+
+TEST: #SR 3 4 5 6 38 41
+      "Implementor-defined edgetypes (< 1) should agree with the
+       descriptions supplied by the implementor."
+
+OPQA/IMPLEMENTOR DEFINED EDGETYPES: Is each edgetype depicted
+  according to its numeric identifier's specification in the
+  implementor documentation?
+pass/fail depending on (operator responds "yes")
+
+end_edgetype:
+
+*** *** ***   edge-width   *** *** ***
+
+from dialog common:
+  wcpdc  = WC unit / DC unit
+  qvis   = minimum distinguishable length in DC-units
+
+Are there at least two visually distinguishable edge-widths?
+if (numew = 1)              or
+   (maxew <= 1.02 * minew)  or
+   (maxew-minew < qvis)    then
+   only one distinguishable:
+   tstew1 = first edgewidth to be tested = maxew
+   tstew2 =  last edgewidth to be tested = tstew1
+   mult = 2
+else
+   tstew1 = first edgewidth to be tested = minew
+   tstew2 =  last edgewidth to be tested = maxew
+   if (numew = 0) then
+      continuous range of edgewidths available - take 4 geometric steps
+      mult = 0.9999 * ((tstew2/tstew1) ** 0.25)
+   else
+      discrete set of edgewidths available - test min/max only
+      mult = 0.9999 * (tstew2/tstew1)
+   endif
+endif
+
+numpas = 0 = number of tests passed so far
+thisew = tstew1
+
+loop thru various edgewidths
+next_ew:
+OPQA/VARIOUS EDGEWIDTH SCALE FACTORS: invoke SHEDBW subroutine to
+  test bundle with requested edge width = thisew
+                    expected edge width = thisew
+if abort indicated
+   if (numpas < 2) then
+      message about edgewidth too big for the screen
+      goto min_max_coerce
+   else
+      goto do_test_msg
+   endif
+elseif failure indicated
+   numpas = 0
+   goto do_test_msg
+endif
+
+numpas = numpas+1
+set up for next edgewidth to be tested:
+thisew = thisew * mult
+if thisew <= tstew2 goto next_ew
+
+do_test_msg:
+
+TEST: #SR 3 4 5 6 45 46 47
+      "Available edgewidth scale factors should control the
+       realized thickness of a edge."
+pass/fail depending on (numpas > 0)
+
+min_max_coerce:
+
+TEST: #SR 3 4 5 6 45 46 48
+      "A requested positive edgewidth scale factor below the
+       minimum available should be realized as the minimum."
+OPQA/POSITIVE EDGEWIDTH BELOW MINIMUM: invoke subroutine SHEDBW
+  to test bundle with requested edge width = minew/2
+                       expected edge width = minew
+pass/fail depending on return code from SHEDBW
+
+TEST: #SR 3 4 5 6 45 46 48
+      "A requested negative edgewidth scale factor should be
+       realized as the minimum."
+OPQA/NEGATIVE EDGEWIDTH: invoke subroutine SHEDBW to test
+  bundle with requested edge width = -maxew-100
+               expected edge width = minew
+pass/fail depending on return code from SHEDBW
+
+OPQA/POSITIVE EDGEWIDTH ABOVE MAXIMUM: invoke subroutine SHEDBW
+  to test requested edge width = maxew*2
+           expected edge width = maxew
+if abort indicated
+   message about edge width too big for the screen
+else
+   TEST: #SR 3 4 5 6 45 46 48
+         "A requested edgewidth scale factor above the maximum
+          available should be realized as the maximum."
+   pass/fail depending on return code from SHEDBW
+endif
+
+*** *** ***   edge color index   *** *** ***
+
+TEST: #SR 3 4 5 6 49 50 51
+      "A defined edge color index should cause the addressed
+       entry in the color table to be used when rendering a
+       edge."
+
+bckcol = background color = realized color spec for entry #0
+forcol = foreground color = realized color spec for entry #1
+
+szcolt = maximum size of color table (including entry #0)
+numdis = number of edges to be drawn = min(8, szcolt, szbt)
+edcol  = random permutation of #0,#1, and numdis-2 random choices
+         from entries #2 to #szcolt-1
+visdx = from edcol, randomly select an entry to be made visible
+        but not the one that contains 0, since this may not be
+        re-settable.
+
+for ix = 1 to numdis
+   set entry edcol(ix) in color table to bckcol
+   <set edge representation>:
+      index     = ix
+      edgeflag  = ON
+      edgetype  = 1
+      edgewidth = 1.0
+      color     = edcol(ix)
+next ix
+
+set entry edcol(visdx) in color table to forcol
+
+Display bundles 1 thru numdis and label them
+
+OPQA/DEFINED EDGE COLOR INDICES: which triangle is visible?
+pass/fail depending on
+          (response = triangle with edge colored by visdx)
+
+end_def_col:
+
+TEST: #SR 3 4 5 6 49 50 52
+      "An undefined edge color index should cause entry number 1
+       in the color table to be used when rendering an edge."
+
+set entry #1 in color table opposite from BCKCOL
+set entry #1 different from FORCOL - make sure undefined default
+  to *current* color-rep of #1, not just a predefined color.
+
+explct = number of explicit edges of color #1 = random integer
+   from 0 to min(4, szbt-3)
+u1,u2,u3 = 3 undefined, positive color indices - all greater
+  than maximum defined entry in color table
+
+draw star with color #1
+
+set up bundles 1 thru 3 to:
+        edgeflag = ON, edgetype=1, width=1, color index= undf(1,2,3)
+set up bundles 4 thru (explct+3) to:
+        edgeflag = ON, edgetype=1, width=1, color index=1
+
+display in random order bundles #1 thru explct+3
+
+OPQA/UNDEFINED EDGE COLOR INDICES: how many rectangles have edges
+  the same color as the star?
+pass/fail depending on response = 3+explct
+
+END PROGRAM 12
+
+
+PROGRAM 13: Network inheritance and initialization of edge
+            index
+
+CHARACTERISTICS: ynny
+
+OPERATOR SCRIPT:
+
+STRUCTURE NETWORK INHERITANCE FOR EDGE INDEX: This screen
+displays several left-right pairs of triangles.  Make sure that
+all pairs except one have matching edge flags, edgetypes,
+edgewidths, and colors.  Identify the non-matching pair.
+
+DESIGN:
+
+All test cases use same basic structure network for testing
+inheritance.  Five (distinct if possible) values for the
+attribute to be tested are set up and propagated throughout the
+network.  The first value is the system default from the PDT.
+Note that structure #104 is executed by both #103 and #101.
+Actual results are displayed on the left, expected results
+on the right, with the 14th deliberately made incorrect.
+
+default = val#1
+  |                  102
+  |                 /  prim 2
+  |               /    attr = val#3   val#3
+  V        val#1/      exec 103---------------103
+101           /        prim 8                   prim 3
+  prim 1    /                                   attr = val#4
+  exec 102/                                     prim 4
+  prim 9                                        exec 104\
+  attr = val#2                                  prim 7    \ val#4
+  prim 10                                                   \
+  transform             val#2                                 \
+  exec 104-----------------------------------------------------104
+  un-transform                                                   prim 5/11
+  prim 13                                                        attr = val#5
+  prim 14                                                        prim 6/12
+  exec 105---------->105
+                       expected values
+
+*** *** ***   inheritance for edge index   *** *** ***
+
+use <inquire edge facilities> to determine:
+  numet  = number of edgetypes
+  numew  = number of available edge-widths
+  nomew  = nominal edge-width (DC)
+  minew,maxew = minimum,maximum edge-width (DC)
+
+set edge flag
+edflg[1..5] = ON
+if (numet = 1) edflg(3) = OFF
+
+get edgetype values:
+ledtyp = list of 5 (possible repeated) selected edgetypes
+
+get alternative edgewidth values:
+
+altew1 should not exceed .05 (WC) to avoid overlap - distance
+  between edges will be 1/15 = .06666
+altew1 = min(max scale factor, factor equivalent to .05 in WC)
+altew2 = min scale factor
+
+if default (1.0) is near altew1 or altew2, set alternate so as to
+maximize the smallest gap among altew1, altew2, and 1.0:
+
+avg1 = (altew1 + 1) / 2
+avg2 = (altew2 + 1) / 2
+if (abs(altew1-1) < abs(avg2-1)) then
+   altew1 = avg2
+elseif (abs(altew2-1) < abs(avg1-1)) then
+   altew2 = avg1
+endif
+
+call DISCOL to try to get 5 distinct foreground colors,
+  returning fcol = actual number of foreground colors
+colind[1..5] = [1,2,3,4,5]
+if (fcol < 5) then
+   copy 1st valid part of list to tail of list
+endif
+
+set up bundles 1-5
+
+   bundle
+   index   edge flag  edgetype    edgewidth    color index
+   ------  ---------  --------    ---------    -----------
+     1     edflg(1)    ledtyp(1)     1.0        colind(1)
+     2     edflg(2)    ledtyp(2)     altew1     colind(2)
+     3     edflg(3)    ledtyp(3)     altew2     colind(3)
+     4     edflg(4)    ledtyp(4)     altew1     colind(4)
+     5     edflg(5)    ledtyp(5)     altew2     colind(5)
+
+randomize location of edges
+set up CSS as described above
+
+set all ASFs to BUNDLED
+set interior style attribute ASFs to INDIVIDUAL
+   set interior style = EMPTY, interior color index = 1
+
+display 14 pairs of triangles, using bundles 1-5
+
+TEST: #SR 3 5 6 8 9
+      "The edge index should be saved and restored by
+       <execute structure> during traversal."
+
+OPQA/STRUCTURE NETWORK INHERITANCE FOR EDGE INDEX:
+  which pair of triangles does NOT match?
+pass/fail depending on response = position of edge 14
+
+END PROGRAM 13

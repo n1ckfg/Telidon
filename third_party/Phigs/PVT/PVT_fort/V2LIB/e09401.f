@@ -1,0 +1,57 @@
+      SUBROUTINE E09401 (USEPRM)
+
+C  E09401 tests the handling of error 401.
+
+      COMMON /GLOBNU/ CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT, DUMRL
+      INTEGER         CTLHND, ERRSIG, ERRFIL, IERRCT, UNERR,
+     1        TESTCT, IFLERR, PASSSW, ERRSW, MAXLIN,
+     2        CONID, MEMUN, WKID, WTYPE, GLBLUN, INDLUN,
+     3        DUMINT(20), ERRIND
+      REAL    DUMRL(20)
+
+      COMMON /ERRINF/ ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR,
+     1                USRERR, ERRSAV,      FUNSAV,      FILSAV,
+     2                EFCNT, EFID
+      INTEGER         ERRCOM,FUNCOM,FILCOM, ERNMSW, EXPSIZ,EXPERR(10),
+     1                USRERR, ERRSAV(200), FUNSAV(200), FILSAV(200),
+     2                EFCNT, EFID(100)
+      COMMON /ERRCHR/ CURCON,     ERRSRS,    ERRMRK,    ERFLNM,
+     1                CONTAB
+      CHARACTER       CURCON*200, ERRSRS*40, ERRMRK*20, ERFLNM*80,
+     1                CONTAB(40)*150
+
+      INTEGER    USEPRM, IX, MAXARF, ARNM, NUMARF
+      INTEGER    IDUM1,IDUM2,IDUM3,IDUM4,IDUM5,IDUM6,IDUM7
+      LOGICAL    STREQ
+
+      CURCON = 'opening this archive file would exceed the maximum '//
+     1         'number of simultaneously open archive files'
+      CALL SETVS ('401', EXPERR, EXPSIZ)
+      ERRSRS = '2'
+      CALL ESETUP (USEPRM)
+
+      CALL PQPHF (IDUM1,ERRIND,IDUM2,MAXARF,IDUM3,IDUM4,IDUM5,IDUM6,
+     1            IDUM7)
+      CALL CHKINQ ('pqphf', ERRIND)
+
+      DO 100 IX = 1, MAXARF
+         CALL AVARNM (ARNM)
+         CALL POPARF (IX, ARNM)
+100   CONTINUE
+
+      CALL AVARNM (ARNM)
+      CALL ROPARF (MAXARF+1, ARNM)
+      CALL PQARF (0, ERRIND, NUMARF, IDUM1, IDUM2)
+      CALL CHKINQ ('pqarf', ERRIND)
+      CALL TSTIGN (STREQ('O**O') .AND. NUMARF.EQ.MAXARF)
+
+      DO 150 IX = 1, MAXARF
+         CALL PCLARF (IX)
+150   CONTINUE
+
+      CALL ENDERR
+
+      END

@@ -1,0 +1,526 @@
+TITLE: Modelling utilities
+
+MODULE#: 06.01.01
+
+DESCRIPTION: This module tests the functions provided by PHIGS
+to support modelling transformations.  These functions do not
+depend on the state of PHIGS data structures, nor do they affect
+them; their behavior interacts only with their input and output
+parameters.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  Modelling transformations are represented as 4x4 (for 3D)
+or 3x3 (2D) matrices which pre-multiply points to be transformed.
+#F 91-106
+#D 7.3.3.1 7.3.3.2 7.3.3.3 7.3.3.4
+#S 4.7.2/77/3
+#T P01/1 P01/2 P01/3 P01/4 P02/1 P02/2 P02/3 P02/4 P03/1 P03/2 P03/3
+   P03/4 P04/1 P04/2 P05/1 P05/2 P06/1 P06/2 P07/1 P07/2
+
+SR2.  Points are represented as column vectors with homogeneous
+coordinates, i.e. the coordinates x,y,z,w represent the three
+dimensional point (x/w, y/w, z/w).
+#F 91-106
+#D 7.3.3.1 7.3.3.2 7.3.3.3 7.3.3.4
+#S 4.7.2/77/3
+#T P01/1 P01/2 P01/3 P01/4 P02/1 P02/2 P02/3 P02/4 P03/1 P03/2 P03/3
+   P03/4 P04/1 P04/2 P05/1 P05/2 P06/1 P06/2 P07/1 P07/2
+
+SR3.  <Translate 3> generates a 3D homogeneous transformation
+matrix to translate a point from (x,y,z) to (x+dx, y+dy, z+dz).
+#F 91
+#D
+#S 4.7.3/79/4
+#T P01/1 P01/2
+
+SR4.  <Translate> generates a 2D homogeneous transformation
+matrix to translate a point from (x,y) to (x+dx, y+dy).
+#F 92
+#D
+#S 4.7.3/79/4
+#T P01/3 P01/4
+
+SR5.  <Scale 3> generates a 3D homogeneous transformation
+matrix to scale a point from (x,y,z) to (x*sx, y*sy, z*sz).
+#F 93
+#D
+#S 4.7.3/79/4
+#T P02/1 P02/2
+
+SR6.  <Scale> generates a 2D homogeneous transformation
+matrix to scale a point from (x,y) to (x*sx, y*sy).
+#F 94
+#D
+#S 4.7.3/79/4
+#T P02/3 P02/4
+
+SR7.  <Rotate x> generates a 3D homogeneous transformation matrix
+to rotate a point counterclockwise around the X axis by the
+specified rotation angle.
+#F 95
+#D
+#S 4.7.3/79/4
+#T P03/1
+
+SR8.  <Rotate y> generates a 3D homogeneous transformation matrix
+to rotate a point counterclockwise around the Y axis by the
+specified rotation angle.
+#F 96
+#D
+#S 4.7.3/79/4
+#T P03/2
+
+SR9.  <Rotate z> generates a 3D homogeneous transformation
+matrix to rotate a point counterclockwise around the Z axis by
+the specified rotation angle.
+#F 97
+#D
+#S 4.7.3/79/4
+#T P03/3
+
+SR10.  <Rotate> generates a 2D homogeneous transformation matrix
+to rotate a point counterclockwise around the origin by the
+specified rotation angle.
+#F 98
+#D
+#S 4.7.3/79/4
+#T P03/4
+
+SR11.  <Compose matrix 3> generates a 3D homogeneous
+transformation matrix which performs the same transformation as
+that resulting from the multiplication of the two specified
+matrices.
+#F 99
+#D
+#S 4.7.3/79/4
+#T P04/1
+
+SR12.  <Compose matrix> generates a 2D homogeneous transformation
+matrix which performs the same transformation as that resulting
+from the multiplication of the two specified matrices.
+#F 100
+#D
+#S 4.7.3/79/4
+#T P04/2
+
+SR13.  <Transform point 3> returns the 3D point resulting from
+applying the specified transformation matrix to the specified
+point.
+#F 101
+#D
+#S 4.7.3/79/4
+#T P05/1
+
+SR14.  <Transform point> returns the 2D point resulting from
+applying the specified transformation matrix to the specified
+point.
+#F 102
+#D
+#S 4.7.3/79/4
+#T P05/2
+
+SR15.  <Build transformation matrix 3> generates a 3D homogeneous
+transformation matrix to perform the specified transformation.
+This transformation performs the following operations in order,
+relative to the fixed point: scale, rotate x, rotate y, rotate z,
+and shift.
+#F 103
+#D
+#S 4.7.3/79/4
+#T P06/1
+
+SR16.  <Build transformation matrix> generates a 2D homogeneous
+transformation matrix to perform the specified transformation.
+This transformation performs the following operations in order,
+relative to the fixed point: scale, rotate, and shift.
+#F 104
+#D
+#S 4.7.3/79/4
+#T P06/2
+
+SR17.  <Compose transformation matrix 3> generates a 3D
+homogeneous transformation matrix to perform the specified
+transformation.  This transformation performs the following
+operations in order, relative to the fixed point: scale, rotate
+x, rotate y, rotate z, and shift, and then apply the specified
+matrix.
+#F 105
+#D
+#S 4.7.3/79/4
+#T P07/1
+#C Note that the specified matrix is applied last, not first.
+
+SR18.  <Compose transformation matrix> generates a 2D homogeneous
+transformation matrix  to perform the specified transformation.
+This transformation performs the following operations in order,
+relative to the fixed point: scale, rotate, and shift, and then
+apply the specified matrix.
+#F 106
+#D
+#S 4.7.3/79/4
+#T P07/2
+#C Note that the specified matrix is applied last, not first.
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   91: ptr3    <translate 3>
+   92: ptr     <translate>
+   93: psc3    <scale 3>
+   94: psc     <scale>
+   95: prox    <rotate x>
+   96: proy    <rotate y>
+   97: proz    <rotate z>
+   98: pro     <rotate>
+   99: pcom3   <compose matrix 3>
+  100: pcom    <compose matrix>
+  101: ptp3    <transform point 3>
+  102: ptp     <transform point>
+  103: pbltm3  <build transformation matrix 3>
+  104: pbltm   <build transformation matrix>
+  105: pcotm3  <compose transformation matrix 3>
+  106: pcotm   <compose transformation matrix>
+ 
+  Data Structures ---
+  7  ...  structure_state_list
+  7.3  ...  list_of_structure_elements
+  7.3.3  ...  modelling_transformation_elements
+  7.3.3.1  ...  local_transformation_3
+  7.3.3.2  ...  local_transformation
+  7.3.3.3  ...  global_transformation_3
+  7.3.3.4  ...  global_transformation
+ 
+LOCAL SUBROUTINES: These tests use the transformation subroutine
+library.  See that library for documentation of the routines.
+
+
+PROGRAM 1: Behavior of translations
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 1 2 3
+      "<Translate 3> should return a correct representation for the
+       transformation to translate a 3D point, with non-zero parameters."
+
+Set translate parameters (dx,dy,dz) to (-33.3, 0.0076, 2.2)
+<Translate 3> with dx,dy,dz returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 3
+      "<Translate 3> should return a correct representation for the
+       transformation to translate a 3D point, with zero parameters."
+
+Set translate parameters (dx,dy,dz) to (0.0, 0.0076, 0.0)
+<Translate 3> with dx,dy,dz returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 4
+      "<Translate> should return a correct representation for the
+       transformation to translate a 2D point, with non-zero parameters."
+
+Set translate parameters (dx,dy) to (-33.3, 0.0076)
+<Translate> with dx,dy returns act3x3 = actual array
+Compute exp3x3 = expected array
+pass/fail depending on (act3x3 represents same transformation as exp3x3)
+
+TEST: #SR 1 2 4
+      "<Translate> should return a correct representation for the
+       transformation to translate a 2D point, with zero parameters."
+
+Set translate parameters (dx,dy) to (0.0, 0.0)
+<Translate> with dx,dy returns act3x3 = actual array
+Compute exp3x3 = expected array
+pass/fail depending on (act3x3 represents same transformation as exp3x3)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Behavior of scaling
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 1 2 5
+      "<Scale 3> should return a correct representation for the
+       transformation to scale a 3D point, with non-zero parameters."
+
+Set scale parameters (fx,fy,fz) to (-33.3, 0.0076, 2.2)
+<Scale 3> with fx,fy,fz returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 5
+      "<Scale 3> should return a correct representation for the
+       transformation to scale a 3D point, with zero parameters."
+
+Set scale parameters (fx,fy,fz) to (0.0, 0.0076, 0.0)
+<Scale 3> with fx,fy,fz returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 6
+      "<Scale> should return a correct representation for the
+       transformation to scale a 2D point, with non-zero parameters."
+
+Set scale parameters (fx,fy) to (-33.3, 0.0076)
+<Scale> with fx,fy returns act3x3 = actual array
+Compute exp3x3 = expected array
+pass/fail depending on (act3x3 represents same transformation as exp3x3)
+
+TEST: #SR 1 2 6
+      "<Scale> should return a correct representation for the
+       transformation to scale a 2D point, with zero parameters."
+
+Set scale parameters (fx,fy) to (0.0, 0.0)
+<Scale> with fx,fy returns act3x3 = actual array
+Compute exp3x3 = expected array
+pass/fail depending on (act3x3 represents same transformation as exp3x3)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Behavior of rotations
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 1 2 7
+      "<Rotate x> should return a correct representation for the
+       transformation to rotate a 3D point counterclockwise
+       around the x-axis by the specified number of radians."
+
+Set rotate x parameter rotang to 5.678
+<Rotate x> with rotang returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 8
+      "<Rotate y> should return a correct representation for the
+       transformation to rotate a 3D point counterclockwise
+       around the y-axis by the specified number of radians."
+
+Set rotate y parameter rotang to -0.007373
+<Rotate y> with rotang returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 9
+      "<Rotate z> should return a correct representation for the
+       transformation to rotate a 3D point counterclockwise
+       around the z-axis by the specified number of radians."
+
+Set rotate z parameter rotang to 8.52525
+<Rotate z> with rotang returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 10
+      "<Rotate> should return a correct representation for the
+       transformation to rotate a 2D point counterclockwise
+       around the origin by the specified number of radians."
+
+Set rotate parameter rotang to -11.1111
+<Rotate> with rotang returns act3x3 = actual array
+Compute exp3x3 = expected array
+pass/fail depending on (act3x3 represents same transformation as exp3x3)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Behavior of matrix composition
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 1 2 11
+      "The matrix returned by <compose matrix 3> should perform
+       the same 3D transformation as that resulting from the
+       multiplication of the two specified matrices."
+
+Initialize array A4 to: | -2.2       3.3   4.4   5.5   |
+                        |  0.0023 -727.12  2.09 33.33  |
+                        |  0        34    54.1  -0.045 |
+                        |  7         6     5     4     |
+
+Initialize array B4:
+inc = 0
+do i=1,4
+do j=1,4
+  b(i,j) = tan(-1.56 + inc)
+  inc = inc + 3.0/16.0
+next j
+next i
+
+<Compose matrix 3> using A4 and B4 returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 12
+      "The matrix returned by <compose matrix> should perform
+       the same 2D transformation as that resulting from the
+       multiplication of the two specified matrices."
+
+Initialize array A3 to: | -2.2       3.3    5.5   |
+                        |  0.0023 -727.12  33.33  |
+                        |  0        34     -0.045 |
+
+Initialize array B3:
+inc = 0
+do i=1,3
+do j=1,3
+  b(i,j) = tan(-1.56 + inc)
+  inc = inc + 3.0/9.0
+next j
+next i
+
+<Compose matrix> using A3 and B3 returns act3x3 = actual array
+Compute exp3x3 = expected array
+pass/fail depending on (act3x3 represents same transformation as exp3x3)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Behavior of transformation of points
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 1 2 13
+      "<Transform point 3> should return the 3D point resulting
+       from applying the specified transformation matrix to the
+       specified point."
+
+Initialize array a4 to: | -2.2       3.3   4.4   5.5   |
+                        |  0.0023 -727.12  2.09 33.33  |
+                        |  0        34    54.1  -0.045 |
+                        |  7         6     5     4     |
+
+Initialize 3D point p3 to: (-262.27, 0.02525, 53.838)
+
+<Transform point 3> using a4, p3 returns acttp3 = actual transformed point
+Compute exptp3 = expected transformed point
+
+pass/fail depending on (acttp3 = exptp3)
+
+TEST: #SR 1 2 14
+      "<Transform point> should return the 2D point resulting
+       from applying the specified transformation matrix to the
+       specified point."
+
+Initialize array a3 to: | -2.2       3.3    5.5   |
+                        |  0.0023 -727.12  33.33  |
+                        |  0        34     -0.045 |
+
+Initialize 2D point p2 to: (-262.27, 53.838)
+
+<Transform point> using a3, p2 returns acttp2 = actual transformed point
+Compute exptp2 = expected transformed point
+pass/fail depending on (acttp2 = exptp2)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Building transformations
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 1 2 15
+      "<Build transformation matrix 3> should generate a
+       matrix to perform the specified 3D transformation."
+
+Set up parameters:
+   set fixed point to     (-1.12, 2.23, 3.34)
+   set shift vector to    (6.7, 8.9, 10.11)
+   set rotation angles to (7.6, -5.4, 3.2)
+   set scale factors to   (0.0023, -636.34, 2.2)
+<Build transformation matrix 3> returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 16
+      "<Build transformation matrix> should generate a matrix to
+       perform the specified 2D transformation."
+
+Set up parameters:
+   set fixed point to     (-1.12, 2.23)
+   set shift vector to    (6.7, 10.11)
+   set rotation angle to  (-5.4)
+   set scale factors to   (0.0023, -636.34)
+<Build transformation matrix> returns act3x3 = actual array
+Compute exp3x3 = expected array
+pass/fail depending on (act3x3 represents same transformation as exp3x3)
+
+END PROGRAM 6
+
+
+PROGRAM 7: Composition of a matrix with a transformation
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 1 2 17
+      "<Compose transformation matrix 3> should generate a
+       matrix which is the composition of the specified
+       matrix with the specified 3D transformation."
+
+Initialize array a4 to: | -2.2       3.3   4.4   5.5   |
+                        |  0.0023 -727.12  2.09 33.33  |
+                        |  0        34    54.1  -0.045 |
+                        |  7         6     5     4     |
+
+Set up parameters:
+   set fixed point to     (-1.12, 2.23, 3.34)
+   set shift vector to    (6.7, 8.9, 10.11)
+   set rotation angles to (7.6, -5.4, 3.2)
+   set scale factors to   (0.0023, -636.34, 2.2)
+<Compose transformation matrix 3> returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 18
+      "<Compose transformation matrix> should generate a matrix
+       which is the composition of the specified matrix with the
+       specified 2D transformation."
+
+Initialize array a3 to: | -2.2       3.3    5.5   |
+                        |  0.0023 -727.12  33.33  |
+                        |  0        34     -0.045 |
+
+Set up parameters:
+   set fixed point to     (-1.12, 2.23)
+   set shift vector to    (6.7, 10.11)
+   set rotation angle to  (-5.4)
+   set scale factors to   (0.0023, -636.34)
+<Compose transformation matrix> returns act3x3 = actual array
+Compute exp3x3 = expected array
+pass/fail depending on (act3x3 represents same transformation as exp3x3)
+
+END PROGRAM 7
+

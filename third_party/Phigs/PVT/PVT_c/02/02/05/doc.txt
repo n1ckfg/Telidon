@@ -1,0 +1,217 @@
+TITLE: Copy all elements from structure
+
+MODULE#: 02.02.05
+
+DESCRIPTION: This module tests the ability of the programmer to
+copy all elements from a specified structure into an open
+structure using the function <copy all elements from structure>.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Copy all elements from structure> copies all elements of a
+specified structure into an open structure after the `element
+pointer' regardless of the `edit mode.'
+#F 118
+#D 7.1 7.3 4.3
+#S 4.4.4/29/2
+#T P01/3 P01/5 P01/7 P01/9
+
+SR2.   If the specified structure in <copy all elements from
+structure> is the open structure, its contents are copied into
+itself after the `element pointer.'
+#F 118
+#D 7.1 7.3 4.3
+#S 4.4.4/29/2
+#T P01/11
+
+SR3.   After <copy all elements from structure>, the `element
+pointer' is updated to point to the last element that was copied.
+#F 118
+#D 7.3 4.3
+#S 4.4.4/29/2
+#T P01/4 P01/6 P01/8 P01/10 P01/12
+
+SR4.   If the specified structure in <copy all elements from
+structure> is empty or nonexistent, no action takes place.
+#F 118
+#D 7.1 7.3
+#S 4.4.4/29/2
+#T P01/1 P01/2
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  118: pcelst  <copy all elements from structure>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.3  ...  element_pointer
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.3  ...  list_of_structure_elements
+ 
+PROGRAM 1: Copy all elements from structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+strid1 = 100
+strid2 = 200
+strid3 = 300
+labl1 = 1
+labl2 = 2
+labl3 = 3
+labl9 = 9
+labl8 = 8
+labl7 = 7
+
+create structure strid1:
+
+<open structure> for strid1
+fill strid1 with elements:
+<label> with labl1
+<label> with labl2
+<label> with labl3
+<close structure>
+
+create structure strid2:
+
+<open structure> for strid2
+fill strid2 with elements:
+<label> with labl9
+<label> with labl8
+<label> with labl7
+<close structure>
+
+<open structure> for strid1
+
+elepos = 2
+TEST: #SR 4
+      "If the specified structure in <copy all elements from structure> is
+       nonexistent, no action should take place."
+<set element pointer> to elepos
+<copy all elements from structure> with strid3
+
+pass/fail depending on
+  (current structure contents of strid1 = labels: 1, 2, 3 and
+   current element pointer position     = 2)
+
+Use <empty structure> to create structure strid3
+
+elepos = 0
+TEST: #SR 4
+      "If the specified structure in <copy all elements from structure> is
+       empty, no action should take place."
+<set element pointer> to elepos
+<copy all elements from structure> with strid3
+
+pass/fail depending on
+  (current structure contents of strid1 = labels: 1, 2, 3 and
+   current element pointer position     = 0)
+
+elepos = 0
+TEST: #SR 1
+      "<Copy all elements from structure> should copy all elements of a
+       specified structure into an open structure after the element pointer
+       when the element pointer is positioned at the beginning of the
+       structure."
+
+<set element pointer> to elepos
+<copy all elements from structure> with strid2
+
+pass/fail depending on
+  (current structure content for strid1 = labels: 9, 8, 7, 1, 2, 3)
+
+TEST: #SR 3
+      "After <copy all elements from structure>, the element pointer
+       positioned at the beginning of the structure should be updated to
+       point to the last element that was copied."
+pass/fail depending on
+  (current element pointer position = 3)
+
+elepos = 4
+TEST: #SR 1
+      "<Copy all elements from structure> should copy all elements of a
+       specified structure into an open structure after the element pointer
+       when the element pointer is positioned at the middle of the
+       structure."
+
+<set element pointer> to elepos
+<copy all elements from structure> with strid2
+
+pass/fail depending on
+  (current structure content for strid1 = labels: 9, 8, 7, 1, 9, 8, 7, 2, 3)
+
+TEST: #SR 3
+      "After <copy all elements from structure>, the element pointer
+       positioned at the middle of the structure should be updated to
+       point to the last element that was copied."
+pass/fail depending on
+  (current element pointer position = 7)
+
+elepos = 9
+TEST: #SR 1
+      "<Copy all elements from structure> should copy all elements of a
+       specified structure into an open structure after the element pointer
+       when the element pointer is positioned at the end of the structure."
+
+<set element pointer> with elepos
+<copy all elements from structure> with strid2
+
+pass/fail depending on
+  (current structure content for strid1 = labels: 9, 8, 7, 1, 9, 8, 7, 2, 3,
+                                                  9, 8, 7)
+
+TEST: #SR 3
+      "After <copy all elements from structure>, the element pointer
+       positioned at the end of the structure should be updated to point to
+       the last element that was copied."
+pass/fail depending on
+  (current element pointer position = 12)
+
+elepos = 8
+TEST: #SR 1
+      "<Copy all elements from structure> should insert elements even when the
+       edit mode is REPLACE."
+
+<set edit mode> to REPLACE
+<set element pointer> with elepos
+<copy all elements from structure> with strid2
+
+pass/fail depending on
+  (current structure content for strid1 = labels: 9, 8, 7, 1, 9, 8, 7, 2,
+                                                  9, 8, 7, 3, 9, 8, 7)
+
+TEST: #SR 3
+      "After <copy all elements from structure>, the element pointer
+       should be updated to point to the last element that was copied
+       when the edit mode is set to REPLACE."
+pass/fail depending on
+  (current element pointer position = 11)
+
+<close structure>
+<open structure> for strid2
+elepos = 2
+TEST: #SR 2
+      "If the specified structure in <copy all elements from structure> is
+       the open structure, its contents should be copied into itself after
+       the element pointer."
+
+<set element pointer> to elepos
+<copy all elements from structure> with strid2
+
+pass/fail depending on
+  (current structure content of strid2 = 9, 8, 9, 8, 7, 7)
+
+TEST: #SR 3
+      "After <copy all elements from structure>, the element pointer
+       should be updated to point to the last element that was copied
+       when the specified structure is the open structure."
+pass/fail depending on
+  (current element pointer position = 5)
+
+END PROGRAM 1

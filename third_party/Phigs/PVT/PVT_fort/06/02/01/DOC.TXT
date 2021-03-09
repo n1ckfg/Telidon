@@ -1,0 +1,381 @@
+TITLE: Viewing utilities
+
+MODULE#: 06.02.01
+
+DESCRIPTION: This module tests the functions provided by PHIGS
+to support viewing transformations.  These functions do not
+depend on the state of PHIGS data structures, nor do they affect
+them; their behavior interacts only with their input and output
+parameters.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  Viewing transformations are represented as 4x4 (for 3D) or
+3x3 (2D) homogeneous coordinate transformation matrices which
+pre-multiply points to be transformed.
+#F 107 108 109 110
+#D 5.4.2.3.1 5.4.2.3.2 5.4.2.4.1 5.4.2.4.2
+#S 4.7.4/82/1 4.7.5/84/7 4.7.5/84/8 4.7.2/77/3
+#T P01/1 P01/2 P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7 P02/8 P03/1
+
+SR2.  WC points to be transformed are represented internally as
+column vectors with homogeneous coordinates, i.e. the coordinates
+x,y,z,w represent the three dimensional point (x/w, y/w, z/w).
+#F 107 108 109 110
+#D 5.4.2.3.1 5.4.2.3.2 5.4.2.4.1 5.4.2.4.2
+#S 4.7.2/77/3
+#T P01/1 P01/2 P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7 P02/8 P03/1
+
+*** *** *** *** ***   3D View orientation   *** *** *** *** ***
+
+SR3.  <Evaluate view orientation matrix 3> generates a 3D
+homogeneous 4x4 matrix which performs a shift and rotate such
+that points specified within the WC (x-y-z) system are re-labeled
+according to VRC (u-v-n) system.
+#F 107
+#D
+#S 4.7.5/84/9
+#T P01/1
+
+SR4.  The transformation established by <evaluate view orientation
+matrix 3> is determined as follows:
+a) the "view reference point" in WC defines the origin of the VRC,
+b) the "view plane normal" is a WC vector relative to the "view
+reference point" and defines the N (third) axis of the VRC system
+in the positive direction,
+c) the V (2nd) axis is defined by projecting the "view up vector"
+parallel to the "view plane normal" onto the plane perpendicular
+to the "view plane normal", and
+d) the U (1st) axis is perpendicular to both the V and N axes and
+forms a right-handed system with them.
+#F 107
+#D
+#S 4.7.5/84/10ff
+#T P01/1
+
+*** *** *** *** ***   2D View orientation   *** *** *** *** ***
+
+SR5.  <Evaluate view orientation matrix> generates a 2D
+homogeneous 3x3 matrix which performs a shift and rotate such
+that points specified within the 2D WC (x-y) system are
+re-labeled according to 2D VRC (u-v) system.
+#F 108
+#D
+#S 4.7.5/85/3
+#T P01/2
+
+SR6.  The transformation established by <evaluate view orientation
+matrix> is determined as follows:
+a) the "view reference point" in WC defines the origin of the
+VRC,
+b) the positive direction of the V (2nd) axis is defined by
+the "view up vector", and
+c) the U (1st) axis is perpendicular to the V axis and forms a
+right-handed system with it.
+#F 108
+#D
+#S 4.7.5/85/4ff
+#T P01/2
+
+*** *** *** *** ***   3D View mapping   *** *** *** *** ***
+
+SR7.  <Evaluate view mapping matrix 3> generates a 3D homogeneous
+matrix which performs a transformation of points specified within
+the VRC (u-v-n) system to the NPC (px-py-pz) system, such that
+the surfaces (left, right, etc.) of the view volume are mapped to
+the corresponding surfaces of the projection viewport.
+#F 109
+#D
+#S 4.7.5/86/4
+#T P02/1 P02/3 P02/5 P02/7
+#C Note that the constraints on view mapping do not determine a
+unique transformation; in particular it is not required that the
+transformation from the VRC n-dimension to the NPC z-dimension be
+linear.
+
+SR8.  The view volume established by <evaluate view mapping
+matrix 3> is determined as follows:
+a) The view window is a rectangle lying in plane n=VPD, with
+left, right, bottom, and top edges defined respectively by the
+lines (within the view plane) u=UMIN, u=UMAX, v=VMIN, v=VMAX.
+b) For PARALLEL projection, the projectors are all parallel
+to the line containing the PRP and the center of the view window.
+c) For PERSPECTIVE projection, the projectors all contain
+the PRP.
+d) The left, right, bottom, and top planes of the view volume
+are defined by the constraint that they contain all the
+projectors intersecting the left, right, bottom, and top edges of
+the view window.
+e) The front and back planes of the view volume are defined by
+n=FPD and n=BPD, respectively.
+#F 109
+#D
+#S 4.7.5/86/6ff
+#T P02/1 P02/3 P02/5 P02/7
+
+SR9.  The projection viewport established by <evaluate view
+mapping matrix 3> is the rectangular parallelpiped, whose left,
+right, bottom, top, back, and front planes are defined by,
+respectively, px=XMIN, px=XMAX, py=YMIN, py=YMAX, pz=ZMIN, and
+pz=ZMAX.
+#F 109
+#D
+#S 4.7.5/86/5
+#T P02/1 P02/3 P02/5 P02/7
+
+SR10.  All 3D VRC projectors are mapped to 3D NPC lines of the
+form: (px = constant1, py = constant2, pz = arbitrary).
+#F 109
+#D
+#S 4.7.5/86/9
+#T P02/2 P02/4 P02/6 P02/8
+
+*** *** *** *** ***   2D View mapping   *** *** *** *** ***
+
+SR11. <Evaluate view mapping matrix> generates a 2D homogeneous
+matrix which performs a transformation of points specified within
+the 2D VRC (u-v) system to the 2D NPC (px-py) system, such that
+the edges (left, right, etc.) of the view window are mapped to
+the corresponding edges of the projection viewport.
+#F 110
+#D
+#S 4.7.5/89/1
+#T P03/1
+
+SR12.  The view window established by <evaluate view mapping
+matrix> is the rectangle whose left, right, bottom, and top edges
+are defined by, respectively, u=UMIN, u=UMAX, v=VMIN, and v=VMAX.
+#F 110
+#D
+#S 4.7.5/89/3
+#T P03/1
+
+SR13.  The projection viewport established by <evaluate view
+mapping matrix> is the rectangle whose left, right, bottom, and
+top edges are defined by, respectively, px=XMIN, px=XMAX,
+py=YMIN, and py=YMAX.
+#F 110
+#D
+#S 4.7.5/89/2
+#T P03/1
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  107: pevom3  <evaluate view orientation matrix 3>
+  108: pevom   <evaluate view orientation matrix>
+  109: pevmm3  <evaluate view mapping matrix 3>
+  110: pevmm   <evaluate view mapping matrix>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.4  ...  view_table
+  5.4.2  ...  view_table_ordered_by_input_priority
+  5.4.2.3  ...  current_view
+  5.4.2.3.1  ...  current_view_orientation_matrix
+  5.4.2.3.2  ...  current_view_mapping_matrix
+  5.4.2.4  ...  requested_view
+  5.4.2.4.1  ...  requested_view_orientation_matrix
+  5.4.2.4.2  ...  requested_view_mapping_matrix
+ 
+LOCAL SUBROUTINES: These tests use the transformation subroutine
+library and 06.02.01 level subroutines to check mapping.  See
+those libraries for documentation of the routines.
+
+
+PROGRAM 1: Behavior of orientation utilities
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 1 2 3 4
+      "<Evaluate view orientation matrix 3> should return a
+       correct representation for the transformation to change 3D
+       WC coordinates to 3D VRC coordinates."
+
+Set 3D orientation parameters (all WC x-y-z):
+  VRP (view reference point) :  -3.24, 37.727,  11.2
+  VPN (view plane normal)    :  62.21, 45.67,  -25.98
+  VUP (view up vector)       : -23.32,  6.868,  -2.22
+
+<Evaluate view orientation matrix 3> returns act4x4 = actual array
+Compute exp4x4 = expected array
+pass/fail depending on (act4x4 represents same transformation as exp4x4)
+
+TEST: #SR 1 2 5 6
+      "<Evaluate view orientation matrix> should return a correct
+       representation for the transformation to change 2D WC
+       coordinates to 2D VRC coordinates."
+
+Set 2D orientation parameters (all WC x-y):
+  VRP (view reference point) :  -3.24, 37.727
+  VUP (view up vector)       : -23.32,  0.041
+
+<Evaluate view orientation matrix> returns act3x3 = actual array
+Compute exp3x3 = expected array
+pass/fail depending on (act3x3 represents same transformation as exp3x3)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Behavior of 3D mapping
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+*** *** *** *** *** *** *** *** *** ***
+
+Set 3D mapping parameters for PARALLEL projection:
+  UMIN, UMAX, VMIN, VMAX = -462.27, -80.95, -4891.85, -94.78
+  XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+    0.2640, 0.4082, 0.01339, 0.7457, 0.1395, 0.30036
+  PRP = -15.044, 1.318, 34.873
+  VPD = -1.213
+  BPD = -3.311
+  FPD = 15.332
+
+TEST: #SR 1 2 7 8 9
+      "<Evaluate view mapping matrix 3> should map the corners of the
+       view volume to the corresponding corners of the projection
+       viewport for a PARALLEL projection."
+
+pass/fail depending on results of TSTCOR subroutine (see below)
+
+TEST: #SR 1 2 10
+      "<Evaluate view mapping matrix 3> should map any two points
+       on a given projector to the same x and y values in NPC
+       space for a PARALLEL projection."
+
+pass/fail depending on results of TSTPRJ subroutine (see below)
+
+*** *** *** *** *** *** *** *** *** ***
+
+Set 3D mapping parameters for PERSPECTIVE projection:
+  UMIN, UMAX, VMIN, VMAX =  -462.2236, -11.39577, -4860.530, 2.2558320E-02
+  XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+    0.10639, 0.22243, 0.10012, 0.15392, 0.24695, 0.88262
+  PRP = -3.6054E-02, 2.1181E-03, 3.0569
+  VPD =  0.16487
+  BPD = -5.2858E-03
+  FPD =  3.0531
+
+TEST: #SR 1 2 7 8 9
+      "<Evaluate view mapping matrix 3> should map the corners of the
+       view volume to the corresponding corners of the projection
+       viewport for a PERSPECTIVE projection."
+
+pass/fail depending on results of TSTCOR subroutine (see below)
+
+TEST: #SR 1 2 10
+      "<Evaluate view mapping matrix 3> should map any two points
+       on a given projector to the same x and y values in NPC
+       space for a PERSPECTIVE projection."
+
+pass/fail depending on results of TSTPRJ subroutine (see below)
+
+*** *** *** *** *** *** *** *** *** ***
+
+Set 3D mapping parameters for PARALLEL projection, with flat
+viewport (ZMIN = ZMAX):
+  UMIN, UMAX, VMIN, VMAX = -2.6073, 231.673, 830.654, 4.74075E+4
+  XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+    0.30322, 0.54641, 0.28099, 0.68383, 6.0076E-03, 6.0076E-03
+  PRP = 3.8497, 72.490, -111.363
+  VPD = -0.38069
+  BPD = -0.46296
+  FPD = -4.25281E-02
+
+TEST: #SR 1 2 7 8 9
+      "<Evaluate view mapping matrix 3> should map the corners of the
+       view volume to the corresponding corners of a flat projection
+       viewport for a PARALLEL projection."
+
+pass/fail depending on results of TSTCOR subroutine (see below)
+
+TEST: #SR 1 2 10
+      "<Evaluate view mapping matrix 3> should map any two points
+       on a given projector to the same x and y values in NPC
+       space for a flat projection viewport and a PARALLEL
+       projection."
+
+pass/fail depending on results of TSTPRJ subroutine (see below)
+
+*** *** *** *** *** *** *** *** *** ***
+
+Set 3D mapping parameters for PERSPECTIVE projection, with a flat
+viewport (ZMIN = ZMAX) and view volume (BPD = FPD):
+  UMIN, UMAX, VMIN, VMAX = -1.7800E-03, 7.5534E-02, -1.5509, 8779.861
+  XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+    0.15580, 0.537, 1.7186E-03, 0.3148, 0.73940, 0.73940
+  PRP = -1.8005, -4.19006E-02, 6.3462,
+  VPD = 0.831
+  BPD = -2.1753
+  FPD = -2.1753
+
+TEST: #SR 1 2 7 8 9
+      "<Evaluate view mapping matrix 3> should map the corners of a
+       flat view volume to the corresponding corners of a flat
+       projection viewport for a PERSPECTIVE projection."
+
+pass/fail depending on results of TSTCOR subroutine (see below)
+
+TEST: #SR 1 2 10
+      "<Evaluate view mapping matrix 3> should map any two points
+       on a given projector to the same x and y values in NPC
+       space for a flat view volume, a flat projection viewport,
+       and a PERSPECTIVE projection."
+
+pass/fail depending on results of TSTPRJ subroutine (see below)
+
+---------------------------------------------------------------
+
+TSTCOR subroutine:
+   compute actvv = actual values for view volume corners,
+   compute exppr = expected values for projection viewport corners,
+   use <Evaluate view mapping matrix 3> to determine
+      trnf = transformation matrix
+   apply trnf to actvv to determine
+      actpr = actual values for projection viewport corners
+   pass/fail corners test depending on (actpr approx= exppr)
+
+TSTPRJ subroutine:
+   compute VRC projector passing thru view window center
+   pick two points on projector
+   apply trnf to projector points to determine
+      centx1, centy1, centz1 = 1st transformed center point
+      centx2, centy2, centz2 = 2nd transformed center point
+   pass/fail projector test depending on
+     (centx1 approx= centx2 and centy1 approx= centy2)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Behavior of 2D mapping
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+TEST: #SR 1 2 11 12 13
+      "<Evaluate view mapping matrix> should return a correct
+       representation for the transformation from the view window
+       to the 2D projection viewport."
+
+Set 2D mapping parameters:
+  UMIN, UMAX, VMIN, VMAX = -23.32,  3.56e4, 2.29, 2.295
+  XMIN, XMAX, YMIN, YMAX =   0.298, 0.736,  0.22, 0.89
+
+<Evaluate view mapping matrix> returns act3x3 = actual array
+Compute exp3x3 = expected array
+pass/fail depending on (act3x3 represents same transformation as exp3x3)
+
+END PROGRAM 3

@@ -1,0 +1,546 @@
+
+TITLE: Change structure references
+
+MODULE#: 02.01.03.02
+
+DESCRIPTION:
+This module tests the effects of <change structure references> on
+structures contained in the CSS.  The state of the CSS is examined
+for the changes.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Change structure references> replaces all structure
+invocations of original structure with invocations of resulting
+structure.
+#F 130
+#D 7.1 7.3.4
+#S 4.4.5/30/1
+#T P02/1 P02/2
+
+SR2.   When the original structure is non-existent or not
+referenced then <change structure references> causes no changes
+within the CSS.
+#F 130
+#D 7.1 7.3.4
+#S 4.4.5/30/1
+#T P01/1 P01/2 P01/3
+
+SR3.   When the original and resulting structures are the same
+then <change structure references> causes no changes within the
+CSS.
+#F 130
+#D 7.1 7.3.4
+#S 4.4.5/30/1
+#T P01/4
+
+SR4.   When the resulting structure is referenced then <change
+structure references> causes those references to remain as is.
+#F 130
+#D 7.1 7.3.4
+#S 4.4.5/30/1
+#T P02/2
+
+SR5.   On all workstations where the resulting structure is
+posted, <change structure references> causes the original
+structure to be unposted and the resulting structure to remain
+posted with unchanged priority.
+#F 130
+#D 7.2 5.7
+#S 4.4.5/30/1
+#T P03/1 P03/2
+#X 05.03
+
+SR6.   On all workstations where the original structure is posted
+and the resulting structure is not posted <change structure
+references> causes the original structure to become unposted and
+the resulting structure to become posted with the priority of the
+original structure.
+#F 130
+#D 7.2 5.7
+#S 4.4.5/30/1
+#T P03/3
+#X 05.03
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  130: pcstrf  <change structure references>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.7  ...  list_of_posted_structures
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.2  ...  list_of_workstations_to_which_posted
+  7.3  ...  list_of_structure_elements
+  7.3.4  ...  execute_structure
+ 
+SEMANTIC CROSS-REFERENCES:
+  02.01.01/SR06
+ 
+
+
+PROGRAM 1: <Change structure references> where no changes occur
+           to the CSS
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+The following is the "standard" CSS network for module 02.01.03.  This
+CSS network will be used throughout to test the resulting state of the
+CSS after execution of the <change structure references> function.
+Before each test case the CSS state is completely reset.
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115
+
+
+TEST: #SR 2
+      "<Change structure references> when the original structure is
+       non-existent and the resulting structure exists and is not
+       referenced should have no effect on the contents of the CSS."
+
+orgid = 300
+resid = 120
+<change structure references> orgid, resid
+pass/fail depending on (CSS =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |3    |2
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115    )
+
+
+
+TEST: #SR 2
+      "<Change structure references> when the original structure
+       exists and is not referenced and the resulting structure
+       exists and is referenced should have no effect on the contents
+       of the CSS."
+
+orgid = 130
+resid = 103
+<change structure references> orgid, resid
+pass/fail depending on (CSS =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |3    |2
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115    )
+
+TEST: #SR 2
+      "<Change structure references> when the original structure and
+       resulting structure are non-existent should have no effect
+       on the contents of the CSS."
+
+orgid = 300
+resid = 320
+<change structure references> orgid, resid
+pass/fail depending on (CSS =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |3    |2
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115    )
+
+
+TEST: #SR 3
+      "<Change structure references> when the original structure
+       identifier and resulting identifier are the same and the
+       common structure exists and is referenced should have no
+       effect on the contents of the CSS."
+
+orgid = 107
+resid = 107
+<change structure references> orgid, resid
+pass/fail depending on (CSS =
+
+                   100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |3    |2
+                             |     |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115    )
+
+END PROGRAM 1
+
+PROGRAM 2: <Change structure references> where changes occur
+           to the CSS
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+The following is the "standard" CSS network for module 02.01.03.  This
+CSS network will be used throughout to test the resulting state of the
+CSS after execution of the <change structure references> function.
+Before each test case the CSS state is completely reset.
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115      )
+
+
+TEST: #SR 1
+      "<Change structure references> when the original structure is
+       referenced and the resulting structure is not referenced should
+       replace all execute structure elements which reference original
+       structure identifier with elements which reference resulting
+       structure identifier."
+
+orgid = 108
+resid = 140
+<change structure references> orgid, resid
+pass/fail depending on (CSS =
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130
+           |              / | \     |    /|
+           |2            /  |  \    |   / |
+           |           1/  2|  5\  2|  /3 |5
+           |           /    |    \  | /   |
+          103         /     |     \ |/    |
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    140
+                             |     |
+                             |    1|
+                             |     |
+                             |    142
+                             |
+                             |
+                             |    108
+                             |     |
+                             |3    |2
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115      )
+
+
+TEST: #SR 1 4
+      "When the original structure and resulting structure are referenced
+       then <change structure references> should cause the initial references
+       made to resulting structure to remain as is."
+
+orgid = 108
+resid = 104
+<change structure references> orgid, resid
+pass/fail depending on (CSS =
+
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           2/   |  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /    1|     \ |/    |       142
+                   105      \      106   107
+                    |\       \     |    / /\
+                   /| \       \    |   / /  \
+                 1/ |  \2      \  1| 1/ /4   \5
+                 /  |   \       \  | / /      \
+                /   |    \       \ |/ /       113
+              110   |     \-------104
+                    |             | |
+                    |    108     2| |5
+                    |     |       | |
+                    |3    |2      | |
+                    |     |       109
+                    |    111
+                    |   / |
+                    | 1/  |
+                    | /  3|
+                    |/    |
+                   114   115   )
+
+END PROGRAM 2
+
+PROGRAM 3: The effects of <change structure references> on posted
+           structures
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+The following is the "standard" CSS network for module 02.01.03.  This
+CSS network will be used throughout to test the resulting state of the
+CSS after execution of the <change structure references> function.
+Before each test case the CSS state is completely reset.
+
+                  100
+                  /  \
+                 /    \
+               1/      \2
+               /        \
+              /          \
+          101              102     120   130      140
+           |              / | \     |    /|        |
+           |2            /  |  \    |   / |       1|
+           |           1/  2|  5\  2|  /3 |5       |
+           |           /    |    \  | /   |        |
+          103         /     |     \ |/    |       142
+                   104     105     106   107
+                   | |       |     |    / /\
+                  2| |5     /|\    |   / /  \
+                   | |    1/ | \2 1| 1/ /4   \5
+                   109    /  |  \  | / /      \
+                         /   |   \ |/ /       113
+                       110   |    108
+                             |     |
+                             |     |2
+                             |3    |
+                             |     |
+                             |    111
+                             |   / |
+                             | 1/  |
+                             | /  3|
+                             |/    |
+                            114   115      )
+
+TEST: #SR 5
+      "When the original and resulting structures are posted then
+       <change structure references> should cause the original
+       structure to become unposted and the resulting structure to
+       remain posted with unchanged priority."
+
+orgid  =  108
+orgpri =  .42
+resid  =  104
+respri =  .37
+<post structure> orgid, orgpri
+<post structure> resid, respri
+<change structure references> orgid, resid
+
+Use <inquire posted structures> to determine
+numb   = number of posted structures
+strid  = posted structure identifier
+priort = posted structure priority
+
+pass/fail depending on (numb   = 1       and
+                        strid  = resid   and
+                        priort = respri)
+
+TEST: #SR 5
+      "When the original structure is not posted and the resulting
+       structure is posted then <change structure references> should
+       cause the original structure to remain unposted and the resulting
+       structure to remain posted with unchanged priority."
+
+orgid  =  108
+orgpri =  .42
+resid  =  104
+respri =  .37
+<post structure> resid, respri
+<change structure references> orgid, resid
+
+Use <inquire posted structures> to determine
+numb   = number of posted structures
+strid  = posted structure identifier
+priort = posted structure priority
+
+pass/fail depending on (numb   = 1       and
+                        strid  = resid   and
+                        priort = respri)
+
+TEST: #SR 6
+      "When the original structure is posted and the resulting structure
+       is not posted then <change structure references> should cause
+       the original structure to become unposted and the resulting
+       structure to become posted with the priority of the original
+       structure."
+
+orgid  =  108
+orgpri =  .42
+resid  =  104
+respri =  .37
+<post structure> orgid, orgpri
+<change structure references> orgid, resid
+
+Use <inquire posted structures> to determine
+numb   = number of posted structures
+strid  = posted structure identifier
+priort = posted structure priority
+
+pass/fail depending on (numb   = 1       and
+                        strid  = resid   and
+                        priort = orgpri)
+
+END PROGRAM 3

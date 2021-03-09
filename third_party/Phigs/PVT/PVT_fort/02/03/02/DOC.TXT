@@ -1,0 +1,674 @@
+TITLE: Element search
+
+MODULE#: 02.03.02
+
+DESCRIPTION: This module tests the ability of a PHIGS program to
+search for a specified element within a specified structure.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Element search> searches for the next matching element in
+the specified structure, beginning at the start element position
+and proceeding in the direction specified.
+#F 310
+#D 7.1 7.3
+#S 4.4.6/30/6
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P01/18 P01/19 P01/20
+   P01/21 P01/22 P01/23 P02/1 P02/2 P02/3 P02/4
+
+SR2.   When using <element search>, the search terminates if an
+element is selected or if the limits of the structure are
+reached.
+#F 310
+#D 7.1 7.3
+#S 4.4.6/30/6
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P01/18 P01/19 P01/20
+   P01/21 P01/22 P01/23 P02/1 P02/2 P02/3 P02/4
+
+SR3.   When using <element search>, an element qualifies for
+selection if and only if its type belongs to the inclusion set and
+does not belong to the exclusion set.
+#F 310
+#D 7.3
+#S 4.4.6/30/6
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P01/18 P01/19 P01/20
+   P01/21 P01/22 P01/23 P02/2 P02/3 P02/4
+
+SR4.  When using <element search>, ALL designates the set of all
+possible element types.
+#F 310
+#D 7.3
+#S 4.4.4/28/4 4.4.6/30/6
+#T P01/4 P01/5 P01/6 P01/9 P01/10 P01/12 P01/16 P01/18 P01/19 P01/20
+   P01/21 P01/22 P01/23 P02/2
+
+SR5.  When using <element search>, NIL designates the virtual element
+at position 0 in every structure.
+#F 310
+#D 7.3
+#S 4.4.4/28/4 4.4.6/30/6
+#T P01/7 P02/2
+#C See defect 9592-1/051.  NIL always matches position 0 and only
+position 0.  Specifying NIL as a member of the inclusion or exclusion
+set, therefore, is not the same as specifying a null set.
+
+SR6.   When using <element search>, the inclusion and/or
+exclusion set is formed from the union of the specified element
+types.
+#F 310
+#D 7.3
+#S 4.4.6/30/6
+#T P01/1 P01/2 P01/11 P01/12 P01/13 P01/17 P01/18 P01/19 P01/20 P01/21
+   P01/22 P01/23 P02/1 P02/3 P02/4
+
+SR7.   When using <element search>, if the start element position
+is less than 0, the search will begin at position 0; if the start
+element position is greater than the number of elements in the
+structure, the search will begin at the last element in the
+structure.
+#F 310
+#D 7.1 7.3
+#S 4.4.6/30/6
+#T P01/5 P01/6 P01/7 P01/8 P02/2
+
+SR8.   When using <element search>, if the search is successful,
+the status indicator returns the value SUCCESS and found element
+position parameter is set to point at the matching element.
+#F 310
+#D 7.3
+#S 4.4.6/30/6
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/9 P01/13 P01/17 P01/18
+   P01/19 P01/21 P01/22 P02/2 P02/3 P02/4
+
+SR9.   When using <element search>, if the search is unsuccessful,
+the status indicator returns the value FAILURE.
+#F 310
+#D 7.3
+#S 4.4.6/30/6
+#T P01/8 P01/10 P01/11 P01/12 P01/14 P01/15 P01/16 P01/20 P01/23 P02/1
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  310: pels    <element search>
+ 
+  Data Structures ---
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.3  ...  list_of_structure_elements
+ 
+
+PROGRAM 1: Element search within a single closed structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+strid = 40
+
+<polyline 3>, <polymarker 3> parameters:
+n = 4
+xval = 0.0001, 99.99, -1.3e20, 1.3e13
+yval = -99.99, 0.0,   .0015,   5.0
+zval = .5e10,  1.2,   -5.0,    0.0
+
+<text 3> parameters:
+xpos = 0.0001
+ypos = -99.99
+zpos = .5e10
+xvec = 1.0, .3
+yvec = 2.5, -1.6e13
+zvec = 0.003, 999.0
+chrstr = 'This is a TEXT_3 character string for <element search>.'
+
+<set text font> parameters:
+font = -2
+
+<set character height> parameters:
+charht = .5
+
+<set individual asf> parameters:
+attrid = POLYLINE
+asfval = BUNDLED
+
+<execute structure> parameters:
+stridx = 30
+
+<label> parameters:
+labl1 = 1
+
+<set pick identifier> parameters:
+pkid = 5
+
+create structure strid:
+
+<open structure> for strid
+fill structure with element types:
+
+POSITION     CONTENTS
+--------     --------
+   1         <polyline 3>           with n, xval, yval, zval
+   2         <polymarker 3>         with n, xval, yval, zval
+   3         <text 3>               with xpos, ypos, zpos, xvec, yvec, zvec,
+                                         chrstr
+   4         <set text font>        with font
+   5         <set character height> with charht
+   6         <set individual asf>   with attrid, asfval
+   7         <execute structure>    with stridx
+   8         <label>                with labl1
+   9         <set pick identifier>  with pkid
+<close structure>
+
+selpos = 0
+dir = FORWARD
+elinc = EXECUTE_STRUCTURE, LABEL
+elexc = POLYLINE_3, POLYMARKER_3, TEXT_3
+TEST: #SR 1 2 3 6 8
+      "<Element search> should find the next matching element in the
+       structure identified when searching FORWARD, and when the
+       start element position is at the beginning of the structure."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 7)
+
+selpos = 5
+dir = BACKWARD
+elinc = TEXT_3, POLYMARKER_3
+elexc = SET_TEXT_FONT, SET_CHARACTER_HEIGHT
+TEST: #SR 1 2 3 6 8
+      "<Element search> should find the next matching element in the
+       structure identified when searching BACKWARD, and when the
+       start element position is at the middle of the structure."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 3)
+
+selpos = 9
+dir = BACKWARD
+elinc = SET_TEXT_FONT
+elexc = SET_PICK_IDENTIFIER
+TEST: #SR 1 2 3 8
+      "<Element search> should find the next matching element in
+       the structure identified when searching BACKWARD, and when
+       the start element position is at the end of the structure."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 4)
+
+selpos = 8
+dir = FORWARD
+elinc = LABEL, EXECUTE_STRUCTURE, SET_PICK_ID
+elexc = NIL
+TEST: #SR 1 2 3 4 8
+      "<Element search> should find the next matching element in the
+       structure identified when searching forward, and when the start
+       element position is on the sought element."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 8)
+
+selpos = -5
+dir = FORWARD
+elinc = POLYLINE_3, POLYMARKER_3
+elexc = NIL
+TEST: #SR 1 2 3 4 7 8
+      "When using <element search>, if the start element position
+       is less than 0, the search should begin at element 0."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 1)
+
+selpos = 15
+dir = BACKWARD
+elinc = SET_PICK_IDENTIFIER, LABEL
+elexc = NIL
+TEST: #SR 1 2 3 4 7 8
+      "When using <element search>, if the start element position
+       is greater than the number of elements in the structure,
+       the search should begin at the last element in the structure."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 9)
+
+selpos = -5
+dir = BACKWARD
+elinc = POLYLINE_3, NIL
+elexc = TEXT_3
+TEST: #SR 1 2 3 5 7 8
+      "When using <element search> and searching BACKWARD, if the
+       start element position is less than 0 the search should begin
+       at element position 0."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 0)
+
+selpos = 15
+dir = FORWARD
+elinc = SET_PICK_IDENTIFIER, LABEL, POLYLINE_3
+elexc = EXECUTE_STRUCTURE
+TEST: #SR 1 2 3 7 9
+      "When using <element search> and searching FORWARD, if the start
+       element position is greater than the number of elements in the
+       structure the search should examine only the last element."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 9)
+
+selpos = 0
+dir = FORWARD
+elinc = ALL
+elexc = POLYLINE_3, NIL
+TEST: #SR 1 2 3 4 8
+      "When using <element search>, the element type ALL in the
+       inclusion set should designate all possible element types."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 2)
+
+selpos = 9
+dir = BACKWARD
+elinc = NIL
+elexc = POLYLINE_3
+TEST: #SR 1 2 3 4 9
+      "When using <element search>, the element type NIL in the
+       inclusion set should designate the type of the virtual
+       element in position #0."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 0)
+
+selpos = 9
+dir = BACKWARD
+elinc = empty
+elexc = POLYLINE_3
+TEST: #SR 1 2 3 6 9
+      "When using <element search>, an empty inclusion set should
+       designate no element type."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = FAILURE)
+
+selpos = 0
+dir = FORWARD
+elinc = POLYLINE_3, TEXT_3
+elexc = ALL
+TEST: #SR 1 2 3 4 6 9
+      "When using <element search>, the element type ALL in the
+       exclusion set should designate all element types."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = FAILURE)
+
+selpos = 9
+dir = BACKWARD
+elinc = ALL
+elexc = empty
+TEST: #SR 1 2 3 6 8
+      "When using <element search>, an empty exclusion set should
+       designate no element type."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 9)
+
+selpos = 2
+dir = FORWARD
+elinc = empty
+elexc = empty
+TEST: #SR 1 2 3 9
+      "When using <element search>, an empty inclusion and exclusion
+       set should result in no elements being found."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = FAILURE)
+
+selpos = 0
+dir = FORWARD
+elinc = LABEL
+elexc = LABEL
+TEST: #SR 1 2 3 9
+      "When using <element search>, if an element type is
+       specified in both the exclusion set and inclusion set, it
+       should be excluded."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = FAILURE)
+
+selpos = 1
+dir = FORWARD
+elinc = NIL
+elexc = NIL
+TEST: #SR 1 2 3 4 9
+      "When using <element search>, if an element type is not
+       specified in the exclusion set nor the inclusion set, it
+       should be excluded."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = FAILURE)
+
+selpos = 0
+dir = FORWARD
+elinc = POLYLINE_3, TEXT_3, LABEL, SET_PICK_IDENTIFIER
+elexc = POLYLINE_3, TEXT_3, EXECUTE_STRUCTURE
+TEST: #SR 1 2 3 6 8
+      "When using <element search>, an element should qualify for
+       selection if and only if its type belongs to the inclusion
+       set and does not belong to the exclusion set."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 8)
+
+selpos = 0
+dir = FORWARD
+elinc = SET_TEXT_FONT, POLYLINE_3, ALL
+elexc = NIL
+TEST: #SR 1 2 3 4 6 8
+      "<Element search> should take the union of the element type
+       ALL and other element types in the inclusion set."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 1)
+
+selpos = 0
+dir = FORWARD
+elinc = SET_TEXT_FONT, POLYMARKER_3, NIL
+elexc = POLYMARKER_3
+TEST: #SR 1 2 3 4 6 8
+      "<Element search> should take the union of the element type
+       NIL and other element types in the inclusion set."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 0)
+
+selpos = 9
+dir = BACKWARD
+elinc = POLYLINE_3, POLYMARKER_3, TEXT_3
+elexc = SET_TEXT_FONT, EXECUTE_STRUCTURE, ALL
+TEST: #SR 1 2 3 4 6 9
+      "<Element search> should take the union of the element type
+       ALL and other element types in the exclusion set."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = FAILURE)
+
+selpos = 9
+dir = BACKWARD
+elinc = POLYLINE_3, POLYMARKER_3, TEXT_3
+elexc = POLYLINE_3, TEXT_3, NIL
+TEST: #SR 1 2 3 4 6 8
+      "<Element search> should take the union of the element type
+       NIL and other element types in the exclusion set."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 2)
+
+selpos = 0
+dir = FORWARD
+elinc = ALL, NIL
+elexc = empty
+TEST: #SR 1 2 3 4 6 8
+      "<Element search> should take the union of the element types
+       ALL and NIL in the inclusion set."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 0)
+
+selpos = 9
+dir = BACKWARD
+elinc = SET_PICK_IDENTIFIER, LABEL, EXECUTE_STRUCTURE
+elexc = ALL, NIL
+TEST: #SR 1 2 3 4 6 9
+      "<Element search> should take the union of the element types
+       ALL and NIL in the exclusion set."
+
+<element search> with strid, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = FAILURE)
+
+END PROGRAM 1
+
+PROGRAM 2: Element search with varying types of structures
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+stride = 10
+strido = 20
+stridc = 30
+
+<polyline 3>, <polymarker 3> parameters:
+n = 4
+xval = 0.0001, 99.99, -1.3e20, 1.3e13
+yval = -99.99, 0.0,   .0015,   5.0
+zval = .5e10,  1.2,   -5.0,    0.0
+
+<text 3> parameters:
+xpos = 0.0001
+ypos = -99.99
+zpos = .5e10
+xvec = 1.0, .3
+yvec = 2.5, -1.6e13
+zvec = 0.003, 999.0
+chrstr = 'This is a TEXT_3 character string for <element search>.'
+
+<set text font> parameters:
+font = -2
+
+<set character height> parameters:
+charht = .5
+
+<set individual asf> parameters:
+attrid = POLYLINE
+asfval = BUNDLED
+
+<execute structure> parameters:
+stridx = 30
+
+<label> parameters:
+labl1 = 1
+
+<set pick identifier> parameters:
+pkid = 5
+
+create structure stride:
+
+<open structure> for stride
+<close structure>
+
+create structure stridc:
+
+<open structure> for stridc
+fill structure with element types:
+
+POSITION     CONTENTS
+--------     --------
+   1         <set pick identifier>  with pkid
+   2         <label>                with labl1
+   3         <execute structure>    with stridx
+   4         <set individual asf>   with attrid, asfval
+   5         <set character height> with charht
+   6         <set text font>        with font
+   7         <text 3>               with xpos, ypos, zpox, xvec, yvec, zvec,
+                                         chrstr
+   8         <polymarker 3>         with n, xval, yval, zval
+   9         <polyline 3>           with n, xval, yval, zval
+<close structure>
+
+create structure strido:
+
+<open structure> for strido
+fill structure with element types:
+
+POSITION     CONTENTS
+--------     --------
+   1         <polyline 3>           with n, xval, yval, zval
+   2         <polymarker 3>         with n, xval, yval, zval
+   3         <text 3>               with xpos, ypos, zpos, xvec, yvec, zvec,
+                                         chrstr
+   4         <set text font>        with font
+   5         <set character height> with charht
+   6         <set individual asf>   with attrid, asfval
+   7         <execute structure>    with stridx
+   8         <label>                with labl1
+   9         <set pick identifier>  with pkid
+
+selpos = 0
+dir = FORWARD
+elinc = POLYLINE_3, SET_CHARACTER_HEIGHT, LABEL
+elexc = POLYMARKER_3
+TEST: #SR 1 2 6 9
+      "When using <element search> with an empty structure and
+       searching for non-NIL elements, the search should be
+       unsuccessful and the status indicator should return the
+       value FAILURE."
+
+<element search> with stride, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = FAILURE)
+
+selpos = 93
+dir = BACKWARD
+elinc = ALL
+elexc = POLYMARKER_3
+TEST: #SR 1 2 3 4 5 7 8
+      "When using <element search> with an empty structure and
+       searching for a NIL element, the search should find the
+       element at position #0."
+
+<element search> with stride, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 0)
+
+selpos = 0
+dir = FORWARD
+elinc = POLYMARKER_3, SET_TEXT_FONT, LABEL, SET_PICK_IDENTIFIER
+elexc = POLYMARKER_3, SET_TEXT_FONT, EXECUTE_STRUCTURE
+TEST: #SR 1 2 3 6 8
+      "When using <element search> with an open structure, an
+       element should qualify for selection if and only if its
+       type belongs to the inclusion set and does not belong to
+       the exclusion set."
+
+<element search> with strido, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 8)
+
+selpos = 9
+dir = BACKWARD
+elinc = POLYLINE_3, TEXT_3, POLYMARKER_3
+elexc = POLYLINE_3, POLYMARKER_3
+TEST: #SR 1 2 3 6 8
+      "When using <element search> with a closed structure, an
+       element should qualify for selection if and only if its
+       type belongs to the inclusion set and does not belong to
+       the exclusion set."
+
+<element search> with stridc, selpos, dir, elinc, elexc
+
+pass/fail depending on
+  (errind = 0 and
+   statid = SUCCESS and
+   felpos = 7)
+
+<close structure>
+
+END PROGRAM 2

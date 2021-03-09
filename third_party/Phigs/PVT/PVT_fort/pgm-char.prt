@@ -1,0 +1,581 @@
+PGM_CHAR.PRT file: contains a record with the identifier for each
+program, and that program's characteristics. 
+
+Program totals by type:
+
+              |  use primary workstation?
+              |        yes     no          total
+--------------+---------------------------------
+passive       |        165    160          325
+interactive   |        132     22          154
+              |
+total         |        297    182          479
+
+
+                           uses primary   passive or
+                           workstation    interactive
+                           ------------   -----------
+01          / P01: nnnn        no         passive
+
+02.01       / P01: nnnn        no         passive
+02.01       / P02: nnnn        no         passive
+02.01       / P03: nnnn        no         passive
+
+02.01.01    / P01: nnnn        no         passive
+02.01.01    / P02: nnnn        no         passive
+02.01.01    / P03: nnnn        no         passive
+02.01.01    / P04: ynnn        yes        passive
+02.01.01    / P05: nnnn        no         passive
+02.01.01    / P06: nnnn        no         passive
+02.01.01    / P07: nnnn        no         passive
+02.01.01    / P08: nnnn        no         passive
+02.01.01    / P09: nnnn        no         passive
+02.01.01    / P10: ynnn        yes        passive
+
+02.01.02.01 / P01: nnnn        no         passive
+02.01.02.01 / P02: nnnn        no         passive
+02.01.02.01 / P03: nnnn        no         passive
+02.01.02.01 / P04: nnnn        no         passive
+02.01.02.01 / P05: ynnn        yes        passive
+02.01.02.01 / P06: nnnn        no         passive
+
+02.01.02.02 / P01: nnnn        no         passive
+02.01.02.02 / P02: nnnn        no         passive
+02.01.02.02 / P03: nnnn        no         passive
+02.01.02.02 / P04: ynnn        yes        passive
+02.01.02.02 / P05: ynnn        yes        passive
+02.01.02.02 / P06: ynnn        yes        passive
+02.01.02.02 / P07: ynnn        yes        passive
+02.01.02.02 / P08: nnnn        no         passive
+02.01.02.02 / P09: nnnn        no         passive
+02.01.02.02 / P10: ynnn        yes        passive
+02.01.02.02 / P11: ynnn        yes        passive
+02.01.02.02 / P12: ynnn        yes        passive
+02.01.02.02 / P13: ynnn        yes        passive
+02.01.02.02 / P14: nnnn        no         passive
+
+02.01.02.03 / P01: nnnn        no         passive
+02.01.02.03 / P02: nnnn        no         passive
+
+02.01.03.01 / P01: ynnn        yes        passive
+02.01.03.01 / P02: ynnn        yes        passive
+02.01.03.01 / P03: nnnn        no         passive
+
+02.01.03.02 / P01: nnnn        no         passive
+02.01.03.02 / P02: nnnn        no         passive
+02.01.03.02 / P03: ynnn        yes        passive
+
+02.01.03.03 / P01: ynnn        yes        passive
+02.01.03.03 / P02: ynnn        yes        passive
+02.01.03.03 / P03: nnnn        no         passive
+
+02.02.01    / P01: nnnn        no         passive
+02.02.01    / P02: nnnn        no         passive
+
+02.02.02    / P01: nnnn        no         passive
+02.02.02    / P02: nnnn        no         passive
+02.02.02    / P03: nnnn        no         passive
+
+02.02.03    / P01: nnnn        no         passive
+02.02.03    / P02: nnnn        no         passive
+
+02.02.04    / P01: nnnn        no         passive
+02.02.04    / P02: nnnn        no         passive
+02.02.04    / P03: nnnn        no         passive
+02.02.04    / P04: nnnn        no         passive
+02.02.04    / P05: nnnn        no         passive
+
+02.02.05    / P01: nnnn        no         passive
+
+02.03.01    / P01: nnnn        no         passive
+02.03.01    / P02: nnnn        no         passive
+
+02.03.02    / P01: nnnn        no         passive
+02.03.02    / P02: nnnn        no         passive
+
+02.03.03    / P01: nnnn        no         passive
+02.03.03    / P02: nnnn        no         passive
+02.03.03    / P03: ynnn        yes        passive
+02.03.03    / P04: nnnn        no         passive
+02.03.03    / P05: ynnn        yes        passive
+02.03.03    / P06: nnnn        no         passive
+02.03.03    / P07: nnnn        no         passive
+
+03.01       / P01: nnnn        no         passive
+
+03.02       / P01: nnnn        no         passive
+
+03.03       / P01: nnnn        no         passive
+03.03       / P02: nnnn        no         passive
+03.03       / P03: nnnn        no         passive
+03.03       / P04: nnnn        no         passive
+03.03       / P05: nnnn        no         passive
+03.03       / P06: nnnn        no         passive
+03.03       / P07: nnnn        no         passive
+03.03       / P08: nnnn        no         passive
+
+03.04       / P01: nnnn        no         passive
+03.04       / P02: nnnn        no         passive
+03.04       / P03: nnnn        no         passive
+03.04       / P04: nnnn        no         passive
+
+03.05       / P01: nnnn        no         passive
+03.05       / P02: nnnn        no         passive
+03.05       / P03: nnnn        no         passive
+03.05       / P04: nnnn        no         passive
+
+04.01       / P01: ynny        yes        interactive
+
+04.01.01    / P01: nnnn        no         passive
+04.01.01    / P02: ynny        yes        interactive
+
+04.01.02    / P01: nnnn        no         passive
+04.01.02    / P02: ynny        yes        interactive
+
+04.01.03    / P01: nnnn        no         passive
+04.01.03    / P02: ynny        yes        interactive
+
+04.01.04    / P01: nnnn        no         passive
+04.01.04    / P02: ynny        yes        interactive
+
+04.01.05    / P01: nnnn        no         passive
+04.01.05    / P02: ynny        yes        interactive
+04.01.05    / P03: ynny        yes        interactive
+
+04.01.06    / P01: nnnn        no         passive
+04.01.06    / P02: ynny        yes        interactive
+04.01.06    / P03: ynny        yes        interactive
+
+04.01.07    / P01: nnnn        no         passive
+04.01.07    / P02: ynny        yes        interactive
+
+04.01.08    / P01: ynnn        yes        passive
+
+04.02.01.01 / P01: nnnn        no         passive
+04.02.01.01 / P02: ynny        yes        interactive
+04.02.01.01 / P03: ynny        yes        interactive
+04.02.01.01 / P04: ynny        yes        interactive
+
+04.02.01.02 / P01: ynnn        yes        passive
+04.02.01.02 / P02: ynnn        yes        passive
+04.02.01.02 / P03: ynnn        yes        passive
+04.02.01.02 / P04: ynnn        yes        passive
+04.02.01.02 / P05: ynnn        yes        passive
+04.02.01.02 / P06: ynnn        yes        passive
+04.02.01.02 / P07: ynnn        yes        passive
+04.02.01.02 / P08: ynnn        yes        passive
+04.02.01.02 / P09: ynny        yes        interactive
+04.02.01.02 / P10: ynny        yes        interactive
+04.02.01.02 / P11: ynny        yes        interactive
+04.02.01.02 / P12: ynny        yes        interactive
+
+04.02.02.01 / P01: nnnn        no         passive
+04.02.02.01 / P02: ynny        yes        interactive
+04.02.02.01 / P03: ynny        yes        interactive
+04.02.02.01 / P04: ynny        yes        interactive
+
+04.02.02.02 / P01: ynnn        yes        passive
+04.02.02.02 / P02: ynnn        yes        passive
+04.02.02.02 / P03: ynnn        yes        passive
+04.02.02.02 / P04: ynnn        yes        passive
+04.02.02.02 / P05: ynnn        yes        passive
+04.02.02.02 / P06: ynnn        yes        passive
+04.02.02.02 / P07: ynnn        yes        passive
+04.02.02.02 / P08: ynnn        yes        passive
+04.02.02.02 / P09: ynny        yes        interactive
+04.02.02.02 / P10: ynny        yes        interactive
+04.02.02.02 / P11: ynny        yes        interactive
+04.02.02.02 / P12: ynny        yes        interactive
+
+04.02.03.01 / P01: nnnn        no         passive
+04.02.03.01 / P02: ynny        yes        interactive
+04.02.03.01 / P03: ynny        yes        interactive
+04.02.03.01 / P04: ynny        yes        interactive
+04.02.03.01 / P05: ynny        yes        interactive
+04.02.03.01 / P06: ynny        yes        interactive
+04.02.03.01 / P07: ynny        yes        interactive
+04.02.03.01 / P08: ynny        yes        interactive
+04.02.03.01 / P09: ynny        yes        interactive
+04.02.03.01 / P10: ynny        yes        interactive
+04.02.03.01 / P11: ynny        yes        interactive
+
+04.02.03.02 / P01: ynnn        yes        passive
+04.02.03.02 / P02: ynnn        yes        passive
+04.02.03.02 / P03: ynnn        yes        passive
+04.02.03.02 / P04: ynnn        yes        passive
+04.02.03.02 / P05: ynnn        yes        passive
+04.02.03.02 / P06: ynnn        yes        passive
+04.02.03.02 / P07: ynnn        yes        passive
+04.02.03.02 / P08: ynnn        yes        passive
+04.02.03.02 / P09: ynnn        yes        passive
+04.02.03.02 / P10: ynny        yes        interactive
+04.02.03.02 / P11: ynny        yes        interactive
+04.02.03.02 / P12: ynny        yes        interactive
+04.02.03.02 / P13: ynny        yes        interactive
+04.02.03.02 / P14: ynny        yes        interactive
+04.02.03.02 / P15: ynny        yes        interactive
+04.02.03.02 / P16: ynny        yes        interactive
+04.02.03.02 / P17: ynny        yes        interactive
+
+04.02.03.03 / P01: ynnn        yes        passive
+04.02.03.03 / P02: ynnn        yes        passive
+04.02.03.03 / P03: ynnn        yes        passive
+04.02.03.03 / P04: ynnn        yes        passive
+04.02.03.03 / P05: ynnn        yes        passive
+04.02.03.03 / P06: ynny        yes        interactive
+
+04.02.04.01 / P01: nnnn        no         passive
+04.02.04.01 / P02: ynny        yes        interactive
+04.02.04.01 / P03: ynny        yes        interactive
+04.02.04.01 / P04: ynny        yes        interactive
+04.02.04.01 / P05: ynny        yes        interactive
+04.02.04.01 / P06: ynny        yes        interactive
+04.02.04.01 / P07: ynny        yes        interactive
+04.02.04.01 / P08: ynny        yes        interactive
+04.02.04.01 / P09: ynny        yes        interactive
+04.02.04.01 / P10: ynny        yes        interactive
+04.02.04.01 / P11: ynny        yes        interactive
+
+04.02.04.02 / P01: ynny        yes        interactive
+04.02.04.02 / P02: ynny        yes        interactive
+04.02.04.02 / P03: ynny        yes        interactive
+04.02.04.02 / P04: ynny        yes        interactive
+04.02.04.02 / P05: ynny        yes        interactive
+04.02.04.02 / P06: ynny        yes        interactive
+04.02.04.02 / P07: ynny        yes        interactive
+04.02.04.02 / P08: ynny        yes        interactive
+
+04.02.05.01 / P01: nnnn        no         passive
+04.02.05.01 / P02: ynny        yes        interactive
+04.02.05.01 / P03: ynny        yes        interactive
+04.02.05.01 / P04: ynny        yes        interactive
+04.02.05.01 / P05: ynny        yes        interactive
+
+04.02.05.02 / P01: ynnn        yes        passive
+04.02.05.02 / P02: ynnn        yes        passive
+04.02.05.02 / P03: ynnn        yes        passive
+04.02.05.02 / P04: ynnn        yes        passive
+04.02.05.02 / P05: ynnn        yes        passive
+04.02.05.02 / P06: ynnn        yes        passive
+04.02.05.02 / P07: ynnn        yes        passive
+04.02.05.02 / P08: ynnn        yes        passive
+04.02.05.02 / P09: ynnn        yes        passive
+04.02.05.02 / P10: ynny        yes        interactive
+04.02.05.02 / P11: ynny        yes        interactive
+04.02.05.02 / P12: ynny        yes        interactive
+04.02.05.02 / P13: ynny        yes        interactive
+
+04.02.05.03 / P01: ynnn        yes        passive
+04.02.05.03 / P02: ynnn        yes        passive
+04.02.05.03 / P03: ynnn        yes        passive
+04.02.05.03 / P04: ynnn        yes        passive
+04.02.05.03 / P05: ynnn        yes        passive
+04.02.05.03 / P06: ynnn        yes        passive
+04.02.05.03 / P07: ynnn        yes        passive
+04.02.05.03 / P08: ynnn        yes        passive
+04.02.05.03 / P09: ynnn        yes        passive
+04.02.05.03 / P10: ynny        yes        interactive
+04.02.05.03 / P11: ynny        yes        interactive
+04.02.05.03 / P12: ynny        yes        interactive
+04.02.05.03 / P13: ynny        yes        interactive
+
+04.02.05.04 / P01: ynnn        yes        passive
+04.02.05.04 / P02: ynnn        yes        passive
+04.02.05.04 / P03: ynnn        yes        passive
+04.02.05.04 / P04: ynnn        yes        passive
+04.02.05.04 / P05: ynnn        yes        passive
+04.02.05.04 / P06: ynnn        yes        passive
+
+04.03.01    / P01: nnnn        no         passive
+04.03.01    / P02: ynny        yes        interactive
+04.03.01    / P03: ynny        yes        interactive
+
+04.03.02.01 / P01: ynnn        yes        passive
+04.03.02.01 / P02: ynnn        yes        passive
+04.03.02.01 / P03: ynnn        yes        passive
+04.03.02.01 / P04: ynny        yes        interactive
+
+04.03.02.02 / P01: ynnn        yes        passive
+04.03.02.02 / P02: ynnn        yes        passive
+04.03.02.02 / P03: ynnn        yes        passive
+04.03.02.02 / P04: ynnn        yes        passive
+04.03.02.02 / P05: ynnn        yes        passive
+04.03.02.02 / P06: ynny        yes        interactive
+04.03.02.02 / P07: ynny        yes        interactive
+04.03.02.02 / P08: ynny        yes        interactive
+04.03.02.02 / P09: ynny        yes        interactive
+04.03.02.02 / P10: ynny        yes        interactive
+
+04.03.03    / P01: ynnn        yes        passive
+04.03.03    / P02: ynnn        yes        passive
+04.03.03    / P03: ynnn        yes        passive
+04.03.03    / P04: ynnn        yes        passive
+
+04.03.04.01 / P01: nnnn        no         passive
+04.03.04.01 / P02: nnnn        no         passive
+04.03.04.01 / P03: nnnn        no         passive
+04.03.04.01 / P04: ynny        yes        interactive
+
+04.03.04.02 / P01: ynnn        yes        passive
+04.03.04.02 / P02: ynnn        yes        passive
+04.03.04.02 / P03: ynny        yes        interactive
+04.03.04.02 / P04: ynny        yes        interactive
+
+05.01.01    / P01: nnnn        no         passive
+05.01.01    / P02: nnnn        no         passive
+05.01.01    / P03: nnnn        no         passive
+
+05.01.02    / P01: nnnn        no         passive
+
+05.02       / P01: ynnn        yes        passive
+05.02       / P02: ynnn        yes        passive
+05.02       / P03: ynnn        yes        passive
+05.02       / P04: ynnn        yes        passive
+05.02       / P05: ynnn        yes        passive
+05.02       / P06: yynn        yes*       passive
+05.02       / P07: ynnn        yes        passive
+05.02       / P08: ynnn        yes        passive
+
+05.03       / P01: ynnn        yes        passive
+05.03       / P02: ynnn        yes        passive
+
+06.01.01    / P01: nnnn        no         passive
+06.01.01    / P02: nnnn        no         passive
+06.01.01    / P03: nnnn        no         passive
+06.01.01    / P04: nnnn        no         passive
+06.01.01    / P05: nnnn        no         passive
+06.01.01    / P06: nnnn        no         passive
+06.01.01    / P07: nnnn        no         passive
+
+06.01.02    / P01: nnnn        no         passive
+06.01.02    / P02: nnnn        no         passive
+06.01.02    / P03: nnnn        no         passive
+06.01.02    / P04: nnnn        no         passive
+06.01.02    / P05: nnnn        no         passive
+06.01.02    / P06: nnnn        no         passive
+06.01.02    / P07: nnnn        no         passive
+06.01.02    / P08: nnnn        no         passive
+06.01.02    / P09: ynny        yes        interactive
+06.01.02    / P10: ynny        yes        interactive
+06.01.02    / P11: ynny        yes        interactive
+06.01.02    / P12: ynny        yes        interactive
+06.01.02    / P13: ynny        yes        interactive
+06.01.02    / P14: ynny        yes        interactive
+06.01.02    / P15: ynny        yes        interactive
+06.01.02    / P16: ynny        yes        interactive
+06.01.02    / P17: ynny        yes        interactive
+06.01.02    / P18: ynny        yes        interactive
+
+06.02.01    / P01: nnnn        no         passive
+06.02.01    / P02: nnnn        no         passive
+06.02.01    / P03: nnnn        no         passive
+
+06.02.02    / P01: ynnn        yes        passive
+06.02.02    / P02: ynnn        yes        passive
+06.02.02    / P03: ynnn        yes        passive
+06.02.02    / P04: ynnn        yes        passive
+06.02.02    / P05: ynnn        yes        passive
+06.02.02    / P06: ynnn        yes        passive
+06.02.02    / P07: nnnn        no         passive
+
+06.03       / P01: ynnn        yes        passive
+06.03       / P02: ynnn        yes        passive
+06.03       / P03: ynnn        yes        passive
+06.03       / P04: nnnn        no         passive
+
+09.01       / P01: nnnn        no         passive
+09.01       / P02: nnnn        no         passive
+09.01       / P03: nnny        no         interactive
+09.01       / P04: nnny        no         interactive
+09.01       / P05: nnny        no         interactive
+09.01       / P06: ynnn        yes        passive
+
+09.01.01.01 / P01: nnnn        no         passive
+09.01.01.01 / P02: ynnn        yes        passive
+09.01.01.01 / P03: nnnn        no         passive
+09.01.01.01 / P04: ynnn        yes        passive
+09.01.01.01 / P05: nnnn        no         passive
+09.01.01.01 / P06: nnnn        no         passive
+09.01.01.01 / P07: nnnn        no         passive
+
+09.01.01.02 / P01: nnny        no         interactive
+09.01.01.02 / P02: nnnn        no         passive
+09.01.01.02 / P03: nnny        no         interactive
+09.01.01.02 / P04: ynny        yes        interactive
+09.01.01.02 / P05: nnny        no         interactive
+09.01.01.02 / P06: nnny        no         interactive
+09.01.01.02 / P07: nnny        no         interactive
+
+09.01.02.01 / P01: ynnn        yes        passive
+09.01.02.01 / P02: ynnn        yes        passive
+09.01.02.01 / P03: ynnn        yes        passive
+09.01.02.01 / P04: ynnn        yes        passive
+09.01.02.01 / P05: ynnn        yes        passive
+09.01.02.01 / P06: ynnn        yes        passive
+09.01.02.01 / P07: ynnn        yes        passive
+09.01.02.01 / P08: ynnn        yes        passive
+09.01.02.01 / P09: ynnn        yes        passive
+09.01.02.01 / P10: ynnn        yes        passive
+
+09.01.02.02 / P01: ynny        yes        interactive
+09.01.02.02 / P02: ynny        yes        interactive
+09.01.02.02 / P03: ynny        yes        interactive
+09.01.02.02 / P04: ynny        yes        interactive
+09.01.02.02 / P05: ynny        yes        interactive
+09.01.02.02 / P06: ynny        yes        interactive
+09.01.02.02 / P07: ynny        yes        interactive
+09.01.02.02 / P08: ynny        yes        interactive
+09.01.02.02 / P09: ynny        yes        interactive
+09.01.02.02 / P10: ynny        yes        interactive
+
+09.01.03.01 / P01: ynnn        yes        passive
+09.01.03.01 / P02: ynnn        yes        passive
+09.01.03.01 / P03: ynnn        yes        passive
+09.01.03.01 / P04: ynnn        yes        passive
+09.01.03.01 / P05: ynnn        yes        passive
+09.01.03.01 / P06: ynnn        yes        passive
+09.01.03.01 / P07: ynnn        yes        passive
+09.01.03.01 / P08: ynnn        yes        passive
+09.01.03.01 / P09: ynnn        yes        passive
+09.01.03.01 / P10: ynnn        yes        passive
+09.01.03.01 / P11: ynnn        yes        passive
+09.01.03.01 / P12: ynnn        yes        passive
+09.01.03.01 / P13: ynnn        yes        passive
+09.01.03.01 / P14: ynnn        yes        passive
+09.01.03.01 / P15: ynnn        yes        passive
+09.01.03.01 / P16: nnnn        no         passive
+09.01.03.01 / P17: ynnn        yes        passive
+
+09.01.03.02 / P01: ynny        yes        interactive
+09.01.03.02 / P02: ynny        yes        interactive
+09.01.03.02 / P03: ynny        yes        interactive
+09.01.03.02 / P04: ynny        yes        interactive
+09.01.03.02 / P05: ynny        yes        interactive
+09.01.03.02 / P06: ynny        yes        interactive
+09.01.03.02 / P07: ynny        yes        interactive
+09.01.03.02 / P08: ynny        yes        interactive
+09.01.03.02 / P09: ynny        yes        interactive
+09.01.03.02 / P10: ynny        yes        interactive
+09.01.03.02 / P11: ynny        yes        interactive
+09.01.03.02 / P12: ynny        yes        interactive
+09.01.03.02 / P13: ynny        yes        interactive
+09.01.03.02 / P14: ynny        yes        interactive
+09.01.03.02 / P15: ynny        yes        interactive
+09.01.03.02 / P16: nnny        no         interactive
+09.01.03.02 / P17: ynny        yes        interactive
+
+09.01.04.01 / P01: ynnn        yes        passive
+09.01.04.01 / P02: ynnn        yes        passive
+09.01.04.01 / P03: ynnn        yes        passive
+09.01.04.01 / P04: ynnn        yes        passive
+09.01.04.01 / P05: ynnn        yes        passive
+09.01.04.01 / P06: ynnn        yes        passive
+09.01.04.01 / P07: ynnn        yes        passive
+
+09.01.04.02 / P01: ynny        yes        interactive
+09.01.04.02 / P02: ynny        yes        interactive
+09.01.04.02 / P03: ynny        yes        interactive
+09.01.04.02 / P04: ynny        yes        interactive
+09.01.04.02 / P05: ynny        yes        interactive
+09.01.04.02 / P06: ynny        yes        interactive
+09.01.04.02 / P07: ynny        yes        interactive
+
+09.01.05.01 / P01: nnnn        no         passive
+09.01.05.01 / P02: nnnn        no         passive
+09.01.05.01 / P03: nnnn        no         passive
+09.01.05.01 / P04: nnnn        no         passive
+09.01.05.01 / P05: nnnn        no         passive
+09.01.05.01 / P06: ynnn        yes        passive
+
+09.01.05.02 / P01: nnny        no         interactive
+09.01.05.02 / P02: nnny        no         interactive
+09.01.05.02 / P03: nnny        no         interactive
+09.01.05.02 / P04: nnny        no         interactive
+09.01.05.02 / P05: nnny        no         interactive
+09.01.05.02 / P06: ynny        yes        interactive
+
+09.01.09.01 / P01: nnnn        no         passive
+09.01.09.01 / P02: nnnn        no         passive
+09.01.09.01 / P03: nnnn        no         passive
+09.01.09.01 / P04: nnnn        no         passive
+09.01.09.01 / P05: nnnn        no         passive
+09.01.09.01 / P06: nnnn        no         passive
+
+09.01.09.02 / P01: nnny        no         interactive
+09.01.09.02 / P02: nnny        no         interactive
+09.01.09.02 / P03: nnny        no         interactive
+09.01.09.02 / P04: nnny        no         interactive
+09.01.09.02 / P05: nnny        no         interactive
+09.01.09.02 / P06: nnny        no         interactive
+
+09.01.10.01 / P01: ynnn        yes        passive
+09.01.10.01 / P02: nnnn        no         passive
+09.01.10.01 / P03: ynnn        yes        passive
+09.01.10.01 / P04: nnnn        no         passive
+
+09.01.10.02 / P01: ynny        yes        interactive
+09.01.10.02 / P02: nnny        no         interactive
+09.01.10.02 / P03: ynny        yes        interactive
+09.01.10.02 / P04: nnny        no         interactive
+
+09.01.11.01 / P01: nnnn        no         passive
+09.01.11.01 / P02: nnnn        no         passive
+09.01.11.01 / P03: ynnn        yes        passive
+
+09.01.11.02 / P01: ynny        yes        interactive
+
+09.02.01    / P01: nnnn        no         passive
+09.02.01    / P02: nnnn        no         passive
+09.02.01    / P03: nnnn        no         passive
+09.02.01    / P04: nnnn        no         passive
+
+09.02.02    / P01: nnnn        no         passive
+09.02.02    / P02: ynnn        yes        passive
+09.02.02    / P03: ynnn        yes        passive
+09.02.02    / P04: ynnn        yes        passive
+
+09.02.03    / P01: ynnn        yes        passive
+09.02.03    / P02: ynnn        yes        passive
+09.02.03    / P03: ynnn        yes        passive
+09.02.03    / P04: ynnn        yes        passive
+09.02.03    / P05: ynnn        yes        passive
+09.02.03    / P06: ynnn        yes        passive
+09.02.03    / P07: ynnn        yes        passive
+09.02.03    / P08: ynnn        yes        passive
+
+09.02.04    / P01: nnnn        no         passive
+09.02.04    / P02: nnnn        no         passive
+09.02.04    / P03: nnnn        no         passive
+09.02.04    / P04: nnnn        no         passive
+09.02.04    / P05: nnnn        no         passive
+09.02.04    / P06: nnnn        no         passive
+09.02.04    / P07: nnnn        no         passive
+09.02.04    / P08: nnnn        no         passive
+09.02.04    / P09: nnnn        no         passive
+09.02.04    / P10: nnnn        no         passive
+
+09.02.05    / P01: ynnn        yes        passive
+09.02.05    / P02: nnnn        no         passive
+09.02.05    / P03: nnnn        no         passive
+09.02.05    / P04: nnnn        no         passive
+09.02.05    / P05: nnnn        no         passive
+
+09.02.09    / P01: nnnn        no         passive
+
+09.02.10    / P01: ynnn        yes        passive
+09.02.10    / P02: ynnn        yes        passive
+09.02.10    / P03: ynnn        yes        passive
+09.02.10    / P04: ynnn        yes        passive
+09.02.10    / P05: nnnn        no         passive
+
+09.02.11    / P01: ynnn        yes        passive
+09.02.11    / P02: ynnn        yes        passive
+09.02.11    / P03: ynnn        yes        passive
+
+11.01       / P01: nnnn        no         passive
+
+11.02       / P01: nnnn        no         passive
+11.02       / P02: nnnn        no         passive
+11.02       / P03: nnnn        no         passive
+11.02       / P04: nnnn        no         passive
+11.02       / P05: nnnn        no         passive

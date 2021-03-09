@@ -1,0 +1,1406 @@
+TITLE: Workstation updating
+
+MODULE#: 05.02
+
+DESCRIPTION:
+This module tests the control and reporting of the actual update
+state of the workstation with respect to requested state, as
+expressed by the CSS, workstation tables, and posting.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** ***   Direct access to workstation state   *** *** ***
+
+SR1. The valid deferral-modes are ASAP, ASTI, BNIL, BNIG, and
+WAIT.
+#F 7 221 261
+#D 5.8.1 6.9.1
+#S 4.6.3/70/4 6.6/317/1 6.7/321/1
+#T P01/1 P01/4
+
+SR2. The valid modification-modes are NIVE, UWOR, or UQUM.
+#F 7 221 261
+#D 5.8.2 6.9.2
+#S 4.6.3/71/1 6.6/317/1 6.7/321/1
+#T P01/1 P01/4
+
+SR3. <Set display update state> sets the current deferral-mode as
+ASAP, ASTI, BNIL, BNIG, or WAIT and modification-mode as NIVE,
+UWOR, or UQUM for the workstation.
+#F 7
+#D 5.8.1 5.8.2
+#S 4.6.3/70/1
+#T P01/4 P04/1 P04/2 P04/3 P04/4 P05/1 P05/2 P06/1 P06/2 P06/3 P06/4
+   P07/1 P07/2 P07/3 P07/4
+
+SR4. <Inquire display update state> reports the current deferral
+mode, modification mode, display surface empty, and state of
+visual representation for the workstation.
+#F 221
+#D 5.8.1 5.8.2 5.8.3 5.8.4
+#S 4.6.3/70/3
+#T P01/2 P01/3 P01/4 P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7 P03/1
+   P03/2 P03/3 P03/4 P04/1 P04/2 P04/3 P04/4 P05/1 P05/2 P06/1 P06/2
+   P06/3 P06/4 P07/1 P07/2 P07/3 P07/4
+
+SR5. <Inquire default display update state> reports the default
+deferral mode and modification mode for the workstation type.
+#F 261
+#D 6.9.1 6.9.2
+#S n
+#T P01/1
+
+SR6. <Inquire dynamics of workstation attributes> reports the
+modification severity for the 12 kinds of workstation changes as
+IMM, IRG, or CBS.
+#F 260
+#D 6.8.1 6.8.2 6.8.3 6.8.4 6.8.5 6.8.6 6.8.7 6.8.8 6.8.9 6.8.10
+#D 6.8.11 6.8.12
+#S 4.6.3/69/2
+#T P08/1 P08/3
+
+SR7. <Inquire dynamics of structures> reports the modification
+severity for the 5 kinds of structure changes as IMM, IRG, or CBS.
+#F 286
+#D 6.22.1 6.22.2 6.22.3 6.22.4 6.22.5
+#S 4.6.3/69/2
+#T P08/2 P08/3
+
+
+*** *** *** *** ***   Initialization  *** *** *** *** ***
+
+SR8. After <open workstation> and before <set display update
+state>, the current deferral mode and modification mode = the
+default deferral mode and modification mode.
+#F 3 7
+#D 5.8.1 5.8.2 6.9.1 6.9.2
+#S 6.6/317/1
+#T P01/2
+
+SR9. Immediately after <open workstation>, the display surface =
+EMPTY and the state of visual representation = CORRECT.
+#F 3
+#D 5.8.3 5.8.4
+#S 6.6/317/1
+#T P01/3 P02/1
+
+
+*** *** *** *** ***   Display surface   *** *** *** *** ***
+
+SR10. A primitive is logically visible on a workstation if its
+name set is not eligible for invisibility, some part of it lies
+inside the workstation window after undergoing the most recently
+requested viewing transformations, and it is contained within a
+structure network posted to the workstation.
+#F 132 83-85 87-90
+#D 5.4 5.6 5.7
+#S 4.4.3/25/4 4.7.6/91/2
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7
+#C This SR used to be part of the definition of display surface =
+NOTEMPTY, but that was changed by an interpretation of the PHIGS
+standard committee.
+ 
+SR11. If the state of visual representation is CORRECT and there are
+structures posted to a workstation, then the display surface of that
+workstation is NOTEMPTY.
+#F 221
+#D 5.8.3 5.8.4
+#S 4.6.3/70/2
+#T P02/2 P02/3 P02/6
+
+SR12. If the state of visual representation is CORRECT and there are
+no structures posted to a workstation, then the display surface of
+that workstation is EMPTY.
+#F 221
+#D 5.8.3 5.8.4
+#S 4.6.3/70/2
+#T P02/1 P02/4 P02/5 P02/7
+
+
+*** *** *** ***   State of visual representation   *** *** *** ***
+
+SR13.  The state of visual representation of a workstation is
+CORRECT if and only if there are no deferred visual changes for
+that workstation.
+#F 221
+#D 5.8.4
+#S 4.6.3/70/2
+#T P01/3 P03/1 P03/2 P04/1 P04/2 P04/3 P04/4 P05/1 P05/2 P06/1 P06/2
+   P06/3 P06/4 P07/1 P07/2 P07/3 P07/4 P08/3
+
+SR14.  The state of visual representation of a workstation is
+SIMULATED if and only if there are deferred visual changes for
+that workstation, but they have all been simulated.
+#F 221
+#D 5.8.4
+#S 4.6.3/70/2
+#T P05/1 P05/2 P06/4 P07/4 P08/3
+
+SR15.  The state of visual representation of a workstation is
+DEFERRED if and only if there are deferred visual changes for
+that workstation, and some have not been simulated.
+#F 221
+#D 5.8.4
+#S 4.6.3/70/2
+#T P05/1 P05/2 P06/2 P06/4 P07/2 P07/4 P08/3
+
+
+*** *** *** *** ***   Explicit updating   *** *** *** *** ***
+
+SR16. <Redraw all structures> causes the state of visual
+representation to be CORRECT.
+#F 5
+#D 5.8.4
+#S 4.6.3/70/9 4.6.3/72/1 4.6.3/73/1
+#T P03/1 P08/3
+
+SR17. <Update workstation> with regeneration flag = PERFORM
+causes the state of visual representation to be CORRECT.
+#F 6
+#D 5.8.4
+#S 4.6.3/70/9 4.6.3/72/1 4.6.3/73/1
+#T P03/2
+
+SR18. <Update workstation> with regeneration flag = POSTPONE
+performs all deferred visual changes which do not require
+implicit regeneration.
+#F 6
+#D 5.8.4
+#S n
+#T P03/3 P03/4
+
+
+*** *** *** *** ***   Visual changes   *** *** *** *** ***
+
+SR19. A picture change of category IRG may require regeneration of the
+display image of the workstation.
+#F 260 286 9-71 73-85 87-90 113 116 118 122-134 142-144 150
+#D 6.8 6.22
+#S 4.6.3/69/3 4.6.3/74/1 4.6.3/75/1
+#T P05/2 P08/3
+#C Although IRG means that sometimes a regeneration is required,
+some changes in the category may also be able to be simulated
+or to be done immediately.
+
+SR20. A picture change of category CBS may require regeneration of the
+display image of the workstation for the image to be correct, but if
+so, there must exist a quick update method by which the image can be
+simulated.
+#F 260 286 9-71 73-85 87-90 113 116 118 122-134 142-144 150
+#D 6.8 6.22
+#S 4.6.3/69/3
+#T P05/2 P08/3
+#C The image resulting from a simulation may be only an approximation
+to an exactly correct result.  Also, although CBS means that sometimes
+a regeneration or simulation is required, some changes in the category
+may also be able to be done immediately.
+
+SR21. A picture change of category IMM can be done immediately.
+#F 260 286 9-71 73-85 87-90 113 116 118 122-134 142-144 150
+#D 6.8 6.22
+#S 4.6.3/69/3
+#T P05/2 P08/3
+
+
+*** *** *** *** ***   Display update state   *** *** *** *** ***
+
+*** ***   Deferral mode = ASAP   *** ***
+
+SR22. If deferral mode = ASAP, then the state of visual
+representation is CORRECT.
+#F 7 221
+#D 5.8.1 5.8.4
+#S 4.6.3/70/5 4.6.3/72/1 4.6.3/73/1
+#T P04/1 P04/2 P04/3 P04/4
+
+*** ***   Deferral mode = WAIT   *** ***
+
+SR23. Any visual change with deferral mode = WAIT and
+modification mode = NIVE causes the state of visual
+representation to be DEFERRED.
+#F 7 221
+#D 5.8.1 5.8.2 5.8.4
+#S 4.6.3/70/9 4.6.3/71/1 4.6.3/72/1 4.6.3/73/1 4.6.3/75/3
+#T P05/1
+
+SR24. If a visual change requires regeneration and cannot be simulated
+and deferral mode = WAIT, then the state of visual representation is
+DEFERRED.
+#F 7 221 260 286
+#D 5.8.1 5.8.2 5.8.4 6.8 6.22
+#S 4.6.3/70/9 4.6.3/72/1 4.6.3/73/1
+#T P05/2 P08/3
+
+SR25. If a visual change can be simulated and deferral mode = WAIT and
+modification mode = UWOR, then the state of visual representation is
+DEFERRED.
+#F 7 221 260 286
+#D 5.8.1 5.8.2 5.8.4 6.8 6.22
+#S 4.6.3/70/9 4.6.3/71/1 4.6.3/72/1 4.6.3/73/1
+#T P05/2
+
+SR26. If a visual change can be done immediately and deferral mode =
+WAIT and modification mode = UWOR or UQUM, then the state of visual
+representation is unchanged.
+#F 7 221 260 286
+#D 5.8.1 5.8.2 5.8.4 6.8 6.22
+#S 4.6.3/70/9 4.6.3/71/1 4.6.3/72/1 4.6.3/73/1
+#T P05/2 P08/3
+
+SR27. If a visual change can be simulated, the old state of visual
+representation is DEFERRED, deferral mode = WAIT, and modification
+mode = UQUM, then the state of visual representation is DEFERRED.
+#F 7 221 260 286
+#D 5.8.1 5.8.2 5.8.4 6.8 6.22
+#S 4.6.3/70/9 4.6.3/71/1 4.6.3/72/1 4.6.3/73/1
+#T P05/2
+
+SR28. If a visual change can be simulated, the old state of visual
+representation is not DEFERRED, deferral mode = WAIT, and modification
+mode = UQUM, then the state of visual representation is SIMULATED.
+#F 7 221 260 286
+#D 5.8.1 5.8.2 5.8.4 6.8 6.22
+#S 4.6.3/70/9 4.6.3/71/1 4.6.3/72/1 4.6.3/73/1
+#T P05/2 P08/3
+
+*** Truth-table for deferral-mode = WAIT, modification-mode =
+*** UWOR or UQUM (SR 24-28):
+
+***   immed = can be done immediately
+***   regen = requires regeneration, no simulation available
+***   simul = requires regeneration, simulation available
+
+***   note that:
+***       IRG => immed OR simul OR regen
+***       CBS => immed OR simul
+***       IMM => immed
+
+***        mod    visual   old   |  new
+***    SR  mode   change   svr   |  svr
+***    --------------------------+-------
+***    24  UWOR   regen    DEF   |  DEF
+***    24  UWOR   regen    SIM   |  DEF
+***    24  UWOR   regen    COR   |  DEF
+
+***    24  UQUM   regen    DEF   |  DEF
+***    24  UQUM   regen    SIM   |  DEF
+***    24  UQUM   regen    COR   |  DEF
+
+***    25  UWOR   simul    DEF   |  DEF
+***    25  UWOR   simul    SIM   |  DEF
+***    25  UWOR   simul    COR   |  DEF
+
+***    27  UQUM   simul    DEF   |  DEF
+***    28  UQUM   simul    SIM   |  SIM
+***    28  UQUM   simul    COR   |  SIM
+
+***    26  UWOR   immed    DEF   |  DEF
+***    26  UWOR   immed    SIM   |  SIM
+***    26  UWOR   immed    COR   |  COR
+
+***    26  UQUM   immed    DEF   |  DEF
+***    26  UQUM   immed    SIM   |  SIM
+***    26  UQUM   immed    COR   |  COR
+
+*** ***   Deferral mode = ASTI   *** ***
+
+SR29. Deferral mode = ASTI causes the same behavior as WAIT,
+except that the system may choose at any time to make the state
+of visual representation CORRECT.
+#F 7 221 260 286
+#D 5.8.1 5.8.2 5.8.4 6.8 6.22
+#S 4.6.3/70/6 4.6.3/72/1 4.6.3/73/1
+#T P05/1 P05/2
+
+
+*** ***   Input and deferral mode = BNIL or BNIG   *** ***
+
+SR30. Input is underway at a workstation if one of its input devices
+has a REQUEST pending or is in SAMPLE or EVENT mode.
+#F 164-177
+#D 5.18.1.2 5.18.2.2 5.18.3.2 5.18.4.2 5.18.5.2 5.18.6.2
+#S 4.6.3/70/7
+#T P06/1 P06/3 P07/1 P07/3
+
+SR31. Deferral mode = BNIL causes the same behavior as ASTI,
+except that the state of visual representation for the
+workstation must be CORRECT if input is underway on that
+workstation.
+#F 7 221 260 286
+#D 5.8.1 5.8.2 5.8.4 6.8 6.22
+#D 5.18.1.2 5.18.2.2 5.18.3.2 5.18.4.2 5.18.5.2 5.18.6.2
+#S 4.6.3/70/7 4.6.3/72/1 4.6.3/73/1
+#T P06/1 P06/2 P06/3 P06/4
+
+SR32. Deferral mode = BNIG causes the same behavior as ASTI,
+except that the state of visual representation for the
+workstation must be CORRECT if input is underway on any
+workstation.
+#F 7 221 260 286
+#D 5.8.1 5.8.2 5.8.4 6.8 6.22
+#D 5.18.1.2 5.18.2.2 5.18.3.2 5.18.4.2 5.18.5.2 5.18.6.2
+#S 4.6.3/70/7 4.6.3/72/1 4.6.3/73/1
+#T P07/1 P07/2 P07/3 P07/4
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    3: popwk   <open workstation>
+    5: prst    <redraw all structures>
+    6: puwk    <update workstation>
+    7: psdus   <set display update state>
+    9: ppl3    <polyline 3>
+   10: ppl     <polyline>
+   11: ppm3    <polymarker 3>
+   12: ppm     <polymarker>
+   13: ptx3    <text 3>
+   14: ptx     <text>
+   15: patr3   <annotation text relative 3>
+   16: patr    <annotation text relative>
+   17: pfa3    <fill area 3>
+   18: pfa     <fill area>
+   19: pfas3   <fill area set 3>
+   20: pfas    <fill area set>
+   21: pca3    <cell array 3>
+   22: pca     <cell array>
+   23: pgdp3   <generalized drawing primitive 3>
+   24: pgdp    <generalized drawing primitive>
+   25: pspli   <set polyline index>
+   26: pspmi   <set polymarker index>
+   27: pstxi   <set text index>
+   28: psii    <set interior index>
+   29: psedi   <set edge index>
+   30: psln    <set linetype>
+   31: pslwsc  <set linewidth scale factor>
+   32: psplci  <set polyline colour index>
+   33: psmk    <set marker type>
+   34: psmksc  <set marker size scale factor>
+   35: pspmci  <set polymarker colour index>
+   36: pstxfn  <set text font>
+   37: pstxpr  <set text precision>
+   38: pschxp  <set character expansion factor>
+   39: pschsp  <set character spacing>
+   40: pstxci  <set text colour index>
+   41: pschh   <set character height>
+   42: pschup  <set character up vector>
+   43: pstxp   <set text path>
+   44: pstxal  <set text alignment>
+   45: psatch  <set annotation text character height>
+   46: psatcu  <set annotation text character up vector>
+   47: psatp   <set annotation text path>
+   48: psatal  <set annotation text alignment>
+   49: psans   <set annotation style>
+   50: psis    <set interior style>
+   51: psisi   <set interior style index>
+   52: psici   <set interior colour index>
+   53: psedfg  <set edge flag>
+   54: psedt   <set edgetype>
+   55: psewsc  <set edgewidth scale factor>
+   56: psedci  <set edge colour index>
+   57: pspa    <set pattern size>
+   58: psprpv  <set pattern reference point and vectors>
+   59: psparf  <set pattern reference point>
+   60: pads    <add names to set>
+   61: pres    <remove names from set>
+   62: psiasf  <set individual asf>
+   63: psplr   <set polyline representation>
+   64: pspmr   <set polymarker representation>
+   65: pstxr   <set text representation>
+   66: psir    <set interior representation>
+   67: psedr   <set edge representation>
+   68: pspar   <set pattern representation>
+   69: pscr    <set colour representation>
+   70: pshlft  <set highlighting filter>
+   71: psivft  <set invisibility filter>
+   73: pshrid  <set hlhsr identifier>
+   74: pshrm   <set hlhsr mode>
+   75: pslmt3  <set local transformation 3>
+   76: pslmt   <set local transformation>
+   77: psgmt3  <set global transformation 3>
+   78: psgmt   <set global transformation>
+   79: psmcv3  <set modelling clipping volume 3>
+   80: psmcv   <set modelling clipping volume>
+   81: psmcli  <set modelling clipping indicator>
+   82: prmcv   <restore modelling clipping volume>
+   83: psvwi   <set view index>
+   84: psvwr3  <set view representation 3>
+   85: psvwr   <set view representation>
+   87: pswkw3  <set workstation window 3>
+   88: pswkw   <set workstation window>
+   89: pswkv3  <set workstation viewport 3>
+   90: pswkv   <set workstation viewport>
+  113: pexst   <execute structure>
+  116: pgse    <generalized structure element>
+  118: pcelst  <copy all elements from structure>
+  122: pdel    <delete element>
+  123: pdelra  <delete element range>
+  124: pdellb  <delete elements between labels>
+  125: pemst   <empty structure>
+  126: pdst    <delete structure>
+  127: pdsn    <delete structure network>
+  128: pdas    <delete all structures>
+  129: pcstid  <change structure identifier>
+  130: pcstrf  <change structure references>
+  131: pcstir  <change structure identifier and references>
+  132: ppost   <post structure>
+  133: pupost  <unpost structure>
+  134: pupast  <unpost all structures>
+  142: prest   <retrieve structures>
+  143: presn   <retrieve structure networks>
+  144: prast   <retrieve all structures>
+  150: pspkid  <set pick identifier>
+  164: pslcm   <set locator mode>
+  165: psskm   <set stroke mode>
+  166: psvlm   <set valuator mode>
+  167: pschm   <set choice mode>
+  168: pspkm   <set pick mode>
+  169: psstm   <set string mode>
+  170: prqlc3  <request locator 3>
+  171: prqlc   <request locator>
+  172: prqsk3  <request stroke 3>
+  173: prqsk   <request stroke>
+  174: prqvl   <request valuator>
+  175: prqch   <request choice>
+  176: prqpk   <request pick>
+  177: prqst   <request string>
+  221: pqdus   <inquire display update state>
+  260: pqdswa  <inquire dynamics of workstation attributes>
+  261: pqddus  <inquire default display update state>
+  286: pqdstr  <inquire dynamics of structures>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.4  ...  view_table
+  5.6  ...  workstation_transformation_entry
+  5.7  ...  list_of_posted_structures
+  5.8  ...  update_status
+  5.8.1  ...  deferral_mode
+  5.8.2  ...  modification_mode
+  5.8.3  ...  display_surface_empty
+  5.8.4  ...  state_of_visual_representation
+  5.18  ...  input_device_status
+  5.18.1  ...  locator_entry
+  5.18.1.2  ...  operating_mode
+  5.18.2  ...  stroke_entry
+  5.18.2.2  ...  operating_mode
+  5.18.3  ...  valuator_entry
+  5.18.3.2  ...  operating_mode
+  5.18.4  ...  choice_entry
+  5.18.4.2  ...  operating_mode
+  5.18.5  ...  pick_entry
+  5.18.5.2  ...  operating_mode
+  5.18.6  ...  string_entry
+  5.18.6.2  ...  operating_mode
+  6  ...  workstation_description_table
+  6.8  ...  dynamic_modification_accepted_for
+  6.8.1  ...  view_representation
+  6.8.2  ...  polyline_bundle_representation
+  6.8.3  ...  polymarker_bundle_representation
+  6.8.4  ...  text_bundle_representation
+  6.8.5  ...  interior_bundle_representation
+  6.8.6  ...  edge_bundle_representation
+  6.8.7  ...  pattern_representation
+  6.8.8  ...  colour_representation
+  6.8.9  ...  workstation_transformation_representation
+  6.8.10 ...  highlighting_filter
+  6.8.11 ...  invisibility_filter
+  6.8.12 ...  hlhsr_mode
+  6.9  ...  default_value_for_deferral_state
+  6.9.1  ...  deferral_mode
+  6.9.2  ...  modification_mode
+  6.22  ...  dynamic_modification_accepted_for
+  6.22.1  ...  structure_content_modification
+  6.22.2  ...  post_structure
+  6.22.3  ...  unpost_structure
+  6.22.4  ...  delete_structure
+  6.22.5  ...  reference_modification
+ 
+SEMANTIC CROSS-REFERENCES:
+  04.03.03/SR06 04.03.03/SR07 06.02.02/SR27 06.02.02/SR28
+  06.03/SR18 06.03/SR19
+ 
+LOCAL SUBROUTINES:
+
+SETPCL (pcctab): loads the pcctab table with the names of the
+picture change categories.
+
+SETSVR (wkid, reqsvr): attempts to set the SVR of the specified
+workstation to requested state.  There is no error report; the
+caller must determine success.
+
+EXSVRS (sevrty, defmod, modmd, oldsvr, svrlst, explbl): subroutine
+which computes expected value(s) for SVR, based on severity, deferral
+and modification mode, and old SVR.
+
+SURFOK (wkid, expsur): logical function, true iff display surface
+flag equals expected value.
+
+SVROK (wkid, expvls): logical function, true iff current SVR is
+one of the expected values, encoded by character: c-correct,
+s-simulated, d-deferred. E.g. expvls = 'cd' means SVR must be
+either CORRECT or DEFERRED.
+
+PICENV (wkid): sets up an environment of posted structures to the
+specified workstation, so that PICCHG can be perform requested
+changes.
+
+PICCHG (wkid, severity-list, pcc-list, actual-sev, actual-pcc) -
+attempts to perform a visual change according to the preferred
+order of the requested severity-list and of the specified
+categories (a subset of the 17 kinds of picture change).  It then
+returns the actual severity and actual picture change category
+performed, or indicates that nothing in the severity-list /
+pcc-list combination could be done.  Input parameters are
+integer-lists, represented as strings, e.g. "1,2,3".
+
+DOIMOD (wkid, inclas, inmode): on the workstation (wkid), sets
+device #1 of the specified input class (inclas) to the requested
+mode (inmode).
+
+
+PROGRAM 1: Setting and inquiring display update state
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+<open workstation>
+TEST: #SR 1 2 5
+      "<Inquire default display update state> should report a
+       valid default deferral and modification mode."
+<inquire default display update state> to determine
+   ddef = default deferral mode
+   dmod = default modification mode
+pass/fail depending on (successful inquire and
+                        ddef is valid      and
+                        dmod is valid)
+
+opstat = "opening"
+open_test:
+
+TEST: #SR 4 8
+      "<Inquire display update state> should report the current
+       deferral and modification mode to be the same as the
+       default after " + opstat + " the workstation, but before
+       they are explicitly set."
+<inquire display update state> to determine
+   adef  = actual deferral mode
+   amod  = actual modification mode
+   dsurf = display surface
+   svr   = state of visual representation
+pass/fail depending on (successful inquire and
+                        adef = ddef        and
+                        amod = dmod)
+
+TEST: #SR 4 9 13
+      "Immediately after " + opstat + " the workstation, <inquire
+       display update state> should report the display surface as
+       EMPTY and the state of visual representation as CORRECT."
+pass/fail depending on (successful inquire and
+                        dsurf = EMPTY      and
+                        svr   = CORRECT)
+
+if (opstat = "opening") then
+   if (ddef = ASAP) then
+      dm = ASTI
+   else
+      dm = ASAP
+   endif
+   if (dmod = UQUM) then
+      mm = UWOR
+   else
+      mm = UQUM
+   endif
+   <set display update state> dm,mm
+   post visible structure to workstation
+   <close workstation>
+   <open workstation>
+   opstat = "re-opening"
+   goto open_test
+endif
+
+TEST: #SR 1 2 3 4
+      "<Set display update state> should be able to set any
+       valid deferral and modification mode."
+
+for dm = ASAP, ASTI, BNIL, BNIG, WAIT and
+for mm = NIVE, UWOR, UQUM
+   <set display update state> dm,mm
+   <inquire display update state> to determine
+      rdm = reported deferral mode
+      rmm = reported modification mode
+   if (inquire reports error or
+       rdm not= dm           or
+       rmm not= mm ) then
+      fail
+      goto done
+   endif
+next mm
+next dm
+pass
+
+done:
+<close workstation>
+
+END PROGRAM 1
+
+
+PROGRAM 2: Display surface flag
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+create structure 101 with
+   polymarker in default workstation window
+create structure 102 with
+   polyline in default workstation window
+create structure 103 with
+   fill area outside default workstation window
+
+<open workstation>
+<set display update state> ASAP, NIVE
+
+TEST: #SR 4 9 10 12
+      "After <open workstation>, until something is drawn inside
+       the workstation window, the display surface should be
+       reported as EMPTY."
+pass/fail depending on (display surface flag = EMPTY)
+
+<post structure> 101
+TEST: #SR 4 10 11
+      "After a visible primitive is first posted to a workstation
+       with deferral mode ASAP, the display surface should be
+       reported as NOTEMPTY."
+pass/fail depending on (display surface flag = NOTEMPTY)
+
+<post structure> 102
+TEST: #SR 4 10 11
+      "After posting of additional visible primitives to a
+       workstation with deferral mode ASAP, the display surface
+       should be continue to be reported as NOTEMPTY."
+pass/fail depending on (display surface flag = NOTEMPTY)
+
+<unpost all structures> from workstation
+TEST: #SR 4 10 12
+      "After all structures have been unposted from a workstation
+       with deferral mode ASAP, the display surface should be
+       reported as EMPTY."
+pass/fail depending on (display surface flag = EMPTY)
+
+<post structure> 103 (off-screen)
+TEST: #SR 4 10 12
+      "If a structure is posted to a workstation with deferral
+       mode ASAP, but none of its primitives lie within the
+       workstation window, the display surface should still be 
+       reported as NOTEMPTY."
+pass/fail depending on (display surface flag = NOTEMPTY)
+
+<set display update state> WAIT, NIVE
+
+<unpost all structures> from workstation
+<post structure> 101
+<redraw all structures>
+TEST: #SR 4 10 11
+      "After a visible primitive is first posted and the
+       workstation is then explicitly updated, the display
+       surface should be reported as NOTEMPTY."
+pass/fail depending on (display surface flag = NOTEMPTY)
+
+<unpost all structures> from workstation
+<update workstation> with PERFORM
+TEST: #SR 4 10 12
+      "After all structures have been unposted and the
+       workstation is then explicitly updated, the display
+       surface should be reported as EMPTY."
+pass/fail depending on (display surface flag = EMPTY)
+
+<close workstation>
+
+END PROGRAM 2
+
+
+PROGRAM 3: Explicit updating
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+picture change categories are numbered from 1 to 17:
+  workstation changes :  1 to 12
+  structure changes   : 13 to 17
+
+  01 : polyline bundle representation
+  02 : polymarker bundle representation
+  03 : text bundle representation
+  04 : interior bundle representation
+  05 : edge bundle representation
+  06 : pattern representation
+  07 : colour representation
+  08 : view representation
+  09 : workstation transformation
+  10 : highlighting filter
+  11 : invisibility filter
+  12 : HLHSR mode
+  13 : structure content
+  14 : post structure
+  15 : unpost structure
+  16 : delete structure
+  17 : reference modification
+
+invoke PICENV to set up standard picture environment
+
+request-change: (#8,9,12) a workstation change in an entity for
+  which there is a current and requested value, namely view
+  representation, workstation transformation, and HLHSR.
+
+non-request-change: (#1-7,10,11) a workstation change in an
+  entity for which there is only a single value.
+
+<set display update state> WAIT,NIVE
+
+request-change     (8,9,12)    of greatest available severity
+non-request-change (1-7,10,11) of greatest available severity
+structure change   (13-17)     of greatest available severity
+<redraw all structures> with CONDITIONAL
+TEST: #SR 4 13 16
+      "<Redraw all structures> should cause the state of visual
+       representation to be CORRECT."
+pass/fail depending on (current_SVR = CORRECT)
+
+request-change     (12,9,8)    of greatest available severity
+non-request-change (11,10,7-1) of greatest available severity
+structure change   (17-13)     of greatest available severity
+<update workstation> with PERFORM
+TEST: #SR 4 13 17
+      "<Update workstation> with regeneration flag = PERFORM
+       should cause the state of visual representation to be
+       CORRECT."
+pass/fail depending on (current_SVR = CORRECT)
+
+<redraw all structures> with CONDITIONAL to make svr = CORRECT
+request-change     (9,8,12)         of severity = IMM
+non-request-change (10,7-1,11)      of severity = IMM
+structure change   (15,16,14,17,13) of severity = IMM
+<update workstation> with POSTPONE
+TEST: #SR 4 18
+      "If the severity of all deferred actions is IMM, then
+       <update workstation> with regeneration flag = POSTPONE
+       should cause the state of visual representation to be
+       CORRECT."
+pass/fail depending on (current_SVR = CORRECT)
+
+<redraw all structures> with CONDITIONAL to make svr = CORRECT
+request-change     (9,8,12)         of severity = IRG
+non-request-change (10,7-1,11)      of severity = IRG
+structure change   (15,16,14,17,13) of severity = IRG
+if no IRG-severity change available then
+   goto end_irg
+endif
+
+<update workstation> with POSTPONE
+TEST: #SR 4 18
+      "If the severity of some of the deferred actions is IRG,
+       then <update workstation> with regeneration flag = POSTPONE
+       should leave the state of visual representation as
+       DEFERRED or make it CORRECT."
+pass/fail depending on (current_SVR = DEFERRED or CORRECT)
+
+end_irg:
+
+END PROGRAM 3
+
+
+PROGRAM 4: Deferral mode ASAP
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+picture change categories are numbered from 1 to 17:
+  workstation changes :  1 to 12
+  structure changes   : 13 to 17
+
+  01 : polyline bundle representation
+  02 : polymarker bundle representation
+  03 : text bundle representation
+  04 : interior bundle representation
+  05 : edge bundle representation
+  06 : pattern representation
+  07 : colour representation
+  08 : view representation
+  09 : workstation transformation
+  10 : highlighting filter
+  11 : invisibility filter
+  12 : HLHSR mode
+  13 : structure content
+  14 : post structure
+  15 : unpost structure
+  16 : delete structure
+  17 : reference modification
+
+invoke PICENV to set up standard picture environment
+
+request-change: (#8,9,12) a workstation change in an entity for
+  which there is a current and requested value, namely view
+  representation, workstation transformation, and HLHSR.
+
+non-request-change: (#1-7,10,11) a workstation change in an
+  entity for which there is only a single value.
+
+*** *** *** *** ***  visual changes   *** *** *** *** ***
+
+<set display update state> ASAP, NIVE
+
+request-change (8,9,12) of greatest available severity
+TEST: #SR 3 4 13 22
+      "After altering a current/request type entity in the WSL,
+       the state of visual representation should be CORRECT when
+       the deferral mode is ASAP."
+pass/fail depending on (current_SVR = CORRECT)
+
+non-request-change (1-7,10,11) of greatest available severity
+TEST: #SR 3 4 13 22
+      "After altering a single-valued type entity in the WSL,
+       the state of visual representation should be CORRECT when
+       the deferral mode is ASAP."
+pass/fail depending on (current_SVR = CORRECT)
+
+structure change (13-17) of greatest available severity
+TEST: #SR 3 4 13 22
+      "After performing some CSS-type change, the state of visual
+       representation should be CORRECT when the deferral mode is
+       ASAP."
+pass/fail depending on (current_SVR = CORRECT)
+
+*** *** *** *** ***  deferral-mode changes   *** *** *** *** ***
+
+<set display update state> WAIT, NIVE
+structure change   (17-13)     of greatest available severity
+non-request-change (11,10,7-1) of greatest available severity
+request-change     (12,9,8)    of greatest available severity
+<set display update state> ASAP, NIVE
+TEST: #SR 3 4 13 22
+      "After performing visual changes in WAIT,NIVE mode, the
+       state of visual representation should be CORRECT when the
+       deferral mode is re-set to ASAP."
+pass/fail depending on (current_SVR = CORRECT)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Deferral mode WAIT and ASTI
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+picture change categories are numbered from 1 to 17:
+  workstation changes :  1 to 12
+  structure changes   : 13 to 17
+
+set pcctab to names of picture change categories
+
+invoke PICENV to set up standard picture environment
+
+for defmod = WAIT,ASTI
+   set deflbl = string for defmod
+   if (defmod = ASTI) then
+      svrlbl = "DEFERRED or CORRECT"
+   else
+      svrlbl = "DEFERRED"
+   endif
+   <set display update state> defmod, NIVE
+
+   for pcc = 1 to 17 = picture change category
+      <redraw all structures>/COND to make state of visual
+         representation = CORRECT
+      attempt visual change of type pcc
+      if (change unsuccessful) then
+         informative message: skipping test
+         goto skip_pcc
+      endif
+      pcclbl = pcctab(pcc)
+      TEST: #SR 3 4 13 14 15 23 29
+            "A picture change of category " + pcclbl +
+             " performed under mode [" + deflbl + ", NIVE] should
+             leave the state of visual representation as " +
+             svrlbl + "."
+      pass/fail depending on ( current_SVR matches svrlbl )
+skip_pcc:
+   next pcc
+
+   for modmd  = UWOR,UQUM
+       set modlbl = string for modmd
+   for sevrty = IRG,CBS,IMM
+       set sevlbl = string for sevrty
+   for oldsvr = DEFERRED,SIMULATED,CORRECT
+       set oldlbl = string for oldsvr
+       attempt to set SVR to oldsvr
+       <set display update state> defmod, modmd
+       if (current_SVR not= oldsvr) then
+          informative message: skipping test
+          goto skip_svr
+       endif
+
+       attempt to perform sevrty-type operation:
+       invoke PICCHG of type = sevrty
+       if (PICCHG reports failure) then
+          informative message: skipping test
+          goto skip_svr
+       endif
+
+       svrlst = calculate list of expected SVRs, based on
+                sevrty, defmod, modmd, and oldsvr
+       set explbl = string for svrlst
+
+       TEST: #SR 3 4 13 14 15 19 20 21 24 25 26 27 28 29
+             "If update mode = [" + deflbl + ", " + modlbl + "],
+              picture change severity = " + sevlbl + ", and old
+              state of visual representation = " + oldlbl + ",
+              then current state of visual representation should
+              be " + explbl + "."
+       pass/fail depending on (svr contained in svrlst)
+
+skip_svr:
+   next oldsvr
+   next sevrty
+   next modmd
+next defmod
+
+END PROGRAM 5
+
+
+PROGRAM 6: Deferral mode BNIL
+
+CHARACTERISTICS: yynn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+picture change categories are numbered from 1 to 17:
+  workstation changes :  1 to 12
+  structure changes   : 13 to 17
+
+set pcctab to names of picture change categories
+
+invoke PICENV to set up standard picture environment
+
+<set display update state> BNIL, NIVE
+
+<inquire number of available logical input devices> for primary
+   workstation
+inclas = input class for which a device is available
+
+ct = 0
+for pcc = 1 to 17 = picture change category
+   pcclbl = pcctab(pcc)
+   for instat = underway, inactive
+      <redraw all structures>/COND to make state of visual
+         representation = CORRECT
+      if (instat = underway) then
+         activate input:
+         ct = ct + 1
+         if (ct mod 2 = 0) then
+            inmode = SAMPLE
+         else
+            inmode = EVENT
+         endif
+
+         vary order of operation:
+         if (ct mod 3 = 0) then
+            invoke PICCHG for category = pcc
+            set mode of input device #1 of class = inclas to inmode
+         else
+            set mode of input device #1 of class = inclas to inmode
+            invoke PICCHG for category = pcc
+         endif
+
+         if (PICCHG reports failure) then
+            informative message: skipping test
+            goto skip_pcc_act
+         endif
+
+         TEST: #SR 3 4 13 30 31
+               "A picture change of category " + pcclbl +
+                " performed under mode [BNIL, NIVE] when input is
+                underway should leave the state of visual
+                representation CORRECT."
+
+         pass/fail depending on (current_SVR = CORRECT)
+skip_pcc_act:
+         deactivate local input:
+            set mode of input device #1 of class = inclas to REQUEST
+      else (input is inactive)
+         invoke PICCHG for category = pcc
+
+         if (PICCHG reports failure) then
+            informative message: skipping test
+            goto skip_pcc_inact
+         endif
+
+         TEST: #SR 3 4 13 15 31
+               "A picture change of category " + pcclbl +
+                " performed under mode [BNIL, NIVE] when input is
+                inactive should leave the state of visual
+                representation DEFERRED or CORRECT."
+         pass/fail depending on (current_SVR = DEFERRED or CORRECT)
+skip_pcc_inact:
+      endif
+   next instat
+next pcc
+
+ct = 0
+for modmd  = UWOR,UQUM
+    set modlbl = string for modmd
+for sevrty = IRG,CBS,IMM
+    set sevlbl = string for sevrty
+for oldsvr = DEFERRED,SIMULATED,CORRECT
+    set oldlbl = string for oldsvr
+    cndlbl = "update mode = [BNIL, " + modlbl + "],
+              picture change severity = " + sevlbl + ",
+              old state of visual representation = " + oldlbl
+for instat = underway, inactive
+   attempt to set SVR to oldsvr
+   <set display update state> BNIL, modmd
+   if (current_SVR not= oldsvr)
+      informative message: skipping test
+      goto skip_oldsvr
+   endif
+
+   if (instat = underway) then
+      ct = ct + 1
+      if (ct mod 2 = 0) then
+         inmode = SAMPLE
+      else
+         inmode = EVENT
+      endif
+
+      vary order of operation:
+      if (ct mod 3 = 0) then
+         attempt to perform sevrty-type operation:
+            invoke PICCHG of type = sevrty
+         set mode of input device #1 of class = inclas to inmode
+      else
+         set mode of input device #1 of class = inclas to inmode
+         attempt to perform sevrty-type operation:
+            invoke PICCHG of type = sevrty
+      endif
+
+      if (PICCHG reports failure) then
+         informative message: skipping test
+         goto skip_sev_und
+      endif
+
+      TEST: #SR 3 4 13 30 31
+            "If " + cndlbl + ", and input is underway, then
+             current state of visual representation should be
+             CORRECT."
+      pass/fail depending on (current_SVR = CORRECT)
+skip_sev_und:
+      deactivate local input:
+         set mode of input device #1 of class = inclas to REQUEST
+   else (input is inactive)
+      attempt to perform sevrty-type operation:
+         invoke PICCHG of type = sevrty
+
+      if (PICCHG reports failure) then
+         informative message: skipping test
+         goto skip_sev_inact
+      endif
+
+      svrlst = calculate list of expected SVRs, based on
+               sevrty, defmod, modmd, and oldsvr
+      set explbl = string for svrlst
+
+      TEST: #SR 3 4 13 14 15 31
+            "If " + cndlbl + ", and input is inactive, then
+             current state of visual representation should be " +
+             explbl + "."
+      pass/fail depending on (svr contained in svrlst)
+
+skip_sev_inact:
+   endif
+next instat
+skip_oldsvr:
+next oldsvr
+next sevrty
+next modmd
+
+END PROGRAM 6
+
+
+PROGRAM 7: Deferral mode BNIG
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+if (there is a non-primary workst with INPUT capabilities) then
+   set inwk = non-primary
+else
+   if (primary workstation has INPUT capabilities) then
+      informative msg: using local input to test BNIG
+      inwk = primary
+   else
+      informative msg: cannot test BNIG; no input available
+      goto done
+   endif
+endif
+
+picture change categories are numbered from 1 to 17:
+  workstation changes :  1 to 12
+  structure changes   : 13 to 17
+
+set pcctab to names of picture change categories
+
+invoke PICENV to set up standard picture environment
+
+<set display update state> BNIG, NIVE
+
+<inquire number of available logical input devices> for inwk
+inclas = input class for which a device is available
+
+ct = 0
+for pcc = 1 to 17 = picture change category
+   pcclbl = pcctab(pcc)
+   for instat = underway, inactive
+      <redraw all structures>/COND to make state of visual
+         representation = CORRECT
+      if (instat = underway) then
+         activate input:
+         ct = ct + 1
+         if (ct mod 2 = 0) then
+            inmode = SAMPLE
+         else
+            inmode = EVENT
+         endif
+
+         vary order of operation:
+         if (ct mod 3 = 0) then
+            invoke PICCHG for category = pcc
+            set mode of input device #1 on inwk of class = inclas to inmode
+         else
+            set mode of input device #1 on inwk of class = inclas to inmode
+            invoke PICCHG for category = pcc
+         endif
+
+         if (PICCHG reports failure) then
+            informative message: skipping test
+            goto skip_pcc_act
+         endif
+
+         TEST: #SR 3 4 13 30 32
+               "A picture change of category " + pcclbl +
+                " performed under mode [BNIG, NIVE] when input is
+                underway should leave the state of visual
+                representation CORRECT."
+         pass/fail depending on (current_SVR = CORRECT)
+skip_pcc_act:
+         deactivate global input:
+            set mode of input device #1 on inwk of class = inclas to REQUEST
+      else (input is inactive)
+         invoke PICCHG for category = pcc
+
+         if (PICCHG reports failure) then
+            informative message: skipping test
+            goto skip_pcc_inact
+         endif
+
+         TEST: #SR 3 4 13 15 32
+               "A picture change of category " + pcclbl +
+                " performed under mode [BNIG, NIVE] when input is
+                inactive should leave the state of visual
+                representation DEFERRED or CORRECT."
+         pass/fail depending on (current_SVR = DEFERRED or CORRECT)
+skip_pcc_inact:
+      endif
+   next instat
+next pcc
+
+ct = 0
+for modmd  = UWOR,UQUM
+    set modlbl = string for modmd
+for sevrty = IRG,CBS,IMM
+    set sevlbl = string for sevrty
+for oldsvr = DEFERRED,SIMULATED,CORRECT
+    set oldlbl = string for oldsvr
+    cndlbl = "update mode = [BNIG, " + modlbl + "],
+              picture change severity = " + sevlbl + ",
+              old state of visual representation = " + oldlbl
+for instat = underway, inactive
+   attempt to set SVR to oldsvr
+   <set display update state> BNIG, modmd
+   if (current_SVR not= oldsvr)
+      informative message: skipping test
+      goto skip_oldsvr
+   endif
+
+   if (instat = underway) then
+      ct = ct + 1
+      if (ct mod 2 = 0) then
+         inmode = SAMPLE
+      else
+         inmode = EVENT
+      endif
+
+      vary order of operation:
+      if (ct mod 3 = 0) then
+         attempt to perform sevrty-type operation:
+            invoke PICCHG of type = sevrty
+         set mode of input device #1 on inwk of class = inclas to inmode
+      else
+         set mode of input device #1 on inwk of class = inclas to inmode
+         attempt to perform sevrty-type operation:
+            invoke PICCHG of type = sevrty
+      endif
+
+      if (PICCHG reports failure) then
+         informative message: skipping test
+         goto skip_sev_und
+      endif
+
+      TEST: #SR 3 4 13 30 32
+            "If " + cndlbl + ", and input is underway, then
+             current state of visual representation should be
+             CORRECT."
+      pass/fail depending on (current_SVR = CORRECT)
+skip_sev_und:
+      deactivate global input:
+         set mode of input device #1 on inwk of class = inclas to REQUEST
+   else (input is inactive)
+      attempt to perform sevrty-type operation:
+         invoke PICCHG of type = sevrty
+
+      if (PICCHG reports failure) then
+         informative message: skipping test
+         goto skip_sev_inact
+      endif
+
+      svrlst = calculate list of expected SVRs, based on
+               sevrty, defmod, modmd, and oldsvr
+      set explbl = string for svrlst
+
+      TEST: #SR 3 4 13 14 15 32
+            "If " + cndlbl + ", and input is inactive, then
+             current state of visual representation should be " +
+             explbl + "."
+      pass/fail depending on (svr contained in svrlst)
+
+skip_sev_inact:
+   endif
+next instat
+skip_oldsvr:
+next oldsvr
+next sevrty
+next modmd
+
+done:
+
+END PROGRAM 7
+
+
+PROGRAM 8: Categories of picture change
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+picture change categories are numbered from 1 to 17:
+  workstation changes :  1 to 12
+  structure changes   : 13 to 17
+
+set pcctab to names of picture change categories
+
+<set display update state> WAIT, UQUM
+
+valcat = true = valid category
+<inquire dynamics of workstation attr> to determine
+   pcsev(1 to 12) = picture change severity
+
+ng = an invalid code for picture change
+for iwk = 1 to 12
+   if (pcsev(iwk) invalid or error reported from inquire) then
+      valcat = false
+      pcsev(iwk) = ng
+   endif
+next iwk
+
+TEST: #SR 6
+      "<Inquire dynamics of workstation attributes> should report
+       the modification severity for the 12 kinds of workstation
+       changes as IMM,IRG,CBS."
+pass/fail depending on (valcat)
+
+valcat = true = valid category
+<inquire dynamics of struc> to determine
+   pcsev(13 to 17) = picture change severity
+
+for istr = 13 to 17
+   if (pcsev(istr) invalid or error reported from inquire) then
+      valcat = false
+      pcsev(istr) = ng
+   endif
+next istr
+
+TEST: #SR 7
+      "<Inquire dynamics of structures> should report the
+       modification severity for the 5 kinds of structure changes
+       as IMM,IRG,CBS."
+pass/fail depending on (valcat)
+
+expected svr values:
+expsvr(IRG) = DEFERRED
+expsvr(CBS) = SIMULATED
+expsvr(IMM) = CORRECT
+
+severity label:
+sevlbl(IRG) = "IRG"
+sevlbl(CBS) = "CBS"
+sevlbl(IMM) = "IMM"
+
+svr label:
+svrlbl(DEFERRED)  = "DEFERRED"
+svrlbl(SIMULATED) = "SIMULATED"
+svrlbl(CORRECT)   = "CORRECT"
+
+invoke PICENV to set up standard picture environment
+
+for each pcc = 1 to 17 = picture change category
+   repsev = pcsev(pcc)
+   if (repsev = ng) then goto end_pcc
+
+   svrlst = calculate list of expected SVRs, based on
+            sevrty, defmod, modmd, and oldsvr
+   svrmsg = string for svrlst
+
+   <redraw all structures> to make svr CORRECT
+   invoke PICCHG to generate an example of pcc
+   if (change not performed) goto end_pcc
+   pccmsg = pcctab (pcc)
+   sevmsg = sevlbl (repsev)
+   TEST: #SR 6 7 13 14 15 16 19 20 21 24 26 28
+         "Picture change category " + pccmsg + " reported as
+          having severity = " + sevmsg + " should set state of
+          visual representation to " + svrmsg + "."
+   pass/fail depending on (current_SVR contained in svrlst)
+end_pcc:
+next pcc
+
+END PROGRAM 8

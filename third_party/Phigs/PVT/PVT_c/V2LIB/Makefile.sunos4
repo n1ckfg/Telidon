@@ -1,0 +1,149 @@
+
+###############################################################################
+#                                                                             #
+#				 NOTICE                                            #
+#                                                                             #
+#    Acquisition, use, and distribution of this module and related            #
+#    materials are subject to the restrictions of a license agreement.        #
+#    Consult the Preface in the User's Manual for the full terms of           #
+#    this agreement.                                                          #
+#                                                                             #
+###############################################################################
+
+################################################################################
+#   Set PVTHOME to the location of the pvt directory                           #
+################################################################################
+
+  PVTHOME     = /home/kevin/pvt 
+  PHIGSINCDIR = $(PHIGSHOME)/include/phigs
+  XINCDIR     = /usr/openwin/include
+
+################################################################################
+#                                                                              #
+#  Use one of the following:                                                   #
+#                                                                              #
+#                                                                              #
+# for no proto-typing(non-ansi):                                               #
+# CC  =  cc -I$(XINCDIR) -I../F2C -DKR_headers -DNO_PROTO -I$(PHIGSINCDIR)     #
+#                                                                              #
+# for    proto-typing(ansi):                                                   #
+# CC = gcc -I$(XINCDIR) -I../F2C -I$(PHIGSINCDIR)                              #
+#                                                                              #
+#  The -I parameter includes the directory that follows in the search path for #
+#  include files. The following are required:                                  #
+#                                                                              #
+#     -I$(XINCDIR)       For X11 includes ( may not be needed )                #
+#     -I/F2C             The directory where the f2c includes reside           #
+#     -I$(PHIGSINCDIR)   for PHIGS includes                                    #
+################################################################################
+ 
+ CC  =  cc -I$(XINCDIR) -I../F2C -I$(PHIGSINCDIR) -DNO_PROTO -DKR_headers
+
+#####################################################################################
+# The following arguments are Specific to the SUN compiler, but are explained here  #
+# to allow the similar argument on your machine to be determined.                   #
+#                                                                                   #
+#  -Nn5000 increases static table size       -Nx5000 increases external symbol size #
+#####################################################################################
+
+  F77             = f77  -Nn5000 -Nx5000 
+
+################################################################################
+#   List each of the routines in the V2LIB, these are all the routines from all#
+#   the sublibs.                                                               #
+################################################################################
+
+  OBJS =   \
+        DELCSS.o  TSTCID.o  TCSCID.o  TSTCIR.o  TCSCIR.o   ELSTR.o   ACTST.o \
+        PTHSEQ.o  TSTELS.o  SPHDIS.o   ISSPF.o  ISSGEO.o  TX2DEX.o  FLTRAN.o \
+        ISSFLT.o  SETFIL.o    ZVAL.o  CSSIDS.o  RETOPN.o  ARCPTH.o  SETDIF.o \
+        FILREC.o  PLATTR.o    NDLW.o  SHOWLW.o  RANLST.o  EXPPPL.o   RLZLW.o \
+        DISPLB.o  DRWPLB.o  SHPLBW.o  PMATTR.o    NDMW.o  SHOWMW.o  RANMKT.o \
+        EXPPPM.o   RLZMS.o  DISPMB.o  DRWPMB.o  SHPMBW.o  LOCTX1.o  LOCTX2.o \
+        DRWTXT.o  CHTXRC.o  CHMONO.o  TXCOMP.o  TSCHUP.o  INOUTL.o  GEOTXT.o \
+        LOCAT2.o  LOCANS.o  TSANUP.o  DSANST.o  DRWATX.o  SHOWEW.o   PARPT.o \
+        PARLIN.o  CLDIAG.o  DISINB.o  DRWINT.o   RLZEW.o  DISEDB.o  DRWEDB.o \
+        DRBUED.o  SHEDBW.o  LBEDTY.o  PATAVL.o   ARREQ.o  LOCREC.o  PATREC.o \
+        ALTSIZ.o  HLFBOX.o  SIMARK.o  BASBOT.o  TSTASC.o   FPAVL.o  PRPFNT.o \
+        VARFNT.o  SUBFNT.o  CHKFNT.o   UNREP.o  NGTXAT.o  TXPCUP.o  DISTXB.o \
+        ASFSET.o  ASFINT.o  INTINH.o  COLNAM.o  SQGRMK.o  HUEANG.o  MODSEP.o \
+        UNDCMD.o  COLPCH.o  COLTRN.o  SETHUE.o  TSTHUE.o  COLEQL.o  CURNMS.o \
+        TSTHLF.o  TSTIVF.o  NMSCOL.o  ELGPRM.o  NMSPRM.o   YPOS8.o  ARCPTS.o \
+        DISCOL.o   XFINH.o  LOCPPL.o  LOCTXT.o  LOCATX.o  LOCINT.o  LOCTRI.o \
+        SETPCL.o  SETSVR.o  SURFOK.o   SVROK.o  PICENV.o  PICCHG.o  EXSVRS.o \
+        DOIMOD.o  SETPST.o  CHKPST.o  TRANHS.o  COMTOK.o  CHKMCV.o  MODTRN.o \
+        RANARY.o  CLPGON.o  CLPMK5.o  CLPAIR.o  LOCNPM.o  FACLIP.o   EXEDV.o \
+        TSTCOR.o  TSTPRJ.o  TSTVIP.o  E01001.o  C01002.o  E01003.o  C01003.o \
+        E01004.o  C01004.o  E01005.o  C01005.o  E01006.o  C01006.o  E01007.o \
+        C01007.o  IFPHCL.o  E02052.o  E02053.o  E02054.o  E02056.o  E02057.o \
+        E02058.o  E02059.o  E02060.o  E02061.o  E02063.o  E03100.o  E03101.o \
+        E03103.o  E03104.o  E03105.o  E03106.o  E03107.o  E03108.o  E03110.o \
+        E03111.o  E03112.o  E03113.o  E03114.o  E03115.o  E03116.o  E03117.o \
+        E03118.o  E04150.o  E04151.o  E04152.o  E04153.o  E04154.o  E04156.o \
+        E04157.o     DS3.o  E05200.o  E05201.o  E05205.o  E05206.o  E05207.o \
+        E05208.o  E09401.o  E09402.o  E09404.o  E09405.o  E09407.o  E09408.o \
+        E12000.o  E12001.o  E12004.o  E12005.o  ESETUP.o  ENDERR.o  TSTERR.o \
+        GTERRM.o  ERMSGH.o  SCHERR.o  TSTIGN.o   STREQ.o  RFUNCS.o   ECHKZ.o \
+        TSTWAN.o   CREST.o  IFUNCS.o   ICHKZ.o    ETR3.o     ETR.o    ESC3.o \
+           ESC.o    EROX.o    EROY.o    EROZ.o     ERO.o   ECOM3.o    ECOM.o \
+          ETP3.o     ETP.o  EBLTM3.o   EBLTM.o  ECOTM3.o   ECOTM.o  EEVOM3.o \
+         EEVOM.o   EEVMM.o  MATMUL.o   IDMAT.o  ARRTP3.o   RED43.o   EXP34.o \
+        TRNSEQ.o  SATAN2.o   VECL2.o    VECL.o    VEC1.o  DOTPRD.o  VECANG.o \
+        CROSSP.o   PRPV1.o  PERVEC.o  PTPLDS.o  LNPLPT.o   PT3PL.o   PTSPL.o \
+         PL2PL.o   PL2LN.o  ABEST3.o  PTLNDS.o  LINTPT.o  PT2COF.o  PARCOF.o \
+        PTREGD.o  CEILNG.o    MOD1.o   INVOL.o  INAREA.o  ISSDIS.o   ISSAB.o \
+        ISPTHS.o  INITGL.o  XPOPPH.o  MULTWS.o  SETMSG.o    IFPF.o    PASS.o \
+          FAIL.o      PF.o  CHKINQ.o  WINDUP.o   SET2D.o   SETIS.o   SETEQ.o \
+        SETVAL.o   SETVS.o  INIARI.o  SETRVS.o   IAREQ.o  IAREQL.o   RAREQ.o \
+         APPEQ.o  IARFND.o  CPYIAR.o  SRTIAR.o  SRTRAR.o  PRSINT.o  PRSUIN.o \
+         PRSRL.o   NCMSG.o   UNMSG.o   INMSG.o   ABEND.o  BRDMSG.o   OPMSG.o \
+          OPYN.o   OPINT.o   OPLIN.o  DEBLNK.o  LEADNB.o   ITRIM.o  ERRCTL.o \
+        SIGTST.o  SIGMSG.o  ERFUCD.o  ERFUNM.o   NFUNM.o  STDCSS.o  CSSPTH.o \
+         CSSEQ.o  STRCON.o  SETSTR.o  NEWSTR.o  GTROOT.o  CHKELP.o  AVARNM.o \
+        SETDLG.o   ENDIT.o    WIN6.o   WCNPC.o  LOCPPM.o  DRWREC.o  TXEXAL.o \
+        INTSTY.o  DENHAT.o  NUMLAB.o  VISLAB.o   DYNPF.o     DYN.o   DCHPF.o \
+        DCHPFV.o   DCHFL.o  DCHFLV.o  DCHOIC.o  DLSTPF.o  DILIST.o  DRLVAL.o \
+         DLINE.o  OPFAIL.o  OPCOFL.o  OPCOMT.o    OPCO.o  DSTRNG.o  OPMSGW.o \
+        IACMSG.o  IACANS.o  SETASF.o  PSTCTL.o  FITPAR.o  LINBRK.o  SCAPAR.o \
+        YLOCEL.o  RN1SHF.o  RNPERM.o   RNSET.o  RNBSET.o  RNDINT.o   RNDRL.o \
+        RND01.o   PERHND.o
+########################################################################################
+#   List two different object directories, this will allow a C version and FORTRAN     #
+#   version to exist at the same time. The objects for each library will be gathered   #
+#   from the correct sub-directory                                                     #
+########################################################################################
+
+  OBJECTS  = $(OBJS:%=PVT/%)
+
+  COBJECTS = $(OBJS:%=CPVT/%) 
+
+
+all:		libpvt.a libcpvt.a 
+	        @echo "Done"
+
+libpvt.a:	$(OBJECTS)
+	        @echo "pvt"
+		@rm -f libpvt.a
+		ar lrcvu libpvt.a ./PVT/*.o
+		ranlib libpvt.a
+
+libcpvt.a:	$(COBJECTS)
+	        @echo "cpvt"
+		@rm -f libcpvt.a
+		ar lrcvu libcpvt.a ./CPVT/*.o
+		ranlib libcpvt.a
+
+PVT/%.o:	%.f
+		$(F77) -c $(@F:.o=.f) -o PVT/$(@F)
+		ld -r -x PVT/$(@F)
+		mv a.out PVT/$(@F)
+
+CPVT/%.o:	%.c	
+		$(CC) -c $(@F:.o=.c) -o CPVT/$(@F)  
+		ld -r -x CPVT/$(@F)
+		mv a.out CPVT/$(@F)
+
+clean:
+		rm -f CPVT/*.o
+		rm -f PVT/*.o
+

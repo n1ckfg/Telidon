@@ -1,0 +1,698 @@
+TITLE: Deletion of structure elements
+
+MODULE#: 02.02.04
+
+DESCRIPTION: This module tests the ability of the programmer to
+delete elements within an open and closed structure.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Delete element> deletes the element pointed to by the
+`element pointer.'
+#F 122
+#D 7.3 4.3
+#S 4.4.4/29/3
+#T P01/3 P01/5 P01/7 P05/1
+
+SR2.   If <delete element> is used, and if the element position
+is zero nothing is deleted.
+#F 122
+#D 7.3 4.3
+#S 4.4.4/29/3
+#T P01/1
+
+SR3.   <Delete element range> deletes all structure elements
+between and including the lower element position and the higher
+element position.
+#F 123
+#D 7.3
+#S 4.4.4/29/3
+#T P02/1 P02/2 P02/4 P02/6 P02/8 P02/10 P05/3
+
+SR4.   If <delete element range> is used, and if an element
+position is less than 1, a value of 0 is used; if an element
+position is greater than the number of elements in the open
+structure, a value pointing to the last element in the structure
+is used.
+#F 123
+#D 7.3
+#S 4.4.4/29/3
+#T P02/6 P02/8 P02/10
+
+SR5.   <Delete elements between labels> deletes elements between
+but not including the occurrences of two specified labels.
+#F 124
+#D 7.3 7.3.5
+#S 4.4.4/29/3
+#T P03/1 P03/3 P03/5 P03/7 P05/5
+
+SR6.   For <delete elements between labels>, the labels specified
+by label-identifier 1 and 2 are those found by successive forward
+searches, starting from the position following the element
+pointer.
+#F 124
+#D 7.3.5 4.3
+#S 4.4.4/29/3
+#T P03/1 P03/3 P03/5 P03/7 P05/5
+
+SR7.   Following all three delete functions, the `element
+pointer' is positioned at the element immediately preceding the
+element, or group of elements, which was deleted.  If no element
+is deleted, the `element pointer' is unchanged.
+#F 122 123 124
+#D 7.3 4.3
+#S 4.4.4/29/3
+#T P01/2 P01/4 P01/6 P01/8 P02/3 P02/5 P02/7 P02/9 P02/11 P03/2 P03/4
+   P03/6 P03/8 P05/2 P05/4 P05/6
+
+SR8.   <Empty structure> deletes all elements of a specified open
+or closed structure.
+#F 125
+#D 7.1 7.3
+#S 4.4.4/29/4
+#T P04/1 P04/3 P05/7
+
+SR9.   After using <empty structure> on a specified structure,
+the specified structure will exist.
+#F 125
+#D 7.1
+#S 4.4.4/29/4
+#T P04/1 P04/3 P05/7
+
+SR10.  After using <empty structure> on a specified structure,
+references to the now empty structure remain intact.
+#F 125
+#D 7.1 7.3.4
+#S 4.4.4/29/4
+#T P04/2 P04/4
+
+SR11.  If <empty structure> is used on a specified open
+structure, the `element pointer' is set to 0.
+#F 125
+#D 7.1 7.3 4.3
+#S 4.4.4/29/4
+#T P04/5
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  122: pdel    <delete element>
+  123: pdelra  <delete element range>
+  124: pdellb  <delete elements between labels>
+  125: pemst   <empty structure>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.3  ...  element_pointer
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.3  ...  list_of_structure_elements
+  7.3.4  ...  execute_structure
+  7.3.5  ...  label
+ 
+SEMANTIC CROSS-REFERENCES:
+  02.01.01/SR02
+ 
+
+PROGRAM 1: Delete element
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+strid  = 100
+labl1  = 1
+labl2  = 2
+labl3  = 3
+labl4  = 4
+labl5  = 5
+labl6  = 6
+labl7  = 7
+labl8  = 8
+labl9  = 9
+labl10 = 10
+
+<open structure> with strid
+
+fill structure with elements:
+<label> with labl1
+<label> with labl2
+<label> with labl4
+<label> with labl3
+<label> with labl4
+<label> with labl6
+<label> with labl5
+<label> with labl6
+<label> with labl8
+<label> with labl7
+<label> with labl8
+<label> with labl10
+<label> with labl9
+<label> with labl10
+
+elepos = 0
+TEST: #SR 2
+      "If <delete element> is used, and if the element position
+       is zero nothing should be deleted."
+
+<set element pointer> to elepos
+<delete element>
+pass/fail depending on
+  (current structure content = labels: 1, 2, 4, 3, 4, 6, 5, 6, 8, 7, 8,
+                                       10, 9, 10)
+
+TEST: #SR 7
+      "If <delete element> is used, and nothing is deleted the element
+       pointer should be unchanged."
+pass/fail depending on (current element position  = 0)
+
+elepos = 1
+TEST: #SR 1
+      "<Delete element> should delete a leading structure element
+       pointed to by the element pointer."
+
+<set element pointer> to elepos
+<delete element>
+pass/fail depending on
+  (current structure content = labels: 2, 4, 3, 4, 6, 5, 6, 8, 7, 8, 10, 9,
+                                       10)
+
+TEST: #SR 7
+      "Following <delete element>, the element pointer should be
+       positioned at the element immediately preceding the
+       deleted leading structure element."
+pass/fail depending on (current element position = 0)
+
+elepos = 3
+TEST: #SR 1
+      "<Delete element> should delete a middle structure element
+       pointed to by the element pointer."
+
+<set element pointer> to elepos
+<delete element>
+pass/fail depending on
+  (current structure content = labels: 2, 4, 4, 6, 5, 6, 8, 7, 8, 10, 9, 10)
+
+TEST: #SR 7
+      "Following <delete element>, the element pointer should be
+       positioned at the element immediately preceding the
+       deleted middle structure element."
+pass/fail depending on (current element position = 2)
+
+elepos = 12
+TEST: #SR 1
+      "<Delete element> should delete a last structure element
+       pointed to by the element pointer."
+
+<set element pointer> to elepos
+<delete element>
+pass/fail depending on
+  (current structure content = labels: 2, 4, 4, 6, 5, 6, 8, 7, 8, 10, 9)
+
+TEST: #SR 7
+      "Following <delete element>, the element pointer should be
+       positioned at the element immediately preceding the
+       deleted last structure element."
+pass/fail depending on (current element position = 11)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Delete element range
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+strid  = 100
+labl1  = 1
+labl2  = 2
+labl3  = 3
+labl4  = 4
+labl5  = 5
+labl6  = 6
+labl7  = 7
+labl8  = 8
+labl9  = 9
+labl10 = 10
+
+<open structure> with strid
+
+fill structure with elements:
+<label> with labl1
+<label> with labl2
+<label> with labl4
+<label> with labl3
+<label> with labl4
+<label> with labl6
+<label> with labl5
+<label> with labl6
+<label> with labl8
+<label> with labl7
+<label> with labl8
+<label> with labl10
+<label> with labl9
+<label> with labl10
+<label> with labl2
+<label> with labl1
+<label> with labl2
+<label> with labl4
+<label> with labl3
+
+elpos1 = 9
+elpos2 = 11
+TEST: #SR 3
+      "<Delete element range> should delete all structure
+       elements between and including the lower element position
+       and the higher element position when the lower position is
+       the first parameter."
+<delete element range> with elpos1, elpos2
+pass/fail depending on
+  (current structure content = labels: 1, 2, 4, 3, 4, 6, 5, 6, 10, 9, 10, 2,
+                                       1, 2, 4, 3)
+
+elpos1 = 16
+elpos2 = 14
+TEST: #SR 3
+      "<Delete element range> should delete all structure
+       elements between and including the lower element position
+       and the higher element position when the lower position is
+       the second parameter."
+
+<delete element range> with elpos1, elpos2
+pass/fail depending on
+  (current structure content = labels: 1, 2, 4, 3, 4, 6, 5, 6, 10, 9, 10, 2,
+                                       1)
+
+TEST: #SR 7
+      "Following <delete element range>, the element pointer
+       should be positioned at the element immediately preceding
+       the group of elements deleted at the end of the structure."
+pass/fail depending on (current element position = 13)
+
+elpos1 = 1
+elpos2 = 3
+TEST: #SR 3
+      "<Delete element range> should delete all structure
+       elements between and including the lower element position
+       and the higher element position when the lower element
+       position is defined as the beginning of the structure."
+
+<delete element range> with elpos1, elpos2
+pass/fail depending on
+  (current structure content = labels: 3, 4, 6, 5, 6, 10, 9, 10, 2, 1)
+
+TEST: #SR 7
+      "Following <delete element range>, the element pointer
+       should be positioned at the element immediately preceding
+       the group of elements deleted at the beginning of the
+       structure."
+pass/fail depending on (current element position = 0)
+
+elpos1 = -10
+elpos2 = 3
+TEST: #SR 3 4
+      "If <delete element range> is used, and if an element
+       position is less than 1, a value of 0 should be used."
+
+<delete element range> with elpos1, elpos2
+pass/fail depending on
+   (current structure contents = labels: 5, 6, 10, 9, 10, 2, 1)
+
+TEST: #SR 7
+      "Following <delete element range>, the element pointer
+       should be positioned at the element immediately preceding
+       the group of elements deleted when the element position is
+       less than 1."
+pass/fail depending on (current element position = 0)
+
+elpos1 = 5
+elpos2 = 10
+TEST: #SR 3 4
+      "If <delete element range> is used, and if an element
+       position is greater than the number of elements in the
+       open structure, a value pointing to the last element in
+       the structure should be used."
+<delete element range> with elpos1, elpos2
+pass/fail depending on
+  (current structure contents = labels: 5, 6, 10, 9)
+
+TEST: #SR 7
+      "Following <delete element range>, the element pointer
+       should be positioned at the element immediately preceding
+       the group of elements deleted when the element position is
+       greater than the number of elements in the open structure."
+pass/fail depending on (current element position = 4)
+
+elpos1 = -10
+elpos2 = 15
+TEST: #SR 3 4
+      "If <delete element range> is used, and if an element
+       position is less than 1, a value of 0 should be used; if
+       an element position is greater than the number of elements
+       in the open structure, a value pointing to the last
+       element in the structure should be used."
+<delete element range> with elpos1, elpos2
+pass/fail depending on (current structure content = empty)
+
+TEST: #SR 7
+      "Following <delete element range>, the element pointer
+       should be positioned at the element immediately preceding
+       the group of elements deleted when the element positions
+       are less than 1 and greater than the number of elements in
+       the open structure."
+pass/fail depending on (current element position = 0)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Delete elements between labels
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+strid  = 100
+labl1  = 1
+labl2  = 2
+labl3  = 3
+labl4  = 4
+labl5  = 5
+labl6  = 6
+labl7  = 7
+labl8  = 8
+labl9  = 9
+labl10 = 10
+
+<open structure> with strid
+
+fill structure with elements:
+<label> with labl1
+<label> with labl2
+<label> with labl4
+<label> with labl3
+<label> with labl4
+<label> with labl6
+<label> with labl5
+<label> with labl6
+<label> with labl8
+<label> with labl7
+<label> with labl7
+<label> with labl8
+<label> with labl10
+<label> with labl9
+<label> with labl10
+
+elepos = 6
+TEST: #SR 5 6
+      "<Delete elements between labels> should delete elements
+       between but not including the occurrences of two specified
+       labels when the element pointer is not pointing to a
+       specified label."
+<set element pointer> to elepos
+<delete elements between labels> with labl5, labl8
+pass/fail depending on
+  (current structure content = labels: 1, 2, 4, 3, 4, 6, 5, 8, 7, 7, 8,
+                                       10, 9, 10)
+TEST: #SR 7
+      "Following <delete elements between labels>, the element
+       pointer should be positioned at the element immediately
+       preceding the deleted group elements (when the element
+       pointer was not pointing to a specified label)."
+pass/fail depending on (current element position = 7)
+
+elepos = 3
+TEST: #SR 5 6
+      "<Delete elements between labels> should delete elements
+       between but not including the occurrences of two specified
+       labels when the element pointer is currently pointing to a
+       specified label."
+<set element pointer> to elepos
+<delete elements between labels> with labl4, labl5
+pass/fail depending on
+  (current structure content = labels: 1, 2, 4, 3, 4, 5, 8, 7, 7, 8,
+                                       10, 9, 10)
+
+TEST: #SR 7
+      "Following <delete elements between labels>, the element
+       pointer should be positioned at the element immediately
+       preceding the deleted group elements (when the element
+       pointer was pointing to a specified label)."
+pass/fail depending on (current element position = 5)
+
+elepos = 1
+TEST: #SR 5 6
+      "<Delete elements between labels> should delete elements between
+       but not including the successive occurrences of two labels with
+       the same value."
+<set element pointer> to elepos
+<delete elements between labels> with labl8, labl8
+pass/fail depending on
+  (current structure content = labels: 1, 2, 4, 3, 4, 5, 8, 8, 10, 9, 10)
+
+TEST: #SR 7
+      "Following <delete elements between labels>, the element
+       pointer should be positioned at the element immediately
+       preceding the deleted group elements (when both labels
+       had the same value)."
+pass/fail depending on (current element position = 7)
+
+elepos = 0
+TEST: #SR 5 6
+      "<Delete elements between labels> should delete no elements
+       if the two labels are adjacent."
+<set element pointer> to elepos
+<delete elements between labels> with labl4, labl3
+pass/fail depending on
+  (current structure content = labels: 1, 2, 4, 3, 4, 5, 8, 8, 10, 9, 10)
+
+TEST: #SR 7
+      "Following <delete elements between labels>, the element
+       pointer should be positioned at the element immediately
+       preceding the deleted group elements (when the labels
+       were adjacent)."
+pass/fail depending on (current element position = 3)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Empty structure
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire structure status> throughout to determine
+    ststin = structure status indicator
+
+strid  = 90
+stridc = 100
+strido = 110
+labl1  = 1
+labl2  = 2
+labl3  = 3
+labl4  = 4
+labl5  = 5
+labl6  = 6
+labl7  = 7
+labl8  = 8
+labl9  = 9
+labl10 = 10
+
+create structure network:
+
+          90
+         /  \
+        /    \
+      100   110
+
+<open structure> with stridc
+fill structure with elements:
+<label> with labl1
+<label> with labl2
+<label> with labl4
+<label> with labl3
+<label> with labl4
+<label> with labl6
+<label> with labl5
+<label> with labl6
+<label> with labl8
+<label> with labl7
+<label> with labl8
+<label> with labl10
+<close structure>
+
+<open structure> with strido
+fill structure with elements:
+<label> with labl1
+<label> with labl2
+<label> with labl4
+<label> with labl3
+<label> with labl4
+<label> with labl6
+<label> with labl5
+<label> with labl6
+<label> with labl8
+<label> with labl7
+<label> with labl8
+<label> with labl10
+<close structure>
+
+<open structure> with strid
+execute structure strido, stridc into strid:
+<execute structure> with stridc
+<execute structure> with strido
+<close structure>
+
+TEST: #SR 8 9
+      "<Empty structure> should delete all the elements of a
+       specified closed structure, but the structure itself
+       should still exist."
+<empty structure> with stridc
+<inquire structure status> with stridc to set ststin
+pass/fail depending on (ststin = EMPTY)
+
+TEST: #SR 10
+      "After using <empty structure> on a specified closed
+       structure, references to the now empty closed structure
+       should remain intact."
+pass/fail depending on
+  (current structure content of strid = execute structure: 100,
+                                        execute structure: 110)
+
+TEST: #SR 8 9
+      "<Empty structure> should delete all the elements of a
+       specified open structure, but the structure itself should
+       still exist."
+<open structure> with strido
+<empty structure> with strido
+<inquire structure status> with strido to set ststin
+pass/fail depending on (ststin = EMPTY)
+
+TEST: #SR 10
+      "After using <empty structure> on a specified open
+       structure, references to the now empty open structure
+       should remain intact."
+pass/fail depending on
+  (current structure content of strid = execute structure: 100,
+                                        execute structure: 110)
+
+TEST: #SR 11
+      "If <empty structure> is used on a specified open
+       structure, the element pointer should be set to 0."
+pass/fail depending on (current element position = 0)
+
+END PROGRAM 4
+
+PROGRAM 5: Deleting structure elements in REPLACE edit mode
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+strid  = 100
+labl1  = 1
+labl2  = 2
+labl3  = 3
+labl4  = 4
+labl5  = 5
+labl6  = 6
+labl7  = 7
+labl8  = 8
+labl9  = 9
+labl10 = 10
+
+<open structure> for strid
+
+fill structure with elements:
+<label> with labl1
+<label> with labl2
+<label> with labl4
+<label> with labl3
+<label> with labl4
+<label> with labl6
+<label> with labl5
+<label> with labl6
+<label> with labl8
+<label> with labl7
+<label> with labl8
+<label> with labl10
+<label> with labl9
+<label> with labl10
+<label> with labl2
+<label> with labl1
+<label> with labl2
+<label> with labl4
+
+<set edit mode> to REPLACE
+
+elepos = 9
+TEST: #SR 1
+      "When the edit mode is REPLACE, <delete element> should
+       delete the element pointed to by the element pointer."
+<set element pointer> to elepos
+<delete element>
+pass/fail depending on
+  (current structure content = labels: 1, 2, 4, 3, 4, 6, 5, 6, 7,
+                                       8, 10, 9, 10, 2, 1, 2, 4)
+
+TEST: #SR 7
+      "When the edit mode is REPLACE, following <delete element>,
+       the element pointer should be positioned at the element
+       immediately preceding the deleted structure element."
+pass/fail depending on (current element pointer position = 8)
+
+elpos1 = 2
+elpos2 = 6
+TEST: #SR 3
+      "When the edit mode is REPLACE, <delete element range>
+       should delete all structure elements between and including
+       the lower element position and the higher element position."
+<delete element range> elpos1, elpos2
+pass/fail depending on
+  (current structure content = labels: 1, 5, 6, 7, 8, 10, 9, 10,
+                                       2, 1, 2, 4)
+
+TEST: #SR 7
+      "When the edit mode is REPLACE, following <delete element
+       range>, the element pointer should be positioned at the
+       element immediately preceding the deleted group elements."
+pass/fail depending on (current element pointer position = 1)
+
+elepos = 0
+TEST: #SR 5 6
+      "When the edit mode is REPLACE, <delete elements between
+       labels> should delete elements between but not including
+       the occurences of two specified labels."
+<set element pointer> to elepos
+<delete elements between labels> with labl10, labl10
+pass/fail depending on
+  (current structure content = labels: 1, 5, 6, 7, 8, 10, 10, 2,
+                                       1, 2, 4)
+
+TEST: #SR 7
+      "When the edit mode is REPLACE, following <delete elements
+       between labels>, the element pointer should be positioned
+       at the element immediately preceding the deleted group elements."
+pass/fail depending on (current element pointer position = 6)
+
+TEST: #SR 8 9
+      "When the edit mode is REPLACE, <empty structure> should
+       delete all the elements of a specified structure, but the
+       structure itself should still exist."
+<empty structure> with strid
+<inquire structure status> with strid to set ststin
+pass/fail depending on
+  (ststin = EMPTY)
+
+END PROGRAM 5

@@ -1,0 +1,88 @@
+TITLE: Opening and closing PHIGS
+
+MODULE#: 01
+
+DESCRIPTION: This module tests the effect of opening and closing
+PHIGS on the system state.  Other effects of opening PHIGS,
+(initialization of PHIGS Description Table and PHIGS State List)
+are tested in the modules which cover the affected data items.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   <Open PHIGS> sets the system state to open.
+#F 1
+#D 1.1
+#S 4.10/107/2
+#T P01/2 P01/4
+
+SR2.   <Close PHIGS> sets the system state to closed.
+#F 2
+#D 1.1
+#S 4.10/107/2
+#T P01/3
+
+SR3.   <Inquire system state value> returns the system state of PHIGS.
+#F 200
+#D 1.1
+#S n
+#T P01/1 P01/2 P01/3 P01/4
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    1: popph   <open phigs>
+    2: pclph   <close phigs>
+  200: pqsys   <inquire system state value>
+ 
+  Data Structures ---
+  1  ...  operating_state
+  1.1  ...  system_state
+ 
+SEMANTIC CROSS-REFERENCES:
+  04.01.03/SR07
+ 
+
+PROGRAM 1: Testing the system state value
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Use <inquire system state value> to determine:
+    systra = system state value
+
+TEST: #SR 3
+      "<Inquire system state value> should return closed as the system state
+       value before PHIGS is opened."
+
+<inquire system state value> systra
+pass/fail depending on (systra = closed)
+
+TEST: #SR 1 3
+      "After opening PHIGS <inquire system state value> should return the
+       system state value as open."
+
+<open PHIGS>
+<inquire system state value> systra
+pass/fail depending on (systra = open)
+
+TEST: #SR 2 3
+      "After closing PHIGS <inquire system state value> should return the
+       system state value as closed."
+
+<close PHIGS>
+<inquire system state value> systra
+pass/fail depending on (systra = closed)
+
+TEST: #SR 1 3
+      "After reopening PHIGS <inquire system state value> should return the
+       system state value as open."
+
+<open PHIGS>
+<inquire system state value> systra
+pass/fail depending on (systra = open)
+<close PHIGS>
+
+END PROGRAM 1

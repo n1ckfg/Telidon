@@ -1,0 +1,75 @@
+
+.SUFFIXES: .c .o
+
+################################################################################
+#                                                                              #
+#  Use one of the following: See the README file for other options (sys dep)   #
+#                                                                              #
+# for no proto-typing:                                                         #
+# CC  =  cc -DKR_headers                                                       #
+#                                                                              #
+# for    proto-typing:                                                         #
+# CC  =  cc                                                                    #
+#                                                                              #
+################################################################################
+
+CC  =  cc 
+
+# don't need this as long as compiler is ANSI-standard - new Solaris
+# compiler is OK - does return #chars transmitted by sprintf.
+# CFLAGS = -DKR_headers -DUSE_STRLEN
+
+all: libf2c.a 
+
+# If your system lacks onexit() and you are not using an
+# ANSI C compiler, then you should uncomment the following
+# two lines (for compiling main.o):
+#main.o: main.c
+##$(CC) -c -DKR_headers -DNO_ONEXIT -DSkip_f2c_Undefs main.c
+# On at least some Sun systems, it is more appropriate to
+# uncomment the following two lines:
+
+# Leave these commented - Sun lacks onexit, but compiler is ANSI
+# main.o: main.c
+# 	$(CC) -c -DKR_headers -Donexit=on_exit -DSkip_f2c_Undefs main.c 
+
+# compile, then strip unnecessary symbols
+.c.o:
+	$(CC) -c -DSkip_f2c_Undefs $(CFLAGS) $*.c
+# ad hoc, remove -x
+	ld -r -o $*.xxx $*.o
+	mv $*.xxx $*.o
+
+I77 =	Version.o main.o s_rnge.o abort_.o getarg_.o iargc_.o getenv_.o\
+	signal_.o s_stop.o s_paus.o system_.o cabs.o derf_.o derfc_.o  \
+	erf_.o erfc_.o sig_die.o pow_ci.o pow_dd.o pow_di.o pow_hh.o   \
+	pow_ii.o pow_qq.o pow_ri.o pow_zi.o pow_zz.o c_abs.o c_cos.o c_div.o \
+	c_exp.o c_log.o c_sin.o c_sqrt.o z_abs.o z_cos.o z_div.o       \
+	z_exp.o z_log.o z_sin.o z_sqrt.o r_abs.o r_acos.o r_asin.o     \
+	r_atan.o r_atn2.o r_cnjg.o r_cos.o r_cosh.o r_dim.o r_exp.o    \
+	r_imag.o r_int.o r_lg10.o r_log.o r_mod.o r_nint.o r_sign.o    \
+	r_sin.o r_sinh.o r_sqrt.o r_tan.o r_tanh.o d_abs.o d_acos.o    \
+	d_asin.o d_atan.o d_atn2.o d_cnjg.o d_cos.o d_cosh.o d_dim.o   \
+	d_exp.o d_imag.o d_int.o d_lg10.o d_log.o d_mod.o d_nint.o     \
+	d_prod.o d_sign.o d_sin.o d_sinh.o d_sqrt.o d_tan.o d_tanh.o   \
+	i_abs.o i_dim.o i_dnnt.o i_indx.o i_len.o i_mod.o i_nint.o     \
+	i_sign.o h_abs.o h_dim.o h_dnnt.o h_indx.o h_len.o h_mod.o     \
+	h_nint.o h_sign.o l_ge.o l_gt.o l_le.o l_lt.o hl_ge.o hl_gt.o  \
+	hl_le.o hl_lt.o ef1asc_.o ef1cmc_.o s_cat.o s_cmp.o s_copy.o
+
+F77 =	backspace.o close.o dfe.o dolio.o due.o endfile.o err.o \
+	fmt.o fmtlib.o iio.o ilnw.o inquire.o lread.o lwrite.o open.o \
+	rdfmt.o rewind.o rsfe.o rsli.o rsne.o sfe.o sue.o typesize.o uio.o \
+	util.o wref.o wrtfmt.o wsfe.o wsle.o wsne.o xwsne.o
+
+libf2c.a: $(I77) $(F77) 
+	ar rcvu libf2c.a  $(I77) $(F77)
+
+# from pre-Solaris days:
+#	ranlib libf2c.a
+
+$(F77): fio.h fmt.h rawio.h f2c.h fp.h lio.h local.h rawio.h
+
+clean:
+	rm -f $(I77) libf2c.a $(F77)
+	rm -f *.o

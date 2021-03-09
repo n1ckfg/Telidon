@@ -1,0 +1,2105 @@
+TITLE:  Incremental spatial search
+
+MODULE#:  02.03.03
+
+DESCRIPTION: This module tests the capabilities of the
+incremental spatial search feature.  This feature should allow
+the program to look for graphical primitives within a specified
+section of a structure network, based on their location in world
+co-ordinates.  The term "ISS" is used throughout to apply to both
+the two-dimensional and three-dimensional incremental spatial
+search.
+
+SEMANTIC REQUIREMENTS:
+
+*** *** *** ***   2D vs. 3D   *** *** *** ***
+
+SR1.  <Incremental spatial search> behaves exactly like
+<incremental spatial search 3> with the z-co-ordinate of the
+search reference point = 0.
+#F 311 312
+#D
+#S n
+#T P01/1 P01/2 P01/4 P01/7 P01/9 P01/11 P01/12 P01/14 P01/16 P02/1
+   P02/3 P02/5 P02/6 P02/8 P02/10 P02/12 P02/15 P05/1 P05/2 P05/3
+   P05/4 P05/5 P05/6
+
+*** *** *** ***   Conceptual traversal   *** *** *** ***
+
+SR2.  ISS performs a conceptual traversal (including the setting
+of the PHIGS traversal state list) of the structure network whose
+root is the first structure in the starting path.  This
+conceptual traversal consists of a setup process and a search
+process.
+#F 113 311 312
+#D 3 7
+#S 4.4.6/30/9
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P02/1 P02/2 P02/3 P02/4
+   P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11 P02/12 P02/13 P02/14
+   P02/15 P02/16 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+   P03/10 P03/11 P03/12 P03/13 P04/1 P04/2 P04/3 P04/4 P04/5 P04/6
+   P05/1 P05/2 P05/3 P05/4 P05/5 P05/6 P06/1 P06/2 P06/3 P06/4 P06/5
+   P06/6
+
+SR3.  The setup process is the part of the conceptual traversal
+up to and including the position specified by the starting path;
+the PHIGS traversal state list is maintained, but no graphical
+primitives are examined.
+#F 311 312
+#D 3 7
+#S 4.4.6/30/9
+#T P05/1 P05/2 P05/3 P05/4 P05/5 P05/6 P06/1 P06/2 P06/3 P06/4 P06/5
+   P06/6 P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10
+   P07/11 P07/12 P07/15 P07/16 P07/17
+
+SR4.  The search process is the part of the conceptual traversal
+beginning immediately after the position specified by the
+starting path is reached and ending either immediately after the
+last element of the structure indicated by the search ceiling is
+reached or when a qualifying graphical primitive is found,
+whichever occurs first.
+#F 311 312
+#D 3 7
+#S 4.4.6/30/9 4.4.6/31/4 4.4.6/31/5
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P02/1 P02/2 P02/3 P02/4
+   P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11 P02/12 P02/13 P02/14
+   P02/15 P02/16 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+   P03/10 P03/11 P03/12 P03/13 P04/1 P04/2 P04/3 P04/4 P04/5 P04/6
+   P05/1 P05/2 P05/3 P05/4 P05/5 P05/6 P06/1 P06/2 P06/3 P06/4 P06/5
+   P06/6 P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10
+   P07/11 P07/12 P07/15 P07/16 P07/17
+
+SR5.  If a qualifying graphical primitive is found, ISS returns
+the path (from the root of the network) of the structure element
+which generated it, otherwise ISS returns a null path.
+#F 311 312
+#D 3 7
+#S 4.4.6/31/6
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P02/1 P02/2 P02/3 P02/4
+   P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11 P02/12 P02/13 P02/14
+   P02/15 P02/16 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+   P03/10 P03/11 P03/12 P03/13 P04/1 P04/2 P04/3 P04/4 P04/5 P04/6
+   P05/1 P05/2 P05/3 P05/4 P05/5 P05/6 P06/1 P06/2 P06/3 P06/4 P06/5
+   P06/6 P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10
+   P07/11 P07/12 P07/15 P07/16 P07/17
+
+SR6.  A graphical primitive qualifies if and only if its locus
+intersects the search reference volume and its nameset is
+compatible with the normal and inverted filter list.
+#F 9-24 60 61 311 312
+#D 3 3.11 7 7.3.2.7.1 7.3.2.7.2
+#S 4.4.6/30/9 4.4.6/31/1
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P02/1 P02/2 P02/3 P02/4
+   P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11 P02/12 P02/13 P02/14
+   P02/15 P02/16 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+   P03/10 P03/11 P03/12 P03/13 P04/1 P04/2 P04/3 P04/4 P04/5 P04/6
+   P05/1 P05/2 P05/3 P05/4 P05/5 P05/6 P06/1 P06/2 P06/3 P06/4 P06/5
+   P06/6 P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10
+   P07/11 P07/12 P07/15 P07/16 P07/17
+
+SR7.  If the element position of the last entry in the starting
+path is 0, the specified position is that immediately preceding
+the first element (if any) of the structure named in that entry.
+#F 311 312
+#D 7.1 7.3
+#S 4.4.6/30/9
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P02/1 P02/2 P02/3 P02/4
+   P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11 P02/12 P02/13 P02/14
+   P02/15 P02/16 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+   P03/10 P03/11 P03/12 P03/13 P04/3 P05/1 P05/2 P05/3 P05/4 P05/5
+
+SR8.  The structure indicated by a search ceiling = n is the
+structure specified in the nth element of the starting path.
+#F 311 312
+#D 7.1 7.3.4
+#S 4.4.6/31/5
+#T P04/3 P04/5 P04/6 P06/1
+
+
+*** *** *** ***   Search reference volume   *** *** *** ***
+
+SR9.  If the search distance is greater than zero, the search
+reference volume (in world co-ordinates) is the sphere whose
+center is the search reference point and whose radius equals the
+search distance; otherwise it is simply the search reference
+point.
+#F 311 312
+#D
+#S 4.4.6/31/1
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P02/1 P02/2 P02/3 P02/4
+   P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11 P02/12 P02/13 P02/14
+   P02/15 P02/16 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+   P03/10 P03/11 P03/12 P03/13 P04/1 P04/2 P04/3 P04/4 P04/5 P04/6
+
+*** *** *** ***   Locus of graphical primitives   *** *** *** ***
+
+SR10.  The locus of a graphical primitive (in world co-ordinates)
+is obtained from the locus of the generating structure element
+(in modelling co-ordinates) by first applying the current
+composite modelling transformation, and then, if and only if the
+modelling clip flag parameter is CLIP, applying the current
+modelling clipping volume.
+#F 9-24 75-80 82 311 312
+#D 3.12.1 3.12.2 3.12.3
+#D 7.3.1 7.3.3.1 7.3.3.2 7.3.3.3 7.3.3.4 7.3.3.5 7.3.3.6 7.3.3.8
+#S 4.7.3/80/1
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6 P01/7 P01/8 P01/9 P01/10 P01/11
+   P01/12 P01/13 P01/14 P01/15 P01/16 P01/17 P02/1 P02/2 P02/3 P02/4
+   P02/5 P02/6 P02/7 P02/8 P02/9 P02/10 P02/11 P02/12 P02/13 P02/14
+   P02/15 P02/16 P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+   P03/10 P03/11 P03/12 P03/13 P06/1 P06/2 P06/3 P06/4 P06/5 P06/6
+   P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10 P07/11
+   P07/12 P07/15 P07/16 P07/17
+#X 06.01.02
+#C The current modelling clipping indicator in the PHIGS
+traversal state list is ignored.
+
+SR11.  The locus of a polymarker structure element is the
+specified set of points.
+#F 11 12 311 312
+#D 7.3.1.3 7.3.1.4
+#S 4.5.1/34/1
+#T P01/1 P01/2 P01/3 P02/1 P02/2
+
+SR12.  The locus of a polyline structure element is set of line
+segments connecting the specified sequence of points.
+#F 9 10 311 312
+#D 7.3.1.1 7.3.1.2
+#S 4.5.1/34/1
+#T P01/4 P01/5 P01/6 P02/3 P02/4 P03/1 P03/2
+
+SR13.  The locus of a fill area structure element is the border
+defined by the specified sequence of points and the portion of
+the fill area plane interior to the border.
+#F 17 18 311 312
+#D 7.3.1.9 7.3.1.10
+#S 4.5.1/34/1 4.5.1/35/4 4.5.1/35/6 4.5.1/35/7
+#T P01/7 P01/8 P02/5 P02/6 P02/7 P03/9 P03/10 P03/11 P03/12 P06/5
+   P06/6
+
+SR14.  The locus of a fill area set structure element is the set of
+borders defined by the specified set of point sequences and the
+portion of the fill area plane interior to those borders.
+#F 19 20 311 312
+#D 7.3.1.11 7.3.1.12
+#S 4.5.1/34/1 4.5.1/35/4 4.5.1/35/6 4.5.1/35/7
+#T P01/9 P01/10 P01/11 P02/8 P02/9 P03/13
+#C SRs in module 04.01.06 define the interior of a fill area set as
+follows: the interior of a fill area set is determined by the number
+of intersections between a straight line drawn from a given point to
+infinity in the plane of the primitive and the subarea boundaries.  If
+the number of intersections is odd, the point is in the interior,
+otherwise it is outside.  Note that this is not equivalent to the
+union of the subareas.
+
+SR15.  The locus of a text structure element is the text extent
+rectangle generated by the current geometric text attributes,
+together with text font = 1, text precision = STROKE, character
+expansion factor = 1, and character spacing = 0.
+#F 13 14 311 312
+#D 3.3.12 3.3.13 3.3.14 3.3.15 3.3.16 3.3.17 3.3.18
+#D 7.3.1.5 7.3.1.6 7.3.2.4.6 7.3.2.4.7 7.3.2.4.8 7.3.2.4.9
+#S 4.4.6/31/2 4.5.1/34/1 4.5.1/35/1
+#T P01/12 P01/13 P02/10 P02/11 P03/3 P03/4 P03/5 P03/6
+#X 04.02.03.03
+#C The default non-geometric attribute values are the same as for
+<inquire text extent>.  Note that text precision STROKE is used,
+and thus the current text precision in the PHIGS traversal state
+list is ignored.
+
+SR16.  The locus of an annotation text relative structure element
+is the annotation reference point.
+#F 15 16 311 312
+#D 7.3.1.7 7.3.1.8
+#S 4.4.6/31/3 4.5.1/34/1
+#T P01/14 P01/15 P02/12 P02/13 P02/14
+
+SR17.  The locus of a cell array structure element is the cell
+array parallelogram defined by the specified corner points.
+#F 21 22 311 312
+#D 7.3.1.13 7.3.1.14
+#S 4.5.1/34/1 4.5.1/36/1 4.5.1/37/1
+#T P01/16 P01/17 P02/15 P02/16 P03/7 P03/8
+#C For a 2D cell array, the parallelogram is a rectangle in the
+z=0 plane of modelling co-ordinate space.
+
+
+*** *** *** ***   Namesets and filters   *** *** *** ***
+
+SR18.  The nameset of a graphical primitive is compatible with
+the normal filter list if it is accepted by every filter in the
+list.
+#F 60 61 311 312
+#D 3.11 7.3.2.7.1 7.3.2.7.2
+#S 4.4.6/31/11
+#T P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10 P07/11
+   P07/12 P07/15 P07/16 P07/17
+#C This condition is vacuously true if the list is empty.
+
+SR19.  The nameset of a graphical primitive is compatible with
+the inverted filter list if it is rejected by every filter in the
+list.
+#F 60 61 311 312
+#D 3.11 7.3.2.7.1 7.3.2.7.2
+#S 4.4.6/31/11
+#T P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10 P07/11
+   P07/12 P07/15 P07/16 P07/17
+#C This condition is vacuously true if the list is empty.
+
+SR20.  A nameset is accepted by a filter if it has at least one
+name in common with the filter's inclusion set and no names in
+common with the filter's exclusion set; otherwise it is rejected.
+#F 60 61 311 312
+#D 3.11 7.3.2.7.1 7.3.2.7.2
+#S 4.4.6/31/9
+#T P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8 P07/9 P07/10 P07/11
+   P07/12 P07/15 P07/16 P07/17
+#X 04.03.04.01
+
+SR21.  The maximum lengths of the normal and inverted filter
+lists returned by <inquire phigs facilities> must be at least 1.
+#F 205
+#D 2.8 2.9
+#S 4.14/114/2 6.3/309/1
+#T P07/13 P07/14
+
+SR22.  The lengths of the normal and inverted filter lists
+specified for ISS may be any value up to the maxima returned by
+<inquire phigs facilities>.
+#F 205 311 312
+#D 2.8 2.9
+#S 4.14/114/2 6.3/309/1
+#T P07/14
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+    9: ppl3    <polyline 3>
+   10: ppl     <polyline>
+   11: ppm3    <polymarker 3>
+   12: ppm     <polymarker>
+   13: ptx3    <text 3>
+   14: ptx     <text>
+   15: patr3   <annotation text relative 3>
+   16: patr    <annotation text relative>
+   17: pfa3    <fill area 3>
+   18: pfa     <fill area>
+   19: pfas3   <fill area set 3>
+   20: pfas    <fill area set>
+   21: pca3    <cell array 3>
+   22: pca     <cell array>
+   23: pgdp3   <generalized drawing primitive 3>
+   24: pgdp    <generalized drawing primitive>
+   60: pads    <add names to set>
+   61: pres    <remove names from set>
+   75: pslmt3  <set local transformation 3>
+   76: pslmt   <set local transformation>
+   77: psgmt3  <set global transformation 3>
+   78: psgmt   <set global transformation>
+   79: psmcv3  <set modelling clipping volume 3>
+   80: psmcv   <set modelling clipping volume>
+   82: prmcv   <restore modelling clipping volume>
+  113: pexst   <execute structure>
+  205: pqphf   <inquire phigs facilities>
+  311: piss3   <incremental spatial search 3>
+  312: piss    <incremental spatial search>
+ 
+  Data Structures ---
+  2  ...  phigs_description_table
+  2.8  ...  maximum_length_of_normal_filter_list_for_iss
+  2.9  ...  maximum_length_of_inverted_filter_list_for_iss
+  3  ...  phigs_traversal_state_list
+  3.3  ...  current_text_attributes
+  3.3.12 ...  current_character_height
+  3.3.13 ...  current_character_up_vector
+  3.3.14 ...  current_character_width
+  3.3.15 ...  current_character_base_vector
+  3.3.16 ...  current_text_path
+  3.3.17 ...  current_text_alignment_horizontal
+  3.3.18 ...  current_text_alignment_vertical
+  3.11 ...  current_name_set
+  3.12 ...  current_modelling_attributes
+  3.12.1  ...  current_global_modelling_transformation
+  3.12.2  ...  current_local_modelling_transformation
+  3.12.3  ...  current_modelling_clipping_volume
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.3  ...  list_of_structure_elements
+  7.3.1  ...  graphical_primitives
+  7.3.1.1  ...  polyline_3
+  7.3.1.2  ...  polyline
+  7.3.1.3  ...  polymarker_3
+  7.3.1.4  ...  polymarker
+  7.3.1.5  ...  text_3
+  7.3.1.6  ...  text
+  7.3.1.7  ...  annotation_text_relative_3
+  7.3.1.8  ...  annotation_text_relative
+  7.3.1.9  ...  fill_area_3
+  7.3.1.10 ...  fill_area
+  7.3.1.11 ...  fill_area_set_3
+  7.3.1.12 ...  fill_area_set
+  7.3.1.13 ...  cell_array_3
+  7.3.1.14 ...  cell_array
+  7.3.2  ...  primitive_attributes
+  7.3.2.4  ...  text_attributes
+  7.3.2.4.6  ...  character_height
+  7.3.2.4.7  ...  character_up_vector
+  7.3.2.4.8  ...  text_path
+  7.3.2.4.9  ...  text_alignment
+  7.3.2.7  ...  nameset_attributes
+  7.3.2.7.1  ...  add_names_to_set
+  7.3.2.7.2  ...  remove_names_from_set
+  7.3.3  ...  modelling_transformation_elements
+  7.3.3.1  ...  local_transformation_3
+  7.3.3.2  ...  local_transformation
+  7.3.3.3  ...  global_transformation_3
+  7.3.3.4  ...  global_transformation
+  7.3.3.5  ...  modelling_clipping_volume_3
+  7.3.3.6  ...  modelling_clipping_volume
+  7.3.3.8  ...  restore_modelling_clipping_volume
+  7.3.4  ...  execute_structure
+ 
+LOCAL SUBROUTINES:
+
+SUBROUTINE ISSPF invokes the specified spatial search routine and
+issues pass or fail, depending on its agreement with the expected
+result.  Always: structure #101 is searched, search ceiling is 1,
+modelling clip off, filter lists empty.
+
+SUBROUTINE ISSDIS invokes the 3D spatial search routine with the
+search distance set just below and above the theoretically
+correct distance.  The only primitive to be searched is in
+structure #101.  Thus, the search should first be unsuccessful,
+and then successful.  ISSDIS issues pass or fail as a result of
+these two searches.
+
+SUBROUTINE ISSAB invokes the 3D spatial search routine with the
+search distance set just below and above the theoretically
+correct distance.  Thus, the search should first be unsuccessful,
+and then successful.  ISSAB issues pass or fail as a result of
+these two searches.
+
+SUBROUTINE STCEIL repeatedly invokes spatial search, using the
+found path of one search as the starting path for the next, and
+issues pass or fail, depending on whether the actual paths match
+those expected.
+
+SUBROUTINE ISSGEO tests whether ISS successfully detects the
+corners of a text extent rectangle.
+
+SUBROUTINE TX2DEX computes the expected lower-left and
+upper-right corner of a text extent rectangle, including the
+effect of text position and character-up vector, which are not
+taken into account by <inquire text extent>.
+
+REAL FUNCTION PTREGD computes the minimum distance from a 3D
+point to a planar 3D region.
+
+SUBROUTINE INVOL, given a 3D point and planar fill area,
+determines whether the point is within the normal projection of
+the area, and the distance of the point from the plane.
+
+INTEGER FUNCTION INAREA, given a 2D point and fill area,
+determines whether the point is within the area, on the edge, or
+outside.
+
+SUBROUTINE FLTRAN, given a set of attitude numbers for a plane,
+returns a 4 X 4 transformation matrix which rotates the plane so
+as to be parallel to the z=0 plane.  This is useful for
+visualizing a planar 3D primitive.
+
+SUBROUTINE ISSFLT tests the effect of various filter lists on the
+behavior of ISS.  It issues pass or fail depending on whether or
+not the actual result of ISS matches the expected result.  All
+the parameters are encoded in character form, and thus must be
+translated before invoking ISS.
+
+SUBROUTINE SETFIL translates the character version of a filter
+list into the appropriate integer arrays.
+
+
+PROGRAM 1: Basic spatial search for 2-D primitives
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+All ISS's from start of root (101,0), no modelling clipping,
+null filter lists, search ceiling = 1.
+
+*** *** *** ***   polymarker   *** *** *** ***
+
+Build structure 101:
+  1.  polymarker: (11,1), (12,2), (13,2), (22.3, 2.3)
+  2.  polymarker: (21,1), (22,2), (23,2)
+
+TEST: #SR 1 2 4 5 6 7 9 10 11
+      "The points of a qualifying two-dimensional polymarker
+       should be found by a two-dimensional spatial search."
+
+<incremental spatial search> with
+   search reference point = 22.1, 2.1
+   search distance        = 0.2
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 1 2 4 5 6 7 9 10 11
+      "The points of a qualifying two-dimensional polymarker
+       should be found by a two-dimensional spatial search,
+       even when the search distance is zero."
+
+<incremental spatial search> with
+   search reference point = 22, 2
+   search distance        = 0.0
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 11
+      "The points of a qualifying two-dimensional polymarker
+       should be found by a three-dimensional spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 22.1, 2.1, -0.1
+   search distance        = 0.2
+pass/fail depending on (no error and found path = (101,2))
+
+
+*** *** *** ***   polyline   *** *** *** ***
+
+Build structure 101:
+  1.  polyline: (11,1), (12,2), (13,2), (21.5, 1.7)
+  2.  polyline: (21,1), (22,2), (23,2)
+
+TEST: #SR 1 2 4 5 6 7 9 10 12
+      "The line segments of a qualifying two-dimensional polyline
+       should be found by a two-dimensional spatial search."
+
+<incremental spatial search> with
+   search reference point = 21.5, 1.5
+   search distance        = 0.1
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 12
+      "The line segments of a qualifying two-dimensional polyline
+       should be found by a three-dimensional spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 21.5, 1.5, 0.1
+   search distance        = 0.11
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 12
+      "The line segments of a qualifying two-dimensional polyline
+       should be found by a three-dimensional spatial search,
+       even when the search distance is negative."
+
+<incremental spatial search 3> with
+   search reference point = 23, 2, 0
+   search distance        = -33.3
+pass/fail depending on (no error and found path = (101,2))
+
+
+*** *** *** ***   fill area   *** *** *** ***
+
+Build structure 101:
+  1.  fill area: (20.5, 1), (21.5, 2), (21.5, 1)
+  2.  fill area: (21,   1), (22,   2), (22,   1)
+
+TEST: #SR 1 2 4 5 6 7 9 10 13
+      "The interior of a qualifying two-dimensional fill area
+       should be found by a two-dimensional spatial search."
+
+<incremental spatial search> with
+   search reference point = 21.7, 1.3
+   search distance        = 0.1
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 13
+      "The interior of a qualifying two-dimensional fill area
+       should be found by a three-dimensional spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 21.7, 1.3, 0.1
+   search distance        = 0.11
+pass/fail depending on (no error and found path = (101,2))
+
+
+*** *** *** ***   fill area set   *** *** *** ***
+
+Build structure 101:
+  1.  fill area set: (1,0), (0,1), (1,2)  / (3,2), (4,1), (3,0)
+  2.  fill area set: (11,2), (13,2), (13,0), (11,0)  /
+                     ( 1,2), ( 3,2), ( 3,0), ( 1,0)
+
+TEST: #SR 1 2 4 5 6 7 9 10 14
+      "The interiors of a qualifying two-dimensional fill area
+       set should be found by a two-dimensional spatial search."
+
+<incremental spatial search> with
+   search reference point = 2, 1
+   search distance        = 0.1
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 14
+      "The interiors of a qualifying two-dimensional fill area
+       set should be found by a three-dimensional spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 2, 1, 0.1
+   search distance        = 0.11
+pass/fail depending on (no error and found path = (101,2))
+
+Build structure 101:
+  1.  fill area set: (1,4), (4,1), (4,4) / (3,6), (6,3), (3,3)
+  2.  fill area set: (3.4,3.4), (3.4,3.6), (3.6,3.6), (3.6,3.4)
+TEST: #SR 1 2 4 5 6 7 9 10 14
+      "The interior of a qualifying two-dimensional fill area
+       set should be found by a two-dimensional spatial search,
+       but sub-areas overlapping an even number of times should
+       not be found."
+
+<incremental spatial search> with
+   search reference point = 3.5,3.5
+   search distance        = 0.1
+pass/fail depending on (no error and found path = (101,2))
+
+*** *** *** ***   text   *** *** *** ***
+
+Build structure 101:
+  1.  set character height = 1.0
+  2.  set text alignment   = (LEFT, BOTTOM)
+  3.  text: "Viva PHIGS!" at 5,0
+  4.  text: "Viva PHIGS!" at 5,5
+
+TEST: #SR 1 2 4 5 6 7 9 10 15
+      "The text extent rectangle of a qualifying two-dimensional
+       text primitive should be found by a two-dimensional
+       spatial search."
+
+<incremental spatial search> with
+   search reference point = 4.9, 5.5
+   search distance        = 0.3
+pass/fail depending on (no error and found path = (101,4))
+
+TEST: #SR 2 4 5 6 7 9 10 15
+      "The text extent rectangle of a qualifying two-dimensional
+       text primitive should be found by a three-dimensional
+       spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 4.9, 5.5, -0.1
+   search distance        = 0.3
+pass/fail depending on (no error and found path = (101,4))
+
+
+*** *** *** ***   annotation text   *** *** *** ***
+
+Build structure 101:
+  1.  set annotation text character height = 1.0
+  2.  set annotation text alignment        = (LEFT, BOTTOM)
+  3.  annotation text relative: "Viva PHIGS!" at 5,0 with offset = 0,0
+  4.  annotation text relative: "Viva PHIGS!" at 5,5 with offset = 0,0
+
+TEST: #SR 1 2 4 5 6 7 9 10 16
+      "The annotation reference point of a qualifying
+       two-dimensional annotation text should be found by a
+       two-dimensional spatial search."
+
+<incremental spatial search> with
+   search reference point = 5,3
+   search distance        = 2.5
+pass/fail depending on (no error and found path = (101,4))
+
+TEST: #SR 2 4 5 6 7 9 10 16
+      "The annotation reference point of a qualifying
+       two-dimensional annotation text should be found by a
+       three-dimensional spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 5,3,1
+   search distance        = 2.5
+pass/fail depending on (no error and found path = (101,4))
+
+
+*** *** *** ***   cell array   *** *** *** ***
+
+colia = color index array =  1 0 1
+                             0 1 1
+
+Build structure 101:
+  1.  cell array: colia between corners (0,0) and (2,2)
+  2.  cell array: colia between corners (1,1) and (3,3)
+
+TEST: #SR 1 2 4 5 6 7 9 10 17
+      "The parallelogram of a qualifying two-dimensional cell
+       array should be found by a two-dimensional spatial
+       search."
+
+<incremental spatial search> with
+   search reference point = 2, 2.5
+   search distance        = 0.1
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 17
+      "The parallelogram of a qualifying two-dimensional cell
+       array should be found by a three-dimensional spatial
+       search."
+
+<incremental spatial search 3> with
+   search reference point = 2, 2.5, 0.1
+   search distance        = 0.11
+pass/fail depending on (no error and found path = (101,2))
+
+END PROGRAM 1
+
+
+PROGRAM 2: Basic spatial search for 3-D primitives
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+All ISS's from start of root (101,0), no modelling clipping,
+null filter lists, search ceiling = 1.
+
+*** *** *** ***   polymarker 3   *** *** *** ***
+
+Build structure 101:
+  1.  polymarker 3: (11,1,1), (12,2,2), (22,2,0.2), (13,2,3)
+  2.  polymarker 3: (21,1,6), (12.3,2.3,2.3), (22,2,-0.1), (23,2,5)
+
+TEST: #SR 1 2 4 5 6 7 9 10 11
+      "The points of a qualifying three-dimensional polymarker
+       should be found by a two-dimensional spatial search."
+
+<incremental spatial search> with
+   search reference point = 22.1, 2.1
+   search distance        = 0.24
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 11
+      "The points of a qualifying three-dimensional polymarker
+       should be found by a three-dimensional spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 12.2, 2.2, 2.2
+   search distance        = 0.25
+pass/fail depending on (no error and found path = (101,2))
+
+*** *** *** ***   polyline 3   *** *** *** ***
+
+Build structure 101:
+  1.  polyline 3: (2.0,2.2,0.2), (3,3,3)
+  2.  polyline 3: (1,1,-0.1), (3,3,-0.3), (3,3,3.1)
+
+TEST: #SR 1 2 4 5 6 7 9 10 12
+      "The line segments of a qualifying three-dimensional polyline
+       should be found by a two-dimensional spatial search."
+
+<incremental spatial search> with
+   search reference point = 2,2
+   search distance        = 0.21
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 12
+      "The line segments of a qualifying three-dimensional polyline
+       should be found by a three-dimensional spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 3,3,3.2
+   search distance        = 0.11
+pass/fail depending on (no error and found path = (101,2))
+
+*** *** *** ***   fill area 3   *** *** *** ***
+
+Use plane: 3x + 4y - z - 7 = 0, so
+  z = f(x,y) = 3x + 4y - 7
+
+Build structure 101:
+  1.  fill area 3: (1.1,0,z), (1.1,2,z), (2,2,z), (2,0,z)
+  2.  fill area 3: (0,  0,z), (0,  2,z), (2,2,z), (2,0,z)
+
+TEST: #SR 1 2 4 5 6 7 9 10 13
+      "The interior of a qualifying three-dimensional fill area
+       should be found by a two-dimensional spatial search."
+
+<incremental spatial search> with
+   search reference point = 1,1
+   search distance        = 0.1
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 1 2 4 5 6 7 9 10 13
+      "The interior of a qualifying three-dimensional fill area
+       should be found by a two-dimensional spatial search,
+       even when the search distance is negative."
+
+<incremental spatial search> with
+   search reference point = 1,1
+   search distance        = -22.22
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 13
+      "The interior of a qualifying three-dimensional fill area
+       should be found by a three-dimensional spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 1,2,4
+   search distance        = 0.1
+pass/fail depending on (no error and found path = (101,2))
+
+*** *** *** ***   fill area set 3   *** *** *** ***
+
+Use plane: 3x + 4y - z - 7 = 0, so
+  z = f(x,y) = 3x + 4y - 7
+
+Build structure 101:
+  1.  fill area set 3: (1,0,z), (0,1,z), (1,2,z) /
+                       (3,2,z), (4,1,z), (3,0,z)
+  2.  fill area set 3: (11,2,z), (13,2,z), (13,0,z), (11,0,z)  /
+                       ( 1,2,z), ( 3,2,z), ( 3,0,z), ( 1,0,z)
+
+TEST: #SR 1 2 4 5 6 7 9 10 14
+      "The interiors of a qualifying three-dimensional fill area
+       set should be found by a two-dimensional spatial search."
+
+<incremental spatial search> with
+   search reference point = 2, 0.25
+   search distance        = 0.1
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 14
+      "The interiors of a qualifying three-dimensional fill area
+       set should be found by a three-dimensional spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 2, 1, z
+   search distance        = 0.1
+pass/fail depending on (no error and found path = (101,2))
+
+*** *** *** ***   text 3   *** *** *** ***
+
+tdv1 =  first text direction vector = 1,   0.1, 0.2
+tdv2 = second text direction vector = 0.1, 1,   0.2
+tlcx = text local co-ordinate-x = tdv1
+tlcy = text local co-ordinate-y = vector in tdv-plane,
+       perpendicular to tlcx, and such that tlcy . tdv2 > 0
+tlcz = perpendicular to text plane = tlcx X tlcy
+tlcz1 = tlcz, normalized to unit length
+tp2  = text position 2 = 3,4,0.1
+tp1  = text position 1 = tp2 + tlcz1 (1.0 away from tp2)
+a,b,c,d = coefficients of text plane containing tp2: ax+by+cz+d=0
+srp2d   = 2D search reference point = (tp2x - 0.3, tp2y - 0.3)
+dist2d  = distance of srp2d from tp2 plane; since this plane is
+   close to z=0 plane, the 2D search reference point will be closer
+   to it than to the text plane of tp1, which is about z=1.
+
+Build structure 101:
+  1.  set character height = 1.0
+  2.  set text alignment   = (CENTRE, HALF)
+  3.  text 3: "Viva PHIGS!" at tp1 with tdv1,tdv2
+  4.  text 3: "Viva PHIGS!" at tp2 with tdv1,tdv2
+
+TEST: #SR 1 2 4 5 6 7 9 10 15
+      "The text extent rectangle of a qualifying three-dimensional
+       text primitive should be found by a two-dimensional
+       spatial search."
+
+<incremental spatial search> with
+   search reference point = srp2d
+   search distance        = dist2d * 1.1
+pass/fail depending on (no error and found path = (101,4))
+
+TEST: #SR 2 4 5 6 7 9 10 15
+      "The text extent rectangle of a qualifying three-dimensional
+       text primitive should be found by a three-dimensional
+       spatial search."
+
+srp3d   = 3D search reference point = (tp2x + 0.3, tp2y + 0.3, z)
+          where z puts srp3d in a,b,c,d plane
+dist3d  = 0.95 (because text planes are 1.0 apart - see tp1 above)
+
+<incremental spatial search 3> with
+   search reference point = srp3d
+   search distance        = dist3d
+pass/fail depending on (no error and found path = (101,4))
+
+
+*** *** *** ***   annotation text 3   *** *** *** ***
+
+Build structure 101:
+  1.  set annotation text character height = 1.0
+  2.  set annotation text alignment        = (RIGHT, TOP)
+  3.  annotation text relative 3: "Viva PHIGS!" at 5,0,0
+         with offset = 0,5,1
+  4.  annotation text relative 3: "Viva PHIGS!" at 5,5,1
+         with offset = -1,2,-3
+
+TEST: #SR 1 2 4 5 6 7 9 10 16
+      "The annotation reference point of a qualifying
+       three-dimensional annotation text should be found by a
+       two-dimensional spatial search."
+
+<incremental spatial search> with
+   search reference point = 5,3
+   search distance        = 2.5
+pass/fail depending on (no error and found path = (101,4))
+
+TEST: #SR 2 4 5 6 7 9 10 16
+      "The annotation reference point of a qualifying
+       three-dimensional annotation text should be found by a
+       three-dimensional spatial search."
+
+<incremental spatial search 3> with
+   search reference point = 5,3,1
+   search distance        = 2.1
+pass/fail depending on (no error and found path = (101,4))
+
+TEST: #SR 2 4 5 6 7 9 10 16
+      "The annotation reference point of a qualifying
+       three-dimensional annotation text should be found by a
+       three-dimensional spatial search, even when the search
+       distance is zero."
+
+<incremental spatial search 3> with
+   search reference point = 5,5,1
+   search distance        = 0.0
+pass/fail depending on (no error and found path = (101,4))
+
+*** *** *** ***   cell array 3   *** *** *** ***
+
+Use plane: 3x + 4y - z - 7 = 0, so
+  z = f(x,y) = 3x + 4y - 7
+
+colia = color index array =  1 0 1
+                             0 1 1
+
+Build structure 101:
+  1.  cell array 3: colia with corners
+                    P=(1.1,1.1,z), Q=(0.6,2.0,z), R=(2.0,0.6,z)
+  2.  cell array 3: colia with corners
+                    P=(1.2,1.3,z), Q=(1.5,0.5,z), R=(0.5,1.5,z)
+
+TEST: #SR 1 2 4 5 6 7 9 10 17
+      "The parallelogram of a qualifying three-dimensional cell
+       array should be found by a two-dimensional spatial
+       search."
+
+<incremental spatial search> with
+   search reference point = 1,1
+   search distance        = 0.1
+pass/fail depending on (no error and found path = (101,2))
+
+TEST: #SR 2 4 5 6 7 9 10 17
+      "The parallelogram of a qualifying three-dimensional cell
+       array should be found by a three-dimensional spatial
+       search."
+
+<incremental spatial search 3> with
+   search reference point = 1.6,0.5,z
+   search distance        = 0.11
+pass/fail depending on (no error and found path = (101,2))
+
+END PROGRAM 2
+
+
+PROGRAM 3: Geometrical borderline cases for graphical primitives
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+ndtran = non-distorting transformation: arbitrary shift and
+  rotate (but not scale).  Apply this to easily visualized
+  2D cases to generate more complex 3D cases.
+
+*** *** *** *** ***   polyline   *** *** *** *** *** ***
+
+simpl = simple polyline = (1,1),(2,2),(2,1)
+compl = complex polyline = ndtran X simpl
+
+Build structure 101:
+  1. polyline 3: compl
+
+sisrp = simple search reference point = (2.1, 1.5, 0.1)
+sdist = distance from primitive = 0.1 * sqrt(2)
+
+TEST: #SR 2 4 5 6 7 9 10 12
+      "The middle of a line segment in a 3D polyline should be
+       found if and only if its true distance from the search
+       reference point is not greater than the search distance."
+
+With transformed SRP, try search distance first just above and
+   then just below sdist.
+pass/fail depending on (polyline first not found, then found)
+
+sisrp = simple search reference point = (2.1, 2.1, 0.1)
+sdist = distance from primitive = 0.1 * sqrt(3)
+
+TEST: #SR 2 4 5 6 7 9 10 12
+      "The vertex of a 3D polyline should be found if and only if
+       its true distance from the search reference point is not
+       greater than the search distance."
+
+With transformed SRP, try search distance first just above and
+   then just below sdist.
+pass/fail depending on (polyline first not found, then found)
+
+
+*** *** *** *** ***   text   *** *** *** *** *** ***
+
+tdv1 =  first text direction vector = 1.2, 5.1, 0.2
+tdv2 = second text direction vector = 2.1, 1.4, 3.2
+tlcu = text local co-ordinate U vector = normalized tdv1
+tlcv = text local co-ordinate V vector = unit vector in tdv-plane,
+       perpendicular to tlcu, and such that tlcv . tdv2 > 0
+tlcw = text local co-ordinate W vector, perpendicular to text
+       plane = tlcu X tlcv
+tpos = text position = 3.1, 4.2, 0.1
+
+Set up geometric attributes:
+chht = character height = 3.3
+chup = character up vector = (1.2, -3.1)
+txpath = text path = UP
+txalh,txalv = text alignment = CENTER,CAP
+str = character string = "Quod licet Jovi, non licet bovi."
+
+<inquire text extent> with
+  workstation type           = primary workstation type
+    (ignored because font #1 is workstation-independent)
+  text font                  = 1
+  character expansion factor = 1.0
+  character spacing          = 0.0
+    (three above set as assumed by spatial search, see SR15)
+  character height           = chht
+  text path                  = txpath
+  text alignment             = txalh,txalv
+  character string           = str
+    to determine:
+  recxlo,recxhi,recylo,recyhi = text extent rectangle in TLC,
+    with assumed text position = 0,0 character up vector = (0,1),
+    and text precision = STROKE
+
+Rotate expected rectangle in TLC around 0,0 according to
+  character-up vector.
+rotang = rotation angle = atan2(chupv, chupu) - pi/2
+build and apply transformation:
+
+xtlc(1),ytlc(1) = rotated (recxlo, recylo)
+xtlc(2),ytlc(2) = rotated (recxhi, recylo)
+xtlc(3),ytlc(3) = rotated (recxhi, recyhi)
+xtlc(4),ytlc(4) = rotated (recxlo, recyhi)
+
+ztlc(1) = 0
+ztlc(2) = 0
+ztlc(3) = 0
+ztlc(4) = 0
+
+Transform 4 TLC corners to expected values in MC; use tlc-vectors
+for rotation and tpos for shift.  Also, get midpoint:
+
+midx,midy,midz = 0
+for cx = 1 to 4
+   xmc(cx) = tposx + tlcux*xtlc(cx) + tlcvx*ytlc(cx) + tlcwx*ztlc(cx)
+   ymc(cx) = tposy + tlcuy*xtlc(cx) + tlcvy*ytlc(cx) + tlcwy*ztlc(cx)
+   zmc(cx) = tposz + tlcuz*xtlc(cx) + tlcvz*ytlc(cx) + tlcwz*ztlc(cx)
+   midx = midx + xmc(cx)/4
+   midy = midy + ymc(cx)/4
+   midz = midz + zmc(cx)/4
+next cx
+
+Expected MC rectangle is complete; now generate actual text extent.
+
+Build structure 101:
+  1.  set text precision      = STRING
+  2.  set character height    = chht
+  3.  set character up vector = chup
+  4.  set text path           = txpath
+  5.  set text alignment      = txalh,txalv
+  6.  text 3: str at tpos with tdv1,tdv2
+
+Project SRP out past corner #4:
+SRP    = corner(4) + (corner(4) - mid-point)
+sdist  = distance from corner(4) to mid-point
+
+TEST: #SR 2 4 5 6 7 9 10 15
+      "The size of a 3D text extent rectangle, as treated by ISS,
+       should be based on STROKE precision, even if the current
+       precision is not STROKE."
+
+With SRP, try search distance first just above and then just
+   below sdist.
+pass/fail depending on (text first not found, then found)
+
+replace element number #1 with:
+  1.  set text precision      = STROKE
+
+TEST: #SR 2 4 5 6 7 9 10 15
+      "The corner of a 3D text extent rectangle should be
+       found if and only if its true distance from the search
+       reference point is not greater than the search distance."
+
+With SRP, try search distance first just above and then just
+   below sdist.
+pass/fail depending on (text first not found, then found)
+
+Project SRP above text plane:
+SRP    = mid-point + tlcw
+sdist  = 1.0 (because tlcw is a unit vector).
+
+TEST: #SR 2 4 5 6 7 9 10 15
+      "The middle of a 3D text extent rectangle should be
+       found if and only if its true distance from the search
+       reference point is not greater than the search distance."
+
+With SRP, try search distance first just above and then just
+   below sdist.
+pass/fail depending on (text first not found, then found)
+
+Project SRP above and outside of edge of text plane:
+zdist  = 2.2
+cor12  = vector from corner 2 to corner 1 = corner(1) - corner(2)
+SRP    = mid-point + zdist*tlcw + cor12
+sdist  = sqrt (zdist ** 2 + (cor12 / 2) ** 2 )
+
+TEST: #SR 2 4 5 6 7 9 10 15
+      "The edge of a 3D text extent rectangle should be
+       found if and only if its true distance from the search
+       reference point is not greater than the search distance."
+
+With SRP, try search distance first just above and then just
+   below sdist.
+pass/fail depending on (text first not found, then found)
+
+
+*** *** *** *** ***   cell array   *** *** *** *** *** ***
+
+simpl = simple cell array = p:(1,1), q:(4,2), r:(2,3)
+compl = complex cell array = ndtran X simpl
+
+Build structure 101:
+  1. cell array 3: compl
+
+sisrp = simple search reference point = (2, 2, 0.1)
+sdist = distance from primitive = 0.1
+
+TEST: #SR 2 4 5 6 7 9 10 17
+      "The interior region of a 3D cell array should be
+       found if and only if its true distance from the search
+       reference point is not greater than the search distance."
+
+With transformed SRP, try search distance first just above and
+   then just below sdist.
+pass/fail depending on (cell array first not found, then found)
+
+sisrp = simple search reference point = (1, 2.25, 0.1)
+npe   = nearest point on edge = (1.5, 2, 0)
+sdist = distance from primitive =
+   sqrt( (sisrpx-npex)**2 + (sisrpy-npey)**2 + (sisrpz-npez)**2 )
+
+TEST: #SR 2 4 5 6 7 9 10 17
+      "The edge of a 3D cell array should be found if and only if
+       its true distance from the search reference point is not
+       greater than the search distance."
+
+With transformed SRP, try search distance first just above and
+   then just below sdist.
+pass/fail depending on (cell array first not found, then found)
+
+
+*** *** *** *** ***   fill area   *** *** *** *** *** ***
+
+simpl = simple fill area = (0,0), (2,0), (2,3.5), (.5,3.5),
+  (.5,2), (1.5,2), (1.5,3), (0,3), (0,1), (.5,1), (.5,1.5),
+  (1.5,1.5), (1.5,.5), (0,.5)
+compl = complex fill area = ndtran X simpl
+
+simple fill area looks like:
+
+        ------- 2,3.5
+        |     |
+     ---+---  |
+     |  |  |  |
+     |  ----  |
+     |        |
+     |  ----  |
+     |  |  |  |
+     ----  |  |
+           |  |
+     -------  |
+     |        |
+ 0,0 ---------- 2,0
+
+
+Build structure 101:
+  1. fill area 3: compl
+
+sisrp = simple search reference point = (1, 1.7, 0.1)
+sdist = distance from primitive = 0.1
+
+TEST: #SR 2 4 5 6 7 9 10 13
+      "The interior region of a 3D fill area should be
+       found if and only if its true distance from the search
+       reference point is not greater than the search distance."
+
+With transformed SRP, try search distance first just above and
+   then just below sdist.
+pass/fail depending on (fill area first not found, then found)
+
+sisrp = simple search reference point = (2.2, 1, 5)
+sdist = distance from primitive = sqrt (0.2**2 + 5**2)
+
+TEST: #SR 2 4 5 6 7 9 10 13
+      "The edge of a 3D fill area should be found if and only if
+       its true distance from the search reference point is not
+       greater than the search distance."
+
+With transformed SRP, try search distance first just above and
+   then just below sdist.
+pass/fail depending on (fill area first not found, then found)
+
+sisrp = simple search reference point = (1.1, 1.2, 0)
+sdist = distance from primitive = 0.3
+
+TEST: #SR 2 4 5 6 7 9 10 13
+      "A concave region of a 3D fill area should be
+       found if and only if its true distance from the search
+       reference point is not greater than the search distance."
+
+With transformed SRP, try search distance first just above and
+   then just below sdist.
+pass/fail depending on (fill area first not found, then found)
+
+sisrp = simple search reference point = (1.1, 2.7, 0)
+sdist = distance from primitive = 0.3
+
+TEST: #SR 2 4 5 6 7 9 10 13
+      "An interior region of a 3D fill area surrounding a hole
+       formed by a self-intersecting border should be found if
+       and only if its true distance from the search reference
+       point is not greater than the search distance."
+
+With transformed SRP, try search distance first just above and
+   then just below sdist.
+pass/fail depending on (fill area first not found, then found)
+
+
+*** *** *** *** ***   fill area set   *** *** *** *** *** ***
+
+simpl = simple fill area set = (1,0), (0,0), (0,1), (1,1) /
+                               (2,1), (3,1), (3,0), (2,0)
+compl = complex fill area set = ndtran X simpl
+
+Build structure 101:
+  1. fill area set 3: compl
+
+sisrp = simple search reference point = (1.8, 0.2, 0)
+sdist = distance from primitive = 0.2
+
+TEST: #SR 2 4 5 6 7 9 10 14
+      "The edge of a 3D fill area set should be found if and only
+       if its true distance from the search reference point is
+       not greater than the search distance."
+
+With transformed SRP, try search distance first just above and
+   then just below sdist.
+pass/fail depending on (fill area set first not found, then found)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Starting path and search ceiling
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Set up CSS:
+
+              101
+             /   \
+           1/     \2
+           /       \
+        102         105:1,3
+         |           |
+        1|           |2
+         |           |
+          \         106
+           \       /   \
+            \    3/     \5
+             \   /       \
+              103         107:3,4
+             /   \
+           1/     \2
+           /       \
+        108         104:2
+
+
+Numbers 101-108 are structure identifiers.  Numbers on edges are
+element positions of 'execute structure' elements.  Numbers
+following colons are element positions of primitives to be found
+by spatial search.  E.g. starting from 101, the first found path
+should be: (101,1), (102,1), (103,2), (104,2).
+
+All ISS done with same search reference point, search distance
+(set so as to find all the primitives listed above), no modelling
+clipping, and null filter lists.
+
+TEST: #SR 2 4 5 6 9
+      "ISS should ignore a primitive at the starting path
+       location, and commence the search at the element
+       immediately following."
+
+<incremental spatial search> with
+   starting path  = (101,2), (105,2), (106,5), (107,3)
+   search ceiling = 1
+pass/fail depending on (found path = (101,2), (105,2), (106,5), (107,4))
+
+TEST: #SR 2 4 5 6 9
+      "ISS should ignore an execute-structure element at the
+       starting path location, and commence the search at the
+       element immediately following."
+
+<incremental spatial search> with
+   starting path  = (101,1)
+   search ceiling = 1
+pass/fail depending on (found path = (101,2), (105,1))
+
+TEST: #SR 2 4 5 6 7 8 9
+      "Repeated incremental spatial search, starting with element
+       zero of the root structure, using the found path as the
+       next starting path, and a search ceiling of 1, should find
+       all qualifying primitives within a network."
+
+sp = (101,0)
+sc = 1
+expected paths:
+  1: (101,1), (102,1), (103,2), (104,2)
+  2: (101,2), (105,1)
+  3: (101,2), (105,2), (106,3), (103,2), (104,2)
+  4: (101,2), (105,2), (106,5), (107,3)
+  5: (101,2), (105,2), (106,5), (107,4)
+  6: (101,2), (105,3)
+  7: empty
+
+for ipath = 1 to 7
+   <incremental spatial search> with
+      starting path  = sp
+      search ceiling = sc
+   IF (found path = expected path (ipath)) THEN
+      sp = found path
+   ELSE
+      fail
+      goto end_repeat_test
+   ENDIF
+next ipath
+pass
+
+end_repeat_test:
+
+TEST: #SR 2 4 5 6 9
+      "ISS should be able to search a sub-network within a
+       larger CSS network."
+
+sp = (106,1)
+sc = 1
+expected paths:
+  1: (106,3), (103,2), (104,2)
+  2: (106,5), (107,3)
+  3: (106,5), (107,4)
+  4: empty
+
+for ipath = 1 to 4
+   <incremental spatial search> with
+      starting path  = sp
+      search ceiling = sc
+   IF (found path = expected path (ipath)) THEN
+      sp = found path
+   ELSE
+      fail
+      goto end_subnet_test
+   ENDIF
+next ipath
+pass
+
+end_subnet_test:
+
+TEST: #SR 2 4 5 6 8 9
+      "A search ceiling greater than 1 should limit the search to
+       the network of the indicated structure."
+
+sp = (101,2), (105,2), (106,3), (103,1), (108,0)
+sc = 4
+expected paths:
+  1: (101,2), (105,2), (106,3), (103,2), (104,2)
+  2: empty
+
+for ipath = 1 to 2
+   <incremental spatial search> with
+      starting path  = sp
+      search ceiling = sc
+   IF (found path = expected path (ipath)) THEN
+      sp = found path
+   ELSE
+      fail
+      goto end_ceiling_test
+   ENDIF
+next ipath
+pass
+
+end_ceiling_test:
+
+TEST: #SR 2 4 5 6 8 9
+      "Any search ceiling up to the end of the starting path
+       should be valid."
+
+sp = (101,1), (102,1), (103,2), (104,1)
+sc = 4
+expected paths:
+  1: (101,1), (102,1), (103,2), (104,2)
+  2: empty
+
+for ipath = 1 to 2
+   <incremental spatial search> with
+      starting path  = sp
+      search ceiling = sc
+   IF (found path = expected path (ipath)) THEN
+      sp = found path
+   ELSE
+      fail
+      goto end_max_ceiling_test
+   ENDIF
+next ipath
+pass
+
+end_max_ceiling_test:
+
+END PROGRAM 4
+
+
+PROGRAM 5: Inheritance of geometric attributes
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+The only geometric attributes which affect the size or position
+of primitives are the text attributes:
+  chht   : character height
+  chup   : character up vector
+  txpath : text path
+  txal   : text alignment
+
+All ISS done with search ceiling of 1, no modelling clipping, and
+null filter lists.
+
+Set up CSS:
+
+            101
+            / |
+          5/  |
+          /   |
+         /    |6
+      102     |
+         \    |
+         5\   |
+           \  |
+            \ |
+            103
+
+Numbers 101-103 are structure identifiers.  Numbers on edges are
+element positions of 'execute structure' elements.
+
+tpos = text position = 3.1, 4.2
+str  = character string = "PHIGS or bust ..."
+
+Set up values as in PDT:
+
+chup   = character up     = 0,1
+chht   = character height = 0.01
+txpath = text path        = RIGHT
+txal   = text alignment   = NORMAL,NORMAL
+
+Calculate expected values for PDT:
+<inquire text extent> with
+  workstation type           = primary workstation type
+    (ignored because font #1 is workstation-independent)
+  text font                  = 1
+  character expansion factor = 1.0
+  character spacing          = 0.0
+    (three above set as assumed by spatial search, see SR15)
+  character height           = chht
+  text path                  = txpath
+  text alignment             = txal
+  character string           = str
+    to determine:
+  recxlo,recxhi,recylo,recyhi = text extent rectangle
+    in TLC, with assumed text position = 0,0 character up vector
+    = (0,1), and text precision = STROKE
+
+Add in effect of character up vector:
+rotang = rotation angle = atan2(chupy, chupx) - pi/2
+xfrm = 2D transform for rotation by rotang and shift by tpos
+Get lower-left and upper-right corner:
+  transform recxlo,recylo, using xfrm to exxlo(0),exylo(0)
+  transform recxhi,recyhi, using xfrm to exxhi(0),exyhi(0)
+
+
+Set up values for structure 101:
+
+chup   = character up     = 1,1.3
+chht   = character height = 2.2
+txpath = text path        = DOWN
+txal   = text alignment   = RIGHT,TOP
+
+Structure 101
+-------------
+1. set character up     to chup
+2. set character height to chht
+3. set text path        to txpath
+4. set text alignment   to txal
+5. execute 102
+6. execute 103
+7. set character height to chht/3
+
+Calculate expected values for 101:
+Use <inquire text extent> as above with new values for
+  character height, character up, text path, text alignment
+  to determine expected corners:
+    exxlo(1),exylo(1), exxhi(1),exyhi(1)
+
+
+Set up values for structure 102:
+
+chup   = character up     = -1,1.6
+chht   = character height = 0.023
+txpath = text path        = UP
+txal   = text alignment   = LEFT, HALF
+
+Structure 102
+-------------
+1. set character up     to chup
+2. set character height to chht
+3. set text path        to txpath
+4. set text alignment   to txal
+5. execute 103
+6. set character height to chht/3
+
+Calculate expected values for 102:
+Use <inquire text extent> as above with new values for
+  character height, character up, text path, text alignment
+  to determine expected corners:
+    exxlo(2),exylo(2), exxhi(2),exyhi(2)
+
+Structure 103
+-------------
+1. set text precision to STROKE
+2. 2D text: str at tpos
+3. set character height to 33.3
+
+TEST: #SR 1 2 3 4 5 6 7
+      "Actual geometric attributes should be those set by the
+       most recent ancestor, even if a more distant ancestor also
+       set them."
+
+Test ISS (see below) for corners of text rectangle with:
+  starting path:         101,0
+  expected corner index: 2
+  expected found path:   101,5 102,5, 103,2
+
+TEST: #SR 1 2 3 4 5 6 7
+      "Actual geometric attributes should be re-stored after
+       being changed by a descendant structure that precedes the
+       starting path."
+
+Test ISS (see below) for corners of text rectangle with:
+  starting path:         101,6, 103,0
+  expected corner index: 1
+  expected found path:   101,6, 103,2
+
+TEST: #SR 1 2 3 4 5 6 7
+      "When not explicitly set by an ancestor or by itself, the
+       geometric attributes for a structure should be as
+       inherited from the PHIGS description table."
+
+Test ISS (see below) for corners of text rectangle with:
+  starting path:         103,0
+  expected corner index: 0
+  expected found path:   103,2
+
+Set up values for structure 103:
+
+chup   = character up     = -1,-1.9
+chht   = character height = 12.3
+txpath = text path        = LEFT
+txal   = text alignment   = CENTER,BOTTOM
+
+Insert in beginning of structure 103:
+-------------------------------------
+1. set character up     to chup
+2. set character height to chht
+3. set text path        to txpath
+4. set text alignment   to txal
+
+old elements of 103:
+5. set text precision to STROKE
+6. 2D text: str at tpos
+7. set character height to 33.3
+
+Calculate expected values for 103:
+Use <inquire text extent> as above with new values for
+  character height, character up, text path, text alignment
+  to determine expected corners:
+    exxlo(3),exylo(3), exxhi(3),exyhi(3)
+
+
+TEST: #SR 1 2 3 4 5 6 7
+      "Actual geometric attributes should be as set in prior
+       elements of the current structure, overriding the
+       inherited attributes."
+
+Test ISS (see below) for corners of text rectangle with:
+  starting path:         101,0
+  expected corner index: 3
+  expected found path:   101,5, 102,5, 103,6
+
+TEST: #SR 1 2 3 4 5 6 7
+      "Actual geometric attributes should be as set in prior
+       elements of the current structure when there are no
+       inherited attributes."
+
+Test ISS (see below) for corners of text rectangle with:
+  starting path:         103,0
+  expected corner index: 3
+  expected found path:   103,6
+
+TEST: #SR 1 2 3 4 5 6
+      "Actual geometric attributes should be as set in prior
+       elements of structure even when these precede the starting
+       path."
+
+Test ISS (see below) for corners of text rectangle with:
+  starting path:         103,5
+  expected corner index: 3
+  expected found path:   103,6
+
+end test
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
+Routine to test corners:
+
+given:
+  stpath = starting path
+  excorn = expected corners
+  expath = expected found path
+
+sratio = search ratio = 0.1
+diagv = diagonal vector = vector from lower-left expected corner
+  to upper-right
+incrv = incremental vector = sratio*diagv
+sdist = search distance  = length of incrv
+srp = upper-right corner + incrv
+
+ISS: with stpath, srp, try search distance first just above and
+   then just below sdist.
+pass/fail depending on (text first not found with expected path,
+   then found with expected path)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Modelling transformation and clipping
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+m1 = random transformation matrix
+   =   1.43  -2.41  3.25 -1.15
+      -3.25  -3.13  2.54 -1.35
+      -2.43  -1.54  2.31  1.42
+       3.51  -2.32  2.41  3.25
+
+m2 = random transformation matrix
+   =   -1.23   1.23  -1.02   9.30
+        1.28  -9.34   0.93  -4.89
+        2.03   9.85   4.01  -9.23
+        4.18  -0.12  -9.34   8.01
+
+
+*** *** *** ***   Modelling transformations   *** *** *** ***
+
+set up structure #101:
+1. set local transformation = m1
+2. execute structure 102
+
+pmloc = polymarker location = -6.347, 4.637, 1.082
+
+set up structure #102:
+1. set global transformation = m2
+2. polymarker at pmloc
+
+exloc = expected WC location = m2 X m1 X pmloc
+
+sdist = 0.1
+SRP = exloc + sdist in x-direction
+
+TEST: #SR 2 3 4 5 6 8 10
+      "ISS should detect a primitive according to its location
+       in world coordinates, computed with the current composite
+       modelling transformation, including the effect of
+       inherited transformations."
+
+ISS twice with SRP, varying search distance
+  starting path: 101,1,102,1
+  search ceiling: 2
+
+pass/fail depending on
+  (not found with search distance = 0.98*sdist and
+   found at 101,1 102,2 with search distance = 1.02*sdist )
+
+exloc = expected WC location = m2 X pmloc
+
+sdist = 0.1
+SRP = exloc + sdist in x-direction
+
+TEST: #SR 2 3 4 5 6 10
+      "ISS should detect a primitive according to its location
+       in world coordinates, computed with the current composite
+       modelling transformation when there are no inherited
+       transformations."
+
+ISS twice with SRP, varying search distance
+  starting path: 102,1
+  search ceiling: 1
+
+pass/fail depending on
+  (not found with search distance = 0.98*sdist and
+   found at 102,2 with search distance = 1.02*sdist )
+
+
+*** *** *** ***   Modelling clipping   *** *** *** ***
+
+clear CSS
+
+set up structure #101:
+1. set modelling clipping CLIP
+2. set modelling clipping volume with:
+      point         =  5, 5, 5
+      normal vector = -1,-1,-1
+3. set local transformation = shift by +3,+3,+3
+4. polymarker at MC: 4,4,4 (WC will be 7,7,7)
+5. polymarker at MC: 1,1,1 (WC will be 4,4,4)
+
+TEST: #SR 2 3 4 5 6 10
+      "If the modelling clip flag is NOCLIP, ISS should detect a
+       primitive whether or not its location in world coordinates
+       is outside the current modelling clipping volume, even if
+       the current modelling clipping indicator is CLIP."
+
+ISS twice with
+  modelling clip flag: NOCLIP
+  SRP:                 5.5,5.5,5.5
+  search distance:     1.02*1.5
+
+pass/fail depending on
+  (found at 101,4 with starting path = 101,0  and
+   found at 101,5 with starting path = 101,4)
+
+change element #1 of structure 101 to:
+1. set modelling clipping NOCLIP
+
+
+TEST: #SR 2 3 4 5 6 10
+      "If the modelling clip flag is CLIP, ISS should detect only
+       those primitives whose location in world coordinates is
+       inside the current modelling clipping volume, even if the
+       current modelling clipping indicator is NOCLIP."
+
+ISS with
+  modelling clip flag: CLIP
+  SRP:                 5.5,5.5,5.5
+  search distance:     1.02*1.5
+
+pass/fail depending on
+  (found at 101,5 with starting path = 101,0)
+
+
+*** *** *** ***   Complex primitive   *** *** *** ***
+
+clear CSS
+
+set up vertices for complex fill area:
+
+   1----------2    p1: 0, 1
+   |          |    p2: 3, 1
+   |  5---6   |    p3: 3,-2
+   |  |   |   |    p4: 1,-2
+   |  |   |   |    p5: 1, 0
+   8--+---7   |    p6: 2, 0
+      |       |    p7: 2,-1
+      4-------3    p8: 0,-1
+
+
+tp1-tp8 = WC vertices = m1 X p1-p8
+
+nvec = unit vector normal to WC plane of fill area
+
+set up structure #101:
+1. set global transformation = m1
+2. fill area at p1-p8
+
+SRP   = point over hole in fill area = average of pt5,pt6,pt7 + 0.02*nvec
+sdist = distance from SRP to fill area, as computed by PTREGD
+
+TEST: #SR 2 3 4 5 6 10 13
+      "ISS should detect a complex primitive according to its
+       location in world coordinates."
+
+ISS twice with SRP, NOCLIP, varying search distance
+  starting path:  101,0
+  search ceiling: 1
+
+pass/fail depending on
+  (not found with search distance = 0.98*sdist and
+   found at 101,2 with search distance = 1.02*sdist )
+
+
+*** *** *** ***   Complex clipping   *** *** *** ***
+
+set up vertices for fill area:
+
+       1----------2     p1: 3,2
+      /           /     p2: 6,2
+     /           /      p3: 4,-1
+    4           /       p4: 1,1
+     \         /
+      \       /
+       \     /
+        \   /
+         \ /
+          3
+
+tp1-tp4 = WC vertices = m1 X p1-p4
+clpt  = WC clip point  = point on tp2:tp4 line segment closest to tp1
+  (tp1 normal projection onto line segment)
+clvec = WC clip vector = vector from clpt to tp1 (in WC plane of
+   fill area, normal to line between tp2 and tp4, towards tp1).
+
+nvec  = unit vector normal to WC fill area plane
+
+set up structure #102:
+1. set modelling clipping volume with:
+      point         = clpt
+      normal vector = clvec
+2. set global transformation = m1
+3. fill area at p1-p4
+
+dvec = vector away from clipping volume and up from fill area plane
+
+SRP = clpt + dvec (outside clipping volume)
+sdist = length of dvec
+
+TEST: #SR 2 3 4 5 6 10 13
+      "If the modelling clip flag is CLIP, ISS should detect only
+       those portions of a complex primitive whose location in
+       world coordinates is inside the current modelling clipping
+       volume."
+
+ISS twice with SRP, CLIP, varying search distance
+  starting path:  102,0
+  search ceiling: 1
+
+pass/fail depending on
+  (not found with search distance = 0.98*sdist and
+   found at 102,3 with search distance = 1.02*sdist )
+
+END PROGRAM 6
+
+
+PROGRAM 7: ISS and filters
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+Structure #101:
+1. add names to set: 3,4,5
+2. execute structure 102
+
+Structure #102:
+1. polymarker at 1,2,3
+
+Throughout, keep fixed for ISS:
+SRP = 1,2,3
+search distance = 0.1
+search ceiling = 1
+clipping flag = OFF
+
+*** *** *** ***   One normal and inverted filter   *** *** *** ***
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should be found if its non-null
+       nameset is accepted by a single non-null normal filter and
+       rejected by a single non-null inverted filter."
+
+ISS with
+  starting path =   101,1
+  normal filter =   incl: 5,6,7; excl: 8,9
+  inverted filter = incl: 1,2;   excl: 8,9
+
+pass/fail depending on (found path = 101,2, 102,1)
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should not be found if its non-null
+       nameset is rejected by a single non-null normal filter and
+       also by a single non-null inverted filter."
+
+ISS with
+  starting path =   101,1
+  normal filter =   incl: 5,6,7; excl: 3,8,9
+  inverted filter = incl: 1,2;   excl: 8,9
+
+pass/fail depending on (found path = empty)
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should not be found if its non-null
+       nameset is accepted by a single non-null normal filter but
+       also by a single non-null inverted filter."
+
+ISS with
+  starting path =   101,1
+  normal filter =   incl: 4,6,7; excl: 9,1
+  inverted filter = incl: 3;     excl: 8,9
+
+pass/fail depending on (found path = empty)
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should not be found if its non-null
+       nameset is rejected by a single non-null normal filter and
+       accepted by a single non-null inverted filter."
+
+ISS with
+  starting path =   101,1
+  normal filter =   incl: 6,7;  excl: 9,1,3
+  inverted filter = incl: 11,3; excl: 8,9
+
+pass/fail depending on (found path = empty)
+
+*** *** ***   One normal or inverted filter, but not both   *** *** ***
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should be found if its non-null
+       nameset is accepted by a single non-null normal filter and
+       there are no inverted filters."
+
+ISS with
+  starting path =   101,1
+  normal filter =   incl: 5,6,7; excl: 8,9
+  inverted filter = none
+
+pass/fail depending on (found path = 101,2, 102,1)
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should not be found if its non-null
+       nameset is rejected by a single non-null normal filter and
+       there are no inverted filters."
+
+ISS with
+  starting path =   101,1
+  normal filter =   incl: 2,6,7; excl: 8,9
+  inverted filter = none
+
+pass/fail depending on (found path = empty)
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should not be found if its non-null
+       nameset is accepted by a single non-null inverted filter and
+       there are no normal filters."
+
+ISS with
+  starting path =   101,1
+  normal filter =   none
+  inverted filter = incl: 2,6,4,7; excl: 8,9
+
+pass/fail depending on (found path = empty)
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should be found if its non-null
+       nameset is rejected by a single non-null inverted filter and
+       there are no normal filters."
+
+ISS with
+  starting path =   101,1
+  normal filter =   none
+  inverted filter = incl: empty; excl: 8,9
+
+pass/fail depending on (found path = 101,2, 102,1)
+
+*** *** ***   No filters   *** *** ***
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should be found if its nameset is
+       non-null and there is no normal or inverted filter."
+
+ISS with
+  starting path =   101,1
+  normal filter =   none
+  inverted filter = none
+
+pass/fail depending on (found path = 101,2, 102,1)
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should be found if its nameset is
+       null and there is no normal or inverted filter."
+
+ISS with
+  starting path =   102,0
+  normal filter =   none
+  inverted filter = none
+
+pass/fail depending on (found path = 102,1)
+
+*** *** *** ***   Null nameset   *** *** *** ***
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should not be found if its nameset
+       is null and there is at least one normal filter."
+
+ISS with
+  starting path =   102,0
+  normal filter =   incl: empty; excl: 1,2
+  inverted filter = incl: 11,3;  excl: 8,9,4
+
+pass/fail depending on (found path = empty)
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should be found if its nameset
+       is null and there is no normal filter."
+
+ISS with
+  starting path =   102,0
+  normal filter =   none
+  inverted filter = incl: empty; excl: 8,9
+
+pass/fail depending on (found path = 102,1)
+
+*** *** *** ***   Maximum number of filters   *** *** *** ***
+
+<inquire phigs facilities> to determine:
+  mxnfl = maximum length of normal filter list
+  mxifl = maximum length of inverted filter list
+
+TEST: #SR 21
+      "<Inquire phigs facilities> should report the maximum
+       lengths of both the normal and inverted filter lists to be
+       at least 1."
+
+pass/fail depending on (mxnfl > 0 and mxifl > 0)
+
+if (mxnfl < 2 or mxifl < 2) then
+   message: skipping multiple filter tests
+   goto end_mult_filter
+endif
+
+mxntst = min (mxnfl, 50)
+mxitst = min (mxifl, 50)
+
+TEST: #SR 21 22
+      "ISS should be able to specify as many filters in a list as
+       the maximum reported by <inquire phigs facilities>."
+
+inval = 3
+for n from 1 to mxntst
+   if (inval > 4) then
+      inval = 3
+   else
+      inval = inval+1
+   endif
+   set up nth normal filter inclusion set as 1,inval
+   set up nth normal filter exclusion set as 8,9
+next n
+
+inval = 5
+for n from 1 to mxitst
+   if (inval > 4) then
+      inval = 2
+   else
+      inval = inval+1
+   endif
+   set up nth inverted filter inclusion set as 1,inval
+   set up nth inverted filter exclusion set as inval,8
+next n
+
+ISS with
+  starting path =   101,1
+  normal filter =   as set up
+  inverted filter = as set up
+
+pass/fail depending on
+   (no error from ISS and found path = 101,2, 102,1)
+
+*** *** *** ***   Multiple filters   *** *** *** ***
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should be found if its nameset is
+       accepted all the normal filters and rejected by all the
+       inverted filters."
+
+ISS with
+  starting path =    101,1
+  normal filters =   incl: 5,3,6,7; excl: 8,9
+                     incl: 3;       excl: empty
+  inverted filters = incl: 1,2;     excl: 8,9
+                     incl: 3,1,2;   excl: 4,8,9
+
+pass/fail depending on (found path = 101,2, 102,1)
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should not be found if its
+       nameset is rejected by at least one normal filter."
+
+ISS with
+  starting path =    101,1
+  normal filters =   incl: 5,3,6,7; excl: 8,9
+                     incl: 3;       excl: 3
+  inverted filters = incl: 1,2;     excl: 8,9
+                     incl: 3,1,2;   excl: 4,8,9
+
+pass/fail depending on (found path = empty)
+
+TEST: #SR 3 4 5 6 10 18 19 20
+      "An eligible primitive should not be found if its
+       nameset is accepted by at least one inverted filter."
+
+ISS with
+  starting path =    101,1
+  normal filters =   incl: 5,3,6,7; excl: 8,9
+                     incl: 3;       excl: 2,1
+  inverted filters = incl: 4,1,2;   excl: 8,9
+                     incl: 3,1,2;   excl: 4,8,9
+
+pass/fail depending on (found path = empty)
+
+end_mult_filter:
+
+END PROGRAM 7

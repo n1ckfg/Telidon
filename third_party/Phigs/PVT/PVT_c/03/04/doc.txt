@@ -1,0 +1,930 @@
+TITLE: Examining structures in an archive
+
+
+MODULE#: 03.04
+
+
+DESCRIPTION: This module tests the basic features for obtaining
+information about the contents of an archive file and its topography
+as well as comparing the structures in the archive to those in the
+CSS.
+
+
+SEMANTIC REQUIREMENTS:
+
+***   List of structure identifiers   ***
+
+SR1.  <Retrieve structure identifiers> returns a list of
+identifiers for all existing structures in the specified archive
+file.
+#F 141
+#D 9.1.1
+#S 4.4.7/32/5
+#T P01/1
+
+***   Examine conflicting structures   ***
+
+SR2.  <Inquire all conflicting structures> returns a list of
+identifiers for all structures that exist in both the specified
+archive and the CSS.
+#F 213
+#D 4.5 7.1 9.1.1
+#S 4.4.7/33/2
+#T P02/7 P02/8
+
+SR3.  If structure network source = CSS, then <inquire
+conflicting structures in network> returns a list of identifiers
+for all structures that exist in both 1) the specified archive
+file, and 2) the CSS network whose root is the specified
+structure.
+#F 214
+#D 4.5 7.1 7.3.4 9.1.1
+#S 4.4.7/33/2
+#T P02/1 P02/3 P02/5
+
+SR4.  If structure network source = ARCHIVE, then <inquire
+conflicting structures in network> returns a list of identifiers
+for all structures that exist in both 1) the CSS, and 2) the
+archive network whose root is the specified structure.
+#F 214
+#D 4.5 7.1 9.1.1 9.1.2.4
+#S 4.4.7/33/2
+#T P02/2 P02/4 P02/6
+
+***   Examine archive paths   ***
+
+SR5.  <Retrieve paths to ancestors> returns a list of ancestor
+paths in the specified archive file from the specified structure
+identifier.
+#F 145
+#D 9.1.2.4 9.1.1
+#S 4.4.7/32/6
+#T P03/1 P03/2 P03/3
+
+
+SR6.  <Retrieve paths to descendants> returns a list of
+descendant paths in the specified archive file from the specified
+structure identifier.
+#F 146
+#D 9.1.2.4 9.1.1
+#S 4.4.7/32/6
+#T P04/1 P04/2 P04/3 P04/4
+
+SR7.  An ancestor or descendant path is a sequence of at least two
+ordered pairs (one pair for the specified structure, the second for an
+immediate ancestor or descendant) each of which consists of a
+referring structure identifier and the position of the 'execute
+structure' element in that structure (0 if there is no such element in
+the structure).
+#F 113 145 146
+#D 9.1.2.4 9.1.1
+#S 4.4.7/32/6
+#T P03/1 P03/2 P03/3 P04/1 P04/2 P04/3 P04/4
+#C See defect 9592-1/066.  A (non-truncated) path cannot consist
+simply of the single specified structure.
+
+SR8.  Ancestor and descendant paths are ordered with the element
+for the referring (parent) structure identifier preceding that
+for the referred (child) structure identifier, i.e. top-down.
+#F 113 145 146
+#D 9.1.2.4 9.1.1
+#S 4.4.7/32/6
+#T P03/1 P03/2 P03/3 P04/1 P04/2 P04/3 P04/4
+
+SR9.  If the structure network specified by <retrieve paths to
+descendants> contains an archived structure S that refers to a
+structure T which does not also exist in archive file, then the
+returned paths will be the same as if T were an existing empty
+structure.
+#F 113 146
+#D 9.1.2.4 9.1.1
+#S n
+#T P04/4
+#C Thus, the last element of a descendant path may be (T,0),
+whether or not T exists.
+
+SR10.  An ancestor path returned by <retrieve paths to ancestors>
+is maximal if path depth is specified as zero or if path depth is
+positive but is not exceeded by the number of elements in the
+maximal path.
+#F 145
+#D 9.1.2.4 9.1.1
+#S n
+#T P03/1 P03/2 P03/3
+
+SR11.  A descendant path returned by <retrieve paths to
+descendants> is maximal if path depth is specified as zero or if
+path depth is positive but is not exceeded by the number of
+elements in the maximal path.
+#F 146
+#D 9.1.2.4 9.1.1
+#S n
+#T P04/1 P04/2 P04/3
+
+SR12.  If a positive path depth of P and path order of TOPFIRST
+is specified for <retrieve paths to ancestors>, then only the
+first P elements of any maximal ancestor path whose length
+exceeds P will be reported.
+#F 145
+#D 9.1.2.4 9.1.1
+#S 4.4.7/32/6
+#T P03/2
+
+SR13.  If a positive path depth of P and path order of
+BOTTOMFIRST is specified for <retrieve paths to ancestors>, then
+only the last P elements of any maximal ancestor path whose
+length exceeds P will be reported.
+#F 145
+#D 9.1.2.4 9.1.1
+#S 4.4.7/32/6
+#T P03/3
+
+SR14.  If a positive path depth of P and path order of TOPFIRST
+is specified for <retrieve paths to descendants>, then only the
+first P elements of any maximal descendant path whose length
+exceeds P will be reported.
+#F 146
+#D 9.1.2.4 9.1.1
+#S 4.4.7/32/6
+#T P04/2
+
+SR15.  If a positive path depth of P and path order of
+BOTTOMFIRST is specified for <retrieve paths to descendants>,
+then only the last P elements of any maximal descendant path
+whose length exceeds P will be reported.
+#F 146
+#D 9.1.2.4 9.1.1
+#S 4.4.7/32/6
+#T P04/3
+
+SR16.  If, after truncation due to path depth, the remaining
+portions of two distinct maximal ancestor paths are the same,
+then only one such portion is reported by <retrieve paths to
+ancestors>.
+#F 145
+#D 9.1.2.4 9.1.1
+#S 4.4.7/32/6
+#T P03/2 P03/3
+
+SR17.  If, after truncation due to path depth, the remaining
+portions of two distinct maximal descendant paths are the same,
+then only one such portion is reported by <retrieve paths to
+descendants>.
+#F 146
+#D 9.1.2.4 9.1.1
+#S 4.4.7/32/6
+#T P04/2 P04/3
+
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  113: pexst   <execute structure>
+  141: prsid   <retrieve structure identifiers>
+  145: prepan  <retrieve paths to ancestors>
+  146: prepde  <retrieve paths to descendants>
+  213: pqcst   <inquire all conflicting structures>
+  214: pqcstn  <inquire conflicting structures in network>
+ 
+  Data Structures ---
+  4  ...  phigs_state_list
+  4.5  ...  list_of_structure_identifiers
+  7  ...  structure_state_list
+  7.1  ...  structure_identifier
+  7.3  ...  list_of_structure_elements
+  7.3.4  ...  execute_structure
+  9  ...  archive
+  9.1  ...  archive_file
+  9.1.1  ...  structure_identifier
+  9.1.2  ...  list_of_structure_elements
+  9.1.2.4  ...  execute_structure
+ 
+LOCAL SUBROUTINES:
+
+ARCPTH accepts as a parameter a set of expected ancestor or
+descendant paths in an archive file and compares the reported
+(actual) set to this expected value to test for set-equality.
+
+
+PROGRAM 1: Inquiring about structure identifiers
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+set up standard networks in CSS
+open new archive file, with arid = archive identifier
+
+<delete all structures from archive> to ensure empty file
+expstr = expected structures = 114,102,100,140,107
+<archive structures> with expstr, arid
+<delete all structures> from CSS
+
+<retrieve structure identifiers> to determine
+   lasi = list of archive structure identifiers
+TEST: #SR 1
+      "<Retrieve structure identifiers> should retrieve all
+       identifiers as archived by <archive structures>."
+pass/fail depending on (lasi contains same identifiers as expstr)
+
+close archive file
+
+END PROGRAM 1
+
+
+PROGRAM 2: Examine conflicting structures
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+open archive file = arid
+
+set up structures as follows:
+
+   Archive =                         CSS =
+   ---------------------             ------------------
+   112   102    103  109             101    102     105
+         / \     |    |               |     /  \     |
+       104 105  108  114             119  104  106  107
+         \  |    |                         |  / |    |
+           110  113                       110  112  113
+
+
+*** ***   conflicting networks - root and descendants   *** ***
+
+<inquire conflicting structures in network> for CSS structure 102
+   to determine cssncs = CSS network conflicting structure
+TEST: #SR 3
+      "If the CSS is the structure network source and the
+       specified structure also exists and has descendants in
+       the archive file, then <inquire conflicting structures
+       in network> should return a list of identifiers which exist
+       in both the archive and the CSS network whose root is the
+       specified structure."
+pass/fail depending on (cssncs = 102,104,110,112)
+
+<inquire conflicting structures in network> for archive structure 105
+   to determine arcncs = archive network conflicting structure
+TEST: #SR 4
+      "If the archive is the structure network source and the
+       specified structure also exists and has descendants in
+       the CSS, then <inquire conflicting structures in network>
+       should return a list of identifiers which exist in both
+       the CSS and the archive network whose root is the specified
+       structure."
+pass/fail depending on (arcncs = 105,110)
+
+*** ***   conflicting networks - descendants only   *** ***
+
+<inquire conflicting structures in network> for CSS structure 106
+   to determine cssncs = CSS network conflicting structure
+TEST: #SR 3
+      "If the CSS is the structure network source and the
+       specified structure does not exist in the archive file (but
+       some descendants do), then <inquire conflicting structures
+       in network> should return a list of identifiers which exist
+       in both the archive and the CSS network whose root is the
+       specified structure."
+pass/fail depending on (cssncs = 110, 112)
+
+<inquire conflicting structures in network> for archive structure 108
+   to determine arcncs = archive network conflicting structure
+TEST: #SR 4
+      "If the archive is the structure network source and the
+       specified structure does not exist in the CSS (but some
+       descendants do), then <inquire conflicting structures in
+       network> should return a list of identifiers which exist in
+       both the CSS and the archive network whose root is the
+       specified structure."
+pass/fail depending on (arcncs = 113)
+
+*** *** *** ***   non-conflicting networks   *** *** *** ***
+
+<inquire conflicting structures in network> for CSS structure 101
+   to determine cssncs = CSS network conflicting structure
+TEST: #SR 3
+      "If the CSS is the structure network source and the
+       specified structure neither exists nor has descendants in
+       the archive file, then <inquire conflicting structures
+       in network> should return an empty list."
+pass/fail depending on (cssncs = empty)
+
+<inquire conflicting structures in network> for archive structure 109
+   to determine arcncs = archive network conflicting structure
+TEST: #SR 4
+      "If the archive is the structure network source and the
+       specified structure neither exists nor has descendants in
+       the CSS, then <inquire conflicting structures in network>
+       should return an empty list."
+pass/fail depending on (arcncs = empty)
+
+
+*** *** *** ***   structures conflict   *** *** *** ***
+
+<inquire all conflicting structures> to determine
+   allcfs = all conflicting structures
+TEST: #SR 2
+      "If the same structure identifiers exist in both the CSS and
+       archive file, then <inquire all conflicting structures>
+       should return a list of all such identifiers."
+pass/fail depending on (allcfs = 102,104,105,110,112,113)
+
+*** *** *** ***   disjoint structures   *** *** *** ***
+
+<delete all structures from archive> to ensure empty archive
+clear CSS
+
+set up archive and CSS as follows:
+
+   Archive =                        CSS =
+   -----------------                ------------
+   101   102    103                 112   115
+         / \     |                         /\
+       104 105  108                     114  116
+
+<inquire all conflicting structures> to determine
+   allcfs = all conflicting structures
+TEST: #SR 2
+      "If there are no structure identifiers that exist in both
+       the CSS and archive file, then <inquire all conflicting
+       structures> should return an empty list."
+pass/fail depending on (allcfs = empty)
+
+close archive file
+
+END PROGRAM 2
+
+
+PROGRAM 3: Retrieving ancestor paths
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+open new archive file, with arid = archive identifier
+Set up archive as follows:
+
+                 101        106       108
+                / | \       /
+               /  |  \    1/
+             1/  2|  3\   /
+             /    |    \ /
+            /     |    107
+           /      |
+        102      103
+        | \      / \\
+        |  \   1/   \\
+       1|  2\  /    2\\3
+        |    \/       \\
+        |    104      105
+        |     |      /
+        |    1|    1/
+         \    |    /
+          \   |   /
+           \  |  /
+            \ | /
+             109
+
+The nodes of the graph (101-109) represent structures, and the
+labelled edges are references to invoked (lower) structures.
+The labels (1-3) represent the element position of the <execute
+structure> function within the calling structure.  Eg, an element
+reference path from 101 to 109 would be: (101, 2), (103, 3),
+(105, 1), (109, 0).
+
+*** *** *** *** ***   No truncation   *** *** *** *** ***
+
+TEST: #SR 5 7 8 10
+      "<Retrieve paths to ancestors> should retrieve all maximal
+       ancestor paths when path depth is zero."
+
+Use <retrieve paths to ancestors> with
+     structure id = 109
+     path order   = TOPFIRST
+     path depth   = zero, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,1), (102,1), (109,0) ),
+      ( (101,1), (102,2), (104,1), (109,0) ),
+      ( (101,2), (103,1), (104,1), (109,0) ),
+      ( (101,2), (103,2), (105,1), (109,0) ),
+      ( (101,2), (103,3), (105,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <retrieve paths to ancestors> with
+     structure id = 107
+     path order   = BOTTOMFIRST
+     path depth   = zero, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,3), (107,0) ),
+      ( (106,1), (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <retrieve paths to ancestors> with
+     structure id = 106
+     path order   = BOTTOMFIRST
+     path depth   = zero, to get:
+  saap = set of all ancestor paths.
+
+if (saap not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <retrieve paths to ancestors> with
+     structure id = 108
+     path order   = TOPFIRST
+     path depth   = zero, to get:
+  saap = set of all ancestor paths.
+
+if (saap not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+pass
+
+*** *** *** ***   Truncating via TOPFIRST   *** *** *** ***
+
+check_topfirst:
+
+TEST: #SR 5 7 8 10 12 16
+      "<Retrieve paths to ancestors> should retrieve all
+       qualifying ancestor paths (or portions thereof), with no
+       repetition, when path depth is positive and path order is
+       TOPFIRST."
+
+Use <retrieve paths to ancestors> with
+     structure id = 109
+     path order   = TOPFIRST
+     path depth   = 3, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,1), (102,1), (109,0) ),
+      ( (101,1), (102,2), (104,1) ),
+      ( (101,2), (103,1), (104,1) ),
+      ( (101,2), (103,2), (105,1) ),
+      ( (101,2), (103,3), (105,1) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <retrieve paths to ancestors> with
+     structure id = 104
+     path order   = TOPFIRST
+     path depth   = 5, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,1), (102,2), (104,0) ),
+      ( (101,2), (103,1), (104,0)
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <retrieve paths to ancestors> with
+     structure id = 105
+     path order   = TOPFIRST
+     path depth   = 1, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,2) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <retrieve paths to ancestors> with
+     structure id = 101
+     path order   = TOPFIRST
+     path depth   = 5, to get:
+  saap = set of all ancestor paths.
+
+if (saap not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+pass
+
+*** *** *** ***   Truncating via BOTTOMFIRST   *** *** *** ***
+
+check_bottomfirst:
+
+TEST: #SR 5 7 8 10 13 16
+      "<Retrieve paths to ancestors> should retrieve all
+       qualifying ancestor paths (or portions thereof), with no
+       repetition, when path depth is positive and path order is
+       BOTTOMFIRST."
+
+Use <retrieve paths to ancestors> with
+     structure id = 109
+     path order   = BOTTOMFIRST
+     path depth   = 3, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,1), (102,1), (109,0) ),
+      ( (102,2), (104,1), (109,0) ),
+      ( (103,1), (104,1), (109,0) ),
+      ( (103,2), (105,1), (109,0) ),
+      ( (103,3), (105,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <retrive paths to ancestors> with
+     structure id = 109
+     path order   = BOTTOMFIRST
+     path depth   = 2, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (102,1), (109,0) ),
+      ( (104,1), (109,0) ),
+      ( (105,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <retrieve paths to ancestors> with
+     structure id = 107
+     path order   = BOTTOMFIRST
+     path depth   = 5, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (101,3), (107,0) ),
+      ( (106,1), (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <retrieve paths to ancestors> with
+     structure id = 107
+     path order   = BOTTOMFIRST
+     path depth   = 1, to get:
+  saap = set of all ancestor paths.
+
+if (saap does not contain exactly:
+      ( (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <retrieve paths to ancestors> with
+     structure id = 106
+     path order   = BOTTOMFIRST
+     path depth   = 1, to get:
+  saap = set of all ancestor paths.
+
+if (saap not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+pass
+
+done:
+close archive file
+
+END PROGRAM 3
+
+
+PROGRAM 4: Retrieve descendant paths
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test.
+
+DESIGN:
+
+open new archive file, with arid = archive identifier
+set up archive as follows:
+
+                 101        106       108
+                / | \       /
+               /  |  \    1/
+             1/  2|  3\   /
+             /    |    \ /
+            /     |    107
+           /      |
+        102      103
+        | \      / \\
+        |  \   1/   \\
+       1|  2\  /    2\\3
+        |    \/       \\
+        |    104      105
+        |     |      /
+        |    1|    1/
+         \    |    /
+          \   |   /
+           \  |  /
+            \ | /
+             109
+
+
+The nodes of the graph (101-109) represent structures, and the
+labelled edges are references to invoked (lower) structures.
+The labels (1-3) represent the element position of the <execute
+structure> function within the calling structure.  Eg, an element
+reference path from 101 to 109 would be: (101, 2), (103, 3),
+(105, 1), (109, 0).
+
+
+*** *** *** ***   No truncation   *** *** *** ***
+
+TEST: #SR 6 7 8 11
+      "<Retrieve paths to descendants> should retrieve all maximal
+       descendant paths when path depth is zero."
+
+Use <retrieve paths to descendants> with
+     structure id = 101
+     path order   = TOPFIRST
+     path depth   = zero, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (101,1), (102,1), (109,0) ),
+      ( (101,1), (102,2), (104,1), (109,0) ),
+      ( (101,2), (103,1), (104,1), (109,0) ),
+      ( (101,2), (103,2), (105,1), (109,0) ),
+      ( (101,2), (103,3), (105,1), (109,0) ),
+      ( (101,3), (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <retrieve paths to descendants> with
+     structure id = 103
+     path order   = BOTTOMFIRST
+     path depth   = zero, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (103,1), (104,1), (109,0) ),
+      ( (103,2), (105,1), (109,0) ),
+      ( (103,3), (105,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <retrieve paths to descendants> with
+     structure id = 109
+     path order   = BOTTOMFIRST
+     path depth   = zero, to get:
+  sadp = set of all descendant paths.
+
+if (sadp not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+Use <retrieve paths to descendants> with
+     structure id = 108
+     path order   = TOPFIRST
+     path depth   = zero, to get:
+  sadp = set of all descendant paths.
+
+if (sadp not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto check_topfirst
+endif
+
+pass
+
+*** *** *** ***   Truncating via TOPFIRST   *** *** *** ***
+
+check_topfirst:
+
+TEST: #SR 6 7 8 11 14 17
+      "<Retrieve paths to descendants> should retrieve all
+       qualifying descendant paths (or portions thereof), with no
+       repetition, when path depth is positive and path order is
+       TOPFIRST."
+
+Use <retrieve paths to descendants> with
+     structure id = 101
+     path order   = TOPFIRST
+     path depth   = 2, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (101,1), (102,1) ),
+      ( (101,1), (102,2) ),
+      ( (101,2), (103,1) ),
+      ( (101,2), (103,2) ),
+      ( (101,2), (103,3) ),
+      ( (101,3), (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <retrieve paths to descendants> with
+     structure id = 101
+     path order   = TOPFIRST
+     path depth   = 1, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (101,1) ),
+      ( (101,2) ),
+      ( (101,3) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <retrieve paths to descendants> with
+     structure id = 104
+     path order   = TOPFIRST
+     path depth   = 5, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (104,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+Use <retrieve paths to descendants> with
+     structure id = 109
+     path order   = TOPFIRST
+     path depth   = 5, to get:
+  sadp = set of all descendant paths.
+
+if (sadp not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto check_bottomfirst
+endif
+
+pass
+
+*** *** *** ***   Truncating via BOTTOMFIRST   *** *** *** ***
+
+check_bottomfirst:
+
+TEST: #SR 6 7 8 11 15 17
+      "<Retrieve paths to descendants> should retrieve all
+       qualifying descendant paths (or portions thereof), with no
+       repetition, when path depth is positive and path order is
+       BOTTOMFIRST."
+
+Use <retrieve paths to descendants> with
+     structure id = 101
+     path order   = BOTTOMFIRST
+     path depth   = 2, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (102,1), (109,0) ),
+      ( (104,1), (109,0) ),
+      ( (105,1), (109,0) ),
+      ( (101,3), (107,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto missing_struct
+endif
+
+Use <retrieve paths to descendants> with
+     structure id = 103
+     path order   = BOTTOMFIRST
+     path depth   = 5, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (103,1), (104,1), (109,0) ),
+      ( (103,2), (105,1), (109,0) ),
+      ( (103,3), (105,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto missing_struct
+endif
+
+Use <retrieve paths to descendants> with
+     structure id = 102
+     path order   = BOTTOMFIRST
+     path depth   = 1, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto missing_struct
+endif
+
+Use <retrieve paths to descendants> with
+     structure id = 108
+     path order   = BOTTOMFIRST
+     path depth   = 1, to get:
+  sadp = set of all descendant paths.
+
+if (sadp not empty)  then
+   fail
+   generate informative message on cause of failure
+   goto missing_struct
+endif
+
+pass
+
+*** *** ***   Retrieve with missing structure   *** *** ***
+
+missing_struct:
+
+<delete structures from archive> structure identifier 104
+
+TEST: #SR 6 7 8 9
+      "If a referenced structure T does not exist in the archive,
+       then <retrieve paths to descendants> should behave as if T
+       were an existing structure containing no references."
+Use <retrieve paths to descendants> with
+     structure id = 103
+     path order   = TOPFIRST
+     path depth   = 0, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (103,1), (104,0)  ),
+      ( (103,2), (105,1), (109,0) ),
+      ( (103,3), (105,1), (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+Use <retrieve paths to descendants> with
+     structure id = 102
+     path order   = BOTTOMFIRST
+     path depth   = 1, to get:
+  sadp = set of all descendant paths.
+
+if (sadp does not contain exactly:
+      ( (104,0)  ),
+      ( (109,0) )
+   )  then
+   fail
+   generate informative message on cause of failure
+   goto done
+endif
+
+pass
+
+done:
+
+close archive file
+
+END PROGRAM 4

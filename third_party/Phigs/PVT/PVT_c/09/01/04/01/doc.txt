@@ -1,0 +1,910 @@
+TITLE: Transformation and viewing errors handled by user
+
+MODULE#: 09.01.04.01
+
+DESCRIPTION: This module tests that the functions which are related
+to workstation transformation and viewing generate the specified
+error codes if they are executed in an incorrect condition.  The error is
+handled by a user defined error handling subroutine. Also, this module tests
+the requirement that no side effects are generated.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.  If functions <set view representation 3>, <set view
+representation> are called, and setting this view table entry would
+exceed the maximum number of entries allowed in the workstation view
+table, then error 150 is generated and the function is ignored.
+#F 84 85
+#D 5.4.1 6.21.8 8.1
+#S 4.12/109/6
+#T P01/1 P01/2 P01/3
+
+SR2.  If functions <set workstation window 3>, <set workstation
+window> are called, and the specified workstation limits are invalid:
+XMIN>=XMAX, YMIN>=YMAX, ZMIN>=ZMAX, UMIN>=UMAX, or VMIN>=VMAX, then
+error 151 is generated and the function is ignored.
+#F 87 88
+#D 5.6.2 5.6.3 8.1
+#S 4.12/109/6
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6 P02/7 P02/8 P02/9
+
+SR3.  If functions <set workstation viewport 3>, <set workstation
+viewport> are called, and the specified workstation viewport limits
+are invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>=ZMAX, then error 152 is
+generated and the function is ignored.
+#F 89 90
+#D 5.6.4 5.6.5 8.1
+#S 4.12/109/6
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6 P03/7 P03/8 P03/9
+
+SR4.  If function <set view representation 3>, <set view
+representation> are called, and the specified view clipping limits are
+invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>=ZMAX, then error 153 is
+generated and the function is ignored.
+#F 84 85
+#D 5.4.2.3.3 5.4.2.4.3 8.1
+#S 4.12/109/6
+#T P04/1 P04/2 P04/3 P04/4 P04/5 P04/6 P04/7 P04/8 P04/9
+
+SR5.  If functions <set view representation 3>, <set view
+representation> are called, and the specified view clipping limits are
+not within NPC range, then error 154 is generated and the function is
+ignored.
+#F 84 85
+#D 5.4.2.3.3 5.4.2.4.3 8.1
+#S 4.12/109/6
+#T P05/1 P05/2 P05/3 P05/4 P05/5 P05/6 P05/7 P05/8
+
+SR6.  If functions <set workstation window 3>, <set workstation
+window> are called, and the specified workstation window limits are
+not within NPC range, then error 156 is generated and the function is
+ignored.
+#F 87 88
+#D 5.6.2 5.6.3 8.1
+#S 4.12/109/6
+#T P06/1 P06/2 P06/3 P06/4 P06/5 P06/6 P06/7 P06/8
+
+SR7.  If functions <set workstation viewport 3>, <set workstation
+viewport> are called, and the specified workstation viewport limits
+are not within display space, then error 157 is generated and the
+function is ignored.
+#F 89 90
+#D 5.6.4 5.6.5 6.4 8.1
+#S 4.12/109/6
+#T P07/1 P07/2 P07/3 P07/4 P07/5 P07/6 P07/7 P07/8
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+   84: psvwr3  <set view representation 3>
+   85: psvwr   <set view representation>
+   87: pswkw3  <set workstation window 3>
+   88: pswkw   <set workstation window>
+   89: pswkv3  <set workstation viewport 3>
+   90: pswkv   <set workstation viewport>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.4  ...  view_table
+  5.4.1  ...  number_of_view_table_entries
+  5.4.2  ...  view_table_ordered_by_input_priority
+  5.4.2.3  ...  current_view
+  5.4.2.3.3  ...  current_view_clipping_limits
+  5.4.2.4  ...  requested_view
+  5.4.2.4.3  ...  requested_view_clipping_limits
+  5.6  ...  workstation_transformation_entry
+  5.6.2  ...  requested_workstation_window
+  5.6.3  ...  current_workstation_window
+  5.6.4  ...  requested_workstation_viewport
+  5.6.5  ...  current_workstation_viewport
+  6  ...  workstation_description_table
+  6.4  ...  maximum_display_space_size
+  6.21  ...  maximum_table_lengths
+  6.21.8  ...  maximum_number_of_view_table_indices
+  8  ...  phigs_error_state_list
+  8.1  ...  error_state
+ 
+
+
+PROGRAM 1: Error 150 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+This is a passive test, but take care to invoke it so as to link
+in the standard PVT user-defined error handler.  Since this is
+the mode in which the non-error-handling tests are executed, this
+program should be invoked in the normal way.
+
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+First, setting view representations for maximum number allowed on the
+workstation view table, then set one more view representation or view
+representation 3 to test if functions 83,84 generates error 150 :ignoring
+function, setting view table entry would exceed the maximum number of entries
+allowed in the workstation view table.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+
+Use <inquire workstation state table lengths> to determine:
+   maxvw = maximum number of view table indices
+rotmt3(3,3) = identity matrix
+mapmt3(3,3) = identity matrix
+clplm3 = {0.,1.,0.,1.}
+rotmap(4,4) = identity matrix
+mapmat(4,4) = identity matrix
+clplm4 = (0.,1.,0.,1.,0.,1.}
+
+for ix = 1 to maxvw
+   <set view representation> with index=ix, rotmat,mapmat,clplim,clip
+next ix
+<set view representation> with index=maxvw+1,rotmat,mapmat,clplim,clip:
+   signals error
+use <inquire list of view indices> to get:
+   nvwix = number of view bundle table intries
+TEST: #SR 1
+      "If <set view representation> signals an error because setting this
+       view table entry would exceed the maximum number of entries allowed
+       in the workstation view table, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS open and
+                        workstation state = open and nvwix = maxvw)
+
+<set view representation 3> with index=maxvw+1,rotmt4,mapmt4,clplm4,clip,
+                                 clip,clip: signals error
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 1
+      "If <set view representation> is called and setting this view table
+       entry would exceed the maximum number of entries allowed in the
+       workstation view table, it should return error code  150, function
+       identifier  084, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 1
+      "If <set view representation 3> is called and setting this view table
+       entry would exceed the maximum number of entries allowed in the
+       workstation view table, it should return error code  150, function
+       identifier  083, and the current error file identifier to the user
+       defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error 151 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Given invalid window limits to test if functions 86,87 generate error 151:
+ignoring function, invalid window: XMIN>=XMAX, YMIN>=YMAX, ZMIN>ZMAX,
+UMIN>=UMAX, or VMIN>=VMAX.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+
+<set workstation window 3> with xmin=0.1, xmax=0.9, ymin=0.1, ymax=0.9,
+     zmin=0.1, zmax=0.9
+<set workstation window 3> with xmin=0.6, xmax=0.3, ymin=0., ymax=1.,
+     zmin=0.1, zmax=0.9: signals error
+<set workstation window 3> with xmin=0., xmax=1., ymin=0.6, ymax=0.6,
+     zmin=0.,zmax=1.: signals error
+
+<set workstation window 3> with xmin=0., xmax=1., ymin=0., ymax=1.,
+     zmin=0.6,zmax=0.3: signals error
+
+<set workstation windoe 3> with xmin=0., xmax=1., ymin=0.6, ymax=0.3,
+     zmin=0.,zmax=0. : signals error
+
+<set workstation window> with xmin=0.6, xmax=0.3, ymin=0., ymax=1.:
+     signals error
+
+<set workstation window> with xmin=0., xmax=1., ymin=0.6, ymax=0.3:
+     signals error
+
+Use <inquire workstation transformation 3> to get:
+     workstation window limit: xmin1,xmax1,ymin1,ymax1,zmin1,zmax1
+TEST: #SR 2
+      "If <set workstation window> signals an error because the specified
+       workstation window limits are invalid: XMIN>=XMAX, YMIN>=YMAX,
+       ZMIN>ZMAX, UMIN>=UMAX, or VMIN>=VMAX, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        xmin1=0.1 and xmax=0.9 and ymin=0.1 and ymax=0.9 and
+                        zmin1=0.1 and zmax=0.9)
+
+
+<set workstation window> with xmin=0.1, xmax=0.8, ymin=0.1, ymax=0.8
+<set workstation window> with xmin=0.6, xmax=0.3, ymin=0.9, ymax=0.5:
+     signals error
+Use <inquire workstation transformation> to get:
+     workstation window limits = xmin1,xmax1,ymin1,ymax1
+TEST: #SR 2
+      "If <set workstation window> signals an error because the specified
+       workstation window limits are invalid: XMIN>=XMAX, YMIN>=YMAX,
+       ZMIN>ZMAX, UMIN>=UMAX, or VMIN>=VMAX, it should not cause any
+       other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        xmin1=0.1 ans xmax1=0.8 and ymin1=0.1 and ymax1=0.8)
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 2
+      "If <set workstation window 3> is called and the specified workstation
+       window limits are invalid: XMIN>=XMAX, YMIN>=YMAX, ZMIN>ZMAX,
+       UMIN>=UMAX, or VMIN>=VMAX, it should return error code 151,
+       function identifier  086, and the current error file identifier
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <set workstation window 3> is called and the specified workstation
+       window limits are invalid: XMIN>=XMAX, YMIN>=YMAX, ZMIN>ZMAX,
+       UMIN>=UMAX, or VMIN>=VMAX, it should return error code  151,
+       function identifier  086, and the current error file identifier
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <set workstation window 3> is called and the specified workstation
+       window limits are invalid: XMIN>=XMAX, YMIN>=YMAX, ZMIN>ZMAX,
+       UMIN>=UMAX, or VMIN>=VMAX, it should return error code  151,
+       function identifier  086, and the current error file identifier
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <set workstation window 3> is called and the specified workstation
+       window limits are invalid: XMIN>=XMAX, YMIN>=YMAX, ZMIN>ZMAX,
+       UMIN>=UMAX, or VMIN>=VMAX, it should return error code  151,
+       function identifier  086, and the current error file identifier
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <set workstation window> is called and the specified workstation
+       window limits are invalid: XMIN>=XMAX, YMIN>=YMAX, ZMIN>ZMAX,
+       UMIN>=UMAX, or VMIN>=VMAX, it should return error code  151,
+       function identifier  087, and the current error file identifier
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <set workstation window> is called and the specified workstation
+       window limits are invalid: XMIN>=XMAX, YMIN>=YMAX, ZMIN>ZMAX,
+       UMIN>=UMAX, or VMIN>=VMAX, it should return error code  151,
+       function identifier  087, and the current error file identifier
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 2
+      "If <set workstation window> is called and the specified workstation
+       window limits are invalid: XMIN>=XMAX, YMIN>=YMAX, ZMIN>ZMAX,
+       UMIN>=UMAX, or VMIN>=VMAX, it should return error code  151,
+       function identifier  087, and the current error file identifier
+       to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 2
+
+
+PROGRAM 3: Error 152 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Given invalid viewport limits to test if functions 88,89 generate error 152:
+ignoring function, invalid viewport: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+
+Use <inquire display space size 3> to get:
+     maximum display size dx,dy,dz (DC)
+xx = dx/2
+yy = dy/2
+zz = dz/2
+<set workstation viewport 3> with xmin=0.0, xmax=xx, ymin=0., ymax=yy,
+     zmin=0., zmax=zz
+<set workstation viewport 3> with xmin=xx, xmax=0., ymin=0., ymax=dy,
+     zmin=0.,zmax=dz: signals error
+Use <inquire workstation transformation 3> to get:
+     current workstation viewport limits: xmin1,xmax1,ymin1,ymax1,zmin1,zmax1
+TEST: #SR 3
+      "If <set workstation viewport 3> signals an error because the
+       specified workstation viewport limits are invalid: XMIN>=XMAX,
+       YMIN>=YMAX, or ZMIN>ZMAX, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        xmin1=0 and xmax1=xx and ymin=0 and ymax=yy and
+                        zmin1=0 and zmax1=zz)
+
+<set workstation viewport 3> with xmin=0., xmax=dx, ymin=yy, ymax=0.,
+     zmin=0.,zmax=dy: signals error
+
+<set workstation viewport 3> with xmin=0., xmax=dx, ymin=0., ymax=dy,
+     zmin=zz,zmax=0.: signals error
+
+<set workstation viewport 3> with xmin=0., xmax=dx, ymin=yy, ymax=yy,
+     zmin=zz,zmax=zz: signals error
+
+Use <inquire display space size> to get:
+     display space size dx, dy
+xx=dx/2
+yy=dy/2
+<set workstation viewport> with xmin=xx, xmax=0., ymin=0., ymax=dy:
+     signals error
+
+<set workstation viewport> with xmin=0., xmax=dx, ymin=yy, ymax=0.:
+     signals error
+
+<set workstation viewport> with xmin=0., xmax=xx, ymin=0., ymax=yy
+<set workstatino viewport> with xmin=xx, xmax=0., ymin=yy, ymax=0.:
+     signals error
+Use <inquire workstation transformation> to get:
+     workstation viewport limits: xmin1,xmax1,ymin1,ymax1
+TEST: #SR 3
+      "If <set workstation viewport> signals an error because the specified
+       workstation viewport limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or
+       ZMIN>ZMAX, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        xmin1=0 and xmax1=xx and ymin1=0 and ymax1=yy)
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 3
+      "If <set workstation viewport 3> is called and the specified
+       workstation viewport limits are invalid: XMIN>=XMAX, YMIN>=YMAX,
+       or ZMIN>ZMAX, it should return error code  152,
+       function identifier  088, and the current error file identifier to
+       the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set workstation viewport 3> is called and the specified
+       workstation viewport limits are invalid: XMIN>=XMAX, YMIN>=YMAX,
+       or ZMIN>ZMAX, it should return error code  152, function
+       identifier  088, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set workstation viewport 3> is called and the specified
+       workstation viewport limits are invalid: XMIN>=XMAX, YMIN>=YMAX,
+       or ZMIN>ZMAX, it should return error code  152, function
+       identifier  088, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set workstation viewport 3> is called and the specified
+       workstation viewport limits are invalid: XMIN>=XMAX, YMIN>=YMAX,
+       or ZMIN>ZMAX, it should return error code  152, function
+       identifier  088, and the current error file identifier to the
+       user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set workstation viewport> is called and the specified workstation
+       viewport limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error code  152, function identifier  089,
+       and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set workstation viewport> is called and the specified workstation
+       viewport limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error code  152, function identifier  089,
+       and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 3
+      "If <set workstation viewport> is called and the specified workstation
+       viewport limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error code  152, function identifier  089,
+       and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Error 153 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Given invalid view clipping limits to test if functions 83,84 generate error
+153:ignoring function, invalid view clipping limits: XMIN>=XMAX, YMIN>=YMAX,
+or ZMIN>ZMAX.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+
+<set view representation 3> with clipping limits = {0.1,0.9,0.1,0.9,0.1,0.9}
+<set view representation 3> with clipping limits = {0.6,0.3,0.,1.,0.,1.}:
+    signals error
+
+<set view representation 3> with clipping limits = {0.,1.,0.6,0.6,0.,1.}:
+     signals error
+
+<set view representation 3> with clipping limits = {0.,1.,0.,1.,0.6,0.3}:
+     signals error
+
+<set view representation 3> with clipping limits = {0.,1.,0.6,0.3,0.,0.}:
+     signals error
+Use <inquire view representation> to get:
+    current view clipping limits: xmin1,xmax1,ymin1,ymax1,zmin1,zmax1
+TEST: #SR 4
+      "If <set view representation 3> signals an error because the specified
+       view clipping limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or
+       ZMIN>ZMAX, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        xmin1=0.1 and xmax1=0.9 and ymin1=0.1 and ymax=0.9
+                        and zmin1=0.1 and zmax1=0.9)
+
+<set view representation> with clipping limits = {0.1,0.9,0.1,0.9}
+<set view representation> with clipping limits = {0.6,0.3,0.,1.}:
+     signals error
+
+<set view representation> with clipping limits = {0.,1.,0.6,0.3}:
+     signals error
+
+<set view representation> with clipping limits = {0.6,0.3,0.6,0.3}:
+     signals error
+Use <inquire view representation> to get:
+     clipping limits: xmin1,xmax1,ymin1,ymax1
+TEST: #SR 4
+      "If <set view representation> signals an error because the specified
+       view clipping limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or
+       ZMIN>ZMAX, it should not cause any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        xmin1=0.1 and xmax1=0.9 and ymin=0.1 and ymax=0.9)
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 4
+      "If <set view representation 3> is called and the specified
+       view clipping limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or
+       ZMIN>ZMAX, it should return error code  153, function identifier  083,
+       and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+
+TEST: #SR 4
+      "If <set view representation 3> is called and the specified view
+       clipping limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error code  153, function identifier  083,
+       and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set view representation 3> is called and the specified view
+       clipping limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error code  153, function identifier  083,
+       and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set view representation 3> is called and the specified view
+       clipping limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error code  153, function identifier  083,
+       and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set view representation> is called and the specified view clipping
+       limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX, it should
+       return error code  153, function identifier  084,
+       and the current error file identifier to the user defined error
+       handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set view representation> is called and the specified view clipping
+       limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX, it should
+       return error code  153, function identifier  084, and the current
+       error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 4
+      "If <set view representation> is called and the specified view clipping
+       limits are invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX, it should
+       return error code  153, function identifier  084, and the current
+       error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 4
+
+
+PROGRAM 5: Error 154 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Setting view clipping limits to the values out of NPC range to test if
+functions 83,84 generate error 154: ignoring function, the view clipping
+limits are not within NPC range.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+
+<set view representation 3> with view clipping limits =
+      {0.1,0.9,0.1,0.9,0.1,0.9}
+<set view representation 3> with view clipping limits =
+      {-0.1,1.,0.,1.,0.,1.}: signals error
+Use <inquire view representation> to get:
+      clipping limits: xmin1,xmax1,ymin1,ymax1,zmin1,zmax1
+TEST: #SR 5
+      "If <set view representation 3> signals an error because the specified
+       view clipping limits are not within NPC range, it should not cause
+       any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        xmin1=0.1 and xmax1=0.9 and ymin1=0.1 and ymax1=0.9
+                        and zmin=0.1 and zmax1=0.9)
+
+<set view representation 3> with view clipping limits =
+      {0.,1.,0.,1.1,0.,1.}: signals error
+
+<set view representation 3> with view clipping limits =
+      {0.,1.,0.,1.,-0.1,1.1}: signals error
+
+<set view representation> with view clipping limits =
+      {-0.1,1.,0.,1.}: signals error
+
+<set view representaiton> with view clipping limits =
+      {0.,1.,0.,1.1}: signals error
+
+<set view representation> with view clipping limits = {0.1,0.9,0.1,0.9}
+<set view representation> with view clipping limits =
+      {-0.1,1.,0.,1.1}: signals error
+Use <inquire view representation> to get:
+    view clipping limits: xmin1,xmax1,ymin1,ymax1
+TEST: #SR 5
+      "If <set view representation> signals an error because the specified view
+       clipping limits are not within NPC range, it should not cause any other
+       effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstaton state = open   and
+                        xmin1=0.1 and xmax=0.9 and ymin=0.1 and ymax=0.9)
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 5
+      "If <set view representation 3> is called and the specified view
+       clipping limits are not within NPC range, it should return error
+       code  154, function identifier  083, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set view representation 3> is called and the specified view
+       clipping limits are not within NPC range, it should return error
+       code  154, function identifier  083, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set view representation 3> is called and the specified view
+       clipping limits are not within NPC range, it should return error
+       code  154, function identifier  083, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set view representation> is called and the specified view
+       clipping limits are not within NPC range, it should return error
+       code  154, function identifier  084, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set view representation> is called and the specified view
+       clipping limits are not within NPC range, it should return error
+       code  154, function identifier  084, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 5
+      "If <set view representation> is called and the specified view
+       clipping limits are not within NPC range, it should return error
+       code  154, function identifier  084, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 5
+
+
+PROGRAM 6: Error 156 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Setting workstation windos limits to the values out of NPC range to test if
+functions 86,87 generate error 156: ignoring function, the workstation window
+limits are not within NPC range.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+
+<set workstation window 3> with window limits = {0.1,0.9,0.1,0.9,0.1,0.9}
+<set workstation window 3> with window limits =
+      {-0.1,1.,0.,1.,0.,1.}: signals error
+Use <inquire workstation transformation 3> to get:
+     workstation window limits: xmin1,xmax1,ymin1,ymax1,zmin1,zmax1
+TEST: #SR 6
+      "If <set workstation window 3> signals an error because the specified
+       workstation window limits are not within NPC range, it should not cause
+       any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        xmin1=0.1 and xmax=0.9 and ymin=0.1 and
+                        ymax1=0.9 and zmin=0.1 and zmax=0.9)
+
+<set workstation window 3> with window limits =
+      {0.,1.,0.,1.1,0.,1.}: signals error
+
+<set workstatioin window 3> with window limits =
+      {0.,1.,0.,1.,-0.1,1.1}: signals error
+
+<set workstation window> with window limits =
+      {-0.1,1.,0.,1.}: signals error
+
+<set workstation window> with window limits =
+      {0.,1.,0.,1.1}: signals error
+
+<set workstation window> with window limits = {0.1,0.9,0.1,0.9}
+<set workstaiton window> with window limits =
+      {-0.1,1.,0.,1.1}: signals error
+Use <inquire workstation transformation> to get:
+     workstation window limits: xmin1,xmax1,ymin1,ymax1
+TEST: #SR 6
+      "If <set workstation window> signals an error because the specified
+       workstation window limits are not within NPC range, it should not cause
+       any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstaton state = open   and
+                        xmin1=0.1 and xmax1=0.9 and ymin1=0.1 and ymax1=0.9)
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 6
+      "If <set workstation window 3> is called and the specified workstation
+       window limits are not within NPC range, it should return error
+       code  156, function identifier  086, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 6
+      "If <set workstation window 3> is called and the specified workstation
+       window limits are not within NPC range, it should return error
+       code  156, function identifier  086, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 6
+      "If <set workstation window 3> is called and the specified workstation
+       window limits are not within NPC range, it should return error
+       code  156, function identifier  086, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 6
+      "If <set workstation window> is called and the specified workstation
+       window limits are not within NPC range, it should return error
+       code  156, function identifier  087, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 6
+      "If <set workstation window> is called and the specified workstation
+       window limits are not within NPC range, it should return error
+       code  156, function identifier  087, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 6
+      "If <set workstation window> is called and the specified workstation
+       window limits are not within NPC range, it should return error
+       code  156, function identifier  087, and the current error file
+       identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 6
+
+
+PROGRAM 7: Error 157 handled by user
+
+CHARACTERISTICS: ynnn
+
+OPERATOR SCRIPT:
+See OPERATOR SCRIPT for Program 1.
+
+DESIGN:
+Throughout this program, every time an error is signalled (as noted
+by the tag "signals error"), the user-defined error handler saves
+the error code, function identifier, and error file identifier in
+an error table.
+
+Setting workstation viewport limits to the values out of display space to test
+if functions 88,89 generate error 157: ignoring function, the workstation
+viewport is not within display space.
+
+*** *** ***  Generate errors; test absence of side effects  *** *** ***
+
+<open workstation> wkid
+Use <inquire display space size 3> to determine:
+   dx3,dy3,dz3 = maximum display space size in device display coordinate units
+Use <inquire display space size> to determine:
+   dx2,dy2 = maximum display space size in device display coordinate units
+
+xx = dx3/2
+yy = dy3/2
+zz = dz3/2
+<set workstation viewport 3> with viewport limits = {0.,xx,0.,yy,0.,zz}
+<set workstation viewport 3> with viewport limits =
+      {-0.1,dx3,0.,dy3, 0.,dz3}: signals error
+Use <inquire workstation transformation 3> to get:
+     current viewport limits: xmin1,xmax1,ymin1,ymax1,zmin1,zmax1
+TEST: #SR 7
+      "If <set workstation viewport 3> signals an error because the specified
+       workstation viewport is not within display space, it should not cause
+       any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstation state = open  and
+                        xmin1=0. and xmax1=xx and ymin1=0. and ymax1=yy
+                        and zmin1=0 and zmax1=zz)
+
+<set workstation viewport 3> with viewport limits =
+      {0.,dx3,0.,dy3+0.1,0.,dz3}: signals error
+
+<set workstatioin viewport 3> with viewport limits =
+      {0.,dx3,0.,dy3,-0.1,dz3+0.1}: signals error
+
+<set workstation viewport> with viewport limits =
+      {-0.1,dx2,0.,dy2}: signals error
+
+<set workstation viewport> with viewport limits =
+      {0.,dx2,0.,dy2+0,1}: signals error
+
+xx=dx2/2
+yy=dy2/2
+<set workstation viewport> with window limits = {0.,xx,0.,yy}
+<set workstaiton viewport> with window limits =
+      {-0.1,dx2,0.,dy2+0.1}: signals error
+Use <inquire workstation transformation> to get:
+     viewport limits: xmin1,xmax1,ymin1,ymax1
+TEST: #SR 7
+      "If <set workstation viewport> signals an error because the specified
+       workstation viewport is not within display space, it should not cause
+       any other effect."
+pass/fail depending on (system state = PHIGS-open and
+                        workstaton state = open   and
+                        xmin1=0. and xmax1=xx and ymin1=0. and ymax=yy)
+
+<close workstation> wkid
+
+*** *** ***  Results of user-defined error handling  *** *** ***
+
+TEST: #SR 7
+      "If <set workstation viewport 3> is called and the specified
+       workstation viewport is not within display space, it should
+       return error code  157, function identifier  088,
+       and the current error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <set workstation viewport 3> is called and the specified
+       workstation viewport is not within display space, it should
+       return error code  157, function identifier  088,
+       and the current error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <set workstation viewport 3> is called and the specified
+       workstation viewport is not within display space, it should
+       return error code  157, function identifier  088,
+       and the current error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <set workstation viewport> is called and the specified
+       workstation viewport is not within display space, it should
+       return error code  157, function identifier  089,
+       and the current error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <set workstation viewport> is called and the specified
+       workstation viewport is not within display space, it should
+       return error code  157, function identifier  089,
+       and the current error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+TEST: #SR 7
+      "If <set workstation viewport> is called and the specified
+       workstation viewport is not within display space, it should
+       return error code  157, function identifier  089,
+       and the current error file identifier to the user defined error handler."
+pass/fail depending on (next entry in error table = expected values)
+
+END PROGRAM 7
+

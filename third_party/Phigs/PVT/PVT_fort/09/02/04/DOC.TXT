@@ -1,0 +1,647 @@
+TITLE: Transformation and viewing error indicators
+
+MODULE#: 09.02.04
+
+DESCRIPTION: This module tests that the functions related to transformation
+and viewing set the specified transformation and viewing error to error
+indicator if they are executed in an incorrect condition.
+
+SEMANTIC REQUIREMENTS:
+
+SR1.   If functions <evaluate view mapping matrix 3>, <evaluate view mapping
+matrix> are called, and the specified window is invalid: XMIN>=XMAX,
+YMIN>=YMAX, ZMIN>ZMAX, UMIN>=UMAX, or VMIN>=VMAX, then the error indicator
+is set to 151.
+#F 109 110
+#D 5.4.2.3.2 5.4.2.4.2
+#S 4.7.5/84/10 4.7.5/87/3
+#T P01/1 P01/2 P01/3 P01/4 P01/5 P01/6
+
+SR2.   If functions <evaluate view mapping matrix 3>, <evaluate view mapping
+matrix> are called, and the specified viewport is invalid: XMIN>=XMAX,
+YMIN>=YMAX, or ZMIN>=ZMAX, then the error indicator is set to 152.
+#F 109 110
+#D 5.4.2.3.2 5.4.2.4.2
+#S 4.7.5/84/10 4.7.5/87/3
+#T P02/1 P02/2 P02/3 P02/4 P02/5 P02/6
+
+SR3.   If functions <evaluate view mapping matrix 3>, <evaluate view mapping
+matrix> are called, and the projection viewport limits are not within NPC
+range, then the error indicator is set to 155.
+#F 109 110
+#D 5.4.2.3.2 5.4.2.4.2
+#S 4.7.5/84/10 4.7.5/87/3
+#T P03/1 P03/2 P03/3 P03/4 P03/5 P03/6
+
+SR4.  If function <evaluate view mapping matrix 3> is called, and
+front plane and back plane distances are equal when z-extent of the
+project viewport is non-zero, then the error indicator is set to 158.
+#F 109
+#D 5.4.2.3.2 5.4.2.4.2
+#S 4.7.5/84/10 4.7.5/87/3
+#T P04/1 P04/2
+
+SR5.   If function <evaluate view orientation matrix 3> is called, and the
+view plane normal vector has length zero, then the error indicator is set
+to 159.
+#F 107
+#D 5.4.2.3.1 5.4.2.4.1
+#S 4.7.5/84/10
+#T P05/1
+
+SR6.   If functions <evaluate view orientation matrix 3>, <evaluate view
+orientation matrix> are called, and the view up vector has length zero,
+then the error indicator is set to 160.
+#F 107 108
+#D 5.4.2.3.1 5.4.2.4.1
+#S 4.7.5/84/10
+#T P06/1 P06/2
+
+SR7.   If function <evaluate view orientation matrix 3> is called, and
+the view up and view plane normal vectors are parallel thus the viewing
+coordinate system cannot be established, then the error indicator is
+set to 161.
+#F 107
+#D 5.4.2.3.1 5.4.2.4.1
+#S 4.7.5/84/10
+#T P07/1 P07/2 P07/3
+
+SR8.   If function <evaluate view mapping matrix 3> is called, and the
+projection reference point is between the front and the backl plane, then
+the error indicator is set to 162.
+#F 109
+#D 5.4.2.3.2 5.4.2.4.2
+#S 4.7.5/84/10 4.7.5/87/3
+#T P08/1
+
+SR9.   If function <evaluate view mapping matrix 3> is called, and the
+projection reference point cannot be positioned on the view plane, then
+the error indicator is set to 163.
+#F 109
+#D 5.4.2.3.2 5.4.2.4.2
+#S 4.7.5/84/10 4.7.5/87/3
+#T P09/1 P09/2
+
+SR10.  If function <evaluate view mapping matrix 3> is called, and the
+back plane is in front of the front plane, then the error indicator is set
+to 164.
+#F 109
+#D 5.4.2.3.2 5.4.2.4.2
+#S 4.7.5/84/10 4.7.5/87/3
+#T P10/1 P10/2
+ 
+LOCAL DICTIONARY:
+ 
+  Functions ---
+  107: pevom3  <evaluate view orientation matrix 3>
+  108: pevom   <evaluate view orientation matrix>
+  109: pevmm3  <evaluate view mapping matrix 3>
+  110: pevmm   <evaluate view mapping matrix>
+ 
+  Data Structures ---
+  5  ...  workstation_state_list
+  5.4  ...  view_table
+  5.4.2  ...  view_table_ordered_by_input_priority
+  5.4.2.3  ...  current_view
+  5.4.2.3.1  ...  current_view_orientation_matrix
+  5.4.2.3.2  ...  current_view_mapping_matrix
+  5.4.2.4  ...  requested_view
+  5.4.2.4.1  ...  requested_view_orientation_matrix
+  5.4.2.4.2  ...  requested_view_mapping_matrix
+ 
+
+
+PROGRAM 1: Error indicator = 151
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 109,110 with an invalid window to test if they set
+number 151 to the error indicator: Ignoring function, invalid window:
+UMIN>=UMAX or VMIN>=VMAX.
+
+set 3D mapping parameters for PARALLEL projection:
+   UMIN, UMAX, VMIN, VMAX = -80.95, -462.27, -4891.85, -94.78
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.2640, 0.4082, 0.01339, 0.7457, 0.1395, 0.30036
+   PRP = -15.044, 1.318, 34.873
+   VPD = -1.213
+   BPD = -3.311
+   FPD = 15.332
+<evaluate view mapping matrix 3>
+TEST: #SR 1
+      "If <evaluate view mapping matrix 3> is called and the specified
+       window is invalid: UMIN>=UMAX or VMIN>=VMAX, it should return
+       error indicator = 151."
+pass/fail depending on (returned error indicator = 151)
+
+set 3D mapping parameters for PARALLEL projection same as above except:
+   UMIN, UMAX, VMIN, MAX = -462.27, -80.95, -94.78, -4891.85
+<evaluate view mapping matrix 3>
+TEST: #SR 1
+      "If <evaluate view mapping matrix 3> is called and the specified
+       window is invalid: UMIN>=UMAX or VMIN>=VMAX, it should return
+       error indicator = 151."
+pass/fail depending on (returned error indicator = 151)
+
+set 3D mapping parameters for PERSPECTIVE projection:
+   UMIN, UMAX, VMIN, VMAX = -62.2236, -11.39577, 24.255, -60.530
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.10639, 0.22243, 0.10012, 0.15392, 0.24695, 0.88262
+   PRP = -3.6054E-2, 2.1181E-3, 3.0531
+   VPD = 0.16487
+   BPD = -5.2858E-3
+   FPD = 3.0531
+<evaluate view mapping matrix 3>
+TEST: #SR 1
+      "If <evaluate view mapping matrix 3> is called and the specified
+       window is invalid: UMIN>=UMAX or VMIN>=VMAX, it should return
+       error indicator = 151."
+pass/fail depending on (returned error indicator = 151)
+
+set 3D mapping parameters for PERSPECTIVE projection same as above except:
+   UMIN, UMAX, VMIN, VMAX = -11.39577, -62.2236, -60.530, 24.255
+<evaluate view mapping matrix 3>
+TEST: #SR 1
+      "If <evaluate view mapping matrix 3> is called and the specified
+       window is invalid: UMIN>=UMAX or VMIN>=VMAX, it should return
+       error indicator = 151."
+pass/fail depending on (returned error indicator = 151)
+
+set 2D mapping parameters :
+    UMIN, UMAX, VMIN, VMAX = -23.32, 3.56E4, 2.295, 2.29
+    XMIN, XMAX, YMIN, YMAX = 0.298, 0.736, 0.22, 0.89
+<evaluate view mapping matrix>
+TEST: #SR 1
+      "If <evaluate view mapping matrix> is called and the specified
+       window is invalid: UMIN>=UMAX or VMIN>=VMAX, it should return
+       error indicator = 151."
+pass/fail depending on (returned error indicator = 151)
+
+set 2D mapping parameters :
+    UMIN, UMAX, VMIN, VMAX = 3.56E4, -23.32, 2.29, 2.295
+    XMIN, XMAX, YMIN, YMAX = 0.298, 0.736, 0.22, 0.89
+<evaluate view mapping matrix>
+TEST: #SR 1
+      "If <evaluate view mapping matrix> is called and the specified
+       window is invalid: UMIN>=UMAX or VMIN>=VMAX, it should return
+       error indicator = 151."
+pass/fail depending on (returned error indicator = 151)
+
+END PROGRAM 1
+
+
+PROGRAM 2: Error indicator = 152
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 109, 110 with invalid viewport to test if they set 152
+to the error indicator: ignoring function, invalid viewport: XMIN>=XMAX,
+YMIN>=YMAX, or ZMIN>ZMAX.
+
+set 3D mapping parameters for PARALLEL projection:
+   UMIN, UMAX, VMIN, VMAX = -462.27, -80.95, -4891.85, -94.78
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.4082, 0.2640, 0.01339, 0.7457, 0.1395, 0.30036
+   PRP = -15.044, 1.318, 34.873
+   VPD = -1.213
+   BPD = -3.311
+   FPD = 15.332
+<evaluate view mapping matrix 3>
+TEST: #SR 2
+      "If <evaluate view mapping matrix 3> is called and the specified
+       viewport is invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error indicator = 152."
+pass/fail depending on (returned error indicator = 152)
+
+set 3D mapping parameters for PARALLEL projection same as above except:
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.2640, 0.4082, 0.7457, 0.01339, 0.1395, 0.1395
+<evaluate view mapping matrix 3>
+TEST: #SR 2
+      "If <evaluate view mapping matrix 3> is called and the specified
+       viewport is invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error indicator = 152."
+pass/fail depending on (returned error indicator = 152)
+
+set 3D mapping parameters for PERSPECTIVE projection:
+   UMIN, UMAX, VMIN, VMAX = -62.2236, -11.39577, -60.530, 24.255,
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.22243, 0.10639, 0.10012, 0.15392, 0.24695, 0.88262
+   PRP = -3.6054E-2, 2.1181E-3, 3.0531
+   VPD = 0.16487
+   BPD = -5.2858E-3
+   FPD = 3.0531
+<evaluate view mapping matrix 3>
+TEST: #SR 2
+      "If <evaluate view mapping matrix 3> is called and the specified
+       viewport is invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error indicator = 152."
+pass/fail depending on (returned error indicator = 152)
+
+set 3D mapping parameters for PERSPECTIVE projection same as above except:
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.10639, 0.22243, 0.10012, 0.15392, 0.88262, 0.24695
+<evaluate view mapping matrix 3>
+TEST: #SR 2
+      "If <evaluate view mapping matrix 3> is called and the specified
+       viewport is invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error indicator = 152."
+pass/fail depending on (returned error indicator = 152)
+
+set 2D mapping parameters :
+    UMIN, UMAX, VMIN, VMAX = -23.32, 3.56E4, 2.29, 2.295
+    XMIN, XMAX, YMIN, YMAX = 0.736, 0.298, 0.22, 0.89
+<evaluate view mapping matrix>
+TEST: #SR 2
+      "If <evaluate view mapping matrix> is called and the specified
+       viewport is invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error indicator = 152."
+pass/fail depending on (returned error indicator = 152)
+
+set 2D mapping parameters :
+    UMIN, UMAX, VMIN, VMAX = 3.56E4, -23.32, 2.29, 2.295
+    XMIN, XMAX, YMIN, YMAX = 0.298, 0.736, 0.89, 0.22
+<evaluate view mapping matrix>
+TEST: #SR 2
+      "If <evaluate view mapping matrix> is called and the specified
+       viewport is invalid: XMIN>=XMAX, YMIN>=YMAX, or ZMIN>ZMAX,
+       it should return error indicator = 152."
+pass/fail depending on (returned error indicator = 152)
+
+END PROGRAM 2
+
+
+
+PROGRAM 3: Error indicator = 155
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 109, 110 with the viewport limits not within NPC range to
+test if they set 155 to error indicator: ignoring function, the projection
+viewport limits are not within NPC range.
+
+set 3D mapping parameters for PARALLEL projection:
+   UMIN, UMAX, VMIN, VMAX = -462.27, -80.95, -4891.85, -94.78
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.2640, 1.4082, 0.01339, 0.7457, 0.1395, 0.30036
+   PRP = -15.044, 1.318, 34.873
+   VPD = -1.213
+   BPD = -3.311
+   FPD = 15.332
+<evaluate view mapping matrix 3>
+TEST: #SR 3
+      "If <evaluate view mapping matrix 3> is called and the projection
+       viewport limits are not within NPC range, it should return error
+       indicator = 155."
+pass/fail depending on (returned error indicator = 155)
+
+set 3D mapping parameters for PARALLEL projection same as above except:
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.2640, 0.4082, 0.01339, 0.7457, -0.1395, 0.30036
+<evaluate view mapping matrix 3>
+TEST: #SR 3
+      "If <evaluate view mapping matrix 3> is called and the projection
+       viewport limits are not within NPC range, it should return error
+       indicator = 155."
+pass/fail depending on (returned error indicator = 155)
+
+set 3D mapping parameters for PERSPECTIVE projection:
+   UMIN, UMAX, VMIN, VMAX = -62.2236, -11.39577, -60.530, 24.255,
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.10639, 0.22243, -0.10012, 1.15392, 0.24695, 0.88262
+   PRP = -3.6054E-2, 2.1181E-3, 3.0531
+   VPD = 0.16487
+   BPD = -5.2858E-3
+   FPD = 3.0531
+<evaluate view mapping matrix 3>
+TEST: #SR 3
+      "If <evaluate view mapping matrix 3> is called and the projection
+       viewport limits are not within NPC range, it should return error
+       indicator = 155."
+pass/fail depending on (returned error indicator = 155)
+
+set 3D mapping parameters for PERSPECTIVE projection same as above except:
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.10639, 0.22243, 0.10012, 0.15392, 1.24695, 2.88262
+<evaluate view mapping matrix 3>
+TEST: #SR 3
+      "If <evaluate view mapping matrix 3> is called and the projection
+       viewport limits are not within NPC range, it should return error
+       indicator = 155."
+pass/fail depending on (returned error indicator = 155)
+
+set 2D mapping parameters :
+    UMIN, UMAX, VMIN, VMAX = -23.32, 3.56E4, 2.29, 2.295
+    XMIN, XMAX, YMIN, YMAX = 0.298, 1.736, 0.22, 0.89
+<evaluate view mapping matrix>
+TEST: #SR 3
+      "If <evaluate view mapping matrix> is called and the projection
+       viewport limits are not within NPC range, it should return error
+       indicator = 155."
+pass/fail depending on (returned error indicator = 155)
+
+set 2D mapping parameters :
+    UMIN, UMAX, VMIN, VMAX = -23.32, 3.56E4, 2.29, 2.295
+    XMIN, XMAX, YMIN, YMAX = 0.298, 0.736, 0.22, 10.89
+<evaluate view mapping matrix>
+TEST: #SR 3
+      "If <evaluate view mapping matrix> is called and the projection
+       viewport limits are not within NPC range, it should return error
+       indicator = 155."
+pass/fail depending on (returned error indicator = 155)
+
+END PROGRAM 3
+
+
+PROGRAM 4: Error indicator = 158
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call function 109 with same front plane distance and back plane distance,
+and non-zero z-extent of viewport, to test if it sets 158 to error indicator:
+ignoring function, front plane and back plane distances are equal when z-extent
+of the projection viewport is non-zero.
+
+set 3D mapping parameters for PARALLEL projection:
+   UMIN, UMAX, VMIN, VMAX = -462.27, -80.95, -4891.85, -94.78
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.2640, 0.4082, 0.01339, 0.7457, 0.1395, 0.30036
+   PRP = -15.044, 1.318, 34.873
+   VPD = -1.213
+   BPD = 15.332
+   FPD = 15.332
+<evaluate view mapping matrix 3>
+TEST: #SR 4
+      "If <evaluate view mapping matrix 3> is called and front plane and back
+       plane distances are equal when z-extent of the projection viewport is
+       non-zero, it should return error indicator = 158."
+pass/fail depending on (returned error indicator = 158)
+
+set 3D mapping parameters for PERSPECTIVE projection:
+   UMIN, UMAX, VMIN, VMAX = -62.2236, -11.39577, -60.530, 24.255,
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.10639, 0.22243, 0.10012, 0.15392, 0.24695, 0.88262
+   PRP = -3.6054E-2, 2.1181E-3, 3.0531
+   VPD = 0.16487
+   BPD = -5.2858E-3
+   FPD = -5.2858E-3
+<evaluate view mapping matrix 3>
+TEST: #SR 4
+      "If <evaluate view mapping matrix 3> is called and front plane and back
+       plane distances are equal when z-extent of the projection viewport is
+       non-zero, it should return error indicator = 158."
+pass/fail depending on (returned error indicator = 158)
+
+END PROGRAM 4
+
+
+
+PROGRAM 5: Error indicator = 159
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call function 107 with view plane normal vector length = 0 to test if
+it sets 159 to error indicator: ignoring function, the view plane normal
+vector has length zero.
+
+set 3D orientation parameters (all WC x-y-z)
+    VRP (view reference point) : -3.24, 37.737, 11.2
+    VPN (view plane normal)    : 0., 0., 0.
+    VUP (view up vector)       : -23.32, 6.868, -2.22
+<evaluate view orientation matrix 3>
+TEST: #SR 5
+      "If <evaluate view orientation matrix 3> is called and the view plane
+       normal vector has length zero, it should return error indicator =
+       159."
+pass/fail depending on (returned error indicator = 159)
+
+END PROGRAM 5
+
+
+
+PROGRAM 6: Error indicator = 160
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call functions 107,108 with zero length view up vector to test if they
+set 160 to error indicator: ignoring function, the view up vector has length
+zero.
+
+
+set 3D orientation parameters (all WC x-y-z)
+    VRP (view reference point) : -3.24, 37.737, 11.2
+    VPN (view plane normal)    : 62.21, 45.67, -25.98
+    VUP (view up vector)       : 0., 0., 0.
+<evaluate view orientation matrix 3>
+TEST: #SR 6
+      "If <evaluate view orientation matrix 3> is called and the view up
+       vector has length zero, it should return error indicator =
+       160."
+pass/fail depending on (returned error indicator = 160)
+
+set 2D orientation parameters (all WC x-y)
+    VRP (view reference point) : -3.24, 37.727
+    VUP (view up vector)       : 0., 0., 0.
+<evaluate view orientation matrix>
+TEST: #SR 6
+      "If <evaluate view orientation matrix> is called and the view up
+       vector has length zero, it should return error indicator =
+       160."
+pass/fail depending on (returned error indicator = 160)
+
+END PROGRAM 6
+
+
+
+PROGRAM 7: Error indicator = 161
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call function 107 with the view up and view plane normal vectors which
+are parallel to test if it sets 161 to error indicator: ignoring function,
+the view up and view plane normal vectors are parallel thus the viewing
+coordinate system cannot be established.
+
+set 3D orientation parameters (all WC x-y-z)
+    VRP (view reference point) : -3.24, 37.737, 11.2
+    VPN (view plane normal)    : 62.21, 45.67, -25.98
+    VUP (view up vector)       : 2 * VPN
+<evaluate view orientation matrix 3>
+TEST: #SR 7
+      "If <evaluate view orientation matrix 3> is called and the view up
+       and view plane normal vectors are parallel, it should return error
+       indicator = 161."
+pass/fail depending on (returned error indicator = 161)
+
+set 3D orientation parameters (all WC x-y-z)
+    VUP (view up vector)       : -4 * VPN
+<evaluate view orientation matrix 3>
+TEST: #SR 7
+      "If <evaluate view orientation matrix 3> is called and the view up
+       and view plane normal vectors are parallel, it should return error
+       indicator = 161."
+pass/fail depending on (returned error indicator = 161)
+
+set 3D orientation parameters (all WC x-y-z)
+    VUP (view up vector)       : VPN
+<evaluate view orientation matrix 3>
+TEST: #SR 7
+      "If <evaluate view orientation matrix 3> is called and the view up
+       and view plane normal vectors are parallel, it should return error
+       indicator = 161."
+pass/fail depending on (returned error indicator = 161)
+
+END PROGRAM 7
+
+
+PROGRAM 8: Error indicator = 162
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call function 109 with the projection reference point between the front
+and the back planes to test if it sets 162 to error indicator: ignoring
+function, the projection reference point is between the front and the back
+planes.
+
+
+set 3D mapping parameters for PERSPECTIVE projection:
+   UMIN, UMAX, VMIN, VMAX = -62.2236, -11.39577, -60.530, 24.255,
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.10639, 0.22243, 0.10012, 0.15392, 0.24695, 0.88262
+   PRP = -3.6054E-2, 2.1181E-3, 1.0531
+   VPD = 0.16487
+   BPD = -5.2858E-3
+   FPD = 3.0531
+<evaluate view mapping matrix 3>
+TEST: #SR 8
+      "If <evaluate view mapping matrix 3> is called and the projection
+       reference point is between the front and the back planes,
+       it should return error indicator = 162."
+pass/fail depending on (returned error indicator = 162)
+
+END PROGRAM 8
+
+
+PROGRAM 9: Error indicator = 163
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call function 109 with the N coordinate of the projection reference point
+equal to the view plane distance to test if it sets 163 to error indicator:
+ignoring function, the projection reference point cannot be positioned on
+the view plane.
+
+set 3D mapping parameters for PARALLEL projection:
+   UMIN, UMAX, VMIN, VMAX = -462.27, -80.95, -4891.85, -94.78
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.2640, 0.4082, 0.01339, 0.7457, 0.1395, 0.30036
+   PRP = -15.044, 1.318, -1.213
+   VPD = -1.213
+   BPD = -3.311
+   FPD = 15.332
+<evaluate view mapping matrix 3>
+TEST: #SR 9
+      "If <evaluate view mapping matrix 3> is called and the projection
+       reference point is positioned on the view plane,
+       it should return error indicator = 163."
+pass/fail depending on (returned error indicator = 163)
+
+set 3D mapping parameters for PERSPECTIVE projection:
+   UMIN, UMAX, VMIN, VMAX = -62.2236, -11.39577, -60.530, 24.255,
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.10639, 0.22243, 0.10012, 0.15392, 0.24695, 0.88262
+   PRP = -3.6054E-2, 2.1181E-3, 0.16487
+   VPD = 0.16487
+   BPD = -5.2858E-3
+   FPD = 3.0531
+<evaluate view mapping matrix 3>
+TEST: #SR 9
+      "If <evaluate view mapping matrix 3> is called and the projection
+       reference point is positioned on the view plane,
+       it should return error indicator = 163."
+pass/fail depending on (returned error indicator = 163)
+
+END PROGRAM 9
+
+
+PROGRAM 10: Error indicator = 164
+
+CHARACTERISTICS: nnnn
+
+OPERATOR SCRIPT: passive test
+
+DESIGN:
+
+Call function 109 with the N coordinate of the front plane less than the
+N coordinate of the back plane to test if it sets 164 to error indicator:
+ignoring function, the back plane is in front of the front plane.
+
+
+set 3D mapping parameters for PARALLEL projection:
+   UMIN, UMAX, VMIN, VMAX = -462.27, -80.95, -4891.85, -94.78
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.2640, 0.4082, 0.01339, 0.7457, 0.1395, 0.30036
+   PRP = -15.044, 1.318, 34.873
+   VPD = -1.213
+   BPD = -3.311
+   FPD = -15.332
+<evaluate view mapping matrix 3>
+TEST: #SR 10
+      "If <evaluate view mapping matrix 3> is called and the back plane
+       is in front of the front plane, it should return error
+       indicator = 164."
+pass/fail depending on (returned error indicator = 164)
+
+set 3D mapping parameters for PERSPECTIVE projection:
+   UMIN, UMAX, VMIN, VMAX = -62.2236, -11.39577, -60.530, 24.255,
+   XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX =
+       0.10639, 0.22243, 0.10012, 0.15392, 0.24695, 0.88262
+   PRP = -3.6054E-2, 2.1181E-3, 3.0569
+   VPD = 0.16487
+   BPD = -5.2858E-3
+   FPD = -3.0531
+<evaluate view mapping matrix 3>
+TEST: #SR 10
+      "If <evaluate view mapping matrix 3> is called and the back plane
+       is in front of the front plane, it should return error
+       indicator = 164."
+pass/fail depending on (returned error indicator = 164)
+
+END PROGRAM 10
+
