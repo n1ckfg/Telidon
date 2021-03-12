@@ -2,26 +2,33 @@
 <html>
 	
 	<head>
+		<style>
+			body {
+				background: gray;
+			}
+		</style>
 		<script src="../../../js/telidon/naplps.js"></script>
+		<script src="../../../js/telidon/TelidonP5.js"></script>
+		<script src="../../../js/libraries/p5js/p5.min.js"></script>
 		<script>
 			"use strict";
 
-			const range = 5;
+			const range = 1;
 			const numStrokes = 10;
 			const numStrokePoints = 100;
 
 			let strokes = [];
 
 			for (let i=0; i<numStrokes; i++) {
-				let r = 127 + Math.random(127);
-				let g = 127 + Math.random(127);
-				let b = 127 + Math.random(127);
+				let r = 127 + (Math.random() * 127);
+				let g = 127 + (Math.random() * 127);
+				let b = 127 + (Math.random() * 127);
 				let color = new Vector3(r, g, b);
 
 				let points = [];
 				for (let j=0; j<numStrokePoints; j++) {
-					let x = Math.random(-range, range);
-					let y = Math.random(-range, range);
+					let x = Math.random() * range;
+					let y = Math.random() * range;
 					points.push(new Vector2(x, y));
 				}
 
@@ -30,7 +37,24 @@
 
 			console.log(strokes.length);
 
-			console.log(hex("0x1b", 1) + " " + hex("0x1f", 1))
+			console.log(hex("0x1b", 1) + " " + hex("0x1f", 1));
+
+			function setup() {
+				createCanvas(640, 480);
+				background(0);
+				for (let i=0; i<strokes.length; i++) {
+					beginShape();
+					let col = strokes[i].color;
+					console.log(col);
+					stroke(col.x, col.y, col.z);
+					noFill();
+					for (let j=0; j<strokes[i].points.length; j++) {
+						let point = strokes[i].points[j];
+						vertex(point.x * width, point.y * height);
+					}
+					endShape();
+				}
+			};
 		</script>
 	</head>
 
