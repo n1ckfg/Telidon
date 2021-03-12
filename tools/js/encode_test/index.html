@@ -4,6 +4,32 @@
 	<head>
 		<script src="../../../js/telidon/naplps.js"></script>
 		<script>
+			"use strict";
+
+			const range = 5;
+			const numStrokes = 10;
+			const numStrokePoints = 100;
+
+			let strokes = [];
+
+			for (let i=0; i<numStrokes; i++) {
+				let r = 127 + Math.random(127);
+				let g = 127 + Math.random(127);
+				let b = 127 + Math.random(127);
+				let color = new Vector3(r, g, b);
+
+				let points = [];
+				for (let j=0; j<numStrokePoints; j++) {
+					let x = Math.random(-range, range);
+					let y = Math.random(-range, range);
+					points.push(new Vector2(x, y));
+				}
+
+				strokes.push(new StrokeWrapper(color, points, false));	
+			}
+
+			console.log(strokes.length);
+
 			console.log(hex("0x1b", 1) + " " + hex("0x1f", 1))
 		</script>
 	</head>
