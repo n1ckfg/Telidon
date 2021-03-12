@@ -10,8 +10,8 @@ class TelidonDraw {
         this.counter = 0;
         this.finished = false;
 
-        for (var i=0; i<this.decoder.cmds.length; i++) {
-            var cmd = this.decoder.cmds[i]; // NapCmd
+        for (let i=0; i<this.decoder.cmds.length; i++) {
+            let cmd = this.decoder.cmds[i]; // NapCmd
             this.drawCmds.push(new TelidonDrawCmd(cmd, _w, _h));
         }
     }
@@ -21,8 +21,8 @@ class TelidonDraw {
         
         if (this.decoder.version === 699) background(127);
 
-        for (var i=0; i<this.drawCmds.length; i++) {
-            var drawCmd = this.drawCmds[i];
+        for (let i=0; i<this.drawCmds.length; i++) {
+            let drawCmd = this.drawCmds[i];
             if (!drawCmd.moveScanline) this.counter++;
             if (i === this.counter || !drawCmd.moveScanline) {
                 drawCmd.run();
@@ -169,7 +169,7 @@ class TelidonDrawCmd {
                 break;
             case("SET & POLY FILLED"): // relative points after first 
         		this.drawPoints(this.points, this.w, this.h, true);//this.tex.width, this.tex.height);
-                //for (var j=0; j<cmd.points.length; j++) {
+                //for (let j=0; j<cmd.points.length; j++) {
                     //console.log(j + ". " + cmd.points[j]);
                 //}
                 break;
@@ -207,9 +207,9 @@ class TelidonDrawCmd {
         //if (this.moveScanline) {
             /*
             this.tex.loadPixels();
-            for (var x=0; x < this.tex.width; x++) {
-                for (var y=0; y < this.tex.height; y++) {
-                    var loc = 4 * (x + y*this.tex.width);
+            for (let x=0; x < this.tex.width; x++) {
+                for (let y=0; y < this.tex.height; y++) {
+                    let loc = 4 * (x + y*this.tex.width);
                     if (y <= this.scanPos) {
                         this.tex.pixels[loc] = 0;
                         this.tex.pixels[loc + 1] = 0;
@@ -259,10 +259,10 @@ class TelidonDrawCmd {
         	noFill();
         }
         if (points.length == 2) {
-            var x1 = points[0].x * w;
-            var y1 = points[0].y * h;
-            var x2 = points[1].x * w;
-            var y2 = points[1].y * h;
+            let x1 = points[0].x * w;
+            let y1 = points[0].y * h;
+            let x2 = points[1].x * w;
+            let y2 = points[1].y * h;
             rectMode(CORNER);
             rect(x1, y1, x2-x1, y2-y1);
         } else {
@@ -277,19 +277,19 @@ class TelidonDrawCmd {
         	noFill();
         }
 	    if (points.length == 2) {
-	    	var x1 = points[0].x * w;
-	    	var y1 = points[0].y * h;
-	   		var x2 = points[1].x * w;
-	    	var y2 = points[1].y * h;
-		    //var d = dist(x1, y1, x2, y2);
+	    	let x1 = points[0].x * w;
+	    	let y1 = points[0].y * h;
+	   		let x2 = points[1].x * w;
+	    	let y2 = points[1].y * h;
+		    //let d = dist(x1, y1, x2, y2);
 		    ellipseMode(CORNER);
 		    ellipse(x1, y1, x2-x1, x2-x1);
 		} else {
-            for (var i=0; i<points.length-1; i++) {
-                var x1 = points[i].x * w;
-                var y1 = points[i].y * h;
-                var x2 = points[i+1].x * w;
-                var y2 = points[i+1].y * h;
+            for (let i=0; i<points.length-1; i++) {
+                let x1 = points[i].x * w;
+                let y1 = points[i].y * h;
+                let x2 = points[i+1].x * w;
+                let y2 = points[i+1].y * h;
                 arc(x1, y1, x2-x1, y2-y1, i * (PI/points.length), (i+1) * (PI/points.length));
             }
         }
@@ -302,8 +302,8 @@ class TelidonDrawCmd {
         	noFill();
         }
         beginShape();
-        for (var i=0; i<points.length; i++) {
-            var p = points[i]; // PVector
+        for (let i=0; i<points.length; i++) {
+            let p = points[i]; // PVector
             vertex(p.x * w, p.y * h);
         }
         endShape(CLOSE);
@@ -311,8 +311,8 @@ class TelidonDrawCmd {
         if (this.labelPoints) {
             stroke(255);
         	strokeWeight(this.thickness * 2);
-	        for (var i=0; i<points.length; i++) {
-	            var p = points[i]; // PVector
+	        for (let i=0; i<points.length; i++) {
+	            let p = points[i]; // PVector
 	            point(p.x * w, p.y * h);
 
 	            //tex.textFont(font, fontSize);

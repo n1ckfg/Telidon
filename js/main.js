@@ -1,24 +1,24 @@
 "use strict";
 
-var recording = true;
-var c;
-var gif;
-var posCounterX = 0;
-var posCounterY = 0;
+let recording = true;
+let c;
+let gif;
+let posCounterX = 0;
+let posCounterY = 0;
 
-var telidon = [];
-var maxLength = 3;
+let telidon = [];
+let maxLength = 3;
 
-var dropZone;
-var sW = 640;
-var sH = 480;
+let dropZone;
+let sW = 640;
+let sH = 480;
 
-var defaultFont;
+let defaultFont;
 
-var preview, explanation, explanationbg;
-var shark, skull, santa, beer, haunt, email, mouse;
+let preview, explanation, explanationbg;
+let shark, skull, santa, beer, haunt, email, mouse;
 
-var isMobile = false;
+let isMobile = false;
 
 
 function preload() {
@@ -105,7 +105,7 @@ function draw() {
 
     translate(0,sH-sW);
 	
-    for (var i=0; i<telidon.length; i++) {
+    for (let i=0; i<telidon.length; i++) {
 		telidon[i].draw();
 	}
 
@@ -129,9 +129,9 @@ function onDragOver(e) {
 function onDrop(e) {
     e.stopPropagation();
     e.preventDefault();
-    var files = e.dataTransfer.files; // Array of all files
-    for (var i=0, file; file=files[i]; i++) {
-        var reader = new FileReader();
+    let files = e.dataTransfer.files; // Array of all files
+    for (let i=0, file; file=files[i]; i++) {
+        let reader = new FileReader();
         reader.onload = function(e2) {
         	//blendMode(NORMAL);
         	//background(0);
@@ -152,7 +152,7 @@ function loadNewTelidon(fileName) {
     	//background(0);
     	//blendMode(ADD);
         telidon = [];
-        var reader = new FileReader();
+        let reader = new FileReader();
         reader.onload = function(e2) {
             telidon.push(new TelidonDraw([e2.target.result], sW, sW));
             recording = true;
@@ -174,7 +174,7 @@ function setupGif() {
 
     gif.on('finished', function(blob) {
         // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
-        var img = document.createElement('img');
+        let img = document.createElement('img');
         img.src = URL.createObjectURL(blob);
         img.style = "width: " + sW/2 + "px; height: " + sH/2 + "px; position: absolute; left: " + posCounterX + "px; top: " + (posCounterY + sH + 29) + "px;";
         posCounterX += sW/2;

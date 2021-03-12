@@ -10,6 +10,9 @@
 		<script src="../../../js/telidon/naplps.js"></script>
 		<script src="../../../js/telidon/TelidonP5.js"></script>
 		<script src="../../../js/libraries/p5js/p5.min.js"></script>
+	</head>
+
+	<body>
 		<script>
 			"use strict";
 
@@ -81,6 +84,11 @@
 
 			console.log(hex("0x1b", 1) + " " + hex("0x1f", 1));
 
+			let shark;
+			let telidon = [];
+			const sW = 640;
+			const sH = 480;
+
 			function setup() {
 				createCanvas(1280, 480);
 				background(0);
@@ -100,10 +108,35 @@
 				stroke(255);
 				noFill();
 				line(width/2, 0, width/2, height);
-			};
-		</script>
-	</head>
 
-	<body></body>
+				// ~ ~ ~ ~ ~ ~ ~ 
+
+				shark = loadNewTelidon("../../../images/shark.nap");
+			};
+
+			function draw() {
+				push();
+				translate(width/2, 0);
+				for (let i=0; i<telidon.length; i++) {
+					telidon[i].draw();
+				}
+				pop();
+			}
+			function loadNewTelidon(fileName) { 
+			    loadStrings(fileName, function(response) {
+			    	//blendMode(NORMAL);
+			    	//background(0);
+			    	//blendMode(ADD);
+			        telidon = [];
+			        var reader = new FileReader();
+			        reader.onload = function(e2) {
+			            telidon.push(new TelidonDraw([e2.target.result], sW, sW));
+			            //recording = true;
+			        }
+			        reader.readAsText(new Blob(response), 'UTF-8');
+			    });
+			}
+		</script>
+	</body>
 
 </html>
