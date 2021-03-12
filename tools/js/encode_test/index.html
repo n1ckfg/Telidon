@@ -13,11 +13,34 @@
 		<script>
 			"use strict";
 
-			const range = 1;
+			const range = 0.15;
 			const numStrokes = 10;
 			const numStrokePoints = 100;
-
+			const drawOffset = 0.05;
+			const smoothSteps = 15;
+			
 			let strokes = [];
+
+			function clamp(val, min, max) {
+				return Math.min(Math.max(val, min), max);
+			};
+
+			function smoothPoints(points) {
+				for (let i=points.length-2; i>=0; i-=2) {
+					let p1 = points[i];
+					let p2 = points[i+1];
+					let p3 = new Vector2((p1.x+p2.x)/2, (p1.y+p2.y)/2);
+					let loc = Math.random();
+					if (loc < 0.33) {
+						points[i] = p3;
+					} else if (loc >= 0.33 && loc < 0.66) {
+						points[i+1] = p3;
+					} else {
+						points.splice(i, 0, p3);
+					}
+				}
+				return points;
+			}
 
 			for (let i=0; i<numStrokes; i++) {
 				let r = 127 + (Math.random() * 127);
@@ -26,10 +49,29 @@
 				let color = new Vector3(r, g, b);
 
 				let points = [];
+				let x = Math.random();
+				let y = Math.random();
 				for (let j=0; j<numStrokePoints; j++) {
-					let x = Math.random() * range;
-					let y = Math.random() * range;
+					if (j > 0) {
+						let dir = Math.random();
+						if (dir < 0.33) {
+							x += Math.random() * range - Math.random() * range;
+						} else if (dir >= 0.33 && dir < 0.66) {
+							y += Math.random() * range - Math.random() * range;
+						} else {
+							x += Math.random() * range - Math.random() * range;
+							y += Math.random() * range - Math.random() * range;
+						}
+					}
+					x = clamp(x, 0, 1 - drawOffset);
+					y = clamp(y, 0, 1 - drawOffset);
+
 					points.push(new Vector2(x, y));
+					points.push(new Vector2(x + drawOffset, y + drawOffset));
+				}
+
+				for (let j=0; j<smoothSteps; j++) {
+					points = smoothPoints(points);
 				}
 
 				strokes.push(new StrokeWrapper(color, points, false));	
@@ -40,20 +82,24 @@
 			console.log(hex("0x1b", 1) + " " + hex("0x1f", 1));
 
 			function setup() {
-				createCanvas(640, 480);
+				createCanvas(1280, 480);
 				background(0);
+				
 				for (let i=0; i<strokes.length; i++) {
 					beginShape();
 					let col = strokes[i].color;
-					console.log(col);
 					stroke(col.x, col.y, col.z);
 					noFill();
 					for (let j=0; j<strokes[i].points.length; j++) {
 						let point = strokes[i].points[j];
-						vertex(point.x * width, point.y * height);
+						vertex(point.x * width/2, point.y * height);
 					}
 					endShape();
 				}
+
+				stroke(255);
+				noFill();
+				line(width/2, 0, width/2, height);
 			};
 		</script>
 	</head>
