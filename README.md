@@ -29,7 +29,7 @@ License: MIT.
 Language: JavaScript.
 View NAPLPS, save as GIF.
 Tested with Firefox, Chrome, Safari.
-position: yes / color: no / text: no / animation: no
+position: yes / color: yes / text: no / animation: no
 
 TelidonP5 (Nick Fox-Gieg, 2018)
 ./tools/processing/TelidonP5/
@@ -37,9 +37,8 @@ License: MIT.
 Language: Java.
 View NAPLPS only.
 Tested in Win10, OS X High Sierra.
-position: yes / color: no / text: no / animation: yes
+position: yes / color: no / text: no / animation: no
 
-***ONLY KNOWN OPEN-SOURCE COLOR DECODER***
 Ajwm Decoder (Alastair Mayer, 1999)
 ./archives/ajwm-naplps/
 License: GPL.
