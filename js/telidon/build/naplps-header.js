@@ -134,6 +134,13 @@ function unhex(hex) {
     return unhexScalar(hex);
 }
 
+function remap(value, min1, max1, min2, max2) {
+    let range1 = max1 - min1;
+    let range2 = max2 - min2;
+    let valueScaled = (value - min1) / range1;
+    return min2 + (valueScaled * range2);
+}
+
 function parseIntAlt(val, radix) {
     if (val instanceof Array) {
         let ret = [];

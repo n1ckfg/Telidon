@@ -70,20 +70,13 @@ class NapEncoder {
 
 		for (let stroke of input) {
 			for (let point of stroke.points) {
-				point.x = this.remap(point.x, minVal, maxVal, 0, 1);
-				point.y = this.remap(point.y, minVal, maxVal, 0, 1);
+				point.x = remap(point.x, minVal, maxVal, 0, 1);
+				point.y = remap(point.y, minVal, maxVal, 0, 1);
 			}
 		}
 
 		return input;
 	}
-
-	remap(value, min1, max1, min2, max2) {
-        let range1 = max1 - min1;
-        let range2 = max2 - min2;
-        let valueScaled = (value - min1) / range1;
-        return min2 + (valueScaled * range2);
-    }
 
 	makeNapOpcode(_isFill) { // only poly line and fill are implemented
 		if (_isFill) {
