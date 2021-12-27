@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title></title>
+		<script src="../../js/telidon/naplps.js"></script>
+		<script>
+			"use strict";
+
+
+			let input = [];
+
+			let color = new Vector3(255, 0, 0);
+			let points =[];
+			points.push(new Vector3(0, 0, 0));
+			points.push(new Vector3(0, 10, 0));
+			points.push(new Vector3(10, 10, 0));
+
+			let isFill = true;
+			let stroke = new StrokeWrapper(color, points, isFill);
+			
+			input.push(stroke);
+
+			let encoder = new NapEncoder(input);
+		</script>
+	</head>
+
+	<body>
+	</body>
+
+</html>
