@@ -7,17 +7,17 @@
 		<script>
 			"use strict";
 
-
 			let input = [];
 
 			let color = new Vector3(255, 0, 0);
+			
 			let points =[];
-			points.push(new Vector3(0, 0, 0));
-			points.push(new Vector3(0, 10, 0));
-			points.push(new Vector3(10, 10, 0));
+			points.push(new Vector2(250, 200));
+			points.push(new Vector2(0, 10));
+			points.push(new Vector2(500, 300));
 
-			let isFill = true;
-			let stroke = new StrokeWrapper(color, points, isFill);
+			let isFill = false;
+			let stroke = new NapInputWrapper(color, points, isFill);
 			
 			input.push(stroke);
 

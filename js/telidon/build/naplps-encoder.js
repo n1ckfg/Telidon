@@ -1,6 +1,6 @@
 // + + +   E N C O D E R   + + +
 
-class StrokeWrapper {
+class NapInputWrapper {
 
 	constructor(_color, _points, _isFill) {
 		this.color = _color;
@@ -12,30 +12,19 @@ class StrokeWrapper {
 
 class NapEncoder {
 
-	constructor(input) {
-		this.cmds = this.parseCommands(input);
+	constructor(_strokes) {
+		this.cmds = this.parseCommands(_strokes);
 		this.napRaw = this.cmds.join("");
 		console.log(this.napRaw);
 	}
 
-	parseCommands(input) {
+	parseCommands(_strokes) {
 		let returns = [];
 
 		returns.push(this.makeNapHeader());
-
-		input = this.normalizeAllStrokes(input);
-
+		input = this.normalizeAllStrokes(_strokes);
 		for (let stroke of input) {
-			let cmd = [];
-			cmd.push(this.makeNapOpcode(stroke.isFill));
-			cmd.push(this.makeNapColor(stroke.color));
-			
-			for (let point of stroke.points) {
-				cmd.push(this.makeNapVector(point));
-			}
-
-			let cmdString = cmd.join("");
-			returns.push(cmdString);
+			returns.push(this.makeNapStroke(stroke.isFill, stroke.color, stroke.points));
 		}
 
 		return returns;
@@ -94,6 +83,8 @@ class NapEncoder {
 	makeNapHeader() {
 		let returns = [];
 
+		returns.push(this.doEncode("18")); // cancel
+
 		returns.push(this.doEncode("1B")); // esc
 		returns.push(this.doEncode("45"));
 
@@ -126,29 +117,54 @@ class NapEncoder {
 			returns.push(this.doEncode("36")); // SET & POLY OUTLINED
 		}
 
-		return returns.join("");
+		return returns; //.join("");
 	}
 
 	makeNapColor(_color) {
 		let returns = [];
+		returns.push(this.doEncode("3E")); // SELECT COLOR
+		returns.push(this.doEncode("44"));
+		returns.push(this.doEncode("60"));
 
 		returns.push(this.doEncode("3C")); // SET COLOR
-		returns.push(this.doEncode("3E")); // SELECT COLOR
+		returns.push(this.doEncode("69"));
+		returns.push(this.doEncode("44"));
+		returns.push(this.doEncode("69"));
+		returns.push(this.doEncode("44"));
 
 		return returns.join("");
 	}
 
 	makeNapVector(input) {
+		//
+	}
+
+	makeNapPoints(_points) {
 		let returns = [];
 
-		returns.push(this.doEncode("5A")); 
+		returns.push(this.doEncode("40"));
+		returns.push(this.doEncode("63"));
 		returns.push(this.doEncode("6F"));
-		returns.push(this.doEncode("4C"));
-		returns.push(this.doEncode("5A"));
-		returns.push(this.doEncode("7F"));
+		returns.push(this.doEncode("6D"));
+		returns.push(this.doEncode("70"));
+		returns.push(this.doEncode("75"));
+		returns.push(this.doEncode("73"));
+		returns.push(this.doEncode("65"));
+		returns.push(this.doEncode("72"));
+		returns.push(this.doEncode("76"));
+		returns.push(this.doEncode("65"));
 
 		return returns.join("");	
 	}
 
+	makeNapStroke(_isFill, _color, _points) {
+		let returns = [];
+
+		returns.push(this.makeNapOpcode(_isFill));
+		returns.push(this.makeNapColor(_color));
+		returns.push(this.makeNapPoints(_points));
+
+		return returns.join("");	
+	}
 }
 
