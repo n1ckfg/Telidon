@@ -6,6 +6,31 @@ class NapInputWrapper {
 		this.color = _color;
 		this.points = _points;
 		this.isFill = _isFill;
+		this.colorIndex = 0;
+	}
+
+}
+
+class NapInputPalette() {
+
+	constructor() {
+		this.colors = [];
+		this.minDistance = 0.1;
+	}
+
+	addColor(_color) {
+		for (let i=0; i<this.colors.length; i++) {
+			if (getDistance(_color, this.colors[i]) < this.minDistance) {
+				return i;
+			}
+		}
+
+		this.colors.push(_color);
+		return this.colors.length - 1;
+	}
+
+	encodePalette() {
+		return "X";
 	}
 
 }
@@ -13,7 +38,11 @@ class NapInputWrapper {
 class NapEncoder {
 
 	constructor(_strokes) {
-		this.cmds = this.parseCommands(_strokes);
+		this.strokes = _strokes;
+		this.palette = new NapInputPalette();
+
+		this.cmds = this.parseCommands(this.strokes);
+
 		this.napRaw = this.cmds.join("");
 		console.log(this.napRaw);
 	}
@@ -22,9 +51,11 @@ class NapEncoder {
 		let returns = [];
 
 		returns.push(this.makeNapHeader());
+		returns.push(this.makeNapPalette());
+
 		input = this.normalizeAllStrokes(_strokes);
 		for (let stroke of input) {
-			returns.push(this.makeNapStroke(stroke.isFill, stroke.color, stroke.points));
+			returns.push(this.makeNapStroke(stroke.isFill, stroke.colorIndex, stroke.points));
 		}
 
 		return returns;
@@ -80,6 +111,14 @@ class NapEncoder {
 		return returns;
 	}
 
+	makeNapPalette() {
+		for (let stroke of this.strokes) {
+			stroke.index = this.palette.addColor(stroke.color);
+		}
+
+		return this.palette.encodePalette();
+	}
+
 	makeNapHeader() {
 		let returns = [];
 
@@ -122,15 +161,22 @@ class NapEncoder {
 
 	makeNapColor(_color) {
 		let returns = [];
-		returns.push(this.doEncode("3E")); // SELECT COLOR
-		returns.push(this.doEncode("44"));
-		returns.push(this.doEncode("60"));
 
 		returns.push(this.doEncode("3C")); // SET COLOR
 		returns.push(this.doEncode("69"));
 		returns.push(this.doEncode("44"));
 		returns.push(this.doEncode("69"));
 		returns.push(this.doEncode("44"));
+
+		return returns.join("");
+	}
+
+	makeNapColorIndex(_colorIndex) {
+		let returns = [];
+
+		returns.push(this.doEncode("3E")); // SELECT COLOR
+		returns.push(this.doEncode("44"));
+		returns.push(this.doEncode("60"));
 
 		return returns.join("");
 	}
@@ -157,11 +203,11 @@ class NapEncoder {
 		return returns.join("");	
 	}
 
-	makeNapStroke(_isFill, _color, _points) {
+	makeNapStroke(_isFill, _colorIndex, _points) {
 		let returns = [];
 
 		returns.push(this.makeNapOpcode(_isFill));
-		returns.push(this.makeNapColor(_color));
+		returns.push(this.makeNapColorIndex(_colorIndex));
 		returns.push(this.makeNapPoints(_points));
 
 		return returns.join("");	

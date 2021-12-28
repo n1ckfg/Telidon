@@ -141,6 +141,10 @@ function remap(value, min1, max1, min2, max2) {
     return min2 + (valueScaled * range2);
 }
 
+function getDistance(v1, v2) {
+    return Math.sqrt((v1.x - v2.x)**2 + (v1.y - v2.y)**2 + (v1.z - v2.z)**2);
+}
+
 function parseIntAlt(val, radix) {
     if (val instanceof Array) {
         let ret = [];
