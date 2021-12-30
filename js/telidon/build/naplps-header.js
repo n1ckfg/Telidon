@@ -184,6 +184,15 @@ function removeCharAt(s, index) { // string, int
   return returns;
 }
 
+function doEncode(input) {
+    let returns = "";
+    for (let i = 0; i < input.length; i += 2) {
+        returns += String.fromCharCode(parseInt(input.substr(i, 2), 16));
+    }
+    console.log(returns);
+    return returns;
+}
+
 class Char {
 
     constructor(chr) {

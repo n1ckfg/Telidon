@@ -11,11 +11,12 @@ class NapInputWrapper {
 
 }
 
-class NapInputPalette() {
+class NapInputPalette {
 
 	constructor() {
 		this.colors = [];
 		this.minDistance = 0.1;
+		this.paletteString = "";
 	}
 
 	addColor(_color) {
@@ -29,8 +30,35 @@ class NapInputPalette() {
 		return this.colors.length - 1;
 	}
 
+	makeNapColor(_color) {
+		let returns = [];
+
+		returns.push(doEncode("3C")); // SET COLOR
+		returns.push(doEncode("69"));
+		returns.push(doEncode("44"));
+		returns.push(doEncode("69"));
+		returns.push(doEncode("44"));
+
+		return returns.join("");
+	}
+
+	generatePalette(_strokes) {
+		for (let stroke of _strokes) {
+			stroke.index = this.addColor(stroke.color);
+		}
+
+		this.paletteString = this.encodePalette();
+		return this.paletteString;
+	}
+
 	encodePalette() {
-		return "X";
+		let returns = [];
+
+		for (let color of this.colors) {
+			returns.push(this.makeNapColor(color));
+		}
+
+		return returns.join("");
 	}
 
 }
@@ -41,17 +69,16 @@ class NapEncoder {
 		this.strokes = _strokes;
 		this.palette = new NapInputPalette();
 
-		this.cmds = this.parseCommands(this.strokes);
+		this.cmds = this.generateCommands(this.strokes);
 
 		this.napRaw = this.cmds.join("");
 		console.log(this.napRaw);
 	}
 
-	parseCommands(_strokes) {
+	generateCommands(_strokes) {
 		let returns = [];
 
 		returns.push(this.makeNapHeader());
-		returns.push(this.makeNapPalette());
 
 		input = this.normalizeAllStrokes(_strokes);
 		for (let stroke of input) {
@@ -102,47 +129,32 @@ class NapEncoder {
 		return input;
 	}
 
-	doEncode(input) {
-		let returns = "";
-		for (let i = 0; i < input.length; i += 2) {
-			returns += String.fromCharCode(parseInt(input.substr(i, 2), 16));
-		}
-		console.log(returns);
-		return returns;
-	}
-
-	makeNapPalette() {
-		for (let stroke of this.strokes) {
-			stroke.index = this.palette.addColor(stroke.color);
-		}
-
-		return this.palette.encodePalette();
-	}
-
 	makeNapHeader() {
 		let returns = [];
 
-		returns.push(this.doEncode("18")); // cancel
+		returns.push(doEncode("18")); // cancel
 
-		returns.push(this.doEncode("1B")); // esc
-		returns.push(this.doEncode("45"));
+		returns.push(doEncode("1B")); // esc
+		returns.push(doEncode("45"));
 
-		returns.push(this.doEncode("1F")); // nsr 
-		returns.push(this.doEncode("40"));
-		returns.push(this.doEncode("40"));
+		returns.push(doEncode("1F")); // nsr 
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
 		
-		returns.push(this.doEncode("0E")); // shift-out (graphics mode)
+		returns.push(doEncode("0E")); // shift-out (graphics mode)
 
-		returns.push(this.doEncode("20")); // reset 
-		returns.push(this.doEncode("7F"));
-		returns.push(this.doEncode("4F"));
+		returns.push(doEncode("20")); // reset 
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("4F"));
 
-		returns.push(this.doEncode("21")); // domain
-		returns.push(this.doEncode("4D"));
-		returns.push(this.doEncode("40"));
-		returns.push(this.doEncode("40"));
-		returns.push(this.doEncode("40"));
-		returns.push(this.doEncode("40"));
+		returns.push(doEncode("21")); // domain
+		returns.push(doEncode("4D"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
+
+		returns.push(this.palette.generatePalette(this.strokes));
 
 		return returns.join("");
 	}
@@ -151,32 +163,22 @@ class NapEncoder {
 		let returns = [];
 
 		if (_isFill) {
-			returns.push(this.doEncode("37")); // SET & POLY FILLED
+			returns.push(doEncode("37")); // SET & POLY FILLED
+			returns.push(doEncode("35")); // POLY FILLED
 		} else {
-			returns.push(this.doEncode("36")); // SET & POLY OUTLINED
+			returns.push(doEncode("36")); // SET & POLY OUTLINED
+			returns.push(doEncode("34")); // POLY OUTLINED
 		}
 
 		return returns; //.join("");
 	}
 
-	makeNapColor(_color) {
-		let returns = [];
-
-		returns.push(this.doEncode("3C")); // SET COLOR
-		returns.push(this.doEncode("69"));
-		returns.push(this.doEncode("44"));
-		returns.push(this.doEncode("69"));
-		returns.push(this.doEncode("44"));
-
-		return returns.join("");
-	}
-
 	makeNapColorIndex(_colorIndex) {
 		let returns = [];
 
-		returns.push(this.doEncode("3E")); // SELECT COLOR
-		returns.push(this.doEncode("44"));
-		returns.push(this.doEncode("60"));
+		returns.push(doEncode("3E")); // SELECT COLOR
+		returns.push(doEncode("44"));
+		returns.push(doEncode("60"));
 
 		return returns.join("");
 	}
@@ -188,17 +190,17 @@ class NapEncoder {
 	makeNapPoints(_points) {
 		let returns = [];
 
-		returns.push(this.doEncode("40"));
-		returns.push(this.doEncode("63"));
-		returns.push(this.doEncode("6F"));
-		returns.push(this.doEncode("6D"));
-		returns.push(this.doEncode("70"));
-		returns.push(this.doEncode("75"));
-		returns.push(this.doEncode("73"));
-		returns.push(this.doEncode("65"));
-		returns.push(this.doEncode("72"));
-		returns.push(this.doEncode("76"));
-		returns.push(this.doEncode("65"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("63"));
+		returns.push(doEncode("6F"));
+		returns.push(doEncode("6D"));
+		returns.push(doEncode("70"));
+		returns.push(doEncode("75"));
+		returns.push(doEncode("73"));
+		returns.push(doEncode("65"));
+		returns.push(doEncode("72"));
+		returns.push(doEncode("76"));
+		returns.push(doEncode("65"));
 
 		return returns.join("");	
 	}
