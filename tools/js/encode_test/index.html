@@ -1,142 +1,31 @@
 <!DOCTYPE html>
 <html>
-	
-	<head>
-		<style>
-			body {
-				background: gray;
-			}
-		</style>
-		<script src="../../../js/telidon/naplps.js"></script>
-		<script src="../../../js/telidon/TelidonP5.js"></script>
-		<script src="../../../js/libraries/p5js/p5.min.js"></script>
-	</head>
 
-	<body>
+	<head>
+		<title></title>
+		<script src="../../js/telidon/naplps.js"></script>
 		<script>
 			"use strict";
 
-			const range = 0.15;
-			const numStrokes = 10;
-			const numStrokePoints = 100;
-			const drawOffset = 0.05;
-			const smoothSteps = 15;
+			let input = [];
+
+			let color = new Vector3(255, 0, 0);
 			
-			let strokes = [];
+			let points =[];
+			points.push(new Vector2(250, 200));
+			points.push(new Vector2(0, 10));
+			points.push(new Vector2(500, 300));
 
-			function clamp(val, min, max) {
-				return Math.min(Math.max(val, min), max);
-			};
+			let isFill = false;
+			let stroke = new NapInputWrapper(color, points, isFill);
+			
+			input.push(stroke);
 
-			function smoothPoints(points) {
-				for (let i=points.length-2; i>=0; i-=2) {
-					let p1 = points[i];
-					let p2 = points[i+1];
-					let p3 = new Vector2((p1.x+p2.x)/2, (p1.y+p2.y)/2);
-					let loc = Math.random();
-					if (loc < 0.33) {
-						points[i] = p3;
-					} else if (loc >= 0.33 && loc < 0.66) {
-						points[i+1] = p3;
-					} else {
-						points.splice(i, 0, p3);
-					}
-				}
-				return points;
-			}
-
-			for (let i=0; i<numStrokes; i++) {
-				let r = 127 + (Math.random() * 127);
-				let g = 127 + (Math.random() * 127);
-				let b = 127 + (Math.random() * 127);
-				let color = new Vector3(r, g, b);
-
-				let points = [];
-				let x = Math.random();
-				let y = Math.random();
-				for (let j=0; j<numStrokePoints; j++) {
-					if (j > 0) {
-						let dir = Math.random();
-						if (dir < 0.33) {
-							x += Math.random() * range - Math.random() * range;
-						} else if (dir >= 0.33 && dir < 0.66) {
-							y += Math.random() * range - Math.random() * range;
-						} else {
-							x += Math.random() * range - Math.random() * range;
-							y += Math.random() * range - Math.random() * range;
-						}
-					}
-					x = clamp(x, 0, 1 - drawOffset);
-					y = clamp(y, 0, 1 - drawOffset);
-
-					points.push(new Vector2(x, y));
-					points.push(new Vector2(x + drawOffset, y + drawOffset));
-				}
-
-				for (let j=0; j<smoothSteps; j++) {
-					points = smoothPoints(points);
-				}
-
-				strokes.push(new StrokeWrapper(color, points, false));	
-			}
-
-			console.log(strokes.length);
-
-			console.log(hex("0x1b", 1) + " " + hex("0x1f", 1));
-
-			let shark;
-			let telidon = [];
-			const sW = 640;
-			const sH = 480;
-
-			function setup() {
-				createCanvas(1280, 480);
-				background(0);
-				
-				for (let i=0; i<strokes.length; i++) {
-					beginShape();
-					let col = strokes[i].color;
-					stroke(col.x, col.y, col.z);
-					noFill();
-					for (let j=0; j<strokes[i].points.length; j++) {
-						let point = strokes[i].points[j];
-						vertex(point.x * width/2, point.y * height);
-					}
-					endShape();
-				}
-
-				stroke(255);
-				noFill();
-				line(width/2, 0, width/2, height);
-
-				// ~ ~ ~ ~ ~ ~ ~ 
-
-				shark = loadNewTelidon("../../../images/shark.nap");
-			};
-
-			function draw() {
-				push();
-				translate(width/2, 0);
-				for (let i=0; i<telidon.length; i++) {
-					telidon[i].draw();
-				}
-				pop();
-			}
-			function loadNewTelidon(fileName) { 
-			    loadStrings(fileName, function(response) {
-			    	//blendMode(NORMAL);
-			    	//background(0);
-			    	//blendMode(ADD);
-			        telidon = [];
-			        var reader = new FileReader();
-			        reader.onload = function(e2) {
-			            telidon.push(new TelidonDraw([e2.target.result], sW, sW));
-			            //recording = true;
-			        }
-			        reader.readAsText(new Blob(response), 'UTF-8');
-			    });
-			}
+			let encoder = new NapEncoder(input);
 		</script>
+	</head>
+
+	<body>
 	</body>
 
 </html>
