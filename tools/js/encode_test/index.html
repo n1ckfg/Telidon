@@ -3,23 +3,33 @@
 
 	<head>
 		<title></title>
-		<script src="../../js/telidon/naplps.js"></script>
+		<script src="../../../js/telidon/naplps.js"></script>
 		<script>
 			"use strict";
 
 			let input = [];
 
-			let color = new Vector3(255, 0, 0);
+			let color1 = new Vector3(255, 0, 0);
+			let color2 = new Vector3(0, 255, 0);
 			
-			let points =[];
-			points.push(new Vector2(250, 200));
-			points.push(new Vector2(0, 10));
-			points.push(new Vector2(500, 300));
+			let points1 =[];
+			points1.push(new Vector2(250, 200));
+			points1.push(new Vector2(0, 10));
+			points1.push(new Vector2(500, 300));
 
-			let isFill = false;
-			let stroke = new NapInputWrapper(color, points, isFill);
+			let points2 =[];
+			points2.push(new Vector2(0, 30));
+			points2.push(new Vector2(150, 200));
+			points2.push(new Vector2(300, 200));
+
+			let isFill1 = false;
+			let isFill2 = false;
+
+			let stroke1 = new NapInputWrapper(color1, points1, isFill1);
+			let stroke2 = new NapInputWrapper(color2, points2, isFill2);
 			
-			input.push(stroke);
+			input.push(stroke1);
+			input.push(stroke2);
 
 			let encoder = new NapEncoder(input);
 		</script>

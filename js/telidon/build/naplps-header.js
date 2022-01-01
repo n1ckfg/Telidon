@@ -189,7 +189,6 @@ function doEncode(input) {
     for (let i = 0; i < input.length; i += 2) {
         returns += String.fromCharCode(parseInt(input.substr(i, 2), 16));
     }
-    console.log(returns);
     return returns;
 }
 

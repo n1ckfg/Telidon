@@ -189,7 +189,6 @@ function doEncode(input) {
     for (let i = 0; i < input.length; i += 2) {
         returns += String.fromCharCode(parseInt(input.substr(i, 2), 16));
     }
-    console.log(returns);
     return returns;
 }
 
@@ -1219,7 +1218,10 @@ class NapInputPalette {
 
 	addColor(_color) {
 		for (let i=0; i<this.colors.length; i++) {
-			if (getDistance(_color, this.colors[i]) < this.minDistance) {
+			console.log("!!!!");
+			let dist = getDistance(_color, this.colors[i]);
+			console.log("Color similarity is " + dist);
+			if (dist > this.minDistance) {
 				return i;
 			}
 		}
@@ -1240,6 +1242,17 @@ class NapInputPalette {
 		return returns.join("");
 	}
 
+	encodePalette() {
+		let returns = [];
+
+		for (let color of this.colors) {
+			console.log("Encoding color " + color.x + ", " + color.y + ", " + color.z);
+			returns.push(this.makeNapColor(color));
+		}
+
+		return returns.join("");
+	}
+
 	generatePalette(_strokes) {
 		for (let stroke of _strokes) {
 			stroke.index = this.addColor(stroke.color);
@@ -1247,16 +1260,6 @@ class NapInputPalette {
 
 		this.paletteString = this.encodePalette();
 		return this.paletteString;
-	}
-
-	encodePalette() {
-		let returns = [];
-
-		for (let color of this.colors) {
-			returns.push(this.makeNapColor(color));
-		}
-
-		return returns.join("");
 	}
 
 }
@@ -1277,6 +1280,7 @@ class NapEncoder {
 		let returns = [];
 
 		returns.push(this.makeNapHeader());
+		returns.push(this.palette.generatePalette(this.strokes));
 
 		input = this.normalizeAllStrokes(_strokes);
 		for (let stroke of input) {
@@ -1352,8 +1356,6 @@ class NapEncoder {
 		returns.push(doEncode("40"));
 		returns.push(doEncode("40"));
 
-		returns.push(this.palette.generatePalette(this.strokes));
-
 		return returns.join("");
 	}
 
@@ -1388,17 +1390,118 @@ class NapEncoder {
 	makeNapPoints(_points) {
 		let returns = [];
 
+		returns.push(doEncode("51"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("65"));
+		returns.push(doEncode("48"));
 		returns.push(doEncode("40"));
-		returns.push(doEncode("63"));
-		returns.push(doEncode("6F"));
-		returns.push(doEncode("6D"));
-		returns.push(doEncode("70"));
-		returns.push(doEncode("75"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("71"));
 		returns.push(doEncode("73"));
-		returns.push(doEncode("65"));
-		returns.push(doEncode("72"));
-		returns.push(doEncode("76"));
-		returns.push(doEncode("65"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("59"));
+		returns.push(doEncode("7E"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("52"));
+		returns.push(doEncode("6C"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("62"));
+		returns.push(doEncode("45"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("41"));
+		returns.push(doEncode("48"));
+		returns.push(doEncode("67"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("4D"));
+		returns.push(doEncode("4D"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("52"));
+		returns.push(doEncode("75"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("57"));
+		returns.push(doEncode("79"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("4D"));
+		returns.push(doEncode("58"));
+		returns.push(doEncode("78"));
+		returns.push(doEncode("78"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("4D"));
+		returns.push(doEncode("78"));
+		returns.push(doEncode("7A"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("4E"));
+		returns.push(doEncode("78"));
+		returns.push(doEncode("71"));
+		returns.push(doEncode("6D"));
+		returns.push(doEncode("58"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("50"));
+		returns.push(doEncode("48"));
+		returns.push(doEncode("50"));
+		returns.push(doEncode("40"));
+		returns.push(doEncode("68"));
+		returns.push(doEncode("50"));
+		returns.push(doEncode("50"));
+		returns.push(doEncode("47"));
+		returns.push(doEncode("45"));
+		returns.push(doEncode("42"));
+		returns.push(doEncode("77"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("7E"));
+		returns.push(doEncode("49"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("7E"));
+		returns.push(doEncode("7E"));
+		returns.push(doEncode("7E"));
+		returns.push(doEncode("47"));
+		returns.push(doEncode("46"));
+		returns.push(doEncode("4B"));
+		returns.push(doEncode("74"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("71"));
+		returns.push(doEncode("7A"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("43"));
+		returns.push(doEncode("4E"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("4A"));
+		returns.push(doEncode("5E"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("6A"));
+		returns.push(doEncode("7E"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("77"));
+		returns.push(doEncode("5E"));
+		returns.push(doEncode("50"));
+		returns.push(doEncode("78"));
+		returns.push(doEncode("70"));
+		returns.push(doEncode("73"));
+		returns.push(doEncode("4B"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("55"));
+		returns.push(doEncode("5C"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("7F"));
+		returns.push(doEncode("5E"));
+		returns.push(doEncode("4A"));
+		returns.push(doEncode("78"));
+		returns.push(doEncode("70"));
+		returns.push(doEncode("49"));
+		returns.push(doEncode("5E"));
 
 		return returns.join("");	
 	}
