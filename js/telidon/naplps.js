@@ -1218,10 +1218,9 @@ class NapInputPalette {
 
 	addColor(_color) {
 		for (let i=0; i<this.colors.length; i++) {
-			console.log("!!!!");
 			let dist = getDistance(_color, this.colors[i]);
 			console.log("Color similarity is " + dist);
-			if (dist > this.minDistance) {
+			if (dist < this.minDistance) {
 				return i;
 			}
 		}
@@ -1363,10 +1362,10 @@ class NapEncoder {
 		let returns = [];
 
 		if (_isFill) {
-			returns.push(doEncode("37")); // SET & POLY FILLED
+			//returns.push(doEncode("37")); // SET & POLY FILLED
 			returns.push(doEncode("35")); // POLY FILLED
 		} else {
-			returns.push(doEncode("36")); // SET & POLY OUTLINED
+			//returns.push(doEncode("36")); // SET & POLY OUTLINED
 			returns.push(doEncode("34")); // POLY OUTLINED
 		}
 
@@ -1509,8 +1508,8 @@ class NapEncoder {
 	makeNapStroke(_isFill, _colorIndex, _points) {
 		let returns = [];
 
-		returns.push(this.makeNapOpcode(_isFill));
 		returns.push(this.makeNapColorIndex(_colorIndex));
+		returns.push(this.makeNapOpcode(_isFill));
 		returns.push(this.makeNapPoints(_points));
 
 		return returns.join("");	
