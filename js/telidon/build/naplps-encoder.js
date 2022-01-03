@@ -177,11 +177,11 @@ class NapEncoder {
 		let returns = [];
 
 		if (_isFill) {
-			//returns.push(doEncode("37")); // SET & POLY FILLED
-			returns.push(doEncode("35")); // POLY FILLED
+			returns.push(doEncode("37")); // SET & POLY FILLED
+			//returns.push(doEncode("35")); // POLY FILLED
 		} else {
-			//returns.push(doEncode("36")); // SET & POLY OUTLINED
-			returns.push(doEncode("34")); // POLY OUTLINED
+			returns.push(doEncode("36")); // SET & POLY OUTLINED
+			//returns.push(doEncode("34")); // POLY OUTLINED
 		}
 
 		return returns; //.join("");
@@ -191,7 +191,7 @@ class NapEncoder {
 		let returns = [];
 
 		returns.push(doEncode("3E")); // SELECT COLOR
-		returns.push(makeNapInt(1));//_colorIndex));
+		returns.push(this.makeNapInt(1));//_colorIndex));
 
 		return returns.join("");
 

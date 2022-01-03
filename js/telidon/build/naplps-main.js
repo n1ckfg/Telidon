@@ -234,6 +234,30 @@ class Vector3 {
         this.z = _z;
     }
 
+    add(input) {
+        this.x += input.x;
+        this.y += input.y;
+        this.z += input.z;
+    }
+
+    sub(input) {
+        this.x -= input.x;
+        this.y -= input.y;
+        this.z -= input.z;
+    }
+
+    mul(input) {
+        this.x *= input.x;
+        this.y *= input.y;
+        this.z *= input.z;
+    }
+
+    div(input) {
+        this.x /= input.x;
+        this.y /= input.y;
+        this.z /= input.z;
+    }
+
 }
 
 

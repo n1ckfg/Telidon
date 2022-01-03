@@ -234,6 +234,30 @@ class Vector3 {
         this.z = _z;
     }
 
+    add(input) {
+        this.x += input.x;
+        this.y += input.y;
+        this.z += input.z;
+    }
+
+    sub(input) {
+        this.x -= input.x;
+        this.y -= input.y;
+        this.z -= input.z;
+    }
+
+    mul(input) {
+        this.x *= input.x;
+        this.y *= input.y;
+        this.z *= input.z;
+    }
+
+    div(input) {
+        this.x /= input.x;
+        this.y /= input.y;
+        this.z /= input.z;
+    }
+
 }
 
 
@@ -560,6 +584,18 @@ class NapVector extends NapDataArray {
     -----------------      -----------------
     |?|1| | | | | | |      |?|1| | | | | | |
     -----------------      -----------------
+
+         G R B G R B
+     8 7|6 5 4|3 2 1|
+    -----------------
+    |?|1| | | | | | |
+    -----------------
+    |?|1| | | | | | |
+    -----------------
+        . . .
+    -----------------
+    |?|1| | | | | | |
+    -----------------
 */  
     getCoordFromBytes(n, axis) { // NapData[], string
         let returns = "";
@@ -1379,11 +1415,11 @@ class NapEncoder {
 		let returns = [];
 
 		if (_isFill) {
-			//returns.push(doEncode("37")); // SET & POLY FILLED
-			returns.push(doEncode("35")); // POLY FILLED
+			returns.push(doEncode("37")); // SET & POLY FILLED
+			//returns.push(doEncode("35")); // POLY FILLED
 		} else {
-			//returns.push(doEncode("36")); // SET & POLY OUTLINED
-			returns.push(doEncode("34")); // POLY OUTLINED
+			returns.push(doEncode("36")); // SET & POLY OUTLINED
+			//returns.push(doEncode("34")); // POLY OUTLINED
 		}
 
 		return returns; //.join("");
@@ -1393,7 +1429,7 @@ class NapEncoder {
 		let returns = [];
 
 		returns.push(doEncode("3E")); // SELECT COLOR
-		returns.push(makeNapInt(1));//_colorIndex));
+		returns.push(this.makeNapInt(1));//_colorIndex));
 
 		return returns.join("");
 
