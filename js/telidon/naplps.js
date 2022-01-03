@@ -1252,19 +1252,25 @@ class NapInputWrapper {
 
 }
 
-class NapInputPalette {
 
-	constructor() {
+class NapEncoder {
+
+	constructor(_strokes) {
+		this.strokes = this.normalizeAllStrokes(_strokes);
 		this.colors = [];
-		this.minDistance = 0.1;
-		this.paletteString = "";
+		this.minColorDistance = 0.1;
+		
+		this.cmds = this.generateCommands(this.strokes);
+		this.napRaw = this.cmds.join("");
+
+		console.log(this.napRaw);
 	}
 
-	addColor(_color) {
+	addPaletteColor(_color) {
 		for (let i=0; i<this.colors.length; i++) {
 			const dist = getDistance(_color, this.colors[i]);
 			console.log("Color similarity is " + dist);
-			if (dist < this.minDistance) {
+			if (dist < this.minColorDistance) {
 				console.log("Reusing color " + i + ", palette length is " + this.colors.length);
 				return i;
 			}
@@ -1276,66 +1282,33 @@ class NapInputPalette {
 		return len;
 	}
 
-	makeNapColor(_color) {
+	generatePalette() {
 		let returns = [];
 
-		returns.push(doEncode("3C")); // SET COLOR
-		for (let i=0; i<this.dataLength; i++) {
-			// TODO
+		for (let i=0; i<this.strokes.length; i++) {
+			this.strokes[i].colorIndex = this.addPaletteColor(this.strokes[i].color);
 		}
-
-		const binaryR = binary(_color.x);
-		const binaryG = binary(_color.y);
-		const binaryB = binary(_color.z);
-		returns.push(doEncode(hex(binaryR)));
-		returns.push(doEncode(hex(binaryG)));
-		returns.push(doEncode(hex(binaryB)));
-
-		return returns.join("");
-	}
-
-	encodePalette() {
-		let returns = [];
 
 		for (let color of this.colors) {
 			console.log("Encoding color " + color.x + ", " + color.y + ", " + color.z);
-			returns.push(this.makeNapColor(color));
+			returns.push(this.makeNapSetColor(color));
 		}
 
 		return returns.join("");
-	}
-
-	generatePalette(_strokes) {
-		for (let stroke of _strokes) {
-			stroke.index = this.addColor(stroke.color);
-		}
-
-		this.paletteString = this.encodePalette();
-		return this.paletteString;
-	}
-
-}
-
-class NapEncoder {
-
-	constructor(_strokes) {
-		this.strokes = _strokes;
-		this.palette = new NapInputPalette();
-
-		this.cmds = this.generateCommands(this.strokes);
-
-		this.napRaw = this.cmds.join("");
-		console.log(this.napRaw);
 	}
 
 	generateCommands(_strokes) {
 		let returns = [];
 
-		returns.push(this.makeNapHeader());
-		returns.push(this.palette.generatePalette(this.strokes));
+		const headerString = this.makeNapHeader();
+		console.log("Generating header: " + headerString);
+		returns.push(headerString);
 
-		input = this.normalizeAllStrokes(_strokes);
-		for (let stroke of input) {
+		const paletteString = this.generatePalette(this.strokes);
+		console.log("Generating palette: " + paletteString);
+		returns.push(paletteString);
+
+		for (let stroke of this.strokes) {
 			returns.push(this.makeNapStroke(stroke.isFill, stroke.colorIndex, stroke.points));
 		}
 
@@ -1414,22 +1387,51 @@ class NapEncoder {
 	makeNapOpcode(_isFill) { // only poly line and fill are implemented
 		let returns = [];
 
+		/*
+		 * 34 POLY OUTLINED
+		 * 35 POLY FILLED
+		 * 36 SET & POLY OUTLINED
+		 * 37 SET & POLY FILLED
+		 */
+
 		if (_isFill) {
 			returns.push(doEncode("37")); // SET & POLY FILLED
-			//returns.push(doEncode("35")); // POLY FILLED
 		} else {
 			returns.push(doEncode("36")); // SET & POLY OUTLINED
-			//returns.push(doEncode("34")); // POLY OUTLINED
 		}
 
 		return returns; //.join("");
 	}
 
-	makeNapColorIndex(_colorIndex) {
+	makeNapSetColor(_color) {
+		let returns = [];
+
+		returns.push(doEncode("3C")); // SET COLOR
+		for (let i=0; i<this.dataLength; i++) {
+			// TODO
+		}
+
+		/*
+		const binaryR = binary(_color.x);
+		const binaryG = binary(_color.y);
+		const binaryB = binary(_color.z);
+		returns.push(doEncode(hex(binaryR)));
+		returns.push(doEncode(hex(binaryG)));
+		returns.push(doEncode(hex(binaryB)));
+		*/
+		returns.push(doEncode("44"));
+		returns.push(doEncode("74"));
+		returns.push(doEncode("44"));
+		returns.push(doEncode("46"));
+		
+		return returns.join("");
+	}
+
+	makeNapSelectColor(_colorIndex) {
 		let returns = [];
 
 		returns.push(doEncode("3E")); // SELECT COLOR
-		returns.push(this.makeNapInt(1));//_colorIndex));
+		returns.push(this.makeNapInt(_colorIndex));
 
 		return returns.join("");
 
@@ -1567,7 +1569,7 @@ class NapEncoder {
 	makeNapStroke(_isFill, _colorIndex, _points) {
 		let returns = [];
 
-		returns.push(this.makeNapColorIndex(_colorIndex));
+		returns.push(this.makeNapSelectColor(_colorIndex));
 		returns.push(this.makeNapOpcode(_isFill));
 		returns.push(this.makeNapPoints(_points));
 
