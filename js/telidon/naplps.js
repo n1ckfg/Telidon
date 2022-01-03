@@ -1148,6 +1148,11 @@ class NapDecoder {
     }
     
     detectVersion() {
+        /* 699 (Telidon) was the first version of the format.
+         * It should only be encountered in files created on original Telidon hardware.
+         * 709 (NAPLPS) was the second version of the format.
+         * It was used in all later software applications, including Prodigy.
+         */ 
     	let input = this.cmds[0].opcode.hex;
     	if (input == "0E") { // TODO find additional cases
     		return 699;
@@ -1204,6 +1209,9 @@ class NapInputWrapper {
 		this.points = _points;
 		this.isFill = _isFill;
 		this.colorIndex = 0;
+		// Number of bytes per encoded value. This is hardcoded here, but
+		// can be set in the NAPLPS domain command.
+		this.dataLength = 4;
 	}
 
 }
@@ -1218,25 +1226,34 @@ class NapInputPalette {
 
 	addColor(_color) {
 		for (let i=0; i<this.colors.length; i++) {
-			let dist = getDistance(_color, this.colors[i]);
+			const dist = getDistance(_color, this.colors[i]);
 			console.log("Color similarity is " + dist);
 			if (dist < this.minDistance) {
+				console.log("Reusing color " + i + ", palette length is " + this.colors.length);
 				return i;
 			}
 		}
 
 		this.colors.push(_color);
-		return this.colors.length - 1;
+		const len = this.colors.length - 1;
+    	console.log("Adding color " + (len + 1) + ", palette length is " + this.colors.length);
+		return len;
 	}
 
 	makeNapColor(_color) {
 		let returns = [];
 
 		returns.push(doEncode("3C")); // SET COLOR
-		returns.push(doEncode("69"));
-		returns.push(doEncode("44"));
-		returns.push(doEncode("69"));
-		returns.push(doEncode("44"));
+		for (let i=0; i<this.dataLength; i++) {
+			// TODO
+		}
+
+		const binaryR = binary(_color.x);
+		const binaryG = binary(_color.y);
+		const binaryB = binary(_color.z);
+		returns.push(doEncode(hex(binaryR)));
+		returns.push(doEncode(hex(binaryG)));
+		returns.push(doEncode(hex(binaryB)));
 
 		return returns.join("");
 	}
@@ -1376,10 +1393,16 @@ class NapEncoder {
 		let returns = [];
 
 		returns.push(doEncode("3E")); // SELECT COLOR
-		returns.push(doEncode("44"));
-		returns.push(doEncode("60"));
+		returns.push(makeNapInt(1));//_colorIndex));
 
 		return returns.join("");
+
+	}
+
+	makeNapInt(input) {
+		const encodedInput = doEncode(hex(binary(input)));
+		console.log("encoding input " + input + " as " + encodedInput);
+		return encodedInput;		
 	}
 
 	makeNapVector(input) {

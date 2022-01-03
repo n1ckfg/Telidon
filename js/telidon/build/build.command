@@ -14,6 +14,6 @@ BUILD_TARGET="../naplps.js"
 rm $BUILD_TARGET
 touch $BUILD_TARGET
 
-cat "naplps-header.js" "naplps-decoder.js" "naplps-encoder.js" > $BUILD_TARGET
+cat "naplps-main.js" "naplps-decoder.js" "naplps-encoder.js" > $BUILD_TARGET
 
 

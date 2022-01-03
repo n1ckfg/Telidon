@@ -908,6 +908,11 @@ class NapDecoder {
     }
     
     detectVersion() {
+        /* 699 (Telidon) was the first version of the format.
+         * It should only be encountered in files created on original Telidon hardware.
+         * 709 (NAPLPS) was the second version of the format.
+         * It was used in all later software applications, including Prodigy.
+         */ 
     	let input = this.cmds[0].opcode.hex;
     	if (input == "0E") { // TODO find additional cases
     		return 699;
