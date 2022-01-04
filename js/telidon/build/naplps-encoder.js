@@ -205,8 +205,11 @@ class NapEncoder {
 	}
 
 	makeNapInt(input) {
-		const encodedInput = doEncode(hex(intToBinary(input)));
-		console.log("Encoding input " + input + " as " + encodedInput);
+		const binaryInput = intToBinary(input);
+		const hexInput = hex(input);
+		const encodedInput = doEncode(hexInput);
+		console.log("Encoding: input: " + input + ", binary: " + binaryInput + ", hex: " + hexInput + ", encoded: " + encodedInput);
+		console.log("Testing: unbinary: " + unbinary(binaryInput));
 		return encodedInput;		
 	}
 

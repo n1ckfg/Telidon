@@ -280,7 +280,7 @@ class Vector2 {
         this.x /= input.x;
         this.y /= input.y;
     }
-    
+
 }
 
 class Vector3 {
