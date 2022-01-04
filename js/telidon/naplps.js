@@ -264,21 +264,25 @@ class Vector2 {
     add(input) {
         this.x += input.x;
         this.y += input.y;
+        return new Vector2(this.x, this.y);
     }
 
     sub(input) {
         this.x -= input.x;
         this.y -= input.y;
+        return new Vector2(this.x, this.y);
     }
 
     mul(input) {
         this.x *= input.x;
         this.y *= input.y;
+        return new Vector2(this.x, this.y);
     }
 
     div(input) {
         this.x /= input.x;
         this.y /= input.y;
+        return new Vector2(this.x, this.y);
     }
 
 }
@@ -295,24 +299,28 @@ class Vector3 {
         this.x += input.x;
         this.y += input.y;
         this.z += input.z;
+        return new Vector3(this.x, this.y, this.z);
     }
 
     sub(input) {
         this.x -= input.x;
         this.y -= input.y;
         this.z -= input.z;
+        return new Vector3(this.x, this.y, this.z);
     }
 
     mul(input) {
         this.x *= input.x;
         this.y *= input.y;
         this.z *= input.z;
+        return new Vector3(this.x, this.y, this.z);
     }
 
     div(input) {
         this.x /= input.x;
         this.y /= input.y;
         this.z /= input.z;
+        return new Vector3(this.x, this.y, this.z);
     }
 
 }
@@ -1539,8 +1547,8 @@ class NapEncoder {
 
 		// We know that the hardcoded 4-byte domain has 2048 position values
 		// (3 position bits per byte, minus the sign for the first bit)
-		const intX = parseInt(input.x * 2048);
-		const intY = parseInt(input.y * 2048);
+		const intX = parseInt(Math.abs(input.x) * 2048);
+		const intY = parseInt(Math.abs(input.y) * 2048);
 		console.log("Converting vector to int: " + intX + ", " + intY);
 
 		const binX = intToBinary(intX);
@@ -1621,7 +1629,7 @@ class NapEncoder {
 			if (i == 0) {
 				returns.push(this.makeNapVector2(_points[i]));
 			} else {
-				returns.push(this.makeNapVector2(_points[i])); //.sub(_points[i-1])));
+				returns.push(this.makeNapVector2(_points[i].sub(_points[i-1])));
 			}
 		}
 

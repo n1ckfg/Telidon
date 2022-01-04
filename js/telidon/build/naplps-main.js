@@ -264,21 +264,25 @@ class Vector2 {
     add(input) {
         this.x += input.x;
         this.y += input.y;
+        return new Vector2(this.x, this.y);
     }
 
     sub(input) {
         this.x -= input.x;
         this.y -= input.y;
+        return new Vector2(this.x, this.y);
     }
 
     mul(input) {
         this.x *= input.x;
         this.y *= input.y;
+        return new Vector2(this.x, this.y);
     }
 
     div(input) {
         this.x /= input.x;
         this.y /= input.y;
+        return new Vector2(this.x, this.y);
     }
 
 }
@@ -295,24 +299,28 @@ class Vector3 {
         this.x += input.x;
         this.y += input.y;
         this.z += input.z;
+        return new Vector3(this.x, this.y, this.z);
     }
 
     sub(input) {
         this.x -= input.x;
         this.y -= input.y;
         this.z -= input.z;
+        return new Vector3(this.x, this.y, this.z);
     }
 
     mul(input) {
         this.x *= input.x;
         this.y *= input.y;
         this.z *= input.z;
+        return new Vector3(this.x, this.y, this.z);
     }
 
     div(input) {
         this.x /= input.x;
         this.y /= input.y;
         this.z /= input.z;
+        return new Vector3(this.x, this.y, this.z);
     }
 
 }
