@@ -284,18 +284,6 @@ class NapDataArray {
         return returns;
     }
     
-    getSingleByteVal(n, axis) { // NapData, string
-        let returns = "";
-        if (axis === "x") {
-            returns = "" + this.binaryConv(n, 1);
-        } else if (axis === "y") {
-            returns = "" + this.binaryConv(n, this.bitsPerByte + 1);//4);
-        } else if (axis === "z") {
-            returns = "" + this.binaryConv(n, (2 * this.bitsPerByte) + 1); // ? untested
-        }
-        return returns;
-    }
-
 }
 
 // 2.2. XY and XYZ position are handled by the NapVector class.
@@ -333,6 +321,18 @@ class NapVector extends NapDataArray {
     |?|1| | | | | | |
     -----------------
 */  
+    getSingleByteVal(n, axis) { // NapData, string
+        let returns = "";
+        if (axis === "x") {
+            returns = "" + this.binaryConv(n, 1);
+        } else if (axis === "y") {
+            returns = "" + this.binaryConv(n, this.bitsPerByte + 1);//4);
+        } else if (axis === "z") {
+            returns = "" + this.binaryConv(n, (2 * this.bitsPerByte) + 1); // ? untested
+        }
+        return returns;
+    }
+    
     getCoordFromBytes(n, axis) { // NapData[], string
         let returns = "";
         for (let i=0; i<n.length; i++) {
