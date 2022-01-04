@@ -238,8 +238,9 @@ class NapEncoder {
 
 		// We know that the hardcoded 4-byte domain has 2048 position values
 		// (3 position bits per byte, minus the sign for the first bit)
-		const intX = parseInt(Math.abs(input.x) * 2048);
-		const intY = parseInt(Math.abs(input.y) * 2048);
+		const maxBitVals = 2048;
+		const intX = parseInt(Math.abs(input.x) * maxBitVals);
+		const intY = parseInt(Math.abs(input.y) * maxBitVals);
 		console.log("Converting vector to int: " + intX + ", " + intY);
 
 		const binX = intToBinary(intX);
@@ -317,10 +318,14 @@ class NapEncoder {
 
 		for (let i=0; i<_points.length; i++) {
 			// first point is absolute position, rest are relative
+			const point = _points[i];
 			if (i == 0) {
-				returns.push(this.makeNapVector2(_points[i]));
+				console.log("Setting absolute point: " + point);
+				returns.push(this.makeNapVector2(point));
 			} else {
-				returns.push(this.makeNapVector2(_points[i].sub(_points[i-1])));
+				const newPoint = point.sub(_points[i-1]);
+				console.log("Setting relative point: " + newPoint)
+				returns.push(this.makeNapVector2(newPoint));
 			}
 		}
 
