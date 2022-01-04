@@ -261,6 +261,26 @@ class Vector2 {
         this.y = _y;
     }
 
+    add(input) {
+        this.x += input.x;
+        this.y += input.y;
+    }
+
+    sub(input) {
+        this.x -= input.x;
+        this.y -= input.y;
+    }
+
+    mul(input) {
+        this.x *= input.x;
+        this.y *= input.y;
+    }
+
+    div(input) {
+        this.x /= input.x;
+        this.y /= input.y;
+    }
+    
 }
 
 class Vector3 {

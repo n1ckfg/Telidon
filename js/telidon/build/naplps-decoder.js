@@ -294,6 +294,8 @@ class NapVector extends NapDataArray {
         this.x = this.getCoordFromBytes(n, "x"); // float
         this.y = this.getCoordFromBytes(n, "y"); // float
         //this.z = this.getCoordFromBytes(n, "z"); // float
+
+        console.log("Decoded point (" + this.x + ", " + this.y +").");
     }
 
 /*
