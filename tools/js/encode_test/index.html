@@ -18,9 +18,9 @@
 			}
 
 			let points1 = [];
-			points1.push(randomPoint());
-			points1.push(randomPoint());
-			points1.push(randomPoint());
+			points1.push(new Vector2(0.5, 0.5));
+			points1.push(new Vector2(0, 0));
+			points1.push(new Vector2(0, 1));
 
 			let points2 = [];
 			points2.push(randomPoint());
@@ -35,9 +35,9 @@
 			points3.push(randomPoint());
 			points3.push(randomPoint());
 
-			let isFill1 = true;
-			let isFill2 = true;
-			let isFill3 = true;
+			let isFill1 = false;
+			let isFill2 = false;
+			let isFill3 = false;
 
 			let stroke1 = new NapInputWrapper(color1, points1, isFill1);
 			let stroke2 = new NapInputWrapper(color2, points2, isFill2);

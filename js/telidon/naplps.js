@@ -1325,7 +1325,7 @@ class NapInputWrapper {
 class NapEncoder {
 
 	constructor(_strokes) {
-		this.strokes = this.normalizeAllStrokes(_strokes);
+		this.strokes = _strokes; //this.normalizeAllStrokes(_strokes);
 		console.log("Encoder input is " + this.strokes.length + " strokes.");
 		this.colors = [];
 		this.minColorDistance = 0.1;
