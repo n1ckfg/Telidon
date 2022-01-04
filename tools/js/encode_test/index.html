@@ -11,26 +11,33 @@
 
 			let color1 = new Vector3(255, 0, 0);
 			let color2 = new Vector3(0, 255, 0);
-			let color3 = new Vector3(0, 255, 0);
+			let color3 = new Vector3(0, 0, 255);
 			
+			function randomPoint() {
+				return new Vector2(Math.random(), Math.random());
+			}
+
 			let points1 = [];
-			points1.push(new Vector2(0, 0));
-			points1.push(new Vector2(500, 100));
-			points1.push(new Vector2(100, 100));
+			points1.push(randomPoint());
+			points1.push(randomPoint());
+			points1.push(randomPoint());
 
 			let points2 = [];
-			points2.push(new Vector2(0, 30));
-			points2.push(new Vector2(150, 200));
-			points2.push(new Vector2(300, 200));
+			points2.push(randomPoint());
+			points2.push(randomPoint());
+			points2.push(randomPoint());
 
 			let points3 = [];
-			points3.push(new Vector2(100, 30));
-			points3.push(new Vector2(450, 200));
-			points3.push(new Vector2(100, 200));
+			points3.push(randomPoint());
+			points3.push(randomPoint());
+			points3.push(randomPoint());
+			points3.push(randomPoint());
+			points3.push(randomPoint());
+			points3.push(randomPoint());
 
-			let isFill1 = false;
-			let isFill2 = false;
-			let isFill3 = false;
+			let isFill1 = true;
+			let isFill2 = true;
+			let isFill3 = true;
 
 			let stroke1 = new NapInputWrapper(color1, points1, isFill1);
 			let stroke2 = new NapInputWrapper(color2, points2, isFill2);

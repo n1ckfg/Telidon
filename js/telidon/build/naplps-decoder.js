@@ -547,7 +547,7 @@ class NapCmd {
     // This prints out the command contents in various formats
     // Helpful for debugging
     formatCmd(mode) {
-        let returns = "(" + this.index + ") " + this.opcode.id;
+        let returns = "(" + (this.index + 1) + ") " + this.opcode.id;
         if (this.data.length > 0) returns += ": ";
         if (this.opcode.id === "") {
             switch(mode) {

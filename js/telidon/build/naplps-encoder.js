@@ -70,16 +70,21 @@ class NapEncoder {
 		console.log("Generating header: " + headerString);
 		returns.push(headerString);
 
-		const paletteString = this.generatePalette(this.strokes);
-		console.log("Generating palette: " + paletteString);
-		returns.push(paletteString);
+		//const paletteString = this.generatePalette(this.strokes);
+		//console.log("Generating palette: " + paletteString);
+		//returns.push(paletteString);
 
 		for (let i=0; i<this.strokes.length; i++) {
-			const stroke = this.strokes[i];
-			console.log("* * * Encoding stroke " + (i+1) + " / " + this.strokes.length + " * * *");
-			console.log("isFill: " + stroke.isFill + ", colorIndex: " + stroke.colorIndex + ", points: " + stroke.points);
-			returns.push(this.makeNapStroke(stroke.isFill, stroke.colorIndex, stroke.points));
+			console.log("\n");
+			console.log("* * * Begin encoding stroke " + (i+1) + " / " + this.strokes.length + " * * *");
+			returns.push(this.makeNapStroke(this.strokes[i].isFill, this.strokes[i].colorIndex, this.strokes[i].points));
+			console.log("* * * End encoding stroke " + (i+1) + " / " + this.strokes.length + " * * *");
+			console.log("\n");
 		}
+
+		const footerString = this.makeNapFooter();
+		console.log("Generating footer: " + footerString);
+		returns.push(footerString);
 
 		return returns;
 	}
@@ -153,6 +158,15 @@ class NapEncoder {
 		return returns.join("");
 	}
 
+	makeNapFooter() {
+		let returns = [];
+
+		returns.push(doEncode("1B")); // esc
+		returns.push(doEncode("45"));
+
+		return returns.join("");
+	}
+
 	makeNapOpcode(_isFill) { // only poly line and fill are implemented
 		let returns = [];
 
@@ -221,14 +235,6 @@ class NapEncoder {
 
     getBitValsSigned(n) {
         return pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign))
-    }
-
-    getSign(c) { // char or string
-        if (c === '1') {
-            return -1.0;
-        } else {
-            return 1.0;
-        }
     }
 
 	makeNapVector2(input) {
@@ -319,131 +325,15 @@ class NapEncoder {
 		for (let i=0; i<_points.length; i++) {
 			// first point is absolute position, rest are relative
 			const point = _points[i];
-			if (i == 0) {
-				console.log("Setting absolute point: " + point);
+			if (i === 0) {
+				console.log("Setting absolute point: " + point.x + ", " + point.y);
 				returns.push(this.makeNapVector2(point));
 			} else {
 				const newPoint = point.sub(_points[i-1]);
-				console.log("Setting relative point: " + newPoint)
+				console.log("Setting relative point: " + newPoint.x + ", " + newPoint.y);
 				returns.push(this.makeNapVector2(newPoint));
 			}
 		}
-
-		/*
-		// test
-		returns.push(doEncode("51"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("65"));
-		returns.push(doEncode("48"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("71"));
-		returns.push(doEncode("73"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("59"));
-		returns.push(doEncode("7E"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("52"));
-		returns.push(doEncode("6C"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("62"));
-		returns.push(doEncode("45"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("41"));
-		returns.push(doEncode("48"));
-		returns.push(doEncode("67"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("4D"));
-		returns.push(doEncode("4D"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("52"));
-		returns.push(doEncode("75"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("57"));
-		returns.push(doEncode("79"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("4D"));
-		returns.push(doEncode("58"));
-		returns.push(doEncode("78"));
-		returns.push(doEncode("78"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("4D"));
-		returns.push(doEncode("78"));
-		returns.push(doEncode("7A"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("4E"));
-		returns.push(doEncode("78"));
-		returns.push(doEncode("71"));
-		returns.push(doEncode("6D"));
-		returns.push(doEncode("58"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("50"));
-		returns.push(doEncode("48"));
-		returns.push(doEncode("50"));
-		returns.push(doEncode("40"));
-		returns.push(doEncode("68"));
-		returns.push(doEncode("50"));
-		returns.push(doEncode("50"));
-		returns.push(doEncode("47"));
-		returns.push(doEncode("45"));
-		returns.push(doEncode("42"));
-		returns.push(doEncode("77"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("7E"));
-		returns.push(doEncode("49"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("7E"));
-		returns.push(doEncode("7E"));
-		returns.push(doEncode("7E"));
-		returns.push(doEncode("47"));
-		returns.push(doEncode("46"));
-		returns.push(doEncode("4B"));
-		returns.push(doEncode("74"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("71"));
-		returns.push(doEncode("7A"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("43"));
-		returns.push(doEncode("4E"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("4A"));
-		returns.push(doEncode("5E"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("6A"));
-		returns.push(doEncode("7E"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("77"));
-		returns.push(doEncode("5E"));
-		returns.push(doEncode("50"));
-		returns.push(doEncode("78"));
-		returns.push(doEncode("70"));
-		returns.push(doEncode("73"));
-		returns.push(doEncode("4B"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("55"));
-		returns.push(doEncode("5C"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("7F"));
-		returns.push(doEncode("5E"));
-		returns.push(doEncode("4A"));
-		returns.push(doEncode("78"));
-		returns.push(doEncode("70"));
-		returns.push(doEncode("49"));
-		returns.push(doEncode("5E"));
-		*/
 
 		return returns.join("");	
 	}
@@ -451,7 +341,7 @@ class NapEncoder {
 	makeNapStroke(_isFill, _colorIndex, _points) {
 		let returns = [];
 
-		returns.push(this.makeNapSelectColor(_colorIndex));
+		//returns.push(this.makeNapSelectColor(_colorIndex));
 		returns.push(this.makeNapOpcode(_isFill));
 		returns.push(this.makeNapPoints(_points));
 

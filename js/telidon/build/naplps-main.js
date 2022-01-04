@@ -203,6 +203,7 @@ function removeCharAt(s, index) { // string, int
 }
 
 function doEncode(input) {
+    input = input.charAt(input.length-2) + input.charAt(input.length-1);
     let returns = "";
     for (let i = 0; i < input.length; i += 2) {
         returns += String.fromCharCode(parseInt(input.substr(i, 2), 16));
