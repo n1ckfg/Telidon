@@ -66,6 +66,24 @@ function unbinary(binaryString) {
     return result;
 }
 
+function unbinaryToFloat(binaryString) {
+    let bytes = unbinary(binaryString);
+    var sign = (bytes & 0x80000000) ? -1 : 1;
+    var exponent = ((bytes >> 23) & 0xFF) - 127;
+    var significand = (bytes & ~(-1 << 23));
+
+    if (exponent == 128) 
+        return sign * ((significand) ? Number.NaN : Number.POSITIVE_INFINITY);
+
+    if (exponent == -127) {
+        if (significand == 0) return sign * 0.0;
+        exponent = -126;
+        significand /= (1 << 22);
+    } else significand = (significand | (1 << 23)) / (1 << 23);
+
+    return sign * significand * Math.pow(2, exponent);
+}
+
 function decimalToHex(d, padding) {
     //if there is no padding value added, default padding to 8 else go into while statement.
     padding = (padding === undefined || padding === null) ? padding = 8 : padding;
@@ -191,6 +209,25 @@ function doEncode(input) {
     }
     return returns;
 }
+
+function floatToBinary(input) {
+    let buffer = new ArrayBuffer(4);
+    let intView = new Int32Array(buffer);
+    let floatView = new Float32Array(buffer);
+
+    floatView[0] = input;
+    return intView[0].toString(2); // bits of the 32 bit float
+}
+
+function intToBinary(input) {
+    let buffer = new ArrayBuffer(4);
+    let intView = new Int32Array(buffer);
+    let floatView = new Float32Array(buffer);
+
+    intView[0] = parseInt(input);
+    return intView[0].toString(2); // bits of the 32 bit float
+}
+
 
 class Char {
 
