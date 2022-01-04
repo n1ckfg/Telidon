@@ -1304,10 +1304,6 @@ class NapInputWrapper {
 		this.points = _points;
 		this.isFill = _isFill;
 		this.colorIndex = 0;
-
-		// Number of bytes per encoded value. This is hardcoded here, but
-		// can be set in the NAPLPS domain command.
-		this.dataLength = 4;
 	}
 
 }
@@ -1320,7 +1316,11 @@ class NapEncoder {
 		console.log("Encoder input is " + this.strokes.length + " strokes.");
 		this.colors = [];
 		this.minColorDistance = 0.1;
-		
+
+		// Number of bytes per encoded value. This is hardcoded here, but
+		// can be set in the NAPLPS domain command.
+		this.dataLength = 4;
+
 		this.cmds = this.generateCommands(this.strokes);
 		this.napRaw = this.cmds.join("");
 
@@ -1505,56 +1505,70 @@ class NapEncoder {
 		const binaryInput = intToBinary(input);
 		const hexInput = hex(input);
 		const encodedInput = doEncode(hexInput);
-		console.log("Encoding: input: " + input + ", binary: " + binaryInput + ", hex: " + hexInput + ", encoded: " + encodedInput);
-		console.log("Testing: unbinary: " + unbinary(binaryInput));
+		console.log("Encoding int input: " + input + ", binary: " + binaryInput + ", hex: " + hexInput + ", encoded: " + encodedInput);
+		console.log("Testing unbinary: " + unbinary(binaryInput));
 		return encodedInput;		
 	}
 
 	makeNapVector2(input) {
 		let returns = [];
 
-		input = new Vector2(0.5, 0.5);
+		console.log("Encoding vector input " + input + " ...");
 
 		const xBinary = floatToBinary(input.x);
 		const yBinary = floatToBinary(input.y);
 
 		let vectorBytes = [];
 
-		const bitsPerByte = 4;
-
-		for (let i=0; i<bitsPerByte; i++) {
-			let vectorByte = "";
+		for (let i=0; i<this.dataLength; i++) {
+			let vectorByte = "00";
 			// first bit is the sign
 			if (i == 0) {
+				/*
 				if (input.x > 0) {
 					vectorByte += "1";
 				} else {
 					vectorByte += "0";
 				}
+				*/
 
-				vectorByte += xBinary.charAt(0)
+				vectorByte += xBinary.charAt(0);
+				vectorByte += xBinary.charAt(1);
+				vectorByte += xBinary.charAt(2);
 
+				/*
 				if (input.y > 0) {
 					vectorByte += "1";
 				} else {
 					vectorByte += "0";
 				}
+				*/
 
-				vectorByte += yBinary.charAt(0)
+				vectorByte += yBinary.charAt(0);
+				vectorByte += yBinary.charAt(1);
+				vectorByte += yBinary.charAt(2);
 			} else {
-				vectorByte += xBinary.charAt(0)
-				vectorByte += yBinary.charAt(0)
+				vectorByte += xBinary.charAt(0 + (i * 8));
+				vectorByte += xBinary.charAt(1 + (i * 8));
+				vectorByte += xBinary.charAt(2 + (i * 8));
+
+				vectorByte += yBinary.charAt(0 + (i * 8));
+				vectorByte += yBinary.charAt(1 + (i * 8));
+				vectorByte += yBinary.charAt(2 + (i * 8));
 			}
+
+			vectorBytes.push(vectorByte);
 		}
 
 		for (let vectorByte of vectorBytes) {
-			returns.push(doEncode(unbinary(vectorByte)));
+			returns.push(doEncode(hex(unbinary(vectorByte), 2)));
 		}
 
 		return returns.join("");
 	}
 
 	makeNapPoints(_points) {
+		console.log("Encoding " + _points.length + " points ...");
 		let returns = [];
 
 		for (let i=0; i<_points.length; i++) {
@@ -1562,7 +1576,7 @@ class NapEncoder {
 			if (i == 0) {
 				returns.push(this.makeNapVector2(_points[i]));
 			} else {
-				returns.push(this.makeNapVector2(_points[i].sub(_points[i-1])));
+				returns.push(this.makeNapVector2(_points[i])); //.sub(_points[i-1])));
 			}
 		}
 
