@@ -261,11 +261,15 @@ class NapDataArray {
     }
     
     getBitValsUnsigned(n) {
-        return pow(2, (n.length * this.bitsPerByte));// - int(this.firstBitSign));
+        const returns = pow(2, (n.length * this.bitsPerByte)); 
+        console.log("Bitvals unsigned: " + returns);
+        return returns;
     }
 
     getBitValsSigned(n) {
-        return pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign))
+        const returns = pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign))
+        console.log("Bitvals signed: " + returns);
+        return returns;
     }
 
     getSign(c) { // char or string

@@ -582,11 +582,15 @@ class NapDataArray {
     }
     
     getBitValsUnsigned(n) {
-        return pow(2, (n.length * this.bitsPerByte));// - int(this.firstBitSign));
+        const returns = pow(2, (n.length * this.bitsPerByte)); 
+        console.log("Bitvals unsigned: " + returns);
+        return returns;
     }
 
     getBitValsSigned(n) {
-        return pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign))
+        const returns = pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign))
+        console.log("Bitvals signed: " + returns);
+        return returns;
     }
 
     getSign(c) { // char or string
@@ -1320,6 +1324,8 @@ class NapEncoder {
 		// Number of bytes per encoded value. This is hardcoded here, but
 		// can be set in the NAPLPS domain command.
 		this.dataLength = 4;
+        this.bitsPerByte = 3; 
+        this.firstBitSign = true; 
 
 		this.cmds = this.generateCommands(this.strokes);
 		this.napRaw = this.cmds.join("");
@@ -1371,7 +1377,7 @@ class NapEncoder {
 
 		for (let i=0; i<this.strokes.length; i++) {
 			const stroke = this.strokes[i];
-			console.log("Encoding stroke " + (i+1) + " of " + this.strokes.length + ":");
+			console.log("* * * Encoding stroke " + (i+1) + " / " + this.strokes.length + " * * *");
 			console.log("isFill: " + stroke.isFill + ", colorIndex: " + stroke.colorIndex + ", points: " + stroke.points);
 			returns.push(this.makeNapStroke(stroke.isFill, stroke.colorIndex, stroke.points));
 		}
@@ -1503,65 +1509,104 @@ class NapEncoder {
 
 	makeNapInt(input) {
 		const binaryInput = intToBinary(input);
-		const hexInput = hex(input);
+		const hexInput = hex(input, 2);
 		const encodedInput = doEncode(hexInput);
 		console.log("Encoding int input: " + input + ", binary: " + binaryInput + ", hex: " + hexInput + ", encoded: " + encodedInput);
 		console.log("Testing unbinary: " + unbinary(binaryInput));
 		return encodedInput;		
 	}
 
+    getBitValsUnsigned(n) {
+        return pow(2, (n.length * this.bitsPerByte));
+    }
+
+    getBitValsSigned(n) {
+        return pow(2, (n.length * this.bitsPerByte) - int(this.firstBitSign))
+    }
+
+    getSign(c) { // char or string
+        if (c === '1') {
+            return -1.0;
+        } else {
+            return 1.0;
+        }
+    }
+
 	makeNapVector2(input) {
 		let returns = [];
 
 		console.log("Encoding vector input " + input + " ...");
 
-		const xBinary = floatToBinary(input.x);
-		const yBinary = floatToBinary(input.y);
+		// We know that the hardcoded 4-byte domain has 2048 position values
+		// (3 position bits per byte, minus the sign for the first bit)
+		const intX = parseInt(input.x * 2048);
+		const intY = parseInt(input.y * 2048);
+		console.log("Converting vector to int: " + intX + ", " + intY);
 
-		let vectorBytes = [];
+		const binX = intToBinary(intX);
+		const binY = intToBinary(intY);
+		console.log("Converting int to binary: " + binX + ", " + binY);
 
 		for (let i=0; i<this.dataLength; i++) {
-			let vectorByte = "00";
+			let vectorByte = "01";
+
 			// first bit is the sign
-			if (i == 0) {
-				/*
-				if (input.x > 0) {
-					vectorByte += "1";
-				} else {
-					vectorByte += "0";
+			switch (i) {
+				case 0:
+					if (input.x > 0) {
+						vectorByte += "0";
+					} else {
+						vectorByte += "1";
+					}
+
+					vectorByte += binX.charAt(0);
+					vectorByte += binX.charAt(1);
+
+					if (input.y > 0) {
+						vectorByte += "0";
+					} else {
+						vectorByte += "1";
+					}
+
+					vectorByte += binY.charAt(0);
+					vectorByte += binY.charAt(1);
+					break;
+				case 1:
+					vectorByte += binX.charAt(2);
+					vectorByte += binX.charAt(3);
+					vectorByte += binX.charAt(4);
+
+					vectorByte += binY.charAt(2);
+					vectorByte += binY.charAt(3);
+					vectorByte += binY.charAt(4);
+					break;
+				case 2:
+					vectorByte += binX.charAt(5);
+					vectorByte += binX.charAt(6);
+					vectorByte += binX.charAt(7);
+
+					vectorByte += binY.charAt(5);
+					vectorByte += binY.charAt(6);
+					vectorByte += binY.charAt(7);
+					break;
+				case 3:
+					vectorByte += binX.charAt(8);
+					vectorByte += binX.charAt(9);
+					vectorByte += binX.charAt(10);
+
+					vectorByte += binY.charAt(8);
+					vectorByte += binY.charAt(9);
+					vectorByte += binY.charAt(10);
+					break;
 				}
-				*/
 
-				vectorByte += xBinary.charAt(0);
-				vectorByte += xBinary.charAt(1);
-				vectorByte += xBinary.charAt(2);
+			while (vectorByte.length < 8) vectorByte += "0";
 
-				/*
-				if (input.y > 0) {
-					vectorByte += "1";
-				} else {
-					vectorByte += "0";
-				}
-				*/
+			const hexByte = hex(unbinary(vectorByte));
+			const encodedByte = doEncode(hexByte);
 
-				vectorByte += yBinary.charAt(0);
-				vectorByte += yBinary.charAt(1);
-				vectorByte += yBinary.charAt(2);
-			} else {
-				vectorByte += xBinary.charAt(0 + (i * 8));
-				vectorByte += xBinary.charAt(1 + (i * 8));
-				vectorByte += xBinary.charAt(2 + (i * 8));
-
-				vectorByte += yBinary.charAt(0 + (i * 8));
-				vectorByte += yBinary.charAt(1 + (i * 8));
-				vectorByte += yBinary.charAt(2 + (i * 8));
-			}
-
-			vectorBytes.push(vectorByte);
-		}
-
-		for (let vectorByte of vectorBytes) {
-			returns.push(doEncode(hex(unbinary(vectorByte), 2)));
+			console.log("Encoded byte " + i + ", binary: " + vectorByte + ", hex: " + hexByte + ", " + encodedByte)
+			returns.push(encodedByte);
 		}
 
 		return returns.join("");
