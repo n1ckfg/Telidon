@@ -714,16 +714,16 @@ class NapCmd {
                         
                         let x = 0;         
                         if (nv.x < 0) {
-                            x = (abs(nv.x) + abs(p.x)) - 1.0;
+                            x = (Math.abs(nv.x) + Math.abs(p.x)) - 1.0;
                         } else {
                             x = nv.x + p.x;
                         }
                         
                         let y = 0;
                         if (nv.y < 0) {
-                            y = abs(nv.y) + p.y;
+                            y = Math.abs(nv.y) + p.y;
                         } else {
-                            y = (abs(nv.y) + abs(p.y)) - 1.0;
+                            y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
                         }
                         
                         this.points.push(new Vector2(x, y));

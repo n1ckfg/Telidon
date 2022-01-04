@@ -178,12 +178,12 @@ class NapEncoder {
 		 */
 
 		if (_isFill) {
-			returns.push(doEncode("37")); // SET & POLY FILLED
+			returns.push(doEncode("37")); // FILLED
 		} else {
-			returns.push(doEncode("36")); // SET & POLY OUTLINED
+			returns.push(doEncode("36")); // OUTLINED
 		}
 
-		return returns; //.join("");
+		return returns;
 	}
 
 	makeNapSetColor(_color) {
@@ -321,17 +321,15 @@ class NapEncoder {
 	makeNapPoints(_points) {
 		console.log("Encoding " + _points.length + " points ...");
 		let returns = [];
+		
+		const firstPoint = _points[0];
 
 		for (let i=0; i<_points.length; i++) {
-			// first point is absolute position, rest are relative
-			const point = _points[i];
+			// first point is absolute position, rest are relative to first point
 			if (i === 0) {
-				console.log("Setting absolute point: " + point.x + ", " + point.y);
-				returns.push(this.makeNapVector2(point));
+				returns.push(this.makeNapVector2(firstPoint));
 			} else {
-				const newPoint = point.sub(_points[i-1]);
-				console.log("Setting relative point: " + newPoint.x + ", " + newPoint.y);
-				returns.push(this.makeNapVector2(newPoint));
+				returns.push(this.makeNapVector2(_points[i].sub(firstPoint)));
 			}
 		}
 
