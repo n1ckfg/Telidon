@@ -705,37 +705,37 @@ class NapCmd {
             for (let i=0; i<nvList.length; i++) {
                 let nv = nvList[i];
 
-                    if (!_allPointsRelative && i===0) {
-                        this.points.push(new Vector2(nv.x, nv.y));
-                    } else if (_allPointsRelative && i===0) {
-						this.points.push(naplps_drawingCursor)
-					} else {
-                        let p = this.points[this.points.length-1];
-                        
-                        let x = 0;         
-                        if (nv.x < 0) {
-                            x = (Math.abs(nv.x) + Math.abs(p.x)) - 1.0;
-                        } else {
-                            x = nv.x + p.x;
-                        }
-                        
-                        let y = 0;
-                        if (nv.y < 0) {
-                            y = Math.abs(nv.y) + p.y;
-                        } else {
-                            y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
-                        }
-                        
-                        this.points.push(new Vector2(x, y));
+                if (!_allPointsRelative && i===0) {
+                    this.points.push(new Vector2(nv.x, nv.y));
+                } else if (_allPointsRelative && i===0) {
+					this.points.push(naplps_drawingCursor)
+				} else {
+                    let p = this.points[this.points.length-1];
+                    
+                    let x = 0;         
+                    if (nv.x < 0) {
+                        x = (Math.abs(nv.x) + Math.abs(p.x)) - 1.0;
+                    } else {
+                        x = nv.x + p.x;
                     }
+                    
+                    let y = 0;
+                    if (nv.y < 0) {
+                        y = Math.abs(nv.y) + p.y;
+                    } else {
+                        y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
+                    }
+                    
+                    this.points.push(new Vector2(x, y));
                 }
+            }
         } catch (e) { 
             console.log("*Error* " + this.opcode.id + " contains no coordinates.")
         }
 
         if (_set) {
         	try {
-        		let lastPoint = this.points[this.point.length-1];
+        		let lastPoint = this.points[this.points.length-1];
         		naplps_drawingCursor = new Vector2(lastPoint.x, lastPoint.y);
         	} catch (e) { 
             	console.log("*Error* " + this.opcode.id + " tried to set cursor position but failed.")

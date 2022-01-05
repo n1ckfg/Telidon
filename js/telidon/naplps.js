@@ -1035,37 +1035,37 @@ class NapCmd {
             for (let i=0; i<nvList.length; i++) {
                 let nv = nvList[i];
 
-                    if (!_allPointsRelative && i===0) {
-                        this.points.push(new Vector2(nv.x, nv.y));
-                    } else if (_allPointsRelative && i===0) {
-						this.points.push(naplps_drawingCursor)
-					} else {
-                        let p = this.points[this.points.length-1];
-                        
-                        let x = 0;         
-                        if (nv.x < 0) {
-                            x = (Math.abs(nv.x) + Math.abs(p.x)) - 1.0;
-                        } else {
-                            x = nv.x + p.x;
-                        }
-                        
-                        let y = 0;
-                        if (nv.y < 0) {
-                            y = Math.abs(nv.y) + p.y;
-                        } else {
-                            y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
-                        }
-                        
-                        this.points.push(new Vector2(x, y));
+                if (!_allPointsRelative && i===0) {
+                    this.points.push(new Vector2(nv.x, nv.y));
+                } else if (_allPointsRelative && i===0) {
+					this.points.push(naplps_drawingCursor)
+				} else {
+                    let p = this.points[this.points.length-1];
+                    
+                    let x = 0;         
+                    if (nv.x < 0) {
+                        x = (Math.abs(nv.x) + Math.abs(p.x)) - 1.0;
+                    } else {
+                        x = nv.x + p.x;
                     }
+                    
+                    let y = 0;
+                    if (nv.y < 0) {
+                        y = Math.abs(nv.y) + p.y;
+                    } else {
+                        y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
+                    }
+                    
+                    this.points.push(new Vector2(x, y));
                 }
+            }
         } catch (e) { 
             console.log("*Error* " + this.opcode.id + " contains no coordinates.")
         }
 
         if (_set) {
         	try {
-        		let lastPoint = this.points[this.point.length-1];
+        		let lastPoint = this.points[this.points.length-1];
         		naplps_drawingCursor = new Vector2(lastPoint.x, lastPoint.y);
         	} catch (e) { 
             	console.log("*Error* " + this.opcode.id + " tried to set cursor position but failed.")
@@ -1325,8 +1325,10 @@ class NapInputWrapper {
 class NapEncoder {
 
 	constructor(_strokes) {
-		this.strokes = _strokes; //this.normalizeAllStrokes(_strokes);
+		//this.strokes = this.normalizeAllStrokes(_strokes);
+		this.strokes = _strokes;
 		console.log("Encoder input is " + this.strokes.length + " strokes.");
+		
 		this.colors = [];
 		this.minColorDistance = 0.1;
 
@@ -1334,9 +1336,15 @@ class NapEncoder {
 		// can be set in the NAPLPS domain command.
 		this.dataLength = 4;
         this.bitsPerByte = 3; 
+
+		// We know that the hardcoded 4-byte domain has 2048 position values
+		// (3 position bits per byte, minus the sign for the first bit)
+		this.maxBitVals = 2048;
         this.firstBitSign = true; 
 
-		this.cmds = this.generateCommands(this.strokes);
+        this.cursor = new Vector2(0,0);
+
+		this.cmds = this.generateCommands();
 		this.napRaw = this.cmds.join("");
 
 		console.log(this.napRaw);
@@ -1373,7 +1381,7 @@ class NapEncoder {
 		return returns.join("");
 	}
 
-	generateCommands(_strokes) {
+	generateCommands() {
 		let returns = [];
 
 		const headerString = this.makeNapHeader();
@@ -1397,47 +1405,6 @@ class NapEncoder {
 		returns.push(footerString);
 
 		return returns;
-	}
-
-	normalizeAllStrokes(input) {
-		let minX = 0;
-		let maxX = 0;
-		let minY = 0;
-		let maxY = 0;
-		let minVal = 0;
-		let maxVal = 0;
-		
-		for (let stroke of input) {
-			for (let point of stroke.points) {
-				if (point.x < minX) {
-					minX = point.x;
-				} else if (point.x > maxX) {
-					maxX = point.x;
-				}
-				if (point.y < minY) {
-					minY = point.y;
-				} else if (point.y > maxY) {
-					maxY = point.y;
-				}
-			}
-		}
-
-		if (Math.abs(maxX - minX) > Math.abs(maxY - minY)) {
-			maxVal = maxX;
-			minVal = minX;
-		} else {
-			maxVal = maxY;
-			minVal = minY;
-		}
-
-		for (let stroke of input) {
-			for (let point of stroke.points) {
-				point.x = remap(point.x, minVal, maxVal, 0, 1);
-				point.y = remap(point.y, minVal, maxVal, 0, 1);
-			}
-		}
-
-		return input;
 	}
 
 	makeNapHeader() {
@@ -1487,10 +1454,10 @@ class NapEncoder {
 		 * 37 SET & POLY FILLED
 		 */
 
-		if (_isFill) {
-			returns.push(doEncode("37")); // FILLED
-		} else {
+		if (!_isFill) {
 			returns.push(doEncode("36")); // OUTLINED
+		} else {
+			returns.push(doEncode("37")); // FILLED
 		}
 
 		return returns;
@@ -1552,11 +1519,9 @@ class NapEncoder {
 
 		console.log("Encoding vector input " + input + " ...");
 
-		// We know that the hardcoded 4-byte domain has 2048 position values
-		// (3 position bits per byte, minus the sign for the first bit)
-		const maxBitVals = 2048;
-		const intX = parseInt(Math.abs(input.x) * maxBitVals);
-		const intY = parseInt(Math.abs(input.y) * maxBitVals);
+		const intX = parseInt(Math.abs(input.x) * this.maxBitVals);
+		//const intY = Math.abs(this.maxBitVals - parseInt(Math.abs(input.y) * this.maxBitVals));
+		const intY = parseInt(Math.abs(input.y) * this.maxBitVals);
 		console.log("Converting vector to int: " + intX + ", " + intY);
 
 		const binX = intToBinary(intX);
@@ -1628,20 +1593,58 @@ class NapEncoder {
 		return returns.join("");
 	}
 
+	normalizeAllStrokes(input) {
+		let minX = 0;
+		let maxX = 0;
+		let minY = 0;
+		let maxY = 0;
+		let minVal = 0;
+		let maxVal = 0;
+		
+		for (let stroke of input) {
+			for (let point of stroke.points) {
+				if (point.x < minX) {
+					minX = point.x;
+				} else if (point.x > maxX) {
+					maxX = point.x;
+				}
+				if (point.y < minY) {
+					minY = point.y;
+				} else if (point.y > maxY) {
+					maxY = point.y;
+				}
+			}
+		}
+
+		if (Math.abs(maxX - minX) > Math.abs(maxY - minY)) {
+			maxVal = maxX;
+			minVal = minX;
+		} else {
+			maxVal = maxY;
+			minVal = minY;
+		}
+
+		for (let stroke of input) {
+			for (let point of stroke.points) {
+				point.x = remap(point.x, minVal, maxVal, 0, 1);
+				point.y = remap(point.y, minVal, maxVal, 0, 1);
+			}
+		}
+
+		return input;
+	}
+
 	makeNapPoints(_points) {
 		console.log("Encoding " + _points.length + " points ...");
 		let returns = [];
-		
-		const firstPoint = _points[0];
 
-		for (let i=0; i<_points.length; i++) {
-			// first point is absolute position, rest are relative to first point
-			if (i === 0) {
-				returns.push(this.makeNapVector2(firstPoint));
-			} else {
-				returns.push(this.makeNapVector2(_points[i].sub(firstPoint)));
-			}
-		}
+        for (let i=0; i<_points.length; i++) {
+            if (i === 0) {
+            	returns.push(this.makeNapVector2(_points[0]));
+            } else {
+            	returns.push(this.makeNapVector2(_points[i].sub(_points[0])));
+            }
+        }
 
 		return returns.join("");	
 	}
