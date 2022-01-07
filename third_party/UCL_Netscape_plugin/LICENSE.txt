@@ -1,0 +1,17 @@
+Copyright	
+Universal Computer Laboratory Co., Ltd. has all the copyrights for the software above.
+
+Modification	
+Reverse engineering and modification of our software are not permitted.
+
+Distribution	
+Please contact us if you would like to reproduce our software to other networks. Free distribution of our software for the purpose listed below is permitted.
+
+Purpose	
+Our software may be used for the purpose of personal or evaluating use only. Business or commercial uses are not permitted.
+
+Warranty	
+Universal Computer Laboratory Co., Ltd. makes no warranty of our software for any purpose.
+
+Support	
+Universal Computer Laboratory Co., Ltd. provides no product support for our software. If you have any questions or comments, please address them through e-mail.
