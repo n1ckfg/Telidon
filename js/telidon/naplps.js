@@ -1410,6 +1410,10 @@ class NapEncoder {
 		let returns = [];
 
 		/*
+         * 28 LINE ABS
+         * 29 LINE REL
+         * 2A SET & LINE ABS
+         * 2B SET & LINE REL
 		 * 34 POLY OUTLINED
 		 * 35 POLY FILLED
 		 * 36 SET & POLY OUTLINED
@@ -1591,7 +1595,7 @@ class NapEncoder {
 	}
 
 	makeNapPoints(_points) {
-		console.log("Encoding " + _points.length + " points ...");
+		console.log("Encoding " + _points.length + " points to poly ...");
 		let returns = [];
 
         for (let i=0; i<_points.length; i++) {

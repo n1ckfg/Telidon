@@ -305,7 +305,11 @@ class TelidonDrawCmd {
         for (let i=0; i<points.length; i++) {
             let p = points[i]; // PVector
             vertex(p.x * w, p.y * h);
+            if (i === points.length-1) {
+                vertex(points[0].x * w, points[0].y * h);
+            }
         }
+
         endShape(CLOSE);
         
         if (this.labelPoints) {
