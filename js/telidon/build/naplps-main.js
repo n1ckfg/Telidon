@@ -160,7 +160,11 @@ function remap(value, min1, max1, min2, max2) {
 }
 
 function getDistance(v1, v2) {
-    return Math.sqrt((v1.x - v2.x)**2 + (v1.y - v2.y)**2 + (v1.z - v2.z)**2);
+    if (v1.z !== undefined && v2.z !== undefined) {
+        return Math.sqrt((v1.x - v2.x)**2 + (v1.y - v2.y)**2 + (v1.z - v2.z)**2);
+    } else {
+        return Math.sqrt((v1.x - v2.x)**2 + (v1.y - v2.y)**2);
+    }
 }
 
 function parseIntAlt(val, radix) {
@@ -326,5 +330,22 @@ class Vector3 {
 
 }
 
-
+const naplps_black = new Vector3(0, 0, 0);
+const naplps_gray1 = new Vector3(32, 32, 32);
+const naplps_gray2 = new Vector3(64, 64, 64);
+const naplps_gray3 = new Vector3(96, 96, 96);
+const naplps_gray4 = new Vector3(128, 128, 128);
+const naplps_gray5 = new Vector3(160, 160, 160);
+const naplps_gray6 = new Vector3(192, 192, 192);
+const naplps_gray7 = new Vector3(224, 224, 224);
+const naplps_blue = new Vector3(0, 0, 255);
+const naplps_blue_magenta = new Vector3(5*36, 0, 7*36);
+const naplps_pinkish_red = new Vector3(7*36, 0, 4*36);
+const naplps_orange_red = new Vector3(7*36, 2*36, 0);
+const naplps_yellow = new Vector3(255, 255, 0);
+const naplps_yellow_green = new Vector3(2*36, 7*36, 0);
+const naplps_greenish = new Vector3(0, 7*36, 4*36);
+const naplps_bluegreen = new Vector3(0, 5*36, 7*36);  
+const naplps_white = new Vector3(255, 255, 255); // not part of the default palette
+const naplps_defaultColorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
 

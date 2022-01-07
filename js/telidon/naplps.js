@@ -326,7 +326,24 @@ class Vector3 {
 
 }
 
-
+const naplps_black = new Vector3(0, 0, 0);
+const naplps_gray1 = new Vector3(32, 32, 32);
+const naplps_gray2 = new Vector3(64, 64, 64);
+const naplps_gray3 = new Vector3(96, 96, 96);
+const naplps_gray4 = new Vector3(128, 128, 128);
+const naplps_gray5 = new Vector3(160, 160, 160);
+const naplps_gray6 = new Vector3(192, 192, 192);
+const naplps_gray7 = new Vector3(224, 224, 224);
+const naplps_blue = new Vector3(0, 0, 255);
+const naplps_blue_magenta = new Vector3(5*36, 0, 7*36);
+const naplps_pinkish_red = new Vector3(7*36, 0, 4*36);
+const naplps_orange_red = new Vector3(7*36, 2*36, 0);
+const naplps_yellow = new Vector3(255, 255, 0);
+const naplps_yellow_green = new Vector3(2*36, 7*36, 0);
+const naplps_greenish = new Vector3(0, 7*36, 4*36);
+const naplps_bluegreen = new Vector3(0, 5*36, 7*36);  
+const naplps_white = new Vector3(255, 255, 255); // not part of the default palette
+const naplps_defaultColorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
 
 // + + +   D E C O D E R   + + +
 
@@ -335,28 +352,6 @@ class Vector3 {
 // once read, each RGB color is just stored in its drawing command.
 
 let naplps_drawingCursor = new Vector2(0.0, 0.0);
-
-let naplps_black = new Vector3(0, 0, 0);
-let naplps_gray1 = new Vector3(32, 32, 32);
-let naplps_gray2 = new Vector3(64, 64, 64);
-let naplps_gray3 = new Vector3(96, 96, 96);
-let naplps_gray4 = new Vector3(128, 128, 128);
-let naplps_gray5 = new Vector3(160, 160, 160);
-let naplps_gray6 = new Vector3(192, 192, 192);
-let naplps_gray7 = new Vector3(224, 224, 224);
-let naplps_blue = new Vector3(0, 0, 255);
-let naplps_blue_magenta = new Vector3(5*36, 0, 7*36);
-let naplps_pinkish_red = new Vector3(7*36, 0, 4*36);
-let naplps_orange_red = new Vector3(7*36, 2*36, 0);
-let naplps_yellow = new Vector3(255, 255, 0);
-let naplps_yellow_green = new Vector3(2*36, 7*36, 0);
-let naplps_greenish = new Vector3(0, 7*36, 4*36);
-let naplps_bluegreen = new Vector3(0, 5*36, 7*36);  
-
-// naplps_white is not part of the default palette
-let naplps_white = new Vector3(255, 255, 255);
-
-let naplps_defaultColorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
 let naplps_colorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
 let naplps_colorMode = 0;
 let naplps_lastColor = naplps_white;
