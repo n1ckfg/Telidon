@@ -291,16 +291,29 @@ class NapEncoder {
         	console.log(_points[i].x + ", " + _points[i].y);
             if (i === 0) {
             	pointsToEncode.push(_points[0]);
-            	pointsToEncode.push(_points[0]);
             } else {
             	let nv = _points[i];
             	let p = pointsToEncode[pointsToEncode.length-1];
                    
-                let x = nv.x - p.x;
+                let x = 0;         
+                if (nv.x < 0) {
+                    x = (Math.abs(nv.x) + Math.abs(p.x)) - 1.0;
+                } else {
+                    x = nv.x + p.x;
+                }
                 
-                let y = nv.y - p.y;
+                let y = 0;
+                if (nv.y < 0) {
+                    y = Math.abs(nv.y) + p.y;
+                } else {
+                    y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
+                }
                 
-                pointsToEncode.push(new Vector2(x, y));
+                const newPoint = new Vector2(x, y);
+                pointsToEncode.push(newPoint);
+                if (i === _points.length-1) {
+	                pointsToEncode.push(newPoint);
+                }
             }
         }
 
