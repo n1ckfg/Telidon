@@ -241,7 +241,7 @@ class TelidonDrawCmd {
     setColor(v) {
     	this.col = color(v.x, v.y, v.z);
        	fill(this.col);
-       	stroke(0);
+       	stroke(this.col);
       	strokeWeight(this.thickness); // TODO should this go somewhere else?
         //console.log("color: " + this.col);
     }
@@ -309,7 +309,7 @@ class TelidonDrawCmd {
         endShape(CLOSE);
         
         if (this.labelPoints) {
-            stroke(255);
+            stroke(255, 63);
         	strokeWeight(this.thickness * 2);
 	        for (let i=0; i<points.length; i++) {
 	            let p = points[i]; // PVector
