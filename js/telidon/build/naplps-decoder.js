@@ -1,9 +1,5 @@
 // + + +   D E C O D E R   + + +
 
-// The original NAPLPS decoders assumed a global state for reading colors.
-// In our decoder, we don't have to use a limited palette, so 
-// once read, each RGB color is just stored in its drawing command.
-
 let naplps_drawingCursor = new Vector2(0.0, 0.0);
 let naplps_colorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
 let naplps_colorMode = 0;
@@ -276,8 +272,6 @@ class NapVector extends NapDataArray {
         this.x = this.getCoordFromBytes(n, "x"); // float
         this.y = this.getCoordFromBytes(n, "y"); // float
         //this.z = this.getCoordFromBytes(n, "z"); // float
-
-        console.log("Decoded point (" + this.x + ", " + this.y +").");
     }
 
 /*
@@ -684,8 +678,10 @@ class NapCmd {
                 let nv = nvList[i];
 
                 if (!_allPointsRelative && i===0) {
+                    console.log("\nStarting with first point...");
                     this.points.push(new Vector2(nv.x, nv.y));
                 } else if (_allPointsRelative && i===0) {
+                    console.log("\nStarting with cursor position...");
 					this.points.push(naplps_drawingCursor)
 				} else {
                     let p = this.points[this.points.length-1];
@@ -704,6 +700,7 @@ class NapCmd {
                         y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
                     }
                     
+                    console.log("Decoded point (" + x + ", " + y +").");
                     this.points.push(new Vector2(x, y));
                 }
             }

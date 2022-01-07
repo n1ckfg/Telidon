@@ -353,10 +353,6 @@ const naplps_defaultColorIndices2 = [ "40", "60", "40", "60", "50", "70", "50", 
 
 // + + +   D E C O D E R   + + +
 
-// The original NAPLPS decoders assumed a global state for reading colors.
-// In our decoder, we don't have to use a limited palette, so 
-// once read, each RGB color is just stored in its drawing command.
-
 let naplps_drawingCursor = new Vector2(0.0, 0.0);
 let naplps_colorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
 let naplps_colorMode = 0;
@@ -629,8 +625,6 @@ class NapVector extends NapDataArray {
         this.x = this.getCoordFromBytes(n, "x"); // float
         this.y = this.getCoordFromBytes(n, "y"); // float
         //this.z = this.getCoordFromBytes(n, "z"); // float
-
-        console.log("Decoded point (" + this.x + ", " + this.y +").");
     }
 
 /*
@@ -1037,8 +1031,10 @@ class NapCmd {
                 let nv = nvList[i];
 
                 if (!_allPointsRelative && i===0) {
+                    console.log("\nStarting with first point...");
                     this.points.push(new Vector2(nv.x, nv.y));
                 } else if (_allPointsRelative && i===0) {
+                    console.log("\nStarting with cursor position...");
 					this.points.push(naplps_drawingCursor)
 				} else {
                     let p = this.points[this.points.length-1];
@@ -1057,6 +1053,7 @@ class NapCmd {
                         y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
                     }
                     
+                    console.log("Decoded point (" + x + ", " + y +").");
                     this.points.push(new Vector2(x, y));
                 }
             }
@@ -1325,8 +1322,8 @@ class NapInputWrapper {
 class NapEncoder {
 
 	constructor(_strokes) {
-		this.strokes = this.normalizeAllStrokes(_strokes);
-		//this.strokes = _strokes;
+		//this.strokes = this.normalizeAllStrokes(_strokes);
+		this.strokes = _strokes;
 		console.log("Encoder input is " + this.strokes.length + " strokes.");
 
 		// Number of bytes per encoded value. This is hardcoded here, but
@@ -1338,8 +1335,6 @@ class NapEncoder {
 		// (3 position bits per byte, minus the sign for the first bit)
 		this.maxBitVals = 2048;
         this.firstBitSign = true; 
-
-        this.cursor = new Vector2(0,0);
 
 		this.cmds = this.generateCommands();
 		this.napRaw = this.cmds.join("");
@@ -1483,8 +1478,11 @@ class NapEncoder {
 		const intY = parseInt(Math.abs(input.y) * this.maxBitVals);
 		console.log("Converting vector to int: " + intX + ", " + intY);
 
-		const binX = intToBinary(intX);
-		const binY = intToBinary(intY);
+		let binX = intToBinary(intX);
+		while (binX.length < 11) binX += "0";
+		let binY = intToBinary(intY);
+		while (binY.length < 11) binY += "0";
+
 		console.log("Converting int to binary: " + binX + ", " + binY);
 
 		for (let i=0; i<this.dataLength; i++) {
@@ -1499,8 +1497,8 @@ class NapEncoder {
 						vectorByte += "1";
 					}
 
-					vectorByte += binX.charAt(10);
-					vectorByte += binX.charAt(9);
+					vectorByte += binX.charAt(0);
+					vectorByte += binX.charAt(1);
 
 					if (input.y > 0) {
 						vectorByte += "0";
@@ -1508,39 +1506,37 @@ class NapEncoder {
 						vectorByte += "1";
 					}
 
-					vectorByte += binY.charAt(10);
-					vectorByte += binY.charAt(9);
+					vectorByte += binY.charAt(0);
+					vectorByte += binY.charAt(1);
 					break;
 				case 1:
-					vectorByte += binX.charAt(8);
-					vectorByte += binX.charAt(7);
-					vectorByte += binX.charAt(6);
+					vectorByte += binX.charAt(2);
+					vectorByte += binX.charAt(3);
+					vectorByte += binX.charAt(4);
 
-					vectorByte += binY.charAt(8);
-					vectorByte += binY.charAt(7);
-					vectorByte += binY.charAt(6);
+					vectorByte += binY.charAt(2);
+					vectorByte += binY.charAt(3);
+					vectorByte += binY.charAt(4);
 					break;
 				case 2:
 					vectorByte += binX.charAt(5);
-					vectorByte += binX.charAt(4);
-					vectorByte += binX.charAt(3);
+					vectorByte += binX.charAt(6);
+					vectorByte += binX.charAt(7);
 
 					vectorByte += binY.charAt(5);
-					vectorByte += binY.charAt(4);
-					vectorByte += binY.charAt(3);
+					vectorByte += binY.charAt(6);
+					vectorByte += binY.charAt(7);
 					break;
 				case 3:
-					vectorByte += binX.charAt(2);
-					vectorByte += binX.charAt(1);
-					vectorByte += binX.charAt(0);
+					vectorByte += binX.charAt(8);
+					vectorByte += binX.charAt(9);
+					vectorByte += binX.charAt(10);
 
-					vectorByte += binY.charAt(2);
-					vectorByte += binY.charAt(1);
-					vectorByte += binY.charAt(0);
+					vectorByte += binY.charAt(8);
+					vectorByte += binY.charAt(9);
+					vectorByte += binY.charAt(10);
 					break;
-				}
-
-			while (vectorByte.length < 8) vectorByte += "0";
+			}
 
 			const hexByte = hex(unbinary(vectorByte));
 			const encodedByte = doEncode(hexByte);
@@ -1596,14 +1592,29 @@ class NapEncoder {
 	makeNapPoints(_points) {
 		console.log("Encoding " + _points.length + " points to poly ...");
 		let returns = [];
+		
+		let pointsToEncode = [];
 
         for (let i=0; i<_points.length; i++) {
+        	console.log(_points[i].x + ", " + _points[i].y);
             if (i === 0) {
-            	returns.push(this.makeNapVector2(_points[0]));
+            	pointsToEncode.push(_points[0]);
+            	pointsToEncode.push(_points[0]);
             } else {
-            	let newPoint = new Vector3(_points[i].x, _points[i].y, _points[i].z).sub(_points[i-1]);
-            	returns.push(this.makeNapVector2(newPoint));
+            	let nv = _points[i];
+            	let p = pointsToEncode[pointsToEncode.length-1];
+                   
+                let x = nv.x - p.x;
+                
+                let y = nv.y - p.y;
+                
+                pointsToEncode.push(new Vector2(x, y));
             }
+        }
+
+        for (let point of pointsToEncode) {
+           	returns.push(this.makeNapVector2(point));
+            console.log("Encoded point (" + point.x + ", " + point.y +").");
         }
 
 		return returns.join("");	

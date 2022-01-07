@@ -19,9 +19,9 @@
 
 			let points1 = [];
 			points1.push(new Vector2(0, 0));
-			points1.push(new Vector2(0.5, 0));
-			points1.push(new Vector2(0.5, 0.5));
-			points1.push(new Vector2(0, 0.5));
+			points1.push(new Vector2(1, 0));
+			points1.push(new Vector2(1, 1));
+			points1.push(new Vector2(0, 1));
 
 			let points2 = [];
 			points2.push(randomPoint());
@@ -48,8 +48,8 @@
 			let stroke3 = new NapInputWrapper(color3, points3, isFill3);
 			
 			input.push(stroke1);
-			input.push(stroke2);
-			input.push(stroke3);
+			//input.push(stroke2);
+			//input.push(stroke3);
 
 			let encoder = new NapEncoder(input);
 

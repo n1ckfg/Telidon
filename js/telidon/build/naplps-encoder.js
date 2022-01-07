@@ -28,8 +28,6 @@ class NapEncoder {
 		this.maxBitVals = 2048;
         this.firstBitSign = true; 
 
-        this.cursor = new Vector2(0,0);
-
 		this.cmds = this.generateCommands();
 		this.napRaw = this.cmds.join("");
 
@@ -172,8 +170,11 @@ class NapEncoder {
 		const intY = parseInt(Math.abs(input.y) * this.maxBitVals);
 		console.log("Converting vector to int: " + intX + ", " + intY);
 
-		const binX = intToBinary(intX);
-		const binY = intToBinary(intY);
+		let binX = intToBinary(intX);
+		while (binX.length < 11) binX += "0";
+		let binY = intToBinary(intY);
+		while (binY.length < 11) binY += "0";
+
 		console.log("Converting int to binary: " + binX + ", " + binY);
 
 		for (let i=0; i<this.dataLength; i++) {
@@ -188,8 +189,8 @@ class NapEncoder {
 						vectorByte += "1";
 					}
 
-					vectorByte += binX.charAt(10);
-					vectorByte += binX.charAt(9);
+					vectorByte += binX.charAt(0);
+					vectorByte += binX.charAt(1);
 
 					if (input.y > 0) {
 						vectorByte += "0";
@@ -197,39 +198,37 @@ class NapEncoder {
 						vectorByte += "1";
 					}
 
-					vectorByte += binY.charAt(10);
-					vectorByte += binY.charAt(9);
+					vectorByte += binY.charAt(0);
+					vectorByte += binY.charAt(1);
 					break;
 				case 1:
-					vectorByte += binX.charAt(8);
-					vectorByte += binX.charAt(7);
-					vectorByte += binX.charAt(6);
+					vectorByte += binX.charAt(2);
+					vectorByte += binX.charAt(3);
+					vectorByte += binX.charAt(4);
 
-					vectorByte += binY.charAt(8);
-					vectorByte += binY.charAt(7);
-					vectorByte += binY.charAt(6);
+					vectorByte += binY.charAt(2);
+					vectorByte += binY.charAt(3);
+					vectorByte += binY.charAt(4);
 					break;
 				case 2:
 					vectorByte += binX.charAt(5);
-					vectorByte += binX.charAt(4);
-					vectorByte += binX.charAt(3);
+					vectorByte += binX.charAt(6);
+					vectorByte += binX.charAt(7);
 
 					vectorByte += binY.charAt(5);
-					vectorByte += binY.charAt(4);
-					vectorByte += binY.charAt(3);
+					vectorByte += binY.charAt(6);
+					vectorByte += binY.charAt(7);
 					break;
 				case 3:
-					vectorByte += binX.charAt(2);
-					vectorByte += binX.charAt(1);
-					vectorByte += binX.charAt(0);
+					vectorByte += binX.charAt(8);
+					vectorByte += binX.charAt(9);
+					vectorByte += binX.charAt(10);
 
-					vectorByte += binY.charAt(2);
-					vectorByte += binY.charAt(1);
-					vectorByte += binY.charAt(0);
+					vectorByte += binY.charAt(8);
+					vectorByte += binY.charAt(9);
+					vectorByte += binY.charAt(10);
 					break;
-				}
-
-			while (vectorByte.length < 8) vectorByte += "0";
+			}
 
 			const hexByte = hex(unbinary(vectorByte));
 			const encodedByte = doEncode(hexByte);
@@ -285,14 +284,29 @@ class NapEncoder {
 	makeNapPoints(_points) {
 		console.log("Encoding " + _points.length + " points to poly ...");
 		let returns = [];
+		
+		let pointsToEncode = [];
 
         for (let i=0; i<_points.length; i++) {
+        	console.log(_points[i].x + ", " + _points[i].y);
             if (i === 0) {
-            	returns.push(this.makeNapVector2(_points[0]));
+            	pointsToEncode.push(_points[0]);
+            	pointsToEncode.push(_points[0]);
             } else {
-            	let newPoint = new Vector3(_points[i].x, _points[i].y, _points[i].z).sub(_points[i-1]);
-            	returns.push(this.makeNapVector2(newPoint));
+            	let nv = _points[i];
+            	let p = pointsToEncode[pointsToEncode.length-1];
+                   
+                let x = nv.x - p.x;
+                
+                let y = nv.y - p.y;
+                
+                pointsToEncode.push(new Vector2(x, y));
             }
+        }
+
+        for (let point of pointsToEncode) {
+           	returns.push(this.makeNapVector2(point));
+            console.log("Encoded point (" + point.x + ", " + point.y +").");
         }
 
 		return returns.join("");	
