@@ -348,5 +348,6 @@ const naplps_greenish = new Vector3(0, 7*36, 4*36);
 const naplps_bluegreen = new Vector3(0, 5*36, 7*36);  
 const naplps_white = new Vector3(255, 255, 255); // not part of the default palette
 const naplps_defaultColorMap = [ naplps_black, naplps_gray1, naplps_gray2, naplps_gray3, naplps_gray4, naplps_gray5, naplps_gray6, naplps_gray7, naplps_blue, naplps_blue_magenta, naplps_pinkish_red, naplps_orange_red, naplps_yellow, naplps_yellow_green, naplps_greenish, naplps_bluegreen ]; 
-const naplps_defaultColorIndices = [ "60", "60", "60", "60", "60", "60", "60", "60", "60", "60", "60", "5F", "60", "60", "60", "60"];
+const naplps_defaultColorIndices1 = [ "40", "44", "49", "4D", "52", "56", "5B", "5F", "60", "64", "68", "6C", "70", "74", "78", "7C"];
+const naplps_defaultColorIndices2 = [ "40", "60", "40", "60", "50", "70", "50", "70", "40", "40", "40", "40", "40", "40", "40", "40"];
 

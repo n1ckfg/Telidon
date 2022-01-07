@@ -114,6 +114,8 @@ class NapEncoder {
 		return returns;
 	}
 
+	// TODO set color can generate a custom 16-color palette
+
 	makeNapSelectColor(_color) {
 		let returns = [];
 
@@ -122,14 +124,15 @@ class NapEncoder {
 		let index = 0;
 		let dist = 999999;
 		for (let i=0; i<naplps_defaultColorMap.length; i++) {
-			if (getDistance(_color, naplps_defaultColorMap[i]) < dist) {
+			let newDist = getDistance(_color, naplps_defaultColorMap[i]);
+			if (newDist < dist) {
 				index = i;
+				dist = newDist;
 			}
 		}
 
-		let finalIndex = "" + naplps_defaultColorIndices[index];
-		returns.push(doEncode(finalIndex)); 
-		returns.push(doEncode("40"));
+		returns.push(doEncode(naplps_defaultColorIndices1[index])); 
+		returns.push(doEncode(naplps_defaultColorIndices2[index])); 
 		returns.push(doEncode("40"));
 		returns.push(doEncode("40"));
 
@@ -137,6 +140,7 @@ class NapEncoder {
 
 	}
 
+	/*
 	makeNapInt(input) {
 		const binaryInput = intToBinary(input);
 		const hexInput = hex(input, 2);
@@ -145,6 +149,7 @@ class NapEncoder {
 		console.log("Testing unbinary: " + unbinary(binaryInput));
 		return encodedInput;		
 	}
+	*/
 
     getBitValsUnsigned(n) {
         return pow(2, (n.length * this.bitsPerByte));
