@@ -286,8 +286,8 @@ class NapEncoder {
 		let pointsToEncode = [];
 
         for (let i=0; i<_points.length; i++) {
-           	_points[i].y = 1.0 - _points[i].y;
         	console.log(_points[i].x + ", " + _points[i].y);
+           	_points[i].y = 1.0 - _points[i].y;
 
             if (i === 0) {
             	pointsToEncode.push(_points[0]);
@@ -301,14 +301,14 @@ class NapEncoder {
                 	console.log("X > pX");
 	                x = Math.abs(Math.abs(nv.x) - Math.abs(p.x)); 
                 } else if (nv.x < p.x) {
-                	console.log("X < pX");
+                	console.log("X < pX"); // OK
 	                x = Math.abs(Math.abs(nv.x) - Math.abs(p.x)) - 1.0; 
                 }
 
 
                 let y = 0;
                 if (nv.y > p.y) {
-                	console.log("Y > pY");
+                	console.log("Y > pY"); // OK
 	                y = Math.abs(Math.abs(nv.y) - Math.abs(p.y));    
                 } else if (nv.y < p.y) {
                 	console.log("Y < pY");
