@@ -10,46 +10,38 @@
 			let input = [];
 
 			let color1 = new Vector3(255, 255, 0);
-			let color2 = new Vector3(0, 255, 0);
-			let color3 = new Vector3(0, 0, 255);
-			
-			function randomPoint() {
-				return new Vector2(Math.random(), Math.random());
-			}
+			let color2 = new Vector3(0, 255, 0);		
 
 			let points1 = [];
-			points1.push(new Vector2(0, 0));
-			points1.push(new Vector2(1, 0));
-			points1.push(new Vector2(1, 1));
-			points1.push(new Vector2(0, 1));
-
+			points1.push(new Vector2(0.40673828125, 0.5400390625));
+			points1.push(new Vector2(0.17822265625, 0.42138671875));
+			points1.push(new Vector2(0.3642578125, 0.6416015625));
+			points1.push(new Vector2(0.12255859375, 0.904296875));
+			points1.push(new Vector2(0.44970703125, 0.69970703125));
+			points1.push(new Vector2(0.6650390625, 0.91796875));
+			points1.push(new Vector2(0.544921875, 0.646484375));
+			points1.push(new Vector2(0.75927734375, 0.53564453125));
+			points1.push(new Vector2(0.51318359375, 0.5400390625));
+			
 			let points2 = [];
-			points2.push(randomPoint());
-			points2.push(randomPoint());
-			points2.push(randomPoint());
-			points2.push(randomPoint());
-			points2.push(randomPoint());
-			points2.push(randomPoint());
-
-			let points3 = [];
-			points3.push(randomPoint());
-			points3.push(randomPoint());
-			points3.push(randomPoint());
-			points3.push(randomPoint());
-			points3.push(randomPoint());
-			points3.push(randomPoint());
+			points2.push(new Vector2(0.76416015625, 0.35107421875));
+			points2.push(new Vector2(0.69189453125, 0.33349609375));
+			points2.push(new Vector2(0.75537109375, 0.384765625));
+			points2.push(new Vector2(0.71533203125, 0.42236328125));
+			points2.push(new Vector2(0.7841796875, 0.39697265625));
+			points2.push(new Vector2(0.86279296875, 0.4267578125));
+			points2.push(new Vector2(0.81396484375, 0.375));
+			points2.push(new Vector2(0.85888671875, 0.3154296875));
+			points2.push(new Vector2(0.79638671875, 0.33984375));
 
 			let isFill1 = false;
 			let isFill2 = false;
-			let isFill3 = false;
 
 			let stroke1 = new NapInputWrapper(color1, points1, isFill1);
 			let stroke2 = new NapInputWrapper(color2, points2, isFill2);
-			let stroke3 = new NapInputWrapper(color3, points3, isFill3);
 			
 			input.push(stroke1);
-			//input.push(stroke2);
-			//input.push(stroke3);
+			input.push(stroke2);
 
 			let encoder = new NapEncoder(input);
 
