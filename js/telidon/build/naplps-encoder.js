@@ -171,9 +171,7 @@ class NapEncoder {
 		console.log("Converting vector to int: " + intX + ", " + intY);
 
 		let binX = binary(intX, 11); //intToBinary(intX);
-		//while (binX.length < 11) binX = "0" + binX;
 		let binY = binary(intY, 11); //intToBinary(intY);
-		//while (binY.length < 11) binY = "0" + binY;
 		console.log("Converting int to binary: " + binX + ", " + binY);
 
 		for (let i=0; i<this.dataLength; i++) {
@@ -294,11 +292,10 @@ class NapEncoder {
             	pointsToEncode.push(_points[0]);
             } else {
             	let nv = _points[i];
-            	let p = pointsToEncode[pointsToEncode.length-1];
+            	let p = pointsToEncode[0];
                 
-                let x = (Math.abs(nv.x) + Math.abs(p.x)) - 1.0;
-                
-                let y = 1.0 - (Math.abs(nv.y) + Math.abs(p.y));
+                let x = Math.abs(Math.abs(nv.x) - Math.abs(p.x));         
+                let y = Math.abs(Math.abs(nv.y) - Math.abs(p.y));         
 
                 let newPoint = new Vector2(x, y);
                 pointsToEncode.push(newPoint);
