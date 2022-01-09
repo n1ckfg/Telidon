@@ -299,7 +299,7 @@ class NapEncoder {
 
                 if (nv.x > p.x) {
                 	console.log("X > pX");
-	                x = Math.abs(Math.abs(nv.x) - Math.abs(p.x)); 
+	                x = nv.x - p.x; 
                 } else if (nv.x < p.x) {
                 	console.log("X < pX"); // OK
 	                x = Math.abs(Math.abs(nv.x) - Math.abs(p.x)) - 1.0; 
@@ -312,7 +312,7 @@ class NapEncoder {
 	                y = Math.abs(Math.abs(nv.y) - Math.abs(p.y));    
                 } else if (nv.y < p.y) {
                 	console.log("Y < pY");
-                	y = Math.abs(Math.abs(nv.y) - Math.abs(p.y));    
+                	y = Math.abs(Math.abs(nv.y) - Math.abs(p.y));
                 }
 
                 let newPoint = new Vector2(x, y);
