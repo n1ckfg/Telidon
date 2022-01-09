@@ -1341,6 +1341,7 @@ class NapEncoder {
 
 		this.cmds = this.generateCommands();
 		this.napRaw = this.cmds.join("");
+		this.debug = false;
 
 		console.log(this.napRaw);
 	}
@@ -1475,15 +1476,15 @@ class NapEncoder {
 	makeNapVector2(input) {
 		let returns = [];
 
-		console.log("Encoding vector input " + input.x + ", " + input.y + " ...");
+		if (this.debug) console.log("Encoding vector input " + input.x + ", " + input.y + " ...");
 
 		const intX = parseInt(Math.abs(input.x) * this.maxBitVals);
 		const intY = parseInt(Math.abs(input.y) * this.maxBitVals);
-		console.log("Converting vector to int: " + intX + ", " + intY);
+		if (this.debug) console.log("Converting vector to int: " + intX + ", " + intY);
 
 		let binX = binary(intX, 11); //intToBinary(intX);
 		let binY = binary(intY, 11); //intToBinary(intY);
-		console.log("Converting int to binary: " + binX + ", " + binY);
+		if (this.debug) console.log("Converting int to binary: " + binX + ", " + binY);
 
 		for (let i=0; i<this.dataLength; i++) {
 			let vectorByte = "01";
@@ -1541,7 +1542,7 @@ class NapEncoder {
 			const hexByte = hex(unbinary(vectorByte));
 			const encodedByte = doEncode(hexByte);
 
-			console.log("Encoded byte " + i + ", binary: " + vectorByte + ", hex: " + hexByte + ", " + encodedByte)
+			if (this.debug) console.log("Encoded byte " + i + ", binary: " + vectorByte + ", hex: " + hexByte + ", " + encodedByte)
 			returns.push(encodedByte);
 		}
 
@@ -1603,10 +1604,25 @@ class NapEncoder {
             	pointsToEncode.push(_points[0]);
             } else {
             	let nv = _points[i];
-            	let p = pointsToEncode[0];
+            	let p = pointsToEncode[pointsToEncode.length-1];
                 
-                let x = Math.abs(Math.abs(nv.x) - Math.abs(p.x));         
-                let y = Math.abs(Math.abs(nv.y) - Math.abs(p.y));         
+                let x = 0;         
+                if (nv.x - p.x < 0) {
+                	console.log("Condition X1");
+                    x = 1.0 - Math.abs(Math.abs(nv.x) - Math.abs(p.x));
+                } else {
+                	console.log("Condition X2");
+                    x = nv.x - p.x;
+                }
+                
+                let y = 0;
+                if (nv.y - p.x < 0) {
+                	console.log("Condition Y1");
+                    y = Math.abs(nv.y) - p.y;
+                } else {
+                	console.log("Condition Y2");
+                    y = 1.0 - Math.abs(Math.abs(nv.y) - Math.abs(p.y));
+                }
 
                 let newPoint = new Vector2(x, y);
                 pointsToEncode.push(newPoint);
