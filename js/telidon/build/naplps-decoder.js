@@ -680,9 +680,12 @@ class NapCmd {
                 if (!_allPointsRelative && i===0) {
                     console.log("\nStarting with first point...");
                     this.points.push(new Vector2(nv.x, nv.y));
+                    console.log((i + 1) + ". Decoded initial point (" + nv.x + ", " + nv.y +").");
                 } else if (_allPointsRelative && i===0) {
+                    // TODO find something to test this
                     console.log("\nStarting with cursor position...");
 					this.points.push(naplps_drawingCursor)
+                    console.log((i + 1) + ". Using cursor initial point (" + naplps_drawingCursor.x + ", " + naplps_drawingCursor.y +").");
 				} else {
                     let p = this.points[this.points.length-1];
                     
@@ -700,7 +703,7 @@ class NapCmd {
                         y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
                     }
                     
-                    console.log("Decoded point (" + x + ", " + y +").");
+                    console.log((i + 1) + ". Decoded point (" + x + ", " + y +").");
                     this.points.push(new Vector2(x, y));
                 }
             }

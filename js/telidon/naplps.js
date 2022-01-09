@@ -1033,9 +1033,12 @@ class NapCmd {
                 if (!_allPointsRelative && i===0) {
                     console.log("\nStarting with first point...");
                     this.points.push(new Vector2(nv.x, nv.y));
+                    console.log((i + 1) + ". Decoded initial point (" + nv.x + ", " + nv.y +").");
                 } else if (_allPointsRelative && i===0) {
+                    // TODO find something to test this
                     console.log("\nStarting with cursor position...");
 					this.points.push(naplps_drawingCursor)
+                    console.log((i + 1) + ". Using cursor initial point (" + naplps_drawingCursor.x + ", " + naplps_drawingCursor.y +").");
 				} else {
                     let p = this.points[this.points.length-1];
                     
@@ -1053,7 +1056,7 @@ class NapCmd {
                         y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
                     }
                     
-                    console.log("Decoded point (" + x + ", " + y +").");
+                    console.log((i + 1) + ". Decoded point (" + x + ", " + y +").");
                     this.points.push(new Vector2(x, y));
                 }
             }
@@ -1597,12 +1600,15 @@ class NapEncoder {
         for (let i=0; i<_points.length; i++) {
         	console.log(_points[i].x + ", " + _points[i].y);
             if (i === 0) {
+            	_points[0].y = 1.0 - _points[0].y;
             	pointsToEncode.push(_points[0]);
             } else {
-            	const newPoint = _points[i].sub(_points[i-1]);
-                pointsToEncode.push(newPoint);
+            	_points[i].y = 1.0 - _points[i].y;
+            	_points[i] = _points[i].sub(_points[i-1]);
+                pointsToEncode.push(_points[i]);
+                
                 if (i === _points.length-1) {
-	                pointsToEncode.push(newPoint);
+	                pointsToEncode.push(_points[i]); // off by one error somewhere?
 	                console.log("\n");
                 }
             }
