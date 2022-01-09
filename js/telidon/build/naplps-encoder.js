@@ -302,7 +302,7 @@ class NapEncoder {
 	                x = Math.abs(Math.abs(nv.x) - Math.abs(p.x)); 
                 } else if (nv.x < p.x) {
                 	console.log("X < pX");
-	                x = Math.abs(Math.abs(nv.x) - Math.abs(p.x)); 
+	                x = Math.abs(Math.abs(nv.x) - Math.abs(p.x)) - 1.0; 
                 }
 
 
