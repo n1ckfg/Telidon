@@ -294,24 +294,9 @@ class NapEncoder {
             } else {
             	let nv = _points[i];
             	let p = pointsToEncode[pointsToEncode.length-1];
-                
-                let x = 0;         
-                if (nv.x - p.x < 0) {
-                	console.log("Condition X1");
-                    x = 1.0 - Math.abs(Math.abs(nv.x) - Math.abs(p.x));
-                } else {
-                	console.log("Condition X2");
-                    x = nv.x - p.x;
-                }
-                
-                let y = 0;
-                if (nv.y - p.x < 0) {
-                	console.log("Condition Y1");
-                    y = Math.abs(nv.y) - p.y;
-                } else {
-                	console.log("Condition Y2");
-                    y = 1.0 - Math.abs(Math.abs(nv.y) - Math.abs(p.y));
-                }
+            	
+                let x = Math.abs(Math.abs(nv.x) - Math.abs(p.x));         
+                let y = Math.abs(Math.abs(nv.y) - Math.abs(p.y));    
 
                 let newPoint = new Vector2(x, y);
                 pointsToEncode.push(newPoint);
