@@ -1624,7 +1624,6 @@ class NapEncoder {
                 	y = Math.abs(Math.abs(nv.y) - Math.abs(p.y)) - 1.0;
                 }
 
-
                 let newPoint = new Vector2(x, y);
                 pointsToEncode.push(newPoint);
                 
