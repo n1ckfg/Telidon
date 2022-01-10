@@ -693,7 +693,7 @@ class NapCmd {
                     if (nv.x < 0) {
                         x = (Math.abs(nv.x) + Math.abs(p.x)) - 1.0;
                     } else {
-                        x = nv.x + p.x;
+                        x = Math.abs(nv.x) + p.x;
                     }
                     
                     let y = 0;

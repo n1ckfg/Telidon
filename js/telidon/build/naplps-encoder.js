@@ -293,10 +293,9 @@ class NapEncoder {
             	pointsToEncode.push(_points[0]);
             } else {
             	let nv = _points[i];
-            	let p = pointsToEncode[pointsToEncode.length-1];
+            	let p = pointsToEncode[0];
 
                 let x = 0;
-
                 if (nv.x > p.x) {
                 	console.log("X > pX");
 	                x = nv.x - p.x; 
@@ -305,14 +304,13 @@ class NapEncoder {
 	                x = Math.abs(Math.abs(nv.x) - Math.abs(p.x)) - 1.0; 
                 }
 
-
                 let y = 0;
                 if (nv.y > p.y) {
                 	console.log("Y > pY"); // OK
-	                y = Math.abs(Math.abs(nv.y) - Math.abs(p.y));    
+	                y = nv.y - p.y;    
                 } else if (nv.y < p.y) {
                 	console.log("Y < pY");
-                	y = Math.abs(Math.abs(nv.y) - Math.abs(p.y));
+                	y = Math.abs(Math.abs(nv.y) - Math.abs(p.y)) - 1.0;
                 }
 
                 let newPoint = new Vector2(x, y);
