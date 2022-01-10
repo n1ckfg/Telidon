@@ -46,7 +46,7 @@ class TelidonDrawCmd {
         this.scanDelta = 5; // float
         this.moveScanline = false;
         this.progressiveDraw = true;
-        this.labelPoints = true;
+        //this.labelPoints = true;
         this.col = color(0);
         this.thickness = 1;
         this.text = "";
@@ -247,14 +247,14 @@ class TelidonDrawCmd {
     }
 
     drawText(_text) {
-        fill(255);
-        stroke(0);
+        //fill(255);
+        //stroke(0);
         text(_text, width * 0.0625, height * 1.25); // TODO position
     }
 
     drawRect(points, w, h, isFill) { // PVector, w, h
         if (isFill) {
-        	noStroke();
+        	//noStroke();
         } else {
         	noFill();
         }
@@ -312,6 +312,7 @@ class TelidonDrawCmd {
 
         endShape(CLOSE);
         
+        /*
         if (this.labelPoints) {
             stroke(255, 63);
         	strokeWeight(this.thickness * 2);
@@ -326,6 +327,7 @@ class TelidonDrawCmd {
 	            //tex.text(i, p.x * w, p.y * h);
 	        }
     	}
+    	*/
     }
     
 }
