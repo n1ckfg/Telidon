@@ -33,6 +33,7 @@
 		width:170px;
 		height: 80px;
 		border: 1px solid black;
+		border-radius: 0.5em;
 		padding: 0.5em;
 		margin: 0px;
 		background-color: #000000;
@@ -72,7 +73,7 @@
 		top: 0px;
 		margin: 0px;
 	}
-	
+
 	.explanation-base {
 		display: none;
 		width: 0px;
