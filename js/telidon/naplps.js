@@ -1607,22 +1607,19 @@ class NapEncoder {
             	let p = pointsToEncode[0];
 
                 let x = 0;
-                if (nv.x > p.x) {
-                	console.log("X > pX");
-	                x = nv.x - p.x; 
+                if (p.x < 0) {
+	                x = 1.0 - Math.abs(nv.x - p.x); 
                 } else if (nv.x < p.x) {
-                	console.log("X < pX"); // OK
-	                x = Math.abs(Math.abs(nv.x) - Math.abs(p.x)) - 1.0; 
+	                x = 1.0 - Math.abs(Math.abs(nv.x) + Math.abs(p.x)); 
                 }
 
                 let y = 0;
-                if (nv.y > p.y) {
-                	console.log("Y > pY"); // OK
-	                y = nv.y - p.y;    
-                } else if (nv.y < p.y) {
-                	console.log("Y < pY");
-                	y = Math.abs(Math.abs(nv.y) - Math.abs(p.y)) - 1.0;
-                }
+            	if (p.y > 0) {
+	                y = Math.abs(nv.y) - p.y;    
+            	} else {
+                	y = 1.0 - Math.abs(Math.abs(nv.x) + Math.abs(p.x)); 
+
+            	}
 
                 let newPoint = new Vector2(x, y);
                 pointsToEncode.push(newPoint);

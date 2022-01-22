@@ -25,6 +25,20 @@
 		top: 0px;
 	}
 
+	#naplps_field_container {
+		position: absolute;
+		left: 650px;
+		top: 400px;
+		z-index: 1;
+		width:170px;
+		height: 80px;
+		border: 1px solid black;
+		padding: 0.5em;
+		margin: 0px;
+		background-color: #000000;
+		opacity: 0.8;
+	}
+
 	#canvas {
 		/* */
 	}
@@ -49,6 +63,16 @@
 		margin: 0px;
 	}
 
+	#naplps_field_container {
+		display: none;
+		width: 0px;
+		height: 0px;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		margin: 0px;
+	}
+	
 	.explanation-base {
 		display: none;
 		width: 0px;

@@ -141,15 +141,24 @@
 			    for (let i=0, file; file=files[i]; i++) {
 			        let reader = new FileReader();
 			        reader.onload = function(e2) {
-			            if (telidon.length >= maxLength) telidon.splice(0,1);
-			            telidon.push(new TelidonDraw([e2.target.result], sW, sW));
-			            recording = true;
-			            preview.style.backgroundImage = null;
+			            loadTelidonFromText(e2.target.result);
 			        }
 			        reader.readAsText(file, 'UTF-8');
 			    }      
 			}
 
+			function loadTelidonFromText(input) {
+	            if (telidon.length >= maxLength) telidon.splice(0,1);
+	            telidon.push(new TelidonDraw([input], sW, sW));
+	            recording = true;
+	            preview.style.backgroundImage = null;
+			}
+
+			function onFormSubmit() {
+				const field = document.getElementById("naplps_field");
+				console.log(field.value);
+				loadTelidonFromText(field.value);
+			}
 
 			function loadNewTelidon(fileName) { 
 			    loadStrings(fileName, function(response) {
@@ -239,6 +248,13 @@
 					180326
 				</p>
 			</div>
+			<div id="naplps_field_container">
+				<form>
+					<label style="color: #ffffff;" for="naplps_field">NAPLPS Text: </label>
+					<input type="text" id="naplps_field" name="naplps_field"><br><br>
+  					<input type="button" onclick="onFormSubmit()" value="Submit">
+				</form> 
+			<div>
 		</div>
 	</body>
 
