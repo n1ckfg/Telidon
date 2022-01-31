@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title></title>
+		<script src="../../../js/telidon/naplps.js"></script>
+		<script>
+			"use strict";
+
+			let input = [];
+
+			let color1 = new Vector3(224, 224, 224);
+			let color2 = new Vector3(252, 0, 144);		
+
+			let points1 = [];
+			points1.push(new Vector2(0.32763671875, 0.64599609375));
+			points1.push(new Vector2(0.39013671875, 0.33203125));
+			points1.push(new Vector2(0.05126953125, 0.31103515625));
+			points1.push(new Vector2(0.05859375, 0.2783203125));
+			points1.push(new Vector2(0.4033203125, 0.26513671875));
+
+			
+			let points2 = [];
+			points2.push(new Vector2(0.263671875, 0.4091796875));
+			points2.push(new Vector2(0.333984375, 0.1767578125));
+			points2.push(new Vector2(0.41357421875, 0.17041015625));
+
+			let points3 = [];
+			points3.push(new Vector2(0.44970703125, 0.54296875));
+			points3.push(new Vector2(0.65966796875, 0.53955078125));
+			points3.push(new Vector2(0.5693359375, 0.60205078125));
+
+			let isFill1 = false;
+			let isFill2 = false;
+			let isFill3 = false;
+
+			let stroke1 = new NapInputWrapper(color1, points1, isFill1);
+			let stroke2 = new NapInputWrapper(color1, points2, isFill2);
+			let stroke3 = new NapInputWrapper(color2, points3, isFill3);
+			
+			input.push(stroke1);
+			input.push(stroke2);
+			input.push(stroke3);
+
+			let encoder = new NapEncoder(input);
+
+			document.write(encoder.napRaw);
+		</script>
+	</head>
+
+	<body>
+	</body>
+
+</html>
