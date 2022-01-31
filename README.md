@@ -1,7 +1,7 @@
 ![TelidonP5](/tools/rosetta_stone/cover/screenshots/shark.gif)
 # TelidonP5 Project
 <p>
-	<b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/TelidonP5.js">TelidonP5.js</a></b> allows NAPLPS vector graphics files to be displayed in a browser using <a href="https://p5js.org/">p5.js</a>. Its companion decoder library <b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/naplps.js">naplps.js</a></b> can also be used independently.<br/>
+	<b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/TelidonP5.js">TelidonP5.js</a></b> allows NAPLPS vector graphics files to be displayed in a browser using <a href="https://p5js.org/">p5.js</a>. Its companion encoder/decoder library <b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/naplps.js">naplps.js</a></b> can also be used independently.<br/>
 	[ <a href="https://n1ckfg.github.io/Telidon/"><i>See an example</i></a> ]
 </p>
 
@@ -27,7 +27,7 @@ TelidonP5.js (Nick Fox-Gieg, 2018)
 ./js/telidon/
 License: MIT.
 Language: JavaScript.
-View NAPLPS, save as GIF.
+Read NAPLPS, export to GIF.
 Tested with Firefox, Chrome, Safari.
 position: yes / color: yes / text: no / animation: no
 
@@ -35,7 +35,7 @@ TelidonP5 (Nick Fox-Gieg, 2018)
 ./tools/processing/TelidonP5/
 License: MIT.
 Language: Java.
-View NAPLPS only.
+Read NAPLPS only.
 Tested in Win10, OS X High Sierra.
 position: yes / color: no / text: no / animation: no
 
@@ -43,7 +43,7 @@ Ajwm Decoder (Alastair Mayer, 1999)
 ./archives/ajwm-naplps/
 License: GPL.
 Language: Java.
-View NAPLPS only.
+Read NAPLPS only.
 Tested in Win10, Ubuntu; doesn't work in OS X.
 position: yes / color: yes / text: no / animation: no
 </pre>
@@ -54,7 +54,7 @@ TurShow (Shawn Rhoads, 1993)
 ./archives/simtel/TURSHOW6/
 License: unknown.
 Language: Pascal.
-View NAPLPS only.
+Read NAPLPS only.
 Tested with DosBox emulator; doesn't work in Win10.
 position: yes / color: yes / text: yes / animation: yes
 
@@ -62,7 +62,7 @@ Microstar Graphics Editor (Microstar Software, 1991)
 ./archives/simtel/MGE201A/
 License: unknown.
 Language: unknown.
-View, edit, save NAPLPS.
+Read, edit, write NAPLPS.
 Tested with WinXP emulator; doesn't work with DosBox emulator.
 position: yes / color: yes / text: yes / animation: ?
 
@@ -70,7 +70,7 @@ Personality+III (Microstar Software, 1992)
 ./archives/simtel/PP3217A/
 License: unknown.
 Language: unknown.
-View NAPLPS only.
+Read NAPLPS only.
 Untested; doesn't work with DosBox emulator.
 
 Note: ./archives/ also contains more untested utilities.
