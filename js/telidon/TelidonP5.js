@@ -46,7 +46,7 @@ class TelidonDrawCmd {
         this.scanDelta = 5; // float
         this.moveScanline = false;
         this.progressiveDraw = true;
-        this.labelPoints = true;
+        this.labelPoints = false;
         this.col = color(0);
         this.thickness = 1;
         this.text = "";
