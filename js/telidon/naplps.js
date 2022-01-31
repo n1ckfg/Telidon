@@ -1604,21 +1604,14 @@ class NapEncoder {
             	pointsToEncode.push(_points[0]);
             } else {
             	let nv = _points[i];
-            	let p = pointsToEncode[0];
+            	let p = pointsToEncode[pointsToEncode.length-1];
 
-                let x = 0;
-                if (nv.x < p.x) {
-	                x = Math.abs(nv.x - p.x) - 1.0; 
-                } else if (nv.x > p.x) {
-	                x = Math.abs(nv.x - p.x); 
-                }
-
-                let y = 0;
-                if (nv.y < p.y) {
-	                y = Math.abs(nv.y - p.y) - 1.0;    
-                } else if (nv.y > p.y) {
-                	y = Math.abs(nv.y - p.y);   
-                }
+                let x = Math.abs(nv.x) - Math.abs(p.x);
+                if (nv.x < p.x) x *= -1;
+                if (nv.x > 0) x = Math.abs(x) - 1.0;
+                let y = Math.abs(nv.y) - Math.abs(p.y);
+                if (nv.y < p.y) y *= -1;
+                if (nv.y > 0) y = Math.abs(y) - 1.0;
 
                 let newPoint = new Vector2(x, y);
                 pointsToEncode.push(newPoint);
