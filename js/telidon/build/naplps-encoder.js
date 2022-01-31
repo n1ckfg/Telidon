@@ -293,16 +293,17 @@ class NapEncoder {
             	pointsToEncode.push(_points[0]);
             } else {
             	let nv = _points[i];
-            	let p = pointsToEncode[pointsToEncode.length-1];
+            	let nvLast = _points[i-1];
+            	//let p = pointsToEncode[pointsToEncode.length-1];
 
                 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-                let x = Math.abs(nv.x) - Math.abs(p.x);
-                if (nv.x < p.x) x *= -1;
-                if (nv.x > 0) x = Math.abs(x) - 1.0;
+                let x = Math.abs(nv.x) - Math.abs(nvLast.x);
+                if (nv.x < nvLast.x) x = Math.abs(x) - 1;
                 
-                let y = Math.abs(nv.y) - Math.abs(p.y);
-                if (nv.y < p.y) y *= -1;
-                if (nv.y > 0) y = Math.abs(y) - 1.0;
+                let y = Math.abs(nv.y) - Math.abs(nvLast.y);
+                if (nv.y < nvLast.y) y = Math.abs(y) - 1;
+                
+                console.log("!!!!! " + x + ", " + y + ", " + nv.x + ", " + nv.y + ", " + nvLast.x + ", " + nvLast.y);
                 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
                 let newPoint = new Vector2(x, y);
