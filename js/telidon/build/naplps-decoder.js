@@ -689,19 +689,13 @@ class NapCmd {
 				} else {
                     let p = this.points[this.points.length-1];
                     
-                    let x = 0;         
-                    if (nv.x < 0) {
-                        x = (Math.abs(nv.x) + Math.abs(p.x)) - 1.0;
-                    } else {
-                        x = Math.abs(nv.x) + p.x;
-                    }
+                    // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+                    let x = Math.abs(nv.x) + Math.abs(p.x);         
+                    if (nv.x < 0) x -= 1;
                     
-                    let y = 0;
-                    if (nv.y < 0) {
-                        y = Math.abs(nv.y) + p.y;
-                    } else {
-                        y = (Math.abs(nv.y) + Math.abs(p.y)) - 1.0;
-                    }
+                    let y = Math.abs(nv.y) + Math.abs(p.y);
+                    if (nv.y >= 0) y -= 1;
+                    // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
                     
                     console.log((i + 1) + ". Decoded point (" + x + ", " + y +").");
                     this.points.push(new Vector2(x, y));
