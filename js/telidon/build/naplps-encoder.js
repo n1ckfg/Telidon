@@ -28,6 +28,7 @@ class NapEncoder {
 		this.maxBitVals = 2048;
         this.firstBitSign = true; 
 
+        this.lastColor = undefined;
 		this.cmds = this.generateCommands();
 		this.napRaw = this.cmds.join("");
 		this.debug = false;
@@ -323,7 +324,10 @@ class NapEncoder {
 	makeNapStroke(_isFill, _color, _points) {
 		let returns = [];
 
-		returns.push(this.makeNapSelectColor(_color));
+		if (this.lastColor === undefined || this.lastColor !== _color) {
+			returns.push(this.makeNapSelectColor(_color));
+			this.lastColor = _color;
+		}
 		returns.push(this.makeNapOpcode(_isFill));
 		returns.push(this.makeNapPoints(_points));
 

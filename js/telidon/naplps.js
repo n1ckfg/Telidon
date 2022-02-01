@@ -1333,6 +1333,7 @@ class NapEncoder {
 		this.maxBitVals = 2048;
         this.firstBitSign = true; 
 
+        this.lastColor = undefined;
 		this.cmds = this.generateCommands();
 		this.napRaw = this.cmds.join("");
 		this.debug = false;
@@ -1605,9 +1606,7 @@ class NapEncoder {
                 if (nv.x < nvLast.x) x = Math.abs(x) - 1;
                 
                 let y = Math.abs(nv.y) - Math.abs(nvLast.y);
-                if (nv.y < nvLast.y) y = Math.abs(y) - 1;
-                
-                console.log("!!!!! " + x + ", " + y + ", " + nv.x + ", " + nv.y + ", " + nvLast.x + ", " + nvLast.y);
+                if (nv.y < nvLast.y) y = Math.abs(y) - 1;               
                 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
                 if (i === _points.length-1) {
@@ -1630,7 +1629,10 @@ class NapEncoder {
 	makeNapStroke(_isFill, _color, _points) {
 		let returns = [];
 
-		returns.push(this.makeNapSelectColor(_color));
+		if (this.lastColor === undefined || this.lastColor !== _color) {
+			returns.push(this.makeNapSelectColor(_color));
+			this.lastColor = _color;
+		}
 		returns.push(this.makeNapOpcode(_isFill));
 		returns.push(this.makeNapPoints(_points));
 

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<script src="../../../js/libraries/p5js/p5.min.js"></script>
+	</head>
+
+	<body>
+		<script>
+			"use strict";
+
+			let ps;
+
+			function preload() {
+				ps = loadSVG("test.svg");
+			}
+
+			function setup() {
+				createCanvas(400, 400);
+			}
+
+			function draw() {
+				background(0);
+				image(ps, 0, 0, width, height);
+			}
+		</script>
+	</body>
+
+</html>

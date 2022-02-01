@@ -9,8 +9,8 @@
 
 			let input = [];
 
-			let color1 = new Vector3(255, 255, 0);
-			let color2 = new Vector3(0, 255, 0);		
+			const color1 = new Vector3(255, 255, 0);
+			const color2 = new Vector3(0, 255, 0);		
 
 			let points1 = [];
 			points1.push(new Vector2(0.4951171875, 0.33642578125));
@@ -36,16 +36,16 @@
 			points2.push(new Vector2(0.85888671875, 0.3154296875));
 			points2.push(new Vector2(0.79638671875, 0.33984375));
 
-			let isFill1 = false;
-			let isFill2 = false;
+			const isFill1 = false;
+			const isFill2 = false;
 
-			let stroke1 = new NapInputWrapper(color1, points1, isFill1);
-			let stroke2 = new NapInputWrapper(color2, points2, isFill2);
+			const stroke1 = new NapInputWrapper(color1, points1, isFill1);
+			const stroke2 = new NapInputWrapper(color2, points2, isFill2);
 			
 			input.push(stroke1);
 			input.push(stroke2);
 
-			let encoder = new NapEncoder(input);
+			const encoder = new NapEncoder(input);
 
 			document.write(encoder.napRaw);
 		</script>
