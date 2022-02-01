@@ -11,8 +11,10 @@
 		<script>
 			"use strict";
 
-			let pg, ps, paths;
+			let pg, ps, polylines, polygons;
 			let input = [];
+			let offsetX = 0;
+			let offsetY = 240;
 
 			function preload() {
 				ps = loadSVG("test2.svg");
@@ -26,41 +28,32 @@
 				pg.image(ps, 0, 0);
 			    pg.pop();
 
-			    paths = pg.querySVG('polygon');
+			    let polygons = pg.querySVG('polygon');
+			    let polylines = pg.querySVG('polyline');
 
-			    for (let path of paths) {
+		    	// NAPLPS can only use a fill color or a stroke color in one path, not both.
+				// fill-opacity, stroke-opacity, stroke-linecap, and stroke-width are not used.
+				
+			    for (let path of polygons) {
 			    	let points = [];
-			    	let color, isFill;
+			    	let color = new Vector3(255, 255, 255);
+			    	let isFill = true;
 			    	
-			    	// NAPLPS can only use a fill color or a stroke color in one path, not both.
-					// fill-opacity, stroke-opacity, stroke-linecap, and stroke-width are not used.
-
 					let strokeColorAttr = path.attribute("stroke"); // "#FEFEFE" or "none" 
-			    	let fillColorAttr = path.attribute("fill"); // "#FEFEFE" or "none" 
-					console.log(strokeColorAttr + ", " + fillColorAttr);
-					
-					//let fillOpacityAttr = path.attribute("fill-opacity"); // "1" 
-					//let strokeOpacityAttr = path.attribute("stroke-opacity"); // "0.599998951" 
-					//let strokeLinecapAttr = path.attribute("stroke-linecap"); // "round" 
-					//let strokeWidthAttr = path.attribute("stroke-width"); // "8.34118652" 
+			    	let fillColorAttr = path.attribute("fill"); // "#FEFEFE" or "none" 			
 					
 					if (fillColorAttr !== "none") {
 						let colorHex = hexToRgb(fillColorAttr);
 						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
-						isFill = false;
-					} else if (strokeColorAttr !== "none") {
+					} else if (fillColorAttr === "none" && strokeColorAttr !== "none") {
 						let colorHex = hexToRgb(strokeColorAttr);
 						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
-						isFill = false;
-					} else {
-						color = new Vector3(255, 255, 255);
-						isFill = false;
 					}
 
 			    	let pointsAttr = path.attribute("points").split(" ");
 			    	for (let pointAttr of pointsAttr) {
 			    		let pointAttrArray = pointAttr.split(",");
-			    		let point = new Vector2(float(pointAttrArray[0]), float(pointAttrArray[1]));
+			    		let point = new Vector2(float(pointAttrArray[0]) + offsetX, float(pointAttrArray[1]) + offsetY);
 			    		points.push(point);
 			    	}
 					
@@ -68,7 +61,34 @@
 					input.push(stroke);
 			    }
 
-				const encoder = new NapEncoder(input, 1);
+			    for (let path of polylines) {
+			    	let points = [];
+			    	let color = new Vector3(0, 0, 0);
+			    	let isFill = false;
+			    	
+					let strokeColorAttr = path.attribute("stroke"); // "#FEFEFE" or "none" 
+			    	let fillColorAttr = path.attribute("fill"); // "#FEFEFE" or "none" 
+					
+					if (strokeColorAttr === "none" && fillColorAttr !== "none") {
+						let colorHex = hexToRgb(fillColorAttr);
+						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+					} else if (strokeColorAttr !== "none") {
+						let colorHex = hexToRgb(strokeColorAttr);
+						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+					}
+
+			    	let pointsAttr = path.attribute("points").split(" ");
+			    	for (let pointAttr of pointsAttr) {
+			    		let pointAttrArray = pointAttr.split(",");
+			    		let point = new Vector2(float(pointAttrArray[0]) + offsetX, float(pointAttrArray[1]) + offsetY);
+			    		points.push(point);
+			    	}
+					
+					const stroke = new NapInputWrapper(color, points, isFill);
+					input.push(stroke);
+			    }
+
+				const encoder = new NapEncoder(input, 1, 0.75);
 
 				document.body.appendChild(document.createElement("br"));
 				document.body.appendChild(document.createElement("br"));
