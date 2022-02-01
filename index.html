@@ -6,6 +6,7 @@
 		<link type="text/css" rel="stylesheet" href="./css/main.css"/>
 		<script type="text/javascript" src="./js/libraries/p5js/p5.min.js"></script>
 		<script type="text/javascript" src="./js/libraries/p5js/p5.dom.min.js"></script>
+		<script type="text/javascript" src="./js/libraries/p5js/p5.svg.js"></script>
 		<script type="text/javascript" src="./js/libraries/gifjs/gif.js"></script>
 		<script type="text/javascript" src="./js/telidon/naplps.js"></script>
 		<script type="text/javascript" src="./js/telidon/TelidonP5.js"></script>
@@ -137,14 +138,23 @@
 			function onDrop(e) {
 			    e.stopPropagation();
 			    e.preventDefault();
-			    let files = e.dataTransfer.files; // Array of all files
-			    for (let i=0, file; file=files[i]; i++) {
-			        let reader = new FileReader();
-			        reader.onload = function(e2) {
+			    let file = e.dataTransfer.files[0]; 
+		        let reader = new FileReader();
+		        reader.onload = function(e2) {
+		        	const fileNameArray = file.name.split(".");
+		        	if (fileNameArray[fileNameArray.length-1] === "svg") {
+		        		let div = document.createElement('div');
+        				let element = new p5.SVGElement(div);
+                		div.innerHTML = e2.target.result;
+                		let svg = div.querySelector('svg');
+                		element.elt = svg;
+
+		        		setupSvg(element);
+		        	} else {
 			            loadTelidonFromText(e2.target.result);
-			        }
-			        reader.readAsText(file, 'UTF-8');
-			    }      
+		        	}
+		        }
+		        reader.readAsText(file, 'UTF-8');   
 			}
 
 			function loadTelidonFromText(input) {
@@ -205,7 +215,104 @@
 			    } else {
 			        return false;
 			    }
-			}			
+			}		
+
+			// svg
+
+			function setupSvg(ps) {
+				let pg, polylines, polygons;
+				let input = [];
+				let offsetX = 0;
+				let offsetY = 240;
+
+				pg = createGraphics(50, 50, SVG);
+				
+				pg.push();
+				pg.image(ps, 0, 0);
+			    pg.pop();
+
+			    polygons = pg.querySVG('polygon');
+			    polylines = pg.querySVG('polyline');
+
+		    	// NAPLPS can only use a fill color or a stroke color in one path, not both.
+				// fill-opacity, stroke-opacity, stroke-linecap, and stroke-width are not used.
+				
+			    for (let path of polygons) {
+			    	let points = [];
+			    	let color = new Vector3(255, 255, 255);
+			    	let isFill = true;
+			    	
+					let strokeColorAttr = path.attribute("stroke"); // "#FEFEFE" or "none" 
+			    	let fillColorAttr = path.attribute("fill"); // "#FEFEFE" or "none" 			
+					
+					if (fillColorAttr !== "none") {
+						let colorHex = hexToRgb(fillColorAttr);
+						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+					} else if (fillColorAttr === "none" && strokeColorAttr !== "none") {
+						let colorHex = hexToRgb(strokeColorAttr);
+						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+					}
+
+			    	let pointsAttr = path.attribute("points").split(" ");
+			    	for (let pointAttr of pointsAttr) {
+			    		let pointAttrArray = pointAttr.split(",");
+			    		let point = new Vector2(float(pointAttrArray[0]) + offsetX, float(pointAttrArray[1]) + offsetY);
+			    		points.push(point);
+			    	}
+					
+					const stroke = new NapInputWrapper(color, points, isFill);
+					input.push(stroke);
+			    }
+
+			    for (let path of polylines) {
+			    	let points = [];
+			    	let color = new Vector3(0, 0, 0);
+			    	let isFill = false;
+			    	
+					let strokeColorAttr = path.attribute("stroke"); // "#FEFEFE" or "none" 
+			    	let fillColorAttr = path.attribute("fill"); // "#FEFEFE" or "none" 
+					
+					if (strokeColorAttr === "none" && fillColorAttr !== "none") {
+						let colorHex = hexToRgb(fillColorAttr);
+						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+					} else if (strokeColorAttr !== "none") {
+						let colorHex = hexToRgb(strokeColorAttr);
+						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+					}
+
+			    	let pointsAttr = path.attribute("points").split(" ");
+			    	for (let pointAttr of pointsAttr) {
+			    		let pointAttrArray = pointAttr.split(",");
+			    		let point = new Vector2(float(pointAttrArray[0]) + offsetX, float(pointAttrArray[1]) + offsetY);
+			    		points.push(point);
+			    	}
+					
+					const stroke = new NapInputWrapper(color, points, isFill);
+					input.push(stroke);
+			    }
+
+				const encoder = new NapEncoder(input, 1, 0.75);
+
+				loadTelidonFromText(encoder.napRaw);				
+			}
+
+			function hexToRgb(hex) {
+				let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+				return result ? {
+					r: parseInt(result[1], 16),
+					g: parseInt(result[2], 16),
+					b: parseInt(result[3], 16)
+				} : null;
+			}
+
+			function componentToHex(c) {
+			  let hex = c.toString(16);
+			  return hex.length == 1 ? "0" + hex : hex;
+			}
+
+			function rgbToHex(r, g, b) {
+			  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+			}	
 		</script>
 	</head>
 
