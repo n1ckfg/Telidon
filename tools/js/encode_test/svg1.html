@@ -3,13 +3,14 @@
 	
 	<head>
 		<script src="../../../js/libraries/p5js/p5.min.js"></script>
+		<script src="../../../js/libraries/p5js/p5.svg.js"></script>
 	</head>
 
 	<body>
 		<script>
 			"use strict";
 
-			let ps;
+			let pg, ps, paths, points;
 
 			function preload() {
 				ps = loadSVG("test.svg");
@@ -17,11 +18,31 @@
 
 			function setup() {
 				createCanvas(400, 400);
+				pg = createGraphics(400, 400, SVG);
+				pg.push();
+				pg.image(ps, 0, 0, pg.width, pg.height);
+			    pg.pop();
+			    paths = pg.querySVG('polygon');
+
+			    points = [];
+			    for (let path of paths) {
+			    	let pointsRaw = path.attribute("points").split(" ");
+			    	for (let pointRaw of pointsRaw) {
+			    		let pointRawArray = pointRaw.split(",");
+			    		let point = createVector(float(pointRawArray[0])/10, float(pointRawArray[1])/10);
+			    		points.push(point);
+			    	}
+			    }
+				
 			}
 
 			function draw() {
-				background(0);
-				image(ps, 0, 0, width, height);
+				background(127);
+				beginShape();
+				for (let point of points) {
+					vertex(point.x, point.y);
+				}
+				endShape();
 			}
 		</script>
 	</body>
