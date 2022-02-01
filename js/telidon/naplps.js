@@ -557,12 +557,13 @@ class NapOpcode extends NapChar {
 }
 
 // 1.3. The NapChars following an opcode contain the data that 
-// the command will use.
+// the command will use. A separate data class is used in case
+// we need data-specific methods later.
 class NapData extends NapChar {
     
     constructor(_c) { // char or string
         super(_c);
-        this.f = this.getNormFloat(); // float
+        //this.f = this.getNormFloat(); // float
     }
     
     getNormFloat() {
@@ -1318,8 +1319,13 @@ class NapInputWrapper {
 
 class NapEncoder {
 
-	constructor(_strokes) {
-		//this.strokes = this.normalizeAllStrokes(_strokes);
+	constructor(_strokes, _normX, _normY) {
+		if (_normX !== undefined && _normY === undefined) {
+			this.strokes = this.normalizeAllStrokes(_strokes, _normX, _normX);
+		} else if (_normX !== undefined && _normY !== undefined) {
+			this.strokes = this.normalizeAllStrokes(_strokes, _normX, _normY);	
+		}
+		
 		this.strokes = _strokes;
 		console.log("Encoder input is " + this.strokes.length + " strokes.");
 
@@ -1449,17 +1455,6 @@ class NapEncoder {
 
 	}
 
-	/*
-	makeNapInt(input) {
-		const binaryInput = intToBinary(input);
-		const hexInput = hex(input, 2);
-		const encodedInput = doEncode(hexInput);
-		console.log("Encoding int input: " + input + ", binary: " + binaryInput + ", hex: " + hexInput + ", encoded: " + encodedInput);
-		console.log("Testing unbinary: " + unbinary(binaryInput));
-		return encodedInput;		
-	}
-	*/
-
     getBitValsUnsigned(n) {
         return pow(2, (n.length * this.bitsPerByte));
     }
@@ -1544,7 +1539,7 @@ class NapEncoder {
 		return returns.join("");
 	}
 
-	normalizeAllStrokes(input) {
+	normalizeAllStrokes(input, normX, normY) {
 		let minX = 0;
 		let maxX = 0;
 		let minY = 0;
@@ -1577,8 +1572,8 @@ class NapEncoder {
 
 		for (let stroke of input) {
 			for (let point of stroke.points) {
-				point.x = remap(point.x, minVal, maxVal, 0, 1);
-				point.y = remap(point.y, minVal, maxVal, 0, 0.75);
+				point.x = remap(point.x, minVal, maxVal, 0, normX); // 1.0
+				point.y = remap(point.y, minVal, maxVal, 0, normY); // 0.75
 			}
 		}
 

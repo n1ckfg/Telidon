@@ -204,12 +204,13 @@ class NapOpcode extends NapChar {
 }
 
 // 1.3. The NapChars following an opcode contain the data that 
-// the command will use.
+// the command will use. A separate data class is used in case
+// we need data-specific methods later.
 class NapData extends NapChar {
     
     constructor(_c) { // char or string
         super(_c);
-        this.f = this.getNormFloat(); // float
+        //this.f = this.getNormFloat(); // float
     }
     
     getNormFloat() {
