@@ -53,7 +53,13 @@ class TelidonDrawCmd {
 
         this.points = [];
         this.pointsIndex = 0;
-        if (!this.progressiveDraw) this.points = this.cmd.points;
+        if (!this.progressiveDraw) {
+            for (let point of this.cmd.points) {
+                if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
+                    this.points.push(point);
+                }
+            }
+        }
         this.finished = false;
     }
     
@@ -64,8 +70,11 @@ class TelidonDrawCmd {
         //}
 
         if (this.progressiveDraw && this.points.length < this.cmd.points.length && this.pointsIndex < this.cmd.points.length) {
-        	this.points.push(this.cmd.points[this.pointsIndex]);
-        	this.pointsIndex++;
+        	const point = this.cmd.points[this.pointsIndex];
+            if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
+                this.points.push(point);
+        	}
+            this.pointsIndex++;
         }
 
         if (this.points.length === this.cmd.points.length) this.finished = true;

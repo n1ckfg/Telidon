@@ -221,8 +221,8 @@
 			function setupSvg(ps) {
 				let pg, polylines, polygons;
 				let input = [];
-				let offsetX = 0;
-				let offsetY = 240;
+				let offsetX = -30;
+				let offsetY = 105;
 
 				pg = createGraphics(50, 50, SVG);
 				
@@ -290,7 +290,7 @@
 					input.push(stroke);
 			    }
 
-				const encoder = new NapEncoder(input, 1, 0.75);
+				const encoder = new NapEncoder(input, 1, 1);
 
 				loadTelidonFromText(encoder.napRaw);				
 			}
