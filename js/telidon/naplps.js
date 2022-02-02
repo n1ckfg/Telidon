@@ -1319,24 +1319,31 @@ class NapInputWrapper {
 
 class NapEncoder {
 
-	constructor(_strokes, _normX, _normY) {
-		if (_normX !== undefined && _normY === undefined) {
-			this.strokes = this.normalizeAllStrokes(_strokes, _normX, _normX);
-		} else if (_normX !== undefined && _normY !== undefined) {
+	constructor(_strokes, _normX, _normY, _dataLength) {
+		if (_normX !== undefined && _normY !== undefined) {
 			this.strokes = this.normalizeAllStrokes(_strokes, _normX, _normY);	
+		} else {
+			this.strokes = _strokes;
 		}
-		
-		this.strokes = _strokes;
 		console.log("Encoder input is " + this.strokes.length + " strokes.");
 
-		// Number of bytes per encoded value. This is hardcoded here, but
-		// can be set in the NAPLPS domain command.
-		this.dataLength = 4;
+		// The number of bytes per encoded vector is set by the domain,
+		// and lets you trade precision for file size. The most common value
+		// found in the wild is 4, followed by 3.
+		if (_dataLength === undefined) {
+			this.dataLength = 4;
+		} else {
+			this.dataLength = _dataLength;
+		}
+		// Number of position bits per axis, per byte. All known implementations used
+		// 3 bits, so this is hardcoded here, but can still be set in the NAPLPS domain command.
+		// The 3D version of the format, not known to have ever been implented, used 2 bits. 
         this.bitsPerByte = 3; 
 
-		// We know that the hardcoded 4-byte domain has 2048 position values
+		// For example a 4-byte domain has 2048 position values
 		// (3 position bits per byte, minus the sign for the first bit)
-		this.maxBitVals = 2048;
+		this.bitExponent = (this.dataLength * this.bitsPerByte) - 1;
+		this.maxBitVals = Math.pow(2, this.bitExponent);
         this.firstBitSign = true; 
 
         this.lastColor = undefined;
@@ -1392,7 +1399,13 @@ class NapEncoder {
 		returns.push(doEncode("4F"));
 
 		returns.push(doEncode("21")); // domain
-		returns.push(doEncode("4D"));
+		// We aren't truly programmatically setting the domain here; just assuming 
+		// the number of bytes is 3 or 4.
+		if (this.dataLength === 3) {
+			returns.push(doEncode("49"));
+		} else {
+			returns.push(doEncode("4D"));
+		}
 		returns.push(doEncode("40"));
 		returns.push(doEncode("40"));
 		returns.push(doEncode("40"));
@@ -1476,8 +1489,8 @@ class NapEncoder {
 		const intY = parseInt(Math.abs(input.y) * this.maxBitVals);
 		if (this.debug) console.log("Converting vector to int: " + intX + ", " + intY);
 
-		let binX = binary(intX, 11); //intToBinary(intX);
-		let binY = binary(intY, 11); //intToBinary(intY);
+		let binX = binary(intX, this.bitExponent); 
+		let binY = binary(intY, this.bitExponent); 
 		if (this.debug) console.log("Converting int to binary: " + binX + ", " + binY);
 
 		for (let i=0; i<this.dataLength; i++) {
@@ -1628,10 +1641,11 @@ class NapEncoder {
 	makeNapStroke(_isFill, _color, _points) {
 		let returns = [];
 
-		if (this.lastColor === undefined || this.lastColor !== _color) {
+		if (this.lastColor === undefined || getDistance(this.lastColor, _color) > 0.1) {
 			returns.push(this.makeNapSelectColor(_color));
 			this.lastColor = _color;
 		}
+
 		returns.push(this.makeNapOpcode(_isFill));
 		returns.push(this.makeNapPoints(_points));
 
