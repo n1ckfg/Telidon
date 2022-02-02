@@ -221,10 +221,10 @@
 			function setupSvg(ps) {
 				let pg, polylines, polygons;
 				let input = [];
-				let offsetX = -30;
-				let offsetY = 105;
+				let offsetX = 0; //-30;
+				let offsetY = 0; //105;
 
-				pg = createGraphics(50, 50, SVG);
+				pg = createGraphics(640, 480, SVG);
 				
 				pg.push();
 				pg.image(ps, 0, 0);
