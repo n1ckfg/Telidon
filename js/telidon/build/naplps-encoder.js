@@ -45,19 +45,23 @@ class NapEncoder {
 		let returns = [];
 
 		const headerString = this.makeNapHeader();
-		console.log("Generating header: " + headerString);
+		if (this.debug) console.log("Generating header: " + headerString);
 		returns.push(headerString);
 
 		for (let i=0; i<this.strokes.length; i++) {
-			console.log("\n");
-			console.log("* * * Begin encoding stroke " + (i+1) + " / " + this.strokes.length + " * * *");
+			if (this.debug) {
+				console.log("\n");
+				console.log("* * * Begin encoding stroke " + (i+1) + " / " + this.strokes.length + " * * *");
+			}
 			returns.push(this.makeNapStroke(this.strokes[i].isFill, this.strokes[i].color, this.strokes[i].points));
-			console.log("* * * End encoding stroke " + (i+1) + " / " + this.strokes.length + " * * *");
-			console.log("\n");
+			if (this.debug) {
+				console.log("* * * End encoding stroke " + (i+1) + " / " + this.strokes.length + " * * *");
+				console.log("\n");
+			}
 		}
 
 		const footerString = this.makeNapFooter();
-		console.log("Generating footer: " + footerString);
+		if (this.debug) console.log("Generating footer: " + footerString);
 		returns.push(footerString);
 
 		return returns;
@@ -275,13 +279,13 @@ class NapEncoder {
 	}
 
 	makeNapPoints(_points) {
-		console.log("Encoding " + _points.length + " points to poly ...");
+		if (this.debug) console.log("Encoding " + _points.length + " points to poly ...");
 		let returns = [];
 		
 		let pointsToEncode = [];
 
         for (let i=0; i<_points.length; i++) {
-        	console.log(_points[i].x + ", " + _points[i].y);
+        	if (this.debug) console.log(_points[i].x + ", " + _points[i].y);
            	_points[i].y = 1.0 - _points[i].y;
 
             if (i === 0) {
@@ -299,7 +303,7 @@ class NapEncoder {
                 // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
                 if (i === _points.length-1) {
-	                console.log("\n");
+	                if (this.debug) console.log("\n");
                 }
 
                 let newPoint = new Vector2(x, y);
@@ -309,7 +313,7 @@ class NapEncoder {
 
         for (let point of pointsToEncode) {
            	returns.push(this.makeNapVector2(point));
-            console.log("Encoded point (" + point.x + ", " + point.y +").");
+            if (this.debug) console.log("Encoded point (" + point.x + ", " + point.y +").");
         }
 
 		return returns.join("");	
