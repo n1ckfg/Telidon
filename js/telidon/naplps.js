@@ -1319,14 +1319,7 @@ class NapInputWrapper {
 
 class NapEncoder {
 
-	constructor(_strokes, _normX, _normY, _dataLength) {
-		if (_normX !== undefined && _normY !== undefined) {
-			this.strokes = this.normalizeAllStrokes(_strokes, _normX, _normY);	
-		} else {
-			this.strokes = _strokes;
-		}
-		console.log("Encoder input is " + this.strokes.length + " strokes.");
-
+	constructor(_strokes, _dataLength, _normX, _normY) {
 		// The number of bytes per encoded vector is set by the domain,
 		// and lets you trade precision for file size. The most common value
 		// found in the wild is 4, followed by 3.
@@ -1335,6 +1328,14 @@ class NapEncoder {
 		} else {
 			this.dataLength = _dataLength;
 		}
+
+		if (_normX !== undefined && _normY !== undefined) {
+			this.strokes = this.normalizeAllStrokes(_strokes, _normX, _normY);	
+		} else {
+			this.strokes = _strokes;
+		}
+		console.log("Encoder input is " + this.strokes.length + " strokes.");
+		
 		// Number of position bits per axis, per byte. All known implementations used
 		// 3 bits, so this is hardcoded here, but can still be set in the NAPLPS domain command.
 		// The 3D version of the format, not known to have ever been implented, used 2 bits. 

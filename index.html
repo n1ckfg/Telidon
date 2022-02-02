@@ -221,10 +221,10 @@
 			function setupSvg(ps) {
 				let pg, polylines, polygons;
 				let input = [];
-				let offsetX = 0; //-30;
-				let offsetY = 0; //105;
+				let offsetX = 0;
+				let offsetY = 0.25;
 
-				pg = createGraphics(640, 480, SVG);
+				pg = createGraphics(sW, sH, SVG);
 				
 				pg.push();
 				pg.image(ps, 0, 0);
@@ -255,7 +255,7 @@
 			    	let pointsAttr = path.attribute("points").split(" ");
 			    	for (let pointAttr of pointsAttr) {
 			    		let pointAttrArray = pointAttr.split(",");
-			    		let point = new Vector2(float(pointAttrArray[0]) + offsetX, float(pointAttrArray[1]) + offsetY);
+			    		let point = new Vector2((float(pointAttrArray[0]) / sW) + offsetX, (float(pointAttrArray[1]/ sH * 0.75) + offsetY));
 			    		points.push(point);
 			    	}
 					
@@ -282,7 +282,7 @@
 			    	let pointsAttr = path.attribute("points").split(" ");
 			    	for (let pointAttr of pointsAttr) {
 			    		let pointAttrArray = pointAttr.split(",");
-			    		let point = new Vector2(float(pointAttrArray[0]) + offsetX, float(pointAttrArray[1]) + offsetY);
+			    		let point = new Vector2((float(pointAttrArray[0]) / sW) + offsetX, (float(pointAttrArray[1]/ sH * 0.75) + offsetY));
 			    		points.push(point);
 			    	}
 					
@@ -290,7 +290,7 @@
 					input.push(stroke);
 			    }
 
-				const encoder = new NapEncoder(input, 1, 1);
+				const encoder = new NapEncoder(input, 3);
 
 				loadTelidonFromText(encoder.napRaw);				
 			}
