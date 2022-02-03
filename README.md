@@ -25,24 +25,24 @@ A simple NAPLPS image explained instruction by instruction. Start here.
 <pre>
 TelidonP5.js (Nick Fox-Gieg, 2018)
 ./js/telidon/
-License: MIT.
-Language: JavaScript.
+License: MIT
+Language: JavaScript
 Read, edit, write NAPLPS; convert from SVG; export to GIF.
 Tested with Firefox, Chrome, Safari.
 position: yes / color: yes / text: no / animation: no
 
-TelidonP5 (Nick Fox-Gieg, 2018)
+TelidonP5 prototype (Nick Fox-Gieg, 2018)
 ./tools/processing/TelidonP5/
-License: MIT.
-Language: Java.
+License: MIT
+Language: Java
 Read NAPLPS only.
 Tested in Win10, OS X High Sierra.
 position: yes / color: no / text: no / animation: no
 
 Ajwm Decoder (Alastair Mayer, 1999)
 ./archives/ajwm-naplps/
-License: GPL.
-Language: Java.
+License: GPL
+Language: Java
 Read NAPLPS only.
 Tested in Win10, Ubuntu; doesn't work in OS X.
 position: yes / color: yes / text: no / animation: no
@@ -52,24 +52,24 @@ position: yes / color: yes / text: no / animation: no
 <pre>
 TurShow (Shawn Rhoads, 1993)
 ./archives/simtel/TURSHOW6/
-License: unknown.
-Language: Pascal.
+License: unknown
+Language: Pascal
 Read NAPLPS only.
 Tested with DosBox; doesn't work in Win10.
 position: yes / color: yes / text: yes / animation: yes
 
 Microstar Graphics Editor (Microstar Software, 1991)
 ./archives/simtel/MGE201A/
-License: unknown.
-Language: unknown.
+License: unknown
+Language: unknown
 Read, edit, write NAPLPS.
 Tested with WinXP; doesn't work with DosBox.
 position: yes / color: yes / text: yes / animation: ?
 
 Personality+III (Microstar Software, 1992)
 ./archives/simtel/PP3217A/
-License: unknown.
-Language: unknown.
+License: unknown
+Language: unknown
 Read NAPLPS only.
 Untested; doesn't work with WinXP or DosBox.
 
