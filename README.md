@@ -1,5 +1,5 @@
 ![TelidonP5](/tools/rosetta_stone/cover/screenshots/shark.gif)
-# TelidonP5 Project
+# TelidonP5
 <p>
 	<b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/TelidonP5.js">TelidonP5.js</a></b> allows NAPLPS vector graphics files to be displayed in a browser using <a href="https://p5js.org/">p5.js</a>. Its companion encoder/decoder library <b><a href="https://github.com/n1ckfg/Telidon/blob/master/js/telidon/naplps.js">naplps.js</a></b> can also be used independently.<br/>
 	[ <a href="https://n1ckfg.github.io/Telidon/"><i>See an example</i></a> ]
@@ -21,13 +21,13 @@
 A simple NAPLPS image explained instruction by instruction. Start here.
 </pre>
 
-### Reference Viewers (source included):
+### Experimental Viewers (source included):
 <pre>
 TelidonP5.js (Nick Fox-Gieg, 2018)
 ./js/telidon/
 License: MIT.
 Language: JavaScript.
-Read NAPLPS, export to GIF.
+Read, edit, write NAPLPS; convert from SVG; export to GIF.
 Tested with Firefox, Chrome, Safari.
 position: yes / color: yes / text: no / animation: no
 
@@ -55,7 +55,7 @@ TurShow (Shawn Rhoads, 1993)
 License: unknown.
 Language: Pascal.
 Read NAPLPS only.
-Tested with DosBox emulator; doesn't work in Win10.
+Tested with DosBox; doesn't work in Win10.
 position: yes / color: yes / text: yes / animation: yes
 
 Microstar Graphics Editor (Microstar Software, 1991)
@@ -63,7 +63,7 @@ Microstar Graphics Editor (Microstar Software, 1991)
 License: unknown.
 Language: unknown.
 Read, edit, write NAPLPS.
-Tested with WinXP emulator; doesn't work with DosBox emulator.
+Tested with WinXP; doesn't work with DosBox.
 position: yes / color: yes / text: yes / animation: ?
 
 Personality+III (Microstar Software, 1992)
@@ -71,14 +71,14 @@ Personality+III (Microstar Software, 1992)
 License: unknown.
 Language: unknown.
 Read NAPLPS only.
-Untested; doesn't work with DosBox emulator.
+Untested; doesn't work with WinXP or DosBox.
 
 Note: ./archives/ also contains more untested utilities.
 </pre>
 
 ### Background info:
 <p>
-	August 15th, 2018 marked the 40th anniversary of the <a href="https://en.wikipedia.org/wiki/Telidon">Telidon</a> graphics format, created in 1978. The Telidon hardware was discontinued in 1985, but a variant of the format, <a href="https://en.wikipedia.org/wiki/NAPLPS">NAPLPS</a>, thrived and remained in wide use throughout the <a href="https://en.wikipedia.org/wiki/Bulletin_board_system">BBS</a> era, until the early 1990s. Thanks to its exceptionally small file size and limited animation features, it can be seen as a technological ancestor of the <a href="https://en.wikipedia.org/wiki/GIF#Animated_GIF">animated GIF</a> and the <a href="https://en.wikipedia.org/wiki/SWF">Flash SWF</a>&mdash;a medium that allowed new types of work to be both produced and consumed on the same machine.
+	August 15th, 2018 marked the 40th anniversary of the <a href="https://en.wikipedia.org/wiki/Telidon">Telidon</a> vector graphics workstation, launched in 1978. The Telidon hardware was discontinued in 1985, but its file format, standardized as <a href="https://en.wikipedia.org/wiki/NAPLPS">NAPLPS</a>, thrived and remained in wide use throughout the <a href="https://en.wikipedia.org/wiki/Bulletin_board_system">BBS</a> era, until the mid-1990s. Thanks to its exceptionally small file size and limited animation features, NAPLPS can be seen as a technological ancestor of the <a href="https://en.wikipedia.org/wiki/GIF#Animated_GIF">animated GIF</a> and the <a href="https://en.wikipedia.org/wiki/SWF">Flash SWF</a>&mdash;a new artistic medium that could be both produced and distributed on the same machine.
 </p>
 <p>
 	From 1982&ndash;1985, members of the Toronto arts org <a href="http://interaccess.org/">InterAccess</a> used Telidon systems to produce an ambitious series of <a href="https://motherboard.vice.com/en_us/article/ezveak/the-original-net-artists">interactive BBS-based artworks</a> in the format.
