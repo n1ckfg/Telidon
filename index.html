@@ -256,7 +256,10 @@
 			    	for (let pointAttr of pointsAttr) {
 			    		let pointAttrArray = pointAttr.split(",");
 			    		let point = new Vector2((float(pointAttrArray[0]) / sW) + offsetX, (float(pointAttrArray[1]/ sH * 0.75) + offsetY));
-			    		points.push(point);
+			    		
+			    		if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
+			    			points.push(point);
+			    		}
 			    	}
 					
 					const stroke = new NapInputWrapper(color, points, isFill);
@@ -283,7 +286,10 @@
 			    	for (let pointAttr of pointsAttr) {
 			    		let pointAttrArray = pointAttr.split(",");
 			    		let point = new Vector2((float(pointAttrArray[0]) / sW) + offsetX, (float(pointAttrArray[1]/ sH * 0.75) + offsetY));
-			    		points.push(point);
+			    		
+			    		if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
+							points.push(point);
+						}
 			    	}
 					
 					const stroke = new NapInputWrapper(color, points, isFill);

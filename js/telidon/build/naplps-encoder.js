@@ -302,27 +302,29 @@ class NapEncoder {
         	if (this.debug) console.log(_points[i].x + ", " + _points[i].y);
            	_points[i].y = 1.0 - _points[i].y;
 
-            if (i === 0) {
-            	pointsToEncode.push(_points[0]);
-            } else {
-            	let nv = _points[i];
-            	let nvLast = _points[i-1];
+           	if (_points[i].x >= 0 && _points[i].x <= 1 && _points[i].y >= 0 && _points[i].y <= 1) {
+	            if (i === 0) {
+	            	pointsToEncode.push(_points[0]);
+	            } else {
+	            	let nv = _points[i];
+	            	let nvLast = _points[i-1];
 
-                // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-                let x = Math.abs(nv.x) - Math.abs(nvLast.x);
-                if (nv.x < nvLast.x) x = Math.abs(x) - 1;
-                
-                let y = Math.abs(nv.y) - Math.abs(nvLast.y);
-                if (nv.y < nvLast.y) y = Math.abs(y) - 1;               
-                // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	                // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+	                let x = Math.abs(nv.x) - Math.abs(nvLast.x);
+	                if (nv.x < nvLast.x) x = Math.abs(x) - 1;
+	                
+	                let y = Math.abs(nv.y) - Math.abs(nvLast.y);
+	                if (nv.y < nvLast.y) y = Math.abs(y) - 1;               
+	                // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-                if (i === _points.length-1) {
-	                if (this.debug) console.log("\n");
-                }
+	                if (i === _points.length-1) {
+		                if (this.debug) console.log("\n");
+	                }
 
-                let newPoint = new Vector2(x, y);
-                pointsToEncode.push(newPoint);              
-            }
+	                let newPoint = new Vector2(x, y);
+	                pointsToEncode.push(newPoint);              
+	            }
+        	}
         }
 
         for (let point of pointsToEncode) {
