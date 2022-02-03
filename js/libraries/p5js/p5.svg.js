@@ -2386,7 +2386,7 @@
         };
     }
 
-    (function(p5) {
+    function init(p5) {
         /**
          * @namespace p5
          */
@@ -2400,7 +2400,13 @@
         Object.keys(constants).forEach(function(k) {
             p5.prototype[k] = constants[k];
         });
-    })(window.p5);
+    }
+
+    if (typeof window.p5 !== 'undefined') {
+        init(window.p5);
+    }
+
+    return init;
 
 }());
 //# sourceMappingURL=p5.svg.js.map
