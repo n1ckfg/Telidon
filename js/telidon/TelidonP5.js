@@ -50,9 +50,13 @@ class TelidonDrawCmd {
         this.col = color(0);
         this.thickness = 1;
         this.text = "";
+        this.markTime = 0;
+        this.progressiveDrawInterval = 66;
+        this.extraLoopCounter = 0;
 
         this.points = [];
         this.pointsIndex = 0;
+
         if (!this.progressiveDraw) {
             for (let point of this.cmd.points) {
                 if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
@@ -68,16 +72,25 @@ class TelidonDrawCmd {
             //this.scanPos -= this.scanDelta;
             //if (this.scanPos <= 0) this.moveScanline = false;
         //}
+        if (millis() > this.markTime + this.progressiveDrawInterval) {
+            if (this.progressiveDraw && this.points.length < this.cmd.points.length && this.pointsIndex < this.cmd.points.length) {
+            	const point = this.cmd.points[this.pointsIndex];
+                if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
+                    this.points.push(point);
+            	}
+                this.pointsIndex++;
 
-        if (this.progressiveDraw && this.points.length < this.cmd.points.length && this.pointsIndex < this.cmd.points.length) {
-        	const point = this.cmd.points[this.pointsIndex];
-            if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
-                this.points.push(point);
-        	}
-            this.pointsIndex++;
+                this.markTime = millis();
+            }
         }
 
-        if (this.points.length === this.cmd.points.length) this.finished = true;
+        if (!this.finished && this.points.length === this.cmd.points.length) {
+            if (this.extraLoopCounter < this.progressiveDrawInterval) {
+                this.extraLoopCounter++;
+            } else {
+                this.finished = true;
+            }
+        }
     }
     
     draw() {
