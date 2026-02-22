@@ -341,7 +341,7 @@
 			    		//}
 			    	}
 
-			    	points = rdpSimplify(points, 0.015); // default 0.005, higher = more simplification
+			    	points = rdpSimplify(points, 0.01); // default 0.005, higher = more simplification
 
 			    	if (points.length > 0) {
 			    		const stroke = new NapInputWrapper(color, points, isFill);
@@ -350,6 +350,16 @@
 			    }
 
 				const encoder = new NapEncoder(input);
+
+				// download nap
+				const _ts = new Date().toISOString().replace(/[-:]/g, '').replace('T', '_').split('.')[0];
+				const _blob = new Blob([encoder.napRaw], { type: 'text/plain' });
+				const _url = URL.createObjectURL(_blob);
+				const _a = document.createElement('a');
+				_a.href = _url;
+				_a.download = 'output_' + _ts + '.nap';
+				_a.click();
+				URL.revokeObjectURL(_url);
 
 				loadTelidonFromText(encoder.napRaw);				
 			}
