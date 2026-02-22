@@ -219,16 +219,10 @@
 			// svg
 
 			function setupSvg(ps) {
-				let pg, polylines, polygons, paths;
+				let polylines, polygons, paths;
 				let input = [];
 				let offsetX = 0;
 				let offsetY = 0.25;
-
-				pg = createGraphics(sW, sH, SVG);
-				
-				pg.push();
-				pg.image(ps, 0, 0, pg.width, pg.height);
-			    pg.pop();
 
 			    let svgWidth = parseFloat(ps.attribute("width"));
 			    let svgHeight = parseFloat(ps.attribute("height"));
@@ -241,7 +235,7 @@
 		    	// NAPLPS can only use a fill color or a stroke color in one path, not both.
 				// fill-opacity, stroke-opacity, stroke-linecap, and stroke-width are not used.
 
-			    polygons = pg.querySVG('polygon');
+			    polygons = ps.query('polygon');
 				
 			    for (let path of polygons) {
 			    	let points = [];
@@ -273,7 +267,7 @@
 					input.push(stroke);
 			    }
 
-			    polylines = pg.querySVG('polyline');
+			    polylines = ps.query('polyline');
 
 			    for (let path of polylines) {
 			    	let points = [];
@@ -305,7 +299,7 @@
 					input.push(stroke);
 			    }
 
-			    paths = pg.querySVG('path'); //ps.elt.querySelectorAll('path');
+			    paths = ps.query('path'); //ps.elt.querySelectorAll('path');
 
 			    for (let path of paths) {
 			    	let points = [];
