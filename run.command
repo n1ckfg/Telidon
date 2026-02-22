@@ -8,5 +8,8 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-cd $DIR
+cd "$DIR"
+
+open http://127.0.0.1:8080
+
 http-server
