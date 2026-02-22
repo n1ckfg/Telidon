@@ -227,14 +227,16 @@
 				pg = createGraphics(sW, sH, SVG);
 				
 				pg.push();
-				pg.image(ps, 0, 0);
+				pg.image(ps, 0, 0, pg.width, pg.height);
 			    pg.pop();
 
-			    let info = pg.querySVG("svg")[0];
-
-			    // TODO why can this not be set from attributes?
-			    let svgWidth = 512; //info.attribute("width");
-			    let svgHeight = 512; //info.attribute("height");
+			    let svgWidth = parseFloat(ps.attribute("width"));
+			    let svgHeight = parseFloat(ps.attribute("height"));
+			    if (!svgWidth || !svgHeight) {
+			    	let vb = (ps.attribute("viewBox") || "").trim().split(/[\s,]+/);
+			    	svgWidth  = vb.length >= 4 ? parseFloat(vb[2]) : 512;
+			    	svgHeight = vb.length >= 4 ? parseFloat(vb[3]) : 512;
+			    }
 
 		    	// NAPLPS can only use a fill color or a stroke color in one path, not both.
 				// fill-opacity, stroke-opacity, stroke-linecap, and stroke-width are not used.
