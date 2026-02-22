@@ -219,7 +219,7 @@
 			// svg
 
 			function setupSvg(ps) {
-				let pg, polylines, polygons;
+				let pg, polylines, polygons, paths;
 				let input = [];
 				let offsetX = 0;
 				let offsetY = 0.25;
@@ -230,11 +230,16 @@
 				pg.image(ps, 0, 0);
 			    pg.pop();
 
-			    polygons = pg.querySVG('polygon');
-			    polylines = pg.querySVG('polyline');
+			    let info = pg.querySVG("svg")[0];
+
+			    // TODO why can this not be set from attributes?
+			    let svgWidth = 512; //info.attribute("width");
+			    let svgHeight = 512; //info.attribute("height");
 
 		    	// NAPLPS can only use a fill color or a stroke color in one path, not both.
 				// fill-opacity, stroke-opacity, stroke-linecap, and stroke-width are not used.
+
+			    polygons = pg.querySVG('polygon');
 				
 			    for (let path of polygons) {
 			    	let points = [];
@@ -266,6 +271,8 @@
 					input.push(stroke);
 			    }
 
+			    polylines = pg.querySVG('polyline');
+
 			    for (let path of polylines) {
 			    	let points = [];
 			    	let color = new Vector3(0, 0, 0);
@@ -294,6 +301,56 @@
 					
 					const stroke = new NapInputWrapper(color, points, isFill);
 					input.push(stroke);
+			    }
+
+			    paths = pg.querySVG('path'); //ps.elt.querySelectorAll('path');
+
+			    for (let path of paths) {
+			    	let points = [];
+			    	let color = new Vector3(255, 255, 255);
+			    	let isFill = true;
+
+			    	let fillColorAttr = path.attribute('fill') || 'none';
+			    	let strokeColorAttr = path.attribute('stroke') || 'none';
+
+			    	/*
+			    	if (fillColorAttr !== 'none') {
+			    		let colorHex = hexToRgb(fillColorAttr);
+			    		if (colorHex) color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+			    	} else if (fillColorAttr === 'none' && strokeColorAttr !== 'none') {
+			    		isFill = false;
+			    		let colorHex = hexToRgb(strokeColorAttr);
+			    		if (colorHex) color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+			    	} else {
+			    		color = new Vector3(255, 255, 255);
+			    	}
+			    	*/
+
+			    	// Parse transform="translate(tx,ty)"
+			    	let tx = 0, ty = 0;
+			    	let transformAttr = path.attribute('transform');
+			    	if (transformAttr) {
+			    		let tMatch = /translate\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\)/.exec(transformAttr);
+			    		if (tMatch) { tx = parseFloat(tMatch[1]); ty = parseFloat(tMatch[2]); }
+			    	}
+
+			    	// Parse d attribute: M/L commands only (Z closes the path, no coords)
+			    	let d = path.attribute('d') || '';
+			    	let cmdRegex = /[ML]\s*(-?[\d.]+),(-?[\d.]+)/g;
+			    	let m;
+			    	while ((m = cmdRegex.exec(d)) !== null) {
+			    		let px = parseFloat(m[1]) + tx;
+			    		let py = parseFloat(m[2]) + ty;
+			    		let point = new Vector2((px / svgWidth) + offsetX, ((py / svgHeight) * 0.75) + offsetY);
+			    		//if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
+			    		points.push(point);
+			    		//}
+			    	}
+
+			    	if (points.length > 0) {
+			    		const stroke = new NapInputWrapper(color, points, isFill);
+			    		input.push(stroke);
+			    	}
 			    }
 
 				const encoder = new NapEncoder(input);
