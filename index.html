@@ -313,7 +313,6 @@
 			    	let fillColorAttr = path.attribute('fill') || 'none';
 			    	let strokeColorAttr = path.attribute('stroke') || 'none';
 
-			    	/*
 			    	if (fillColorAttr !== 'none') {
 			    		let colorHex = hexToRgb(fillColorAttr);
 			    		if (colorHex) color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
@@ -324,7 +323,6 @@
 			    	} else {
 			    		color = new Vector3(255, 255, 255);
 			    	}
-			    	*/
 
 			    	// Parse transform="translate(tx,ty)"
 			    	let tx = 0, ty = 0;
@@ -347,6 +345,8 @@
 			    		//}
 			    	}
 
+			    	points = rdpSimplify(points, 0.005);
+
 			    	if (points.length > 0) {
 			    		const stroke = new NapInputWrapper(color, points, isFill);
 			    		input.push(stroke);
@@ -358,7 +358,35 @@
 				loadTelidonFromText(encoder.napRaw);				
 			}
 
-			function hexToRgb(hex) {
+		function rdpSimplify(points, epsilon) {
+			if (points.length <= 2) return points;
+			let start = points[0], end = points[points.length - 1];
+			let maxDist = 0, maxIdx = 0;
+			for (let i = 1; i < points.length - 1; i++) {
+				let dist = rdpPointLineDist(points[i], start, end);
+				if (dist > maxDist) { maxDist = dist; maxIdx = i; }
+			}
+			if (maxDist > epsilon) {
+				let left = rdpSimplify(points.slice(0, maxIdx + 1), epsilon);
+				let right = rdpSimplify(points.slice(maxIdx), epsilon);
+				return left.slice(0, -1).concat(right);
+			}
+			return [start, end];
+		}
+
+		function rdpPointLineDist(p, a, b) {
+			let dx = b.x - a.x, dy = b.y - a.y;
+			let lenSq = dx * dx + dy * dy;
+			if (lenSq === 0) {
+				dx = p.x - a.x; dy = p.y - a.y;
+				return Math.sqrt(dx * dx + dy * dy);
+			}
+			let t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / lenSq));
+			dx = p.x - (a.x + t * dx); dy = p.y - (a.y + t * dy);
+			return Math.sqrt(dx * dx + dy * dy);
+		}
+
+		function hexToRgb(hex) {
 				let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 				return result ? {
 					r: parseInt(result[1], 16),
