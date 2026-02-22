@@ -341,7 +341,7 @@
 			    		//}
 			    	}
 
-			    	points = rdpSimplify(points, 0.005);
+			    	points = rdpSimplify(points, 0.015); // default 0.005, higher = more simplification
 
 			    	if (points.length > 0) {
 			    		const stroke = new NapInputWrapper(color, points, isFill);
