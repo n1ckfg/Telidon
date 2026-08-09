@@ -1,6 +1,6 @@
 TelidonP5 Project
 Copyright (c) 2021 Nick Fox-Gieg
-http://fox-gieg.com
+https://fox-gieg.com
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
