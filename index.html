@@ -13,14 +13,24 @@
 		<script type="text/javascript">
 			"use strict";
 
+			// naplps.js turns a .nap byte stream into a command array and
+			// TelidonP5.js draws that array with p5.  Everything below is the
+			// glue: loading files, playing the commands back at something like
+			// a Telidon terminal's speed, and recording the result as a GIF.
+
+			// The NAPLPS unit screen is 1 wide with a 4:3 aspect ratio, so only
+			// y in [0, 0.75] is visible.
+			const UNIT_HEIGHT = 0.75;
+			// Playback speed, in commands per second.
+			const CMDS_PER_SECOND = 150;
+
 			let recording = true;
 			let c;
 			let gif;
 			let posCounterX = 0;
 			let posCounterY = 0;
 
-			let telidon = [];
-			let maxLength = 3;
+			let player = null;
 
 			let dropZone;
 			let sW = 640;
@@ -33,14 +43,71 @@
 
 			let isMobile = false;
 
+			// Plays a decoded command array into an offscreen buffer.
+			// TelidonP5 draws a whole array in one call, so drawing it
+			// progressively is a matter of re-rendering with a growing limit:
+			// `limit` is how far down the array playback has walked and `time`
+			// is how much of the WAIT clock that walk has spent, which is what
+			// lets an animated image hold each of its frames.
+			class NapPlayer {
 
-			function preload() {
-			    isMobile = detectMobile();
+				constructor(data, w, h) {
+					this.commands = NAPLPS.decode(data).commands;
+					this.pg = createGraphics(w, h);
+					// A palette animation keeps moving after the last command,
+					// so an image with one is never done redrawing.
+					this.blinks = TelidonP5.hasBlink(this.commands);
+					this.index = 0;   // commands played so far
+					this.spent = 0;   // seconds of playback they took
+					this.clock = 0;   // seconds of that spent inside WAITs
+					this.startMillis = millis();
+					this.finished = false;
+					this.render(0);
+				}
 
-			    if (isMobile) loadNewTelidon("./images/shark.nap");
+				// Walk forward to wherever `elapsed` seconds of playback have
+				// reached.  An ordinary command costs a fixed slice of time; a
+				// WAIT costs the whole pause it asks for.
+				advance(elapsed) {
+					let moved = false;
+					while (this.index < this.commands.length) {
+						const cmd = this.commands[this.index];
+						const cost = cmd.type === "wait" ? (cmd.seconds || 0) : 1 / CMDS_PER_SECOND;
+						if (this.spent + cost > elapsed) break;
+						this.spent += cost;
+						if (cmd.type === "wait") this.clock += cmd.seconds || 0;
+						this.index++;
+						moved = true;
+					}
+					if (this.index >= this.commands.length) this.finished = true;
+					return moved;
+				}
+
+				render(blinkTime) {
+					TelidonP5.render(this.pg, this.commands, {
+						limit: this.index,
+						time: this.clock,
+						blinkTime: blinkTime
+					});
+				}
+
+				draw() {
+					const elapsed = (millis() - this.startMillis) / 1000;
+					// A finished still image never changes again, so it is only
+					// re-rendered while something is left to move.
+					if (this.advance(elapsed) || this.blinks) this.render(elapsed);
+					image(this.pg, 0, 0);
+				}
+
+				remove() {
+					this.pg.remove();
+				}
+
 			}
 
 			function setup() {
+				isMobile = detectMobile();
+
 				c = createCanvas(sW, sH);
 				c.position(0, 29);
 
@@ -100,11 +167,13 @@
 			        loadNewTelidon("./images/tb1.nap");
 			        setPreview("mouse");
 			    });
+
+			    if (isMobile) loadNewTelidon("./images/shark.nap");
 			}
 
 			function draw() {    
 				background(0);
-			    if (telidon.length < 1) {
+			    if (!player) {
 			        fill(255);
 			        textAlign(CENTER);
 			        text("\\\\ DRAG ' n ' DROP //", width/2, height/2);
@@ -112,17 +181,16 @@
 			        return;
 			    }
 
-			    translate(0,sH-sW);
-				
-			    for (let i=0; i<telidon.length; i++) {
-					telidon[i].draw();
-				}
+			    // The unit screen maps onto the whole 640x480 canvas: x spans
+			    // [0, 1] across the width and the visible y range [0, 0.75]
+			    // spans the height, so the buffer is blitted at the origin.
+			    player.draw();
 
 			    if (!isMobile && recording && frameCount % 2 == 0) {
 			        gif.addFrame(c.elt, {delay: 1, copy: true});
 			    }
 
-			    if (!isMobile && recording && telidon[telidon.length-1].finished) {
+			    if (!isMobile && recording && player.finished) {
 			        recording = false;
 			        gif.render();
 			    }
@@ -139,10 +207,12 @@
 			    e.stopPropagation();
 			    e.preventDefault();
 			    let file = e.dataTransfer.files[0]; 
+	        	const fileNameArray = file.name.split(".");
+	        	const extension = fileNameArray[fileNameArray.length-1].toLowerCase();
 		        let reader = new FileReader();
-		        reader.onload = function(e2) {
-		        	const fileNameArray = file.name.split(".");
-		        	if (fileNameArray[fileNameArray.length-1] === "svg") {
+
+	        	if (extension === "svg") {
+		        	reader.onload = function(e2) {
 		        		let div = document.createElement('div');
         				let element = new p5.SVGElement(div);
                 		div.innerHTML = e2.target.result;
@@ -150,34 +220,54 @@
                 		element.elt = svg;
 
 		        		setupSvg(element);
-		        	} else {
-			            loadTelidonFromText(e2.target.result);
 		        	}
-		        }
-		        reader.readAsText(file, 'UTF-8');   
+		        	reader.readAsText(file, 'UTF-8');
+	        	} else {
+	        		// NAPLPS is a byte stream, so it is read as bytes; decoding
+	        		// it as text would fold anything above 0x7F into
+	        		// replacement characters.
+		        	reader.onload = function(e2) {
+			            loadTelidonFromData(new Uint8Array(e2.target.result));
+		        	}
+		        	reader.readAsArrayBuffer(file);
+	        	}
 			}
 
-			function loadTelidonFromText(input) {
-	            if (telidon.length >= maxLength) telidon.splice(0,1);
-	            telidon.push(new TelidonDraw([input], sW, sW));
-	            recording = true;
+			// Start a new drawing.  The decoder takes a Uint8Array or a string
+			// of character codes, so both a dropped file and the text field can
+			// be handed straight to it.
+			function startTelidon(data) {
+			    let next;
+			    try {
+			        next = new NapPlayer(data, sW, sH);
+			    } catch (err) {
+			        // Anything can be typed into the text field, so a stream the
+			        // decoder chokes on leaves the current drawing up.
+			        console.error("Couldn't decode NAPLPS input", err);
+			        return;
+			    }
+			    if (player) player.remove();
+			    player = next;
+			    recording = true;
+			}
+
+			function loadTelidonFromData(data) {
+	            startTelidon(data);
 	            preview.style.backgroundImage = null;
 			}
 
 			function onFormSubmit() {
 				const field = document.getElementById("naplps_field");
-				loadTelidonFromText(field.value);
+				loadTelidonFromData(field.value);
 			}
 
 			function loadNewTelidon(fileName) { 
-			    loadStrings(fileName, function(response) {
-			        telidon = [];
-			        let reader = new FileReader();
-			        reader.onload = function(e2) {
-			            telidon.push(new TelidonDraw([e2.target.result], sW, sW));
-			            recording = true;
-			        }
-			        reader.readAsText(new Blob(response), 'UTF-8');
+			    fetch(fileName).then(function(response) {
+			        return response.arrayBuffer();
+			    }).then(function(buffer) {
+			        startTelidon(new Uint8Array(buffer));
+			    }).catch(function(err) {
+			        console.error("Couldn't load " + fileName, err);
 			    });
 			}
 
@@ -218,11 +308,32 @@
 
 			// svg
 
+			// SVG user units are y-down; the NAPLPS unit screen is y-up.
+			// Coordinate operands span [-1, 1), so 1.0 itself has no encoding.
+			function svgPoint(px, py, svgWidth, svgHeight) {
+				return {
+					x: clampUnit(px / svgWidth),
+					y: clampUnit(UNIT_HEIGHT * (1 - (py / svgHeight)))
+				};
+			}
+
+			function clampUnit(v) {
+				return Math.max(0, Math.min(0.999, v));
+			}
+
+			// The encoder takes colors as fractions rather than as bytes.
+			function svgColor(attr, fallback) {
+				const rgb = hexToRgb(attr);
+				if (!rgb) return fallback;
+				return { r: rgb.r / 255, g: rgb.g / 255, b: rgb.b / 255 };
+			}
+
 			function setupSvg(ps) {
 				let polylines, polygons, paths;
-				let input = [];
-				let offsetX = 0;
-				let offsetY = 0.25;
+				let strokes = [];
+
+				const white = { r: 1, g: 1, b: 1 };
+				const black = { r: 0, g: 0, b: 0 };
 
 			    let svgWidth = parseFloat(ps.attribute("width"));
 			    let svgHeight = parseFloat(ps.attribute("height"));
@@ -239,85 +350,69 @@
 				
 			    for (let path of polygons) {
 			    	let points = [];
-			    	let color = new Vector3(255, 255, 255);
+			    	let color = white;
 			    	let isFill = true;
 			    	
 					let strokeColorAttr = path.attribute("stroke"); // "#FEFEFE" or "none" 
 			    	let fillColorAttr = path.attribute("fill"); // "#FEFEFE" or "none" 			
 					
 					if (fillColorAttr !== "none") {
-						let colorHex = hexToRgb(fillColorAttr);
-						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+						color = svgColor(fillColorAttr, white);
 					} else if (fillColorAttr === "none" && strokeColorAttr !== "none") {
-						let colorHex = hexToRgb(strokeColorAttr);
-						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+						color = svgColor(strokeColorAttr, white);
 					}
 
-			    	let pointsAttr = path.attribute("points").split(" ");
+			    	let pointsAttr = (path.attribute("points") || "").trim().split(/\s+/);
 			    	for (let pointAttr of pointsAttr) {
 			    		let pointAttrArray = pointAttr.split(",");
-			    		let point = new Vector2((float(pointAttrArray[0]) / sW) + offsetX, (float(pointAttrArray[1]/ sH * 0.75) + offsetY));
-			    		
-			    		if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
-			    			points.push(point);
-			    		}
+			    		if (pointAttrArray.length < 2) continue;
+			    		points.push(svgPoint(parseFloat(pointAttrArray[0]), parseFloat(pointAttrArray[1]), svgWidth, svgHeight));
 			    	}
 					
-					const stroke = new NapInputWrapper(color, points, isFill);
-					input.push(stroke);
+					if (points.length > 1) strokes.push({ color: color, points: points, isFill: isFill });
 			    }
 
 			    polylines = ps.query('polyline');
 
 			    for (let path of polylines) {
 			    	let points = [];
-			    	let color = new Vector3(0, 0, 0);
+			    	let color = black;
 			    	let isFill = false;
 			    	
 					let strokeColorAttr = path.attribute("stroke"); // "#FEFEFE" or "none" 
 			    	let fillColorAttr = path.attribute("fill"); // "#FEFEFE" or "none" 
 					
 					if (strokeColorAttr === "none" && fillColorAttr !== "none") {
-						let colorHex = hexToRgb(fillColorAttr);
-						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+						color = svgColor(fillColorAttr, black);
 					} else if (strokeColorAttr !== "none") {
-						let colorHex = hexToRgb(strokeColorAttr);
-						color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+						color = svgColor(strokeColorAttr, black);
 					}
 
-			    	let pointsAttr = path.attribute("points").split(" ");
+			    	let pointsAttr = (path.attribute("points") || "").trim().split(/\s+/);
 			    	for (let pointAttr of pointsAttr) {
 			    		let pointAttrArray = pointAttr.split(",");
-			    		let point = new Vector2((float(pointAttrArray[0]) / sW) + offsetX, (float(pointAttrArray[1]/ sH * 0.75) + offsetY));
-			    		
-			    		if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
-							points.push(point);
-						}
+			    		if (pointAttrArray.length < 2) continue;
+			    		points.push(svgPoint(parseFloat(pointAttrArray[0]), parseFloat(pointAttrArray[1]), svgWidth, svgHeight));
 			    	}
 					
-					const stroke = new NapInputWrapper(color, points, isFill);
-					input.push(stroke);
+					if (points.length > 1) strokes.push({ color: color, points: points, isFill: isFill });
 			    }
 
 			    paths = ps.query('path'); //ps.elt.querySelectorAll('path');
 
 			    for (let path of paths) {
 			    	let points = [];
-			    	let color = new Vector3(255, 255, 255);
+			    	let color = white;
 			    	let isFill = true;
 
 			    	let fillColorAttr = path.attribute('fill') || 'none';
 			    	let strokeColorAttr = path.attribute('stroke') || 'none';
 
 			    	if (fillColorAttr !== 'none') {
-			    		let colorHex = hexToRgb(fillColorAttr);
-			    		if (colorHex) color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
+			    		color = svgColor(fillColorAttr, white);
 			    	} else if (fillColorAttr === 'none' && strokeColorAttr !== 'none') {
 			    		isFill = false;
-			    		let colorHex = hexToRgb(strokeColorAttr);
-			    		if (colorHex) color = new Vector3(colorHex.r, colorHex.g, colorHex.b);
-			    	} else {
-			    		color = new Vector3(255, 255, 255);
+			    		color = svgColor(strokeColorAttr, white);
 			    	}
 
 			    	// Parse transform="translate(tx,ty)"
@@ -335,25 +430,29 @@
 			    	while ((m = cmdRegex.exec(d)) !== null) {
 			    		let px = parseFloat(m[1]) + tx;
 			    		let py = parseFloat(m[2]) + ty;
-			    		let point = new Vector2((px / svgWidth) + offsetX, ((py / svgHeight) * 0.75) + offsetY);
-			    		//if (point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
-			    		points.push(point);
-			    		//}
+			    		points.push(svgPoint(px, py, svgWidth, svgHeight));
 			    	}
 
 			    	points = rdpSimplify(points, 0.01); // default 0.005, higher = more simplification
 
-			    	if (points.length > 0) {
-			    		const stroke = new NapInputWrapper(color, points, isFill);
-			    		input.push(stroke);
+			    	if (points.length > 1) {
+			    		strokes.push({ color: color, points: points, isFill: isFill });
 			    	}
 			    }
 
-				const encoder = new NapEncoder(input);
+				// Build the command array the encoder serialises: clear the
+				// screen, then a color and a polygon for each shape.
+				const commands = [{ type: "reset", screen: true, r: 0, g: 0, b: 0 }];
+				for (let stroke of strokes) {
+					commands.push({ type: "setColor", r: stroke.color.r, g: stroke.color.g, b: stroke.color.b });
+					commands.push({ type: "polygon", points: stroke.points, filled: stroke.isFill });
+				}
+
+				const napRaw = NAPLPS.encode(commands);
 
 				// download nap
 				const _ts = new Date().toISOString().replace(/[-:]/g, '').replace('T', '_').split('.')[0];
-				const _blob = new Blob([encoder.napRaw], { type: 'text/plain' });
+				const _blob = new Blob([napRaw], { type: 'application/octet-stream' });
 				const _url = URL.createObjectURL(_blob);
 				const _a = document.createElement('a');
 				_a.href = _url;
@@ -361,7 +460,7 @@
 				_a.click();
 				URL.revokeObjectURL(_url);
 
-				loadTelidonFromText(encoder.napRaw);				
+				loadTelidonFromData(napRaw);				
 			}
 
 		function rdpSimplify(points, epsilon) {
