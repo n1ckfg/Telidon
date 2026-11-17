@@ -30,6 +30,34 @@ The command types a decode can produce:
 
 Stored definitions are resolved at decode time rather than left as references. A macro is expanded inline, so it never appears in the command array at all; a DRCS glyph's program is attached to each `drcs` command as `program`, and a programmable fill mask's program is attached to the `texture` command that selects it as `maskProgram`.
 
+#### Coordinate notes
+
+Multi-value operands interleave X and Y across bytes to save space. Each byte
+carries six data bits (bit 6 is always set, keeping bytes printable): bits 5, 4
+and 3 belong to X and bits 2, 1 and 0 to Y.
+
+The concatenated bits form a **two's-complement** signed integer, most
+significant bit first, scaled so the full positive range is one unit screen. The
+default 3-byte operand therefore gives 9 bits per axis, a range of −1.0 to
++0.998 in steps of 1/256.
+
+This is the single most consequential detail in the format. Reading the leading
+bit as a sign-magnitude flag instead decodes every positive coordinate correctly
+and every negative one wrongly, which looks like a rendering bug rather than a
+parsing one.
+
+**Negative zero.** The one exception is the bottom of the range — sign bit set,
+every other bit clear — which decodes as 0, not −1.0. Some encoders write the
+sign as "positive only if greater than zero", so an exact zero goes out as sign
+set, magnitude clear. Read literally, every axis that does not move throws the
+drawing point a full screen away, and the image turns into horizontal and
+vertical streaks. The nap-xtz / Telidon JS encoder does this (the
+`Skelton.nap_testbed` files carry tens of thousands of them), and the archived
+simtel NAPFNTA fonts start some glyphs at x = "−0". No other file in any corpus
+here contains an exact −1.0, so the pattern is safe to read as the zero those
+encoders meant. `encode()` clamps one quantum short of −1.0 so it never emits
+it.
+
 #### Encoder notes
 
 `encode()` is not a byte-for-byte inverse of `decode()`. It restates the picture, not the stream that carried it, so a round trip preserves what is drawn but not always how it was compressed:

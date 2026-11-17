@@ -175,13 +175,26 @@
 
   // Interpret bits[0..totalBits-1] (MSB first) as a two's-complement integer and
   // scale it to a fraction of the unit screen.
+  //
+  // The one exception is the most negative value - sign bit set, every other
+  // bit clear - which is read as zero rather than -1.0.  Some encoders write
+  // the sign as "positive only if > 0", so an exact zero goes out as a negative
+  // zero: sign set, magnitude clear.  Taken literally, every axis that does not
+  // move in a polygon throws the drawing point a full screen away, and the
+  // image dissolves into horizontal and vertical streaks.  Files from the
+  // nap-xtz / Telidon JS encoder do this tens of thousands of times, and the
+  // archived simtel NAPFNTA fonts start glyphs at x = "-0".  No other file in
+  // any corpus here contains an exact -1.0, and a displacement of a whole
+  // screen width is meaningless in practice, so the pattern is unambiguous
+  // enough to read as the zero those encoders meant.  encode() never emits it.
   function bitsToSignedFraction(bits, totalBits) {
     var val = 0;
     for (var i = 0; i < totalBits; i++) {
       val = val * 2 + (bits[i] || 0);
     }
     var half = Math.pow(2, totalBits - 1);
-    if (val >= half) val -= half * 2; // negative in two's complement
+    if (val === half) return 0; // negative zero - see above
+    if (val > half) val -= half * 2; // negative in two's complement
     return val / half;
   }
 
@@ -2040,13 +2053,15 @@
     return bits;
   }
 
-  // Represent a fraction in [-1, 1) as a two's-complement bit array, MSB first.
+  // Represent a fraction in (-1, 1) as a two's-complement bit array, MSB first.
   function signedFractionToBits(value, totalBits) {
     var half = Math.pow(2, totalBits - 1);
     var n = Math.round(value * half);
-    // Clamp to the representable range rather than letting it wrap around.
+    // Clamp to the representable range rather than letting it wrap around.  The
+    // bottom of the two's-complement range, -half, is left out: the decoder
+    // reads that pattern as a negative zero (see bitsToSignedFraction).
     if (n > half - 1) n = half - 1;
-    if (n < -half) n = -half;
+    if (n < -(half - 1)) n = -(half - 1);
     if (n < 0) n += half * 2;
 
     var bits = new Array(totalBits);
