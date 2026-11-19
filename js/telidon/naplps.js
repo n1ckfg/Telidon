@@ -437,22 +437,18 @@
     };
   }
 
-  // Decode a NAPLPS byte stream into a command array.
+  // Decode a NAPLPS (or Telidon 699) byte stream into a command array.
   // `inherit` carries the macro, DRCS and pattern-mask tables into a nested
   // decode, so a stored definition can use the ones defined before it.
   function decode(inputData, inherit) {
-    var data;
-    if (inputData instanceof Uint8Array) {
-      data = inputData;
-    } else if (Array.isArray(inputData)) {
-      data = inputData;
-    } else if (typeof inputData === 'string') {
-      data = [];
-      for (var i = 0; i < inputData.length; i++) {
-        data.push(inputData.charCodeAt(i) & 0xFF);
+    var data = toBytes(inputData);
+    var sourceFormat = 'naplps';
+    if (!inherit) {
+      var detected = identifyFormat(data);
+      sourceFormat = detected.format;
+      if (detected.format === '699') {
+        data = convert699(data);
       }
-    } else {
-      data = new Uint8Array(inputData);
     }
 
     var state = createDefaultState();
@@ -1988,7 +1984,7 @@
   pushPalette();
     runDecodeLoop();
     closeDefinition(); // file a definition left open by a truncated stream
-    return { commands: commands, state: state };
+    return { commands: commands, state: state, format: sourceFormat };
   }
 
   // ─── Encoder (Basic) ──────────────────────────────────────────────
@@ -2639,11 +2635,759 @@
     return !cmd.r && !cmd.g && !cmd.b;
   }
 
+  // ─── Telidon 699 Format Detection & Conversion ─────────────────────
+  // Telidon 699 (CRC Technical Note 699-E, 1979) shares the 7-bit ASCII PDI
+  // geometry opcodes ($..7) with NAPLPS, but multiplexes control/status
+  // operations behind '=' (0x3D) and uses 1-byte '<' colour/value operands.
+
+  function toBytes(inputData) {
+    if (inputData instanceof Uint8Array) return inputData;
+    if (Array.isArray(inputData)) return inputData;
+    if (typeof inputData === 'string') {
+      var arr = [];
+      for (var i = 0; i < inputData.length; i++) {
+        arr.push(inputData.charCodeAt(i) & 0xFF);
+      }
+      return arr;
+    }
+    return new Uint8Array(inputData);
+  }
+
+  function pushAll(target, src) {
+    for (var i = 0; i < src.length; i++) target.push(src[i]);
+  }
+
+  function repeatStr(ch, count) {
+    var out = '';
+    for (var i = 0; i < count; i++) out += ch;
+    return out;
+  }
+
+  function byteBits(value) {
+    return ('00000000' + (value & 0xFF).toString(2)).slice(-8);
+  }
+
+  // Pack a string of bit characters into bytes.
+  // Each character contributes the low bit of its code point, and a trailing
+  // partial byte is padded with zero bits).
+  function packBits(bits) {
+    var out = [];
+    var acc = 0;
+    var count = 0;
+    for (var i = 0; i < bits.length; i++) {
+      acc = (acc << 1) | (bits.charCodeAt(i) & 1);
+      count++;
+      if (count === 8) {
+        out.push(acc);
+        acc = 0;
+        count = 0;
+      }
+    }
+    if (count) out.push(acc << (8 - count));
+    return out;
+  }
+
+  // Format a float: ("%.15g", 0.0 / -0.0 -> "0")
+  function nvNumStr(value) {
+    if (value === 0) return '0';
+    var s = value.toExponential(14);
+    var eIdx = s.indexOf('e');
+    var exp = parseInt(s.slice(eIdx + 1), 10);
+    var mant = s.slice(0, eIdx);
+    if (exp < -4 || exp >= 15) {
+      mant = mant.replace(/\.?0+$/, '');
+      var expSign = exp < 0 ? '-' : '+';
+      var expAbs = Math.abs(exp);
+      return mant + 'e' + expSign + (expAbs < 10 ? '0' : '') + expAbs;
+    }
+    var sign = '';
+    if (mant.charAt(0) === '-') {
+      sign = '-';
+      mant = mant.slice(1);
+    }
+    var digits = mant.replace('.', '');
+    var out;
+    if (exp < 0) {
+      out = '0.' + repeatStr('0', -exp - 1) + digits;
+    } else if (exp + 1 >= digits.length) {
+      out = digits + repeatStr('0', exp + 1 - digits.length);
+    } else {
+      out = digits.slice(0, exp + 1) + '.' + digits.slice(exp + 1);
+    }
+    if (out.indexOf('.') >= 0) out = out.replace(/\.?0+$/, '');
+    return sign + out;
+  }
+
+  var NAPLPS_ONLY_OPCODES = {
+    0x20: 'RESET (SPC)',
+    0x21: 'DOMAIN (!)',
+    0x22: 'TEXT (")',
+    0x23: 'TEXTURE (#)',
+    0x3F: 'BLINK (?)'
+  };
+
+  // Classify a raw byte stream as '699', 'naplps', or 'unknown'.
+  function identifyFormat(inputData) {
+    var data = toBytes(inputData);
+    var n = data.length;
+    if (!n) {
+      return {
+        format: 'unknown', score699: 0, scoreNaplps: 0,
+        reasons699: [], reasonsNaplps: [], note: 'empty input'
+      };
+    }
+
+    // Both Telidon 699 and standard 7-bit NAPLPS use 7-bit bytes (0x00-0x7F).
+    // 8-bit NAPLPS uses GR bytes (>= 0x80), which never appear in 699.
+    for (var k = 0; k < n; k++) {
+      if (data[k] >= 0x80) {
+        return {
+          format: 'unknown', score699: 0, scoreNaplps: 0,
+          reasons699: [], reasonsNaplps: [],
+          note: 'contains non-7-bit bytes (>= 0x80)'
+        };
+      }
+    }
+
+    var score699 = 0;
+    var scoreNaplps = 0;
+    var counts699 = {};
+    var countsNaplps = {};
+
+    function add699(label, weight) {
+      score699 += weight;
+      counts699[label] = (counts699[label] || 0) + 1;
+    }
+
+    function addNaplps(label, weight) {
+      scoreNaplps += weight;
+      countsNaplps[label] = (countsNaplps[label] || 0) + 1;
+    }
+
+    var inPdi = false;
+    var curOp = null;
+    var curOps = [];
+
+    function flushPdi() {
+      if (curOp === null) return;
+      var op = curOp;
+      var ops = curOps;
+      curOp = null;
+      curOps = [];
+
+      if (NAPLPS_ONLY_OPCODES[op]) {
+        if (ops.length) addNaplps(NAPLPS_ONLY_OPCODES[op], 10);
+        return;
+      }
+
+      if (op === 0x3D) { // '=': 699 Status vs NAPLPS WAIT
+        if (ops.length >= 2 && ops[0] >= 0x40 && ops[0] <= 0x67) {
+          // '=\' followed by delay bytes is valid in both NAPLPS (WAIT with
+          // fixed format marker 0x5C) and 699 (timed wait), so treat as ambiguous.
+          if (ops[0] !== WAIT_MARKER) {
+            add699('699 status =' + String.fromCharCode(ops[0]) + ' (multi-byte)', 15);
+          }
+        } else if (ops.length === 1) {
+          var subVal = ops[0];
+          // '=@' (699 clear-to-black / NAPLPS WAIT 0) and '=\' are ambiguous.
+          if (subVal >= 0x41 && subVal <= 0x67 && subVal !== WAIT_MARKER) {
+            add699('699 status =' + String.fromCharCode(subVal), 5);
+          }
+        }
+        return;
+      }
+
+      if (op === 0x3C) { // '<': 699 Value (1 byte) vs NAPLPS SET COLOUR (3 bytes)
+        if (ops.length === 1) {
+          add699('1-byte < colour/value', 1);
+        } else if (ops.length === 3) {
+          addNaplps('3-byte < SET COLOUR', 1);
+        }
+      }
+    }
+
+    var i = 0;
+    while (i < n) {
+      var b = data[i];
+
+      if (b === 0x0E) { // SO: enter PDI graphics mode (G1)
+        flushPdi();
+        inPdi = true;
+        i++;
+        continue;
+      }
+
+      if (b === 0x0F) { // SI: enter text mode (G0)
+        flushPdi();
+        inPdi = false;
+        i++;
+        continue;
+      }
+
+      if (b === 0x1B) { // ESC: NAPLPS code extension / 7-bit C1 control
+        flushPdi();
+        i++;
+        if (i < n) {
+          var nxt = data[i];
+          if (nxt >= 0x40 && nxt <= 0x5F) {
+            addNaplps('ESC ' + String.fromCharCode(nxt) + ' (C1)', 10);
+            i++;
+            if ((nxt === 0x41 || nxt === 0x42 || nxt === 0x43 || nxt === 0x44) &&
+                i < n && data[i] >= 0x40 && data[i] <= 0x7F) {
+              i++;
+            }
+          } else if (nxt >= 0x20 && nxt <= 0x2F) {
+            addNaplps('ESC ISO-2022 sequence', 10);
+            while (i < n && data[i] >= 0x20 && data[i] <= 0x2F) i++;
+            if (i < n && data[i] >= 0x30 && data[i] <= 0x7E) i++;
+          } else {
+            addNaplps('ESC', 5);
+          }
+        }
+        continue;
+      }
+
+      if (b === 0x1F) { // US: NAPLPS Non-Selective Reset (NSR)
+        flushPdi();
+        addNaplps('US (NSR)', 10);
+        i++;
+        for (var u = 0; u < 2; u++) {
+          if (i < n && data[i] >= 0x40 && data[i] <= 0x7F) i++;
+          else break;
+        }
+        inPdi = false;
+        continue;
+      }
+
+      if (b === 0x19) { // EM: G2 single-shift
+        flushPdi();
+        i += 2;
+        continue;
+      }
+
+      if (b === 0x18) { // CAN: NAPLPS end macro
+        flushPdi();
+        if (inPdi) addNaplps('CAN (end macro)', 5);
+        i++;
+        continue;
+      }
+
+      if (b === 0x1C || b === 0x1D || b === 0x1E) { // FS, GS, RS
+        flushPdi();
+        if (inPdi) addNaplps('C0 0x' + b.toString(16).toUpperCase(), 3);
+        i++;
+        continue;
+      }
+
+      if (inPdi) {
+        if (b < 0x40) {
+          flushPdi();
+          if (b >= 0x20 && b <= 0x3F) {
+            curOp = b;
+            curOps = [];
+          }
+        } else if (curOp !== null) {
+          curOps.push(b);
+        }
+      }
+      i++;
+    }
+
+    flushPdi();
+
+    var reasons699 = Object.keys(counts699).sort().map(function (key) {
+      return key + ' x' + counts699[key];
+    });
+    var reasonsNaplps = Object.keys(countsNaplps).sort().map(function (key) {
+      return key + ' x' + countsNaplps[key];
+    });
+
+    if (score699 === 0 && scoreNaplps === 0) {
+      return {
+        format: 'unknown', score699: 0, scoreNaplps: 0,
+        reasons699: [], reasonsNaplps: [],
+        note: 'no distinguishing 699 or NAPLPS commands found'
+      };
+    }
+
+    var fmt = score699 > scoreNaplps ? '699' : (scoreNaplps > score699 ? 'naplps' : 'unknown');
+    return {
+      format: fmt,
+      score699: score699,
+      scoreNaplps: scoreNaplps,
+      reasons699: reasons699,
+      reasonsNaplps: reasonsNaplps,
+      note: ''
+    };
+  }
+
+  // ── 699 Text Attribute & Baseline Conversion (textconv.py) ──
+
+  var T699_XVALUES = [26, 36, 54, 72, 96, 128, 180, 260];
+  var T699_DISP = [1.5, 1.2, 1, 0.8, 0, 0, 0, 0];
+  var T699_DISP_DOUBLE = [1.5, 1.4, 1.2, 1.2, 0, 0, 0, 0];
+  var T699_DISPLACEMENT = 1 / 8;
+  var T699_INTERNARROW = {
+    '00': '00',
+    '01': '10',
+    '10': '11',
+    '11': '11'
+  };
+
+  function dec2bin699(dec) {
+    var bits = '';
+    for (var i = 0; i < 9; i++) {
+      var parts = nvNumStr(dec * 2).split('.');
+      bits += parts[0];
+      dec = parseFloat('0.' + (parts.length > 1 ? parts[1] : ''));
+      if (isNaN(dec)) dec = 0;
+    }
+    return bits;
+  }
+
+  function dec2pdi699(x, y) {
+    var bx = dec2bin699(x);
+    var by = dec2bin699(y);
+    var encoded = [];
+    for (var i = 0; i < 3; i++) {
+      var cx = bx.slice(i * 3, i * 3 + 3);
+      var cy = by.slice(i * 3, i * 3 + 3);
+      pushAll(encoded, packBits('01' + cx + cy));
+    }
+    return encoded;
+  }
+
+  function convert699TextSize(pdi, textState) {
+    var bits = pdi.length > 2 ? byteBits(pdi[2]) : '';
+    textState.double = bits.slice(2, 3) === '1';
+    var sizeBits = bits.slice(5, 8);
+    var size = sizeBits ? parseInt(sizeBits, 2) : 0;
+    textState.numeric = size;
+
+    var x = parseFloat((1 / T699_XVALUES[size]).toFixed(7));
+    var y = parseFloat(((1 + 3 / 8) * x).toFixed(7));
+    if (textState.double) y = y * 2;
+    textState.yDec = y;
+    return dec2pdi699(x, y);
+  }
+
+  function convert699TextFormat(pdi) {
+    var bits = pdi.length > 2 ? byteBits(pdi[2]) : '';
+    var rotation = bits.slice(4, 6);
+    var vertical = bits.slice(6, 8);
+    var byte1 = '011100' + rotation;
+    var byte2 = '010000' + (T699_INTERNARROW[vertical] || '');
+    return packBits(byte1).concat(packBits(byte2));
+  }
+
+  function get699DispHeight(textState) {
+    return (textState.double ? T699_DISP_DOUBLE : T699_DISP)[textState.numeric];
+  }
+
+  function get699DisplacementNeg(textState) {
+    var dispHeight = get699DispHeight(textState);
+    var displaceY = textState.yDec * (T699_DISPLACEMENT * dispHeight);
+    if (dispHeight > 0) {
+      displaceY = 1.002 - displaceY;
+    } else {
+      displaceY = displaceY * -1;
+    }
+    return [0x25].concat(dec2pdi699(0, displaceY));
+  }
+
+  function get699DisplacementPos(textState) {
+    var dispHeight = get699DispHeight(textState);
+    var displaceY = textState.yDec * (T699_DISPLACEMENT * dispHeight);
+    if (dispHeight < 0) {
+      displaceY = displaceY * -1;
+      displaceY = 1.002 - displaceY;
+    }
+    return [0x25].concat(dec2pdi699(0, displaceY));
+  }
+
+  // ── 699 Algorithmic Fill to NAPLPS Programmable Texture (texture.py) ──
+
+  var T699_TEX_DIM = 16;
+  var T699_MASK_GRID = [0x40, 0x52, 0x40];  // @R@
+  var T699_MASK_HORIZ = [0x40, 0x42, 0x40]; // @B@
+  var T699_MASK_VERT = [0x40, 0x50, 0x40];  // @P@
+
+  function bin2dec699(bits) {
+    var result = 0.0;
+    var divideBy = 2;
+    for (var i = 0; i < bits.length; i++) {
+      result += parseInt(bits.charAt(i), 10) / divideBy;
+      divideBy *= 2;
+    }
+    return result;
+  }
+
+  function fillStride699(dec) {
+    if (dec === 0) return 0;
+    if (dec > 0.5) dec = 1 - dec;
+    return Math.floor(1 / dec);
+  }
+
+  function gridRect699(xFill, yFill) {
+    var grid = [];
+    for (var i = T699_TEX_DIM; i > 0; i--) {
+      for (var j = T699_TEX_DIM; j > 0; j--) {
+        if (yFill > 0 && i % yFill === 0) grid.push('1');
+        else if (xFill > 0 && j % xFill === 0) grid.push('1');
+        else grid.push('0');
+      }
+    }
+    return grid.join('');
+  }
+
+  function gridAngleY699(fill) {
+    var grid = [];
+    var numZeros = fill - 1;
+    for (var r = 0; r < T699_TEX_DIM; r++) {
+      if (numZeros < 0) numZeros = fill - 1;
+      grid.push(repeatStr('0', Math.max(numZeros, 0)));
+      for (var j = T699_TEX_DIM; j > numZeros; j--) {
+        grid.push(fill > 0 && j % fill === 0 ? '1' : '0');
+      }
+      numZeros--;
+    }
+    return grid.join('');
+  }
+
+  function gridAngleX699(fill) {
+    var grid = [];
+    var rowNum = 0;
+    for (var r = 0; r < T699_TEX_DIM; r++) {
+      if (rowNum === fill) {
+        rowNum = 0;
+      } else {
+        grid.push(repeatStr('0', rowNum));
+      }
+      for (var j = T699_TEX_DIM; j > rowNum; j--) {
+        grid.push(fill > 0 && j % fill === 0 ? '1' : '0');
+      }
+      rowNum++;
+    }
+    return grid.join('');
+  }
+
+  function defTextureBegin699(pelsize) {
+    // @R@ !I<pelsize> ESC D A 8 $ 9 A
+    return [0x40, 0x52, 0x40, 0x21, 0x49].concat(pelsize, [0x1B, 0x44, 0x41, 0x38, 0x24, 0x39, 0x41]);
+  }
+
+  function defTextureEnd699() {
+    // ESC E SO !H@@I#@
+    return [0x1B, 0x45, 0x0E, 0x21, 0x48, 0x40, 0x40, 0x49, 0x23, 0x40];
+  }
+
+  function convert699Texture(operands) {
+    if (!operands || !operands.length) return { tex: null, masksize: null };
+
+    var x = '';
+    var y = '';
+    for (var k = 0; k < operands.length; k++) {
+      var xy = byteBits(operands[k]);
+      x += xy.slice(2, 5);
+      y += xy.slice(5, 8);
+    }
+
+    if (x.slice(1, 5) === '1111' || y.slice(1, 5) === '1111') {
+      return { tex: [0x40], masksize: null };
+    }
+
+    var xAngle = x.slice(0, 1) === '1';
+    var yAngle = y.slice(0, 1) === '1';
+    var xFill = fillStride699(bin2dec699(x.slice(1, 5)));
+    var yFill = fillStride699(bin2dec699(y.slice(1, 5)));
+
+    var defTexture = [];
+    var masksize = null;
+    var grid = '';
+
+    if (!xAngle && !yAngle) {
+      if (xFill < 2 && yFill < 2) {
+        return { tex: [0x40], masksize: null };
+      } else if (xFill < 2 && yFill >= 2) {
+        masksize = T699_MASK_HORIZ;
+      } else if (xFill >= 2 && yFill < 2) {
+        masksize = T699_MASK_VERT;
+      } else {
+        masksize = T699_MASK_GRID;
+      }
+      defTexture = defTextureBegin699(masksize);
+      grid = gridRect699(xFill, yFill);
+    } else if (xAngle && !yAngle) {
+      masksize = T699_MASK_GRID;
+      defTexture = defTextureBegin699(masksize);
+      grid = gridAngleY699(xFill);
+    } else if (!xAngle && yAngle) {
+      masksize = T699_MASK_GRID;
+      defTexture = defTextureBegin699(masksize);
+      grid = gridAngleX699(yFill);
+    } else {
+      if (xFill === 2 && yFill === 2) {
+        masksize = T699_MASK_GRID;
+        defTexture = defTextureBegin699(masksize);
+        grid = gridAngleY699(xFill);
+      }
+    }
+
+    var numBytes = Math.ceil(T699_TEX_DIM / 6);
+    var zeros = repeatStr('0', numBytes * 6 - T699_TEX_DIM);
+    var usable = grid.length - (grid.length % T699_TEX_DIM);
+    for (var start = 0; start < usable; start += T699_TEX_DIM) {
+      var row = grid.slice(start, start + T699_TEX_DIM) + zeros;
+      for (var bi = 0; bi < numBytes; bi++) {
+        pushAll(defTexture, packBits('01' + row.slice(bi * 6, bi * 6 + 6)));
+      }
+    }
+
+    pushAll(defTexture, defTextureEnd699());
+    return { tex: defTexture, masksize: masksize };
+  }
+
+  // ── 699 Stream Converter (699toNAPLPS.py) ──
+
+  var T699_DO_NOTHING = {
+    0x00: 1, 0x01: 1, 0x02: 1, 0x03: 1, 0x04: 1, 0x05: 1, 0x06: 1,
+    0x10: 1, 0x11: 1, 0x12: 1, 0x13: 1, 0x14: 1, 0x15: 1, 0x16: 1, 0x17: 1,
+    0x18: 1, 0x1A: 1, 0x1B: 1, 0x1C: 1, 0x1D: 1, 0x1E: 1, 0x1F: 1,
+    0x20: 1, 0x21: 1, 0x22: 1, 0x23: 1, 0x3E: 1, 0x3F: 1
+  };
+
+  var T699_PASSTHROUGH = {
+    0x07: 1, 0x08: 1, 0x09: 1, 0x0A: 1, 0x0B: 1, 0x0C: 1, 0x0D: 1, 0x0F: 1, 0x19: 1,
+    0x25: 1, 0x26: 1, 0x27: 1, 0x28: 1, 0x29: 1, 0x2A: 1, 0x2B: 1, 0x2C: 1, 0x2D: 1,
+    0x2E: 1, 0x2F: 1, 0x30: 1, 0x31: 1, 0x32: 1, 0x33: 1, 0x34: 1, 0x35: 1, 0x36: 1,
+    0x37: 1
+  };
+
+  var T699_STATUS_FIXED = {
+    0x40: [0x20, 0x78, 0x7F],       // =@  RESET to black
+    0x48: [0x3F, 0x40, 0x40, 0x40], // =H  BLINK off, transparency off
+    0x50: [0x23, 0x40],             // =P  solid line
+    0x51: [0x23, 0x41],             // =Q  dotted line
+    0x52: [0x23, 0x42],             // =R  dashed line
+    0x53: [0x23, 0x43]              // =S  dot-dash line
+  };
+
+  var T699_INITIALIZE_PDI = [
+    0x0E,
+    0x18,
+    0x1F, 0x40, 0x40,
+    0x0E,
+    0x3D, 0x40,
+    0x20, 0x7B, 0x4F,
+    0x21, 0x48,
+    0x40, 0x40, 0x49,
+    0x0F,
+    0x0E,
+    0x23, 0x40, 0x40, 0x40
+  ];
+
+  // Convert a Telidon 699 byte stream into an equivalent NAPLPS Uint8Array.
+  // `options.initialize` (default true) emits the NAPLPS bootstrap header at
+  // the start of the stream; `options.session` optionally carries cross-file
+  // state (text attributes, mask size, current colour) across a batch.
+  function convert699(inputData, options) {
+    options = options || {};
+    var data = toBytes(inputData);
+    var initialize = options.initialize !== undefined ? !!options.initialize : true;
+    var session = options.session || {
+      currentColour: null,
+      textState: { numeric: 0, double: false, yDec: 0.0 },
+      currentTextSize: [0x40, 0x41, 0x7A],   // @Az
+      currentTextFormat: [0x70, 0x40],       // p@
+      displacementFlag: false,
+      masksize: T699_MASK_GRID,
+      lastSavedTexture: 0
+    };
+
+    var fullyConverted = [];
+    var converted = [];
+    if (initialize) pushAll(converted, T699_INITIALIZE_PDI);
+
+    var textmode = false;
+    var colourmode = true;
+    var currentPosition = [];
+    var textures = {};
+
+    function bytesKey(arr) {
+      var s = '';
+      for (var i = 0; i < arr.length; i++) s += String.fromCharCode(arr[i]);
+      return s;
+    }
+
+    function setColour(pdi) {
+      if (pdi.length <= 1) return;
+      var bits = byteBits(pdi[1]);
+      if (colourmode) {
+        var c = parseInt('01' + bits.slice(2, 5) + bits.slice(2, 5), 2);
+        converted.push(0x3C, c, c, c);
+      } else {
+        var b1 = bits.charAt(2);
+        var b2 = bits.charAt(3);
+        var b3 = bits.charAt(4);
+        var c1 = parseInt('01' + b1 + b1 + b1 + b2 + b2 + b2, 2);
+        var c2 = parseInt('01' + b3 + b3 + b3 + b1 + b1 + b1, 2);
+        var c3 = parseInt('01' + b2 + b2 + b2 + b3 + b3 + b3, 2);
+        converted.push(0x3C, c1, c2, c3);
+      }
+    }
+
+    function registerTexture(fill, tex) {
+      // Single active texture mask slot '`' (0x60), matching 699toNAPLPS.py.
+      var mask = 0x60;
+      var fillKey = bytesKey(fill);
+      var registered = textures[mask];
+      if (registered === fillKey) {
+        return mask;
+      }
+      textures[mask] = fillKey;
+      fullyConverted.push(0x23, mask);
+      pushAll(fullyConverted, tex);
+      session.lastSavedTexture = mask;
+      return mask;
+    }
+
+    function handleFill(pdi) {
+      var fill = pdi.slice(2);
+      var tex = null;
+      if (fill.length) {
+        var res = convert699Texture(fill);
+        tex = res.tex;
+        if (res.masksize !== null) session.masksize = res.masksize;
+      }
+      if (tex && tex.length === 1 && tex[0] === 0x40) {
+        converted.push(0x23, 0x40);
+      } else if (tex && tex.length) {
+        var maskLabel = registerTexture(fill, tex);
+        converted.push(0x23, maskLabel);
+        pushAll(converted, session.masksize);
+      }
+    }
+
+    function statusCmds(pdi) {
+      if (pdi.length < 2) return;
+      var sub = pdi[1];
+      if (T699_STATUS_FIXED[sub]) {
+        pushAll(converted, T699_STATUS_FIXED[sub]);
+      } else if (sub === 0x42) { // =B  clear to black & initialize
+        pushAll(converted, T699_INITIALIZE_PDI);
+      } else if (sub === 0x43) { // =C  clear to current colour
+        converted.push(0x20, 0x68, 0x7F);
+      } else if (sub === 0x4C || sub === 0x4E) { // =L, =N  colour mode
+        colourmode = true;
+        if (session.currentColour !== null) setColour(session.currentColour);
+      } else if (sub === 0x4D || sub === 0x4F) { // =M, =O  greyscale mode
+        colourmode = false;
+        if (session.currentColour !== null) setColour(session.currentColour);
+      } else if (sub === 0x54 || sub === 0x55) { // =T, =U  fill pattern
+        handleFill(pdi);
+      } else if (sub === 0x60) { // =`  text format
+        session.currentTextFormat = convert699TextFormat(pdi);
+        converted.push(0x22);
+        pushAll(converted, session.currentTextFormat);
+        pushAll(converted, session.currentTextSize);
+      } else if (sub === 0x61) { // =a  text size
+        session.currentTextSize = convert699TextSize(pdi, session.textState);
+        converted.push(0x22);
+        pushAll(converted, session.currentTextFormat);
+        pushAll(converted, session.currentTextSize);
+      }
+    }
+
+    function pdiCmds(pdi) {
+      var opcode = pdi[0];
+      if (T699_PASSTHROUGH[opcode]) {
+        pushAll(converted, pdi);
+      } else if (opcode === 0x0E) { // SO: exit text mode
+        pushAll(converted, pdi);
+        if (session.displacementFlag) {
+          pushAll(converted, get699DisplacementPos(session.textState));
+          session.displacementFlag = false;
+        }
+      } else if (opcode === 0x24) { // $  point, absolute invisible
+        currentPosition = pdi;
+        pushAll(fullyConverted, converted);
+        converted = pdi.slice();
+      } else if (opcode === 0x3C) { // <  PDI control - value (colour/greyscale)
+        setColour(pdi);
+        session.currentColour = pdi;
+      }
+    }
+
+    function dispatchPdi(pdi) {
+      if (textmode) return;
+      if (pdi[0] === 0x3D) statusCmds(pdi);
+      else pdiCmds(pdi);
+    }
+
+    function getCurrentX() {
+      var x = [];
+      for (var k = 1; k < currentPosition.length; k++) {
+        var bits = byteBits(currentPosition[k]);
+        x.push(parseInt('01' + bits.slice(2, 5) + '000', 2));
+      }
+      return x;
+    }
+
+    function convertNewline() {
+      return [0x0E, 0x25].concat(getCurrentX(), [0x0F]);
+    }
+
+    var pdi = null;
+    for (var idx = 0; idx < data.length; idx++) {
+      var value = data[idx];
+
+      if (value === 0x0F) { // SI: enter text mode
+        if (!textmode) {
+          if (pdi !== null) {
+            dispatchPdi(pdi);
+            pdi = null;
+          }
+          textmode = true;
+          pushAll(converted, get699DisplacementNeg(session.textState));
+          session.displacementFlag = true;
+        }
+      } else if (value === 0x0E) { // SO: exit text mode
+        if (textmode) {
+          textmode = false;
+        }
+      }
+
+      if (textmode) {
+        converted.push(value);
+        if (value === 0x0D) { // CR
+          pushAll(converted, convertNewline());
+        }
+        continue;
+      }
+
+      if (value < 0x40) {
+        if (pdi !== null) dispatchPdi(pdi);
+        pdi = null;
+        if (!T699_DO_NOTHING[value]) pdi = [value];
+      } else if (pdi !== null) {
+        pdi.push(value);
+      }
+    }
+
+    if (pdi !== null) dispatchPdi(pdi);
+
+    pushAll(fullyConverted, converted);
+    fullyConverted.push(0x1A); // trailing SUB so the final opcode runs
+    return new Uint8Array(fullyConverted);
+  }
+
   // ─── Public API ───────────────────────────────────────────────────
 
   return {
     decode: decode,
     encode: encode,
+    identify: identifyFormat,
+    convert699: convert699,
     buildDefaultPalette: buildDefaultPalette,
     decodeCoordinate: decodeCoordinate,
     encodeCoordinate: encodeCoordinate,
