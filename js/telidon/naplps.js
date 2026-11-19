@@ -1,5 +1,13 @@
-// NAPLPS (North American Presentation Level Protocol Syntax) Decoder/Encoder
-// Pure JavaScript implementation - UMD module
+/* 
++ + +          NAPLPS for JavaScript          + + + 
++ + +     (part of the TelidonP5 Project)     + + +
++ + +   Nick Fox-Gieg  https://fox-gieg.com   + + +
+
+- North American Presentation Level Protocol Syntax encoder/decoder
+- No library dependencies
+- UMD module
+*/
+
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define([], factory);
