@@ -35,6 +35,9 @@
   // 4-7 are the programmable masks A-D.  With no DEF TEXTURE they draw nothing
   // in color modes 0 and 1, and the background color in mode 2.
 
+  // Default milliseconds between vertices during progressive draw-on.
+  var PROGRESSIVE_DRAW_INTERVAL = 66;
+
   // ─── Geometry ──────────────────────────────────────────────────────
 
   // Maps unit-screen coordinates onto the canvas.  By default X and Y share a
@@ -69,6 +72,11 @@
 
   function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
 
+  function progressiveSlice(arr, limit) {
+    if (limit >= arr.length) return arr;
+    return arr.slice(0, Math.max(0, limit));
+  }
+
   // ─── Color ─────────────────────────────────────────────────────────
 
   var WHITE = { r: 1, g: 1, b: 1 };
@@ -101,6 +109,7 @@
       blinks: [],     // active palette-animation processes
       clock: 0,       // seconds of WAIT elapsed so far
       blinkClock: 0,  // wall-clock seconds, used for palette animation
+      pointLimit: Infinity, // max vertices/segments per shape for progressive draw-on
       point: { x: 0, y: 0 }
     };
   }
@@ -504,6 +513,7 @@
   }
 
   function drawText(pg, state, vp, cmd) {
+    if (state.pointLimit < 1) return;
     pg.push();
     var field = enterCharField(pg, vp, cmd);
     paintCharBackground(pg, state, cmd, field);
@@ -546,6 +556,7 @@
   ];
 
   function drawMosaic(pg, state, vp, cmd) {
+    if (state.pointLimit < 1) return;
     pg.push();
     var field = enterCharField(pg, vp, cmd);
     paintCharBackground(pg, state, cmd, field);
@@ -572,6 +583,7 @@
   // program directly, rather than through a bitmap, keeps it resolution
   // independent - which the spec itself recommends.
   function drawDrcs(pg, state, vp, cmd) {
+    if (state.pointLimit < 1) return;
     pg.push();
     var field = enterCharField(pg, vp, cmd);
     paintCharBackground(pg, state, cmd, field);
@@ -601,6 +613,7 @@
   // corner picked out by the signs of the pel dimensions, so spanning
   // x..x+w and y..y+h in unit space places it correctly for any sign.
   function drawPoint(pg, state, vp, cmd) {
+    if (state.pointLimit < 1) return;
     var pel = pelPixels(state, vp);
     var x = vp.x(cmd.x);
     var y = vp.y(cmd.y);
@@ -614,6 +627,7 @@
   }
 
   function drawLine(pg, state, vp, cmd) {
+    if (state.pointLimit < 2) return;
     strokeSegment(pg, state, vp, vp.x(cmd.x1), vp.y(cmd.y1), vp.x(cmd.x2), vp.y(cmd.y2));
   }
 
@@ -643,6 +657,7 @@
   }
 
   function drawRect(pg, state, vp, cmd) {
+    if (state.pointLimit < 2) return;
     // Width and height are signed displacements from the drawing point.
     var x0 = vp.x(Math.min(cmd.x, cmd.x + cmd.w));
     var x1 = vp.x(Math.max(cmd.x, cmd.x + cmd.w));
@@ -661,7 +676,9 @@
 
   function drawPolygon(pg, state, vp, cmd) {
     if (!cmd.points || cmd.points.length < 2) return;
-    var pts = cmd.points.map(function (p) { return { x: vp.x(p.x), y: vp.y(p.y) }; });
+    var raw = progressiveSlice(cmd.points, state.pointLimit);
+    if (raw.length < 2) return;
+    var pts = raw.map(function (p) { return { x: vp.x(p.x), y: vp.y(p.y) }; });
 
     if (cmd.filled) {
       paintFilled(pg, state, vp, pts);
@@ -673,10 +690,17 @@
 
   function drawArc(pg, state, vp, cmd) {
     if (!cmd.points || cmd.points.length < 2) return;
-    var pts = cmd.points.map(function (p) { return { x: vp.x(p.x), y: vp.y(p.y) }; });
+    var raw = cmd.points;
+    if (raw.length <= 3) {
+      if (state.pointLimit < raw.length) return;
+    } else {
+      raw = progressiveSlice(raw, state.pointLimit);
+      if (raw.length < 2) return;
+    }
+    var pts = raw.map(function (p) { return { x: vp.x(p.x), y: vp.y(p.y) }; });
     var curve;
 
-    if (pts.length === 2) {
+    if (cmd.points.length === 2) {
       // Start and end coincide: the second point gives the diameter of a circle.
       var a = pts[0], b = pts[1];
       var cx = (a.x + b.x) / 2, cy = (a.y + b.y) / 2;
@@ -686,7 +710,7 @@
         var t = (i / 96) * Math.PI * 2;
         curve.push({ x: cx + r * Math.cos(t), y: cy + r * Math.sin(t) });
       }
-    } else if (pts.length === 3) {
+    } else if (cmd.points.length === 3) {
       curve = arcPoints(pts[0], pts[1], pts[2]);
     } else {
       curve = splinePoints(pts);
@@ -704,8 +728,9 @@
 
   function drawIncLine(pg, state, vp, cmd) {
     if (!cmd.segments) return;
-    for (var i = 0; i < cmd.segments.length; i++) {
-      var s = cmd.segments[i];
+    var segs = progressiveSlice(cmd.segments, state.pointLimit);
+    for (var i = 0; i < segs.length; i++) {
+      var s = segs[i];
       strokeSegment(pg, state, vp, vp.x(s.x1), vp.y(s.y1), vp.x(s.x2), vp.y(s.y2));
     }
   }
@@ -714,6 +739,7 @@
   // carries its own RGB value; in the palette modes it carries an index, so
   // rewriting the palette recolors the image.
   function drawIncPoint(pg, state, vp, cmd) {
+    if (state.pointLimit < 1) return;
     var w = Math.max(1, Math.ceil(Math.abs(cmd.pelW) * vp.scale));
     var h = Math.max(1, Math.ceil(Math.abs(cmd.pelH) * vp.scale));
 
@@ -947,6 +973,30 @@
     return false;
   }
 
+  // Maximum vertex or segment count across all progressive shapes in the
+  // command array.  Used to know when a vertex-by-vertex draw-on has finished.
+  function maxPoints(commands) {
+    var max = 0;
+    if (!commands) return max;
+    for (var i = 0; i < commands.length; i++) {
+      var cmd = commands[i];
+      var n = 0;
+      if (cmd.type === 'polygon' || cmd.type === 'arc') {
+        n = cmd.points ? cmd.points.length : 0;
+      } else if (cmd.type === 'incLine') {
+        n = cmd.segments ? cmd.segments.length : 0;
+      } else if (cmd.type === 'line' || cmd.type === 'rect') {
+        n = 2;
+      } else if (cmd.type === 'point') {
+        n = cmd.draw ? 1 : 0;
+      } else if (cmd.type === 'text' || cmd.type === 'mosaic' || cmd.type === 'drcs' || cmd.type === 'incPoint') {
+        n = 1;
+      }
+      if (n > max) max = n;
+    }
+    return max;
+  }
+
   // ─── Main Entry Point ──────────────────────────────────────────────
 
   // Draw a command array with p5.
@@ -961,6 +1011,13 @@
   //                      image; pass it separately for a still image whose only
   //                      motion is BLINK.
   //   options.limit      stop after this many commands (useful for debugging).
+  //   options.pointLimit maximum vertices/segments to draw per shape, for the
+  //                      progressive vertex-by-vertex draw-on effect.  Defaults
+  //                      to Infinity (draw complete shapes).
+  //   options.progressiveDraw
+  //                      when true and pointLimit is omitted, derives pointLimit
+  //                      from options.elapsed (ms) or options.blinkTime (s) at
+  //                      one vertex per progressiveDrawInterval (default 66 ms).
   function render(pg, commands, options) {
     options = options || {};
     commands = commands || [];
@@ -971,6 +1028,20 @@
     var limit = options.limit === undefined ? commands.length : options.limit;
     var time = options.time === undefined ? Infinity : options.time;
     var blinkTime = options.blinkTime;
+
+    var pointLimit = options.pointLimit;
+    if (pointLimit === undefined) {
+      if (options.progressiveDraw) {
+        var interval = options.progressiveDrawInterval || PROGRESSIVE_DRAW_INTERVAL;
+        var elapsedMs = options.elapsed !== undefined
+          ? options.elapsed
+          : (blinkTime !== undefined ? blinkTime * 1000 : 0);
+        pointLimit = Math.floor(Math.max(0, elapsedMs) / interval);
+      } else {
+        pointLimit = Infinity;
+      }
+    }
+    state.pointLimit = pointLimit;
 
     state.displayPalette = displayPaletteFor(commands, limit, time);
 
@@ -999,6 +1070,8 @@
     render: render,
     duration: duration,
     hasBlink: hasBlink,
+    maxPoints: maxPoints,
+    PROGRESSIVE_DRAW_INTERVAL: PROGRESSIVE_DRAW_INTERVAL,
     Viewport: Viewport,
     version: '1.0.0'
   };

@@ -21,8 +21,6 @@
 			// The NAPLPS unit screen is 1 wide with a 4:3 aspect ratio, so only
 			// y in [0, 0.75] is visible.
 			const UNIT_HEIGHT = 0.75;
-			// Playback speed, in commands per second.
-			const CMDS_PER_SECOND = 150;
 
 			let recording = true;
 			let c;
@@ -43,12 +41,10 @@
 
 			let isMobile = false;
 
-			// Plays a decoded command array into an offscreen buffer.
-			// TelidonP5 draws a whole array in one call, so drawing it
-			// progressively is a matter of re-rendering with a growing limit:
-			// `limit` is how far down the array playback has walked and `time`
-			// is how much of the WAIT clock that walk has spent, which is what
-			// lets an animated image hold each of its frames.
+			// Plays a decoded command array into an offscreen buffer with the
+			// progressive vertex-by-vertex draw-on effect: all shapes unfold
+			// simultaneously, adding one vertex every progressiveDrawInterval ms,
+			// then holding for extraLoopCounter frames before marking finished.
 			class NapPlayer {
 
 				constructor(data, w, h) {
@@ -57,45 +53,56 @@
 					// A palette animation keeps moving after the last command,
 					// so an image with one is never done redrawing.
 					this.blinks = TelidonP5.hasBlink(this.commands);
-					this.index = 0;   // commands played so far
-					this.spent = 0;   // seconds of playback they took
-					this.clock = 0;   // seconds of that spent inside WAITs
-					this.startMillis = millis();
+					this.totalDuration = TelidonP5.duration(this.commands);
+					this.maxPoints = TelidonP5.maxPoints(this.commands);
+					this.progressiveDrawInterval = TelidonP5.PROGRESSIVE_DRAW_INTERVAL;
+					this.pointsIndex = 0;
+					this.markTime = millis();
+					this.startMillis = this.markTime;
+					this.extraLoopCounter = 0;
 					this.finished = false;
 					this.render(0);
 				}
 
-				// Walk forward to wherever `elapsed` seconds of playback have
-				// reached.  An ordinary command costs a fixed slice of time; a
-				// WAIT costs the whole pause it asks for.
-				advance(elapsed) {
+				update(now, elapsed) {
 					let moved = false;
-					while (this.index < this.commands.length) {
-						const cmd = this.commands[this.index];
-						const cost = cmd.type === "wait" ? (cmd.seconds || 0) : 1 / CMDS_PER_SECOND;
-						if (this.spent + cost > elapsed) break;
-						this.spent += cost;
-						if (cmd.type === "wait") this.clock += cmd.seconds || 0;
-						this.index++;
+					if (now > this.markTime + this.progressiveDrawInterval) {
+						if (this.pointsIndex < this.maxPoints) {
+							this.pointsIndex++;
+							this.markTime = now;
+							moved = true;
+						}
+					}
+
+					if (this.totalDuration > 0 && elapsed <= this.totalDuration) {
 						moved = true;
 					}
-					if (this.index >= this.commands.length) this.finished = true;
+
+					if (!this.finished && this.pointsIndex >= this.maxPoints && elapsed >= this.totalDuration) {
+						if (this.extraLoopCounter < this.progressiveDrawInterval) {
+							this.extraLoopCounter++;
+						} else {
+							this.finished = true;
+						}
+					}
+
 					return moved;
 				}
 
-				render(blinkTime) {
+				render(elapsed) {
 					TelidonP5.render(this.pg, this.commands, {
-						limit: this.index,
-						time: this.clock,
-						blinkTime: blinkTime
+						pointLimit: this.pointsIndex,
+						time: this.totalDuration > 0 ? elapsed : Infinity,
+						blinkTime: elapsed
 					});
 				}
 
 				draw() {
-					const elapsed = (millis() - this.startMillis) / 1000;
+					const now = millis();
+					const elapsed = (now - this.startMillis) / 1000;
 					// A finished still image never changes again, so it is only
 					// re-rendered while something is left to move.
-					if (this.advance(elapsed) || this.blinks) this.render(elapsed);
+					if (this.update(now, elapsed) || this.blinks) this.render(elapsed);
 					image(this.pg, 0, 0);
 				}
 
